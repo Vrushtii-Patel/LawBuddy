@@ -26,20 +26,26 @@ class LocaleNotifier extends StateNotifier<AppLanguage> {
 
   Future<void> _loadLanguagePreference() async {
     final prefs = await SharedPreferences.getInstance();
-    final code = prefs.getString(_langPrefKey);
-    if (code != null) {
-      final matched = AppLanguage.values.firstWhere(
-        (l) => l.code == code,
-        orElse: () => AppLanguage.english,
-      );
-      state = matched;
+    final functionalAllowed = prefs.getBool('storage_consent_functional');
+    if (functionalAllowed == true) {
+      final code = prefs.getString(_langPrefKey);
+      if (code != null) {
+        final matched = AppLanguage.values.firstWhere(
+          (l) => l.code == code,
+          orElse: () => AppLanguage.english,
+        );
+        state = matched;
+      }
     }
   }
 
   Future<void> setLanguage(AppLanguage language) async {
     state = language;
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_langPrefKey, language.code);
+    final functionalAllowed = prefs.getBool('storage_consent_functional');
+    if (functionalAllowed == true) {
+      await prefs.setString(_langPrefKey, language.code);
+    }
   }
 
   String translate(String key, [Map<String, String>? params]) {
@@ -105,6 +111,8 @@ final Map<String, Map<String, String>> _translations = {
   'common.accountDetails': {'en': 'Account Details', 'hi': 'खाता विवरण'},
   'common.fullName': {'en': 'Full Name', 'hi': 'पूरा नाम'},
   'common.emailAddress': {'en': 'Email Address', 'hi': 'ईमेल पता'},
+  'common.yes': {'en': 'Yes', 'hi': 'हाँ'},
+  'common.no': {'en': 'No', 'hi': 'नहीं'},
   'common.signOut': {'en': 'Sign Out', 'hi': 'साइन आउट'},
   'common.signOutConfirm': {
     'en': 'Are you sure you want to sign out of your LawBuddy session?',
@@ -353,8 +361,18 @@ final Map<String, Map<String, String>> _translations = {
 
   // Checklists Screen
   'checklists.title': {'en': 'Due Diligence Checklists', 'hi': 'उचित सावधानी चेकलिस्ट'},
+  'checklists.titleLabel': {'en': 'Checklist Title', 'hi': 'चेकलिस्ट शीर्षक'},
+  'checklists.defaultTitle': {'en': 'Property Due Diligence Checklist', 'hi': 'संपत्ति उचित तत्परता चेकलिस्ट'},
+  'checklists.untitledChecklist': {'en': 'Untitled Checklist', 'hi': 'शीर्षकहीन चेकलिस्ट'},
   'checklists.new': {'en': 'New Checklist', 'hi': 'नई चेकलिस्ट'},
   'checklists.newChecklist': {'en': 'New Checklist', 'hi': 'नई चेकलिस्ट'},
+  'checklists.createTitle': {'en': 'Generate Custom Legal Checklist', 'hi': 'कस्टम कानूनी चेकलिस्ट बनाएं'},
+  'checklists.createPromptDesc': {
+    'en': 'Describe your property scenario to automatically generate tailored legal verification steps.',
+    'hi': 'अनुकूलित कानूनी सत्यापन चरणों को स्वचालित रूप से उत्पन्न करने के लिए अपने संपत्ति परिदृश्य का वर्णन करें।',
+  },
+  'checklists.createHint': {'en': 'e.g. Buying an Under-construction Apartment in Mumbai', 'hi': 'उदा. मुंबई में निर्माणाधीन अपार्टमेंट खरीदना'},
+  'checklists.quickPresets': {'en': 'Quick Presets', 'hi': 'त्वरित प्रीसेट'},
   'checklists.newBtn': {'en': 'New', 'hi': 'नया'},
   'checklists.prompt': {
     'en': 'What kind of transaction are you doing?',
@@ -374,57 +392,36 @@ final Map<String, Map<String, String>> _translations = {
   'checklists.untitled': {'en': 'Untitled Checklist', 'hi': 'शीर्षकहीन चेकलिस्ट'},
   'checklists.addItem': {'en': 'Add Item', 'hi': 'आइटम जोड़ें'},
   'checklists.addNewItem': {'en': 'Add New Item', 'hi': 'नया आइटम जोड़ें'},
+  'checklists.addNewTask': {'en': 'Add New Task', 'hi': 'नया कार्य जोड़ें'},
+  'checklists.addTaskAction': {'en': 'Add Task', 'hi': 'कार्य जोड़ें'},
   'checklists.enterTitle': {'en': 'Task title', 'hi': 'कार्य शीर्षक'},
   'checklists.enterTaskTitle': {'en': 'Task title', 'hi': 'कार्य शीर्षक'},
+  'checklists.taskDescription': {'en': 'Task Title / Description', 'hi': 'कार्य शीर्षक / विवरण'},
   'checklists.verifyTitleDeed': {'en': 'e.g. Verify Title Deed & Encumbrance Certificate', 'hi': 'उदा. टाइटल डीड और भार प्रमाणपत्र जांचें'},
   'checklists.taskHint': {'en': 'e.g. Verify Title Deed & Encumbrance Certificate', 'hi': 'उदा. टाइटल डीड और भार प्रमाणपत्र जांचें'},
   'checklists.add': {'en': 'Add', 'hi': 'जोड़ें'},
   'checklists.addBtn': {'en': 'Add', 'hi': 'जोड़ें'},
-
-  // Stamp Duty Calculator Screen
-  'calc.screenTitle': {'en': 'Stamp Duty & Registration Calculator', 'hi': 'स्टाम्प शुल्क और पंजीकरण कैलकुलेटर'},
-  'calc.screenSubtitle': {
-    'en': 'Calculate estimated stamp duty, registration charges, and state cess across India.',
-    'hi': 'भारत भर में अनुमानित स्टाम्प शुल्क, पंजीकरण शुल्क और राज्य उपकर की गणना करें।',
+  'checklists.cancel': {'en': 'Cancel', 'hi': 'रद्द करें'},
+  'checklists.saveAction': {'en': 'Save Changes', 'hi': 'परिवर्तन सहेजें'},
+  'checklists.retryAction': {'en': 'Retry', 'hi': 'पुनः प्रयास करें'},
+  'checklists.taskAddedSuccess': {'en': 'Task added successfully', 'hi': 'कार्य सफलतापूर्वक जोड़ा गया'},
+  'checklists.failedToAdd': {'en': 'Failed to add task: {error}', 'hi': 'कार्य जोड़ने में विफल: {error}'},
+  'checklists.taskDeletedSuccess': {'en': 'Task removed successfully', 'hi': 'कार्य सफलतापूर्वक हटाया गया'},
+  'checklists.deleteTaskTitle': {'en': 'Delete Task', 'hi': 'कार्य हटाएं'},
+  'checklists.deleteTaskConfirm': {'en': 'Are you sure you want to remove "{task}" from this checklist?', 'hi': 'क्या आप वाकई इस चेकलिस्ट से "{task}" को हटाना चाहते हैं?'},
+  'checklists.renameChecklistTitle': {'en': 'Rename Checklist', 'hi': 'चेकलिस्ट का नाम बदलें'},
+  'checklists.newTitleHint': {'en': 'Enter new checklist title...', 'hi': 'नया चेकलिस्ट शीर्षक दर्ज करें...'},
+  'checklists.renameSuccess': {'en': 'Checklist renamed successfully', 'hi': 'चेकलिस्ट का नाम सफलतापूर्वक बदला गया'},
+  'checklists.renameFailed': {'en': 'Failed to rename checklist: {error}', 'hi': 'चेकलिस्ट का नाम बदलने में विफल: {error}'},
+  'checklists.deleteChecklistTitle': {'en': 'Delete Checklist', 'hi': 'चेकलिस्ट हटाएं'},
+  'checklists.deleteChecklistConfirm': {
+    'en': 'Are you sure you want to permanently delete "{title}"? This action cannot be undone.',
+    'hi': 'क्या आप वाकई "{title}" को स्थायी रूप से हटाना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।',
   },
-  'calc.cardTitle': {'en': 'Property & Transaction Details', 'hi': 'संपत्ति और लेनदेन का विवरण'},
-  'calc.propertyType': {'en': 'Property Type', 'hi': 'संपत्ति का प्रकार'},
-  'calc.selectPropertyType': {'en': 'Select property type', 'hi': 'संपत्ति प्रकार चुनें'},
-  'calc.typeResidential': {'en': 'Residential', 'hi': 'आवासीय'},
-  'calc.typeCommercial': {'en': 'Commercial', 'hi': 'व्यावसायिक'},
-  'calc.typeAgricultural': {'en': 'Agricultural', 'hi': 'कृषि'},
-  'calc.typeOther': {'en': 'Other', 'hi': 'अन्य'},
-  'calc.state': {'en': 'State / UT', 'hi': 'राज्य / केंद्र शासित प्रदेश'},
-  'calc.selectState': {'en': 'Select state', 'hi': 'राज्य चुनें'},
-  'calc.agreementValue': {'en': 'Agreement Value', 'hi': 'अनुबंध मूल्य'},
-  'calc.enterAgreementValue': {'en': 'e.g. 75,00,000', 'hi': 'उदा. 75,00,000'},
-  'calc.circleRate': {'en': 'Circle Rate Value', 'hi': 'सर्किल रेट मूल्य'},
-  'calc.enterCircleRate': {'en': 'e.g. 50,00,000', 'hi': 'उदा. 50,00,000'},
-  'calc.gender': {'en': 'Buyer Gender / Ownership', 'hi': 'खरीदार का लिंग / स्वामित्व'},
-  'calc.selectGender': {'en': 'Select gender', 'hi': 'लिंग चुनें'},
-  'calc.genderMale': {'en': 'Male', 'hi': 'पुरुष'},
-  'calc.genderFemale': {'en': 'Female (Concession where applicable)', 'hi': 'महिला (जहाँ लागू हो छूट)'},
-  'calc.genderJoint': {'en': 'Joint (Male + Female)', 'hi': 'संयुक्त (पुरुष + महिला)'},
-  'calc.firstTimeBuyer': {'en': 'First Time Buyer', 'hi': 'पहली बार खरीदार'},
-  'calc.selectOption': {'en': 'Select option', 'hi': 'विकल्प चुनें'},
-  'calc.yes': {'en': 'Yes', 'hi': 'हाँ'},
-  'calc.no': {'en': 'No', 'hi': 'नहीं'},
-  'calc.calculateBtn': {'en': 'Calculate Stamp Duty', 'hi': 'स्टाम्प शुल्क की गणना करें'},
-  'calc.resetBtn': {'en': 'Reset', 'hi': 'रीसेट करें'},
-  'calc.fillAllError': {'en': 'Please complete all required fields.', 'hi': 'कृपया सभी आवश्यक फ़ील्ड भरें।'},
-  'calc.validValueError': {'en': 'Please enter valid numerical amounts.', 'hi': 'कृपया मान्य संख्यात्मक राशि दर्ज करें।'},
-  'calc.summaryTitle': {'en': 'Stamp Duty & Registration Summary', 'hi': 'स्टाम्प शुल्क और पंजीकरण सारांश'},
-  'calc.rowAgreementValue': {'en': 'Agreement Value', 'hi': 'अनुबंध मूल्य'},
-  'calc.rowCircleRate': {'en': 'Circle Rate Value', 'hi': 'सर्किल रेट मूल्य'},
-  'calc.rowApplicableMarketValue': {'en': 'Applicable Consideration Base', 'hi': 'लागू विचारणीय आधार'},
-  'calc.rowStampDuty': {'en': 'Stamp Duty ({rate}%)', 'hi': 'स्टाम्प शुल्क ({rate}%)'},
-  'calc.rowRegistration': {'en': 'Registration Fee ({rate}%)', 'hi': 'पंजीकरण शुल्क ({rate}%)'},
-  'calc.totalPayable': {'en': 'Total Estimated Statutory Charges', 'hi': 'कुल अनुमानित वैधानिक शुल्क'},
-  'calc.stampPlusReg': {'en': 'Stamp Duty + Registration + Applicable Surcharges', 'hi': 'स्टाम्प शुल्क + पंजीकरण + लागू अधिभार'},
-  'calc.disclaimer': {
-    'en': 'Calculations are indicative estimates based on prevailing state stamp schedules. Verify final rates with the local sub-registrar office.',
-    'hi': 'गणना प्रचलित राज्य स्टाम्प अनुसूचियों पर आधारित सांकेतिक अनुमान हैं। स्थानीय उप-पंजीयक कार्यालय से अंतिम दरों का सत्यापन करें।',
-  },
+  'checklists.delete': {'en': 'Delete', 'hi': 'हटाएं'},
+  'checklists.deleteAction': {'en': 'Delete', 'hi': 'हटाएं'},
+  'checklists.checklistDeletedSuccess': {'en': 'Checklist deleted successfully', 'hi': 'चेकलिस्ट सफलतापूर्वक हटा दी गई'},
+  'checklists.failedToDelete': {'en': 'Failed to delete: {error}', 'hi': 'हटाने में विफल: {error}'},
   'checklists.deleteChecklist': {'en': 'Delete Checklist', 'hi': 'चेकलिस्ट हटाएं'},
   'checklists.deleteConfirm': {'en': 'Are you sure you want to delete this checklist?', 'hi': 'क्या आप वाकई इस चेकलिस्ट को हटाना चाहते हैं?'},
   'checklists.deletedSuccess': {'en': 'Checklist deleted successfully', 'hi': 'चेकलिस्ट सफलतापूर्वक हटा दी गई'},
@@ -457,6 +454,69 @@ final Map<String, Map<String, String>> _translations = {
   'checklists.emptyTitle': {'en': 'Start your property due diligence', 'hi': 'अपनी संपत्ति की उचित सावधानी शुरू करें'},
   'checklists.emptySub': {'en': 'Create a checklist to organize the legal documents, approvals and verification steps you need before committing to a property.', 'hi': 'संपत्ति के लिए प्रतिबद्ध होने से पहले आवश्यक कानूनी दस्तावेजों, अनुमोदनों और सत्यापन चरणों को व्यवस्थित करने के लिए एक चेकलिस्ट बनाएं।'},
   'checklists.quickStartSub': {'en': 'Start with a property-specific due-diligence checklist.', 'hi': 'संपत्ति-विशिष्ट चेकलिस्ट के साथ शुरुआत करें।'},
+
+  // Stamp Duty Calculator Screen
+  'calc.screenTitle': {'en': 'Stamp Duty & Registration Calculator', 'hi': 'स्टाम्प शुल्क और पंजीकरण कैलकुलेटर'},
+  'calc.screenSubtitle': {
+    'en': 'Calculate estimated stamp duty, registration charges, and state cess across India.',
+    'hi': 'भारत भर में अनुमानित स्टाम्प शुल्क, पंजीकरण शुल्क और राज्य उपकर की गणना करें।',
+  },
+  'calc.cardTitle': {'en': 'Property & Transaction Details', 'hi': 'संपत्ति और लेनदेन का विवरण'},
+  'calc.propertyType': {'en': 'Property Type', 'hi': 'संपत्ति का प्रकार'},
+  'calc.propertyTypeLabel': {'en': 'Property Category', 'hi': 'संपत्ति की श्रेणी'},
+  'calc.selectPropertyType': {'en': 'Select property type', 'hi': 'संपत्ति प्रकार चुनें'},
+  'calc.selectPropertyTypeHint': {'en': 'Select property category', 'hi': 'संपत्ति श्रेणी चुनें'},
+  'calc.typeResidential': {'en': 'Residential', 'hi': 'आवासीय'},
+  'calc.typeCommercial': {'en': 'Commercial', 'hi': 'व्यावसायिक'},
+  'calc.typeAgricultural': {'en': 'Agricultural', 'hi': 'कृषि'},
+  'calc.typeOther': {'en': 'Other', 'hi': 'अन्य'},
+  'calc.propertyTypeResidential': {'en': 'Residential', 'hi': 'आवासीय'},
+  'calc.propertyTypeCommercial': {'en': 'Commercial', 'hi': 'व्यावसायिक'},
+  'calc.propertyTypeAgricultural': {'en': 'Agricultural', 'hi': 'कृषि'},
+  'calc.propertyTypeOther': {'en': 'Other', 'hi': 'अन्य'},
+  'calc.state': {'en': 'State / UT', 'hi': 'राज्य / केंद्र शासित प्रदेश'},
+  'calc.stateLabel': {'en': 'State / Jurisdiction', 'hi': 'राज्य / क्षेत्राधिकार'},
+  'calc.selectState': {'en': 'Select state', 'hi': 'राज्य चुनें'},
+  'calc.selectStateHint': {'en': 'Select State / Union Territory', 'hi': 'राज्य / केंद्र शासित प्रदेश चुनें'},
+  'calc.agreementValue': {'en': 'Agreement Value', 'hi': 'अनुबंध मूल्य'},
+  'calc.propValueLabel': {'en': 'Agreement / Declared Value (₹)', 'hi': 'अनुबंध / घोषित मूल्य (₹)'},
+  'calc.enterAgreementValue': {'en': 'e.g. 75,00,000', 'hi': 'उदा. 75,00,000'},
+  'calc.enterPropValError': {'en': 'Please enter the agreement property value', 'hi': 'कृपया अनुबंध संपत्ति मूल्य दर्ज करें'},
+  'calc.circleRate': {'en': 'Circle Rate Value', 'hi': 'सर्किल रेट मूल्य'},
+  'calc.circleRateLabel': {'en': 'Circle Rate Value (₹)', 'hi': 'सर्किल रेट मूल्य (₹)'},
+  'calc.enterCircleRate': {'en': 'e.g. 50,00,000', 'hi': 'उदा. 50,00,000'},
+  'calc.gender': {'en': 'Buyer Gender / Ownership', 'hi': 'खरीदार का लिंग / स्वामित्व'},
+  'calc.genderLabel': {'en': 'Buyer Gender / Ownership', 'hi': 'खरीदार का लिंग / स्वामित्व'},
+  'calc.selectGender': {'en': 'Select gender', 'hi': 'लिंग चुनें'},
+  'calc.selectGenderHint': {'en': 'Select ownership gender category', 'hi': 'स्वामित्व लिंग श्रेणी चुनें'},
+  'calc.genderMale': {'en': 'Male', 'hi': 'पुरुष'},
+  'calc.genderFemale': {'en': 'Female (Concession where applicable)', 'hi': 'महिला (जहाँ लागू हो छूट)'},
+  'calc.genderJoint': {'en': 'Joint (Male + Female)', 'hi': 'संयुक्त (पुरुष + महिला)'},
+  'calc.genderOther': {'en': 'Other / Legal Entity', 'hi': 'अन्य / कानूनी संस्था'},
+  'calc.firstTimeBuyer': {'en': 'First Time Buyer', 'hi': 'पहली बार खरीदार'},
+  'calc.firstTimeLabel': {'en': 'First-Time Homebuyer?', 'hi': 'क्या पहली बार घर खरीद रहे हैं?'},
+  'calc.selectOption': {'en': 'Select option', 'hi': 'विकल्प चुनें'},
+  'calc.selectOptionHint': {'en': 'Select Yes or No', 'hi': 'हाँ या नहीं चुनें'},
+  'calc.yes': {'en': 'Yes', 'hi': 'हाँ'},
+  'calc.no': {'en': 'No', 'hi': 'नहीं'},
+  'calc.calculateBtn': {'en': 'Calculate Stamp Duty', 'hi': 'स्टाम्प शुल्क की गणना करें'},
+  'calc.calcButton': {'en': 'Calculate Charges', 'hi': 'शुल्क की गणना करें'},
+  'calc.resetBtn': {'en': 'Reset', 'hi': 'रीसेट करें'},
+  'calc.resetButton': {'en': 'Reset All', 'hi': 'सभी रीसेट करें'},
+  'calc.fillAllError': {'en': 'Please complete all required fields.', 'hi': 'कृपया सभी आवश्यक फ़ील्ड भरें।'},
+  'calc.validValueError': {'en': 'Please enter valid numerical amounts.', 'hi': 'कृपया मान्य संख्यात्मक राशि दर्ज करें।'},
+  'calc.summaryTitle': {'en': 'Stamp Duty & Registration Summary', 'hi': 'स्टाम्प शुल्क और पंजीकरण सारांश'},
+  'calc.rowAgreementValue': {'en': 'Agreement Value', 'hi': 'अनुबंध मूल्य'},
+  'calc.rowCircleRate': {'en': 'Circle Rate Value', 'hi': 'सर्किल रेट मूल्य'},
+  'calc.rowApplicableMarketValue': {'en': 'Applicable Consideration Base', 'hi': 'लागू विचारणीय आधार'},
+  'calc.rowStampDuty': {'en': 'Stamp Duty ({rate}%)', 'hi': 'स्टाम्प शुल्क ({rate}%)'},
+  'calc.rowRegistration': {'en': 'Registration Fee ({rate}%)', 'hi': 'पंजीकरण शुल्क ({rate}%)'},
+  'calc.totalPayable': {'en': 'Total Estimated Statutory Charges', 'hi': 'कुल अनुमानित वैधानिक शुल्क'},
+  'calc.stampPlusReg': {'en': 'Stamp Duty + Registration + Applicable Surcharges', 'hi': 'स्टाम्प शुल्क + पंजीकरण + लागू अधिभार'},
+  'calc.disclaimer': {
+    'en': 'Calculations are indicative estimates based on prevailing state stamp schedules. Verify final rates with the local sub-registrar office.',
+    'hi': 'गणना प्रचलित राज्य स्टाम्प अनुसूचियों पर आधारित सांकेतिक अनुमान हैं। स्थानीय उप-पंजीयक कार्यालय से अंतिम दरों का सत्यापन करें।',
+  },
 
   // Recent Documents Screen
   'recentDocs.title': {'en': 'Recent Documents', 'hi': 'हाल के दस्तावेज़'},
@@ -569,6 +629,7 @@ final Map<String, Map<String, String>> _translations = {
 
   // Auth / Login / Signup / OTP
   'auth.welcomeBack': {'en': 'Welcome Back', 'hi': 'वापसी पर स्वागत है'},
+  'auth.loginToAccount': {'en': 'Sign in to your account to continue', 'hi': 'जारी रखने के लिए अपने खाते में साइन इन करें'},
   'auth.enterEmailPhone': {
     'en': 'Enter your email or phone to receive a secure OTP code.',
     'hi': 'सुरक्षित ओटीपी कोड प्राप्त करने के लिए अपना ईमेल या फोन दर्ज करें।',
@@ -587,11 +648,20 @@ final Map<String, Map<String, String>> _translations = {
   'auth.nameHint': {'en': 'Full name', 'hi': 'पूरा नाम'},
   'auth.enterIdentifier': {'en': 'Please enter your {type}', 'hi': 'कृपया अपना {type} दर्ज करें'},
   'auth.enterFullName': {'en': 'Please enter your full name', 'hi': 'कृपया अपना पूरा नाम दर्ज करें'},
+  'auth.emailRequired': {'en': 'Please enter your email address', 'hi': 'कृपया अपना ईमेल पता दर्ज करें'},
+  'auth.enterValidEmail': {'en': 'Please enter a valid email address', 'hi': 'कृपया एक मान्य ईमेल पता दर्ज करें'},
+  'auth.mobileRequired': {'en': 'Please enter your mobile number', 'hi': 'कृपया अपना मोबाइल नंबर दर्ज करें'},
+  'auth.enterValidPhone': {'en': 'Please enter a valid 10-digit mobile number', 'hi': 'कृपया एक मान्य 10 अंकों का मोबाइल नंबर दर्ज करें'},
   'auth.validEmail': {'en': 'Enter a valid email address', 'hi': 'एक मान्य ईमेल पता दर्ज करें'},
   'auth.validPhone': {'en': 'Enter a valid phone number', 'hi': 'एक मान्य फ़ोन नंबर दर्ज करें'},
   'auth.sendOtp': {'en': 'Send Secure OTP', 'hi': 'सुरक्षित ओटीपी भेजें'},
   'auth.sendSecureOtp': {'en': 'Send Secure OTP', 'hi': 'सुरक्षित ओटीपी भेजें'},
+  'auth.sendVerificationCode': {'en': 'We will send a 6-digit verification code to this address.', 'hi': 'हम इस पते पर 6 अंकों का सत्यापन कोड भेजेंगे।'},
   'auth.createAccount': {'en': 'Create Account', 'hi': 'खाता बनाएं'},
+  'auth.createAccountSub': {
+    'en': 'Create your account to securely scan, analyze, and manage your property agreements.',
+    'hi': 'अपने संपत्ति समझौतों को सुरक्षित रूप से स्कैन, विश्लेषण और प्रबंधित करने के लिए अपना खाता बनाएं।',
+  },
   'auth.createYourAccount': {'en': 'Create your account', 'hi': 'अपना खाता बनाएं'},
   'auth.enterDetails': {'en': 'Enter your details to get started securely with LawBuddy.', 'hi': 'LawBuddy के साथ सुरक्षित रूप से शुरुआत करने के लिए अपना विवरण दर्ज करें।'},
   'auth.noAccount': {'en': "Don't have an account? ", 'hi': 'खाता नहीं है? '},
@@ -604,6 +674,10 @@ final Map<String, Map<String, String>> _translations = {
     'en': 'Intelligent Protection for Property Agreements.',
     'hi': 'संपत्ति समझौतों के लिए बुद्धिमान सुरक्षा।',
   },
+  'auth.loginHeroSub': {
+    'en': 'Sign in to access your saved document scans, RERA compliance checks, and real-time legal assistant.',
+    'hi': 'अपने सहेजे गए दस्तावेज़ स्कैन, रेरा अनुपालन जांच और रीयल-टाइम कानूनी सहायक तक पहुंचने के लिए साइन इन करें।',
+  },
   'auth.signInSubtitle': {
     'en': 'Sign in to access your saved document scans, RERA compliance checks, and real-time legal assistant.',
     'hi': 'अपने सहेजे गए दस्तावेज़ स्कैन, रेरा अनुपालन जांच और रीयल-टाइम कानूनी सहायक तक पहुंचने के लिए साइन इन करें।',
@@ -612,11 +686,30 @@ final Map<String, Map<String, String>> _translations = {
     'en': 'Sign in to access your saved document scans, RERA compliance checks, and real-time legal assistant.',
     'hi': 'अपने सहेजे गए दस्तावेज़ स्कैन, रेरा अनुपालन जांच और रीयल-टाइम कानूनी सहायक तक पहुंचने के लिए साइन इन करें।',
   },
+  'auth.pillarRera': {'en': 'RERA Compliance Verification', 'hi': 'रेरा अनुपालन सत्यापन'},
+  'auth.pillarReraSub': {'en': 'Automated cross-checking against official state statutory provisions.', 'hi': 'आधिकारिक राज्य वैधानिक प्रावधानों के खिलाफ स्वचालित क्रॉस-चेकिंग।'},
+  'auth.pillarAudit': {'en': 'Instant Risk Audit', 'hi': 'त्वरित जोखिम ऑडिट'},
+  'auth.pillarAuditSub': {'en': 'Detect ambiguous clauses, penalties, and deviations in seconds.', 'hi': 'सेकंडों में अस्पष्ट खंडों, दंडों और विचलनों का पता लगाएं।'},
+  'auth.pillarDueDiligence': {'en': 'Due Diligence Checklists', 'hi': 'उचित तत्परता चेकलिस्ट'},
+  'auth.pillarDueDiligenceSub': {'en': 'Tailored legal task lists for buyers, sellers, and tenants.', 'hi': 'खरीदारों, विक्रेताओं और किरायेदारों के लिए अनुकूलित कानूनी कार्य सूचियां।'},
+  'auth.bankGradeSecurity': {'en': '256-bit Encrypted • Strict Confidentiality', 'hi': '256-बिट एन्क्रिप्टेड • पूर्ण गोपनीयता'},
+  'auth.mobileSubtitle': {'en': 'AI Property Legal Assistant', 'hi': 'एआई संपत्ति कानूनी सहायक'},
+  'auth.signupHeroTitle': {'en': 'Build a Safer Property Journey.', 'hi': 'एक सुरक्षित संपत्ति यात्रा का निर्माण करें।'},
   'auth.buildSaferJourney': {'en': 'Build a Safer Property Journey.', 'hi': 'एक सुरक्षित संपत्ति यात्रा का निर्माण करें।'},
+  'auth.signupHeroSub': {
+    'en': 'Join thousands of homebuyers and legal professionals safeguarding their property transactions.',
+    'hi': 'हजारों घर खरीदारों और कानूनी पेशेवरों से जुड़ें जो अपने संपत्ति लेनदेन की सुरक्षा कर रहे हैं।',
+  },
   'auth.signUpSubtitle': {
     'en': 'Create your account to securely scan, analyze, and manage your property agreements with LawBuddy.',
     'hi': 'LawBuddy के साथ अपने संपत्ति समझौतों को सुरक्षित रूप से स्कैन, विश्लेषण और प्रबंधित करने के लिए अपना खाता बनाएं।',
   },
+  'auth.signupFeatureInstantAudit': {'en': 'Instant Document Audits', 'hi': 'त्वरित दस्तावेज़ ऑडिट'},
+  'auth.signupFeatureInstantAuditSub': {'en': 'Comprehensive 3-tier risk analysis with severity tagging.', 'hi': 'गंभीरता टैगिंग के साथ व्यापक 3-स्तरीय जोखिम विश्लेषण।'},
+  'auth.signupFeatureAiExplain': {'en': 'Plain-Language Explanations', 'hi': 'सरल भाषा में व्याख्या'},
+  'auth.signupFeatureAiExplainSub': {'en': 'Complex legal terminology translated into clear actionable advice.', 'hi': 'जटिल कानूनी शब्दावली का स्पष्ट व्यावहारिक सलाह में अनुवाद।'},
+  'auth.signupFeatureCustomChecklists': {'en': 'Custom Legal Checklists', 'hi': 'कस्टम कानूनी चेकलिस्ट'},
+  'auth.signupFeatureCustomChecklistsSub': {'en': 'Track key verification steps throughout your transaction lifecycle.', 'hi': 'अपने लेनदेन जीवनचक्र के दौरान मुख्य सत्यापन चरणों को ट्रैक करें।'},
   'auth.reraSafety': {'en': 'RERA & Contract Safety', 'hi': 'रेरा और अनुबंध सुरक्षा'},
   'auth.aiReady': {'en': 'AI Analysis Ready', 'hi': 'एआई विश्लेषण तैयार'},
   'auth.clauseAssessment': {'en': 'Clause Risk Assessment • Escrow Compliance', 'hi': 'खंड जोखिम मूल्यांकन • एस्क्रो अनुपालन'},
@@ -628,6 +721,7 @@ final Map<String, Map<String, String>> _translations = {
   'auth.verifyEmail': {'en': 'Verify Your Email', 'hi': 'अपना ईमेल सत्यापित करें'},
   'auth.enter6Digit': {'en': 'Enter the 6-digit code sent to\n{email}', 'hi': '{email}\nपर भेजा गया 6 अंकों का कोड दर्ज करें'},
   'auth.enterCodeSentTo': {'en': 'Enter the 6-digit code sent to\n{email}', 'hi': '{email}\nपर भेजा गया 6 अंकों का कोड दर्ज करें'},
+  'auth.enterComplete6Digit': {'en': 'Please enter the complete 6-digit OTP code', 'hi': 'कृपया पूरा 6 अंकों का ओटीपी कोड दर्ज करें'},
   'auth.codeExpiresIn': {'en': 'Code expires in {time}', 'hi': 'कोड {time} में समाप्त हो जाएगा'},
   'auth.codeExpired': {'en': 'Code has expired', 'hi': 'कोड समाप्त हो चुका है'},
   'auth.verify': {'en': 'Verify', 'hi': 'सत्यापित करें'},
@@ -636,7 +730,9 @@ final Map<String, Map<String, String>> _translations = {
   'auth.waitCooldown': {'en': 'Wait {seconds}s', 'hi': '{seconds}s प्रतीक्षा करें'},
   'auth.waitSeconds': {'en': 'Wait {seconds}s', 'hi': '{seconds}s प्रतीक्षा करें'},
   'auth.otpSentSuccess': {'en': 'OTP sent successfully', 'hi': 'ओटीपी सफलतापूर्वक भेजा गया'},
+  'auth.otpResentSuccess': {'en': 'A new OTP has been sent to your email.', 'hi': 'आपकी ईमेल पर एक नया ओटीपी भेजा गया है।'},
   'auth.otpResendFailed': {'en': 'Failed to resend OTP', 'hi': 'ओटीपी पुनः भेजने में विफल'},
+  'auth.resendFailed': {'en': 'Failed to resend verification code. Please try again.', 'hi': 'सत्यापन कोड पुनः भेजने में विफल। कृपया पुन: प्रयास करें।'},
   'auth.enterValidOtp': {'en': 'Please enter a valid 6-digit OTP', 'hi': 'कृपया एक मान्य 6-अंकीय ओटीपी दर्ज करें'},
   'auth.verificationSuccess': {'en': 'Verification successful!', 'hi': 'सत्यापन सफल!'},
   'auth.mobileOtpComingSoon': {

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
-import '../providers/locale_provider.dart';
 import '../providers/theme_provider.dart';
+import '../providers/locale_provider.dart';
 import '../screens/welcome_screen.dart';
 import '../screens/privacy_policy_screen.dart';
 import '../screens/terms_of_use_screen.dart';
+import 'cookie_consent_banner.dart';
+import '../theme/app_theme.dart';
 
 class UserProfileButton extends ConsumerStatefulWidget {
   const UserProfileButton({super.key});
@@ -119,7 +121,7 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                     const SizedBox(height: 8),
                     Container(
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF1E334D) : const Color(0xFFF4EFE0),
+                        color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: colorScheme.outline),
                       ),
@@ -243,7 +245,7 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                     const SizedBox(height: 8),
                     Container(
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF1E334D) : const Color(0xFFF4EFE0),
+                        color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: colorScheme.outline),
                       ),
@@ -313,56 +315,80 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                     const SizedBox(height: 8),
                     Container(
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF162B43).withValues(alpha: 0.6) : const Color(0xFFE4DDD0).withValues(alpha: 0.4),
+                        color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                         ),
                       ),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            dense: true,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-                            leading: Icon(Icons.shield_outlined, size: 19, color: colorScheme.primary),
-                            title: Text(
-                              currentLanguage == AppLanguage.hindi ? 'गोपनीयता नीति' : 'Privacy Policy',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: colorScheme.onSurface,
+                      child: Material(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              dense: true,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                              leading: Icon(Icons.shield_outlined, size: 19, color: colorScheme.primary),
+                              title: Text(
+                                currentLanguage == AppLanguage.hindi ? 'गोपनीयता नीति' : 'Privacy Policy',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
+                                ),
                               ),
+                              trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
+                              onTap: () {
+                                Navigator.pop(dialogContext);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+                                );
+                              },
                             ),
-                            trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
-                            onTap: () {
-                              Navigator.pop(dialogContext);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
-                              );
-                            },
-                          ),
-                          Divider(height: 1, color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0)),
-                          ListTile(
-                            dense: true,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-                            leading: Icon(Icons.description_outlined, size: 19, color: colorScheme.primary),
-                            title: Text(
-                              currentLanguage == AppLanguage.hindi ? 'उपयोग की शर्तें' : 'Terms of Use',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: colorScheme.onSurface,
+                            Divider(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            ListTile(
+                              dense: true,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                              leading: Icon(Icons.tune_rounded, size: 19, color: colorScheme.primary),
+                              title: Text(
+                                currentLanguage == AppLanguage.hindi ? 'गोपनीयता और संग्रहण प्राथमिकताएं' : 'Privacy & Storage Preferences',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
+                                ),
                               ),
+                              trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
+                              onTap: () {
+                                Navigator.pop(dialogContext);
+                                showPrivacyPreferencesDialog(context);
+                              },
                             ),
-                            trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
-                            onTap: () {
-                              Navigator.pop(dialogContext);
-                              Navigator.of(context).push(
-                                MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
-                              );
-                            },
-                          ),
-                        ],
+                            Divider(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            ListTile(
+                              dense: true,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                              leading: Icon(Icons.description_outlined, size: 19, color: colorScheme.primary),
+                              title: Text(
+                                currentLanguage == AppLanguage.hindi ? 'उपयोग की शर्तें' : 'Terms of Use',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                              trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
+                              onTap: () {
+                                Navigator.pop(dialogContext);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -371,7 +397,7 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: isDark ? const Color(0xFF162B43).withValues(alpha: 0.6) : const Color(0xFFE4DDD0).withValues(alpha: 0.4),
+                        color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -379,13 +405,26 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                           Icon(Icons.info_outline_rounded, size: 16, color: colorScheme.primary),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: Text(
-                              'LawBuddy v1.0.0 • AI Legal Tech Engine',
-                              style: TextStyle(
-                                fontSize: 11.5,
-                                color: colorScheme.onSurfaceVariant,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'LawBuddy Core Engine v1.0',
+                                  style: TextStyle(
+                                    color: colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'RERA Real Estate Analysis Module',
+                                  style: TextStyle(
+                                    color: colorScheme.onSurfaceVariant,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -400,7 +439,7 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                 onPressed: () => Navigator.pop(dialogContext),
                 child: Text(
                   currentLanguage == AppLanguage.hindi ? 'बंद करें' : 'Close',
-                  style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w700),
+                  style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -506,18 +545,18 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                        color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.verified_rounded, size: 13, color: Color(0xFF10B981)),
-                          SizedBox(width: 4),
+                          Icon(Icons.verified_rounded, size: 13, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
+                          const SizedBox(width: 4),
                           Text(
                             'Active Account',
                             style: TextStyle(
-                              color: Color(0xFF10B981),
+                              color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
                               fontSize: 10.5,
                               fontWeight: FontWeight.w700,
                             ),
@@ -572,7 +611,7 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
                     isDense: true,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     filled: true,
-                    fillColor: isDark ? const Color(0xFF1E334D) : const Color(0xFFF4EFE0),
+                    fillColor: isDark ? AppColors.darkSurface : AppColors.lightBackground,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide(color: colorScheme.outline),
@@ -605,7 +644,7 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
                       onPressed: () {
                         final newName = _nameController.text.trim();
                         if (newName.isNotEmpty) {
-                          ref.read(authProvider.notifier).updateUserName(newName);
+                           ref.read(authProvider.notifier).updateUserName(newName);
                         }
                         setState(() => _isEditing = false);
                       },
@@ -621,7 +660,7 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF1E334D) : const Color(0xFFF4EFE0),
+                    color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: colorScheme.outline),
                   ),
@@ -643,7 +682,7 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E334D) : const Color(0xFFF4EFE0),
+                  color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: colorScheme.outline),
                 ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../theme/app_theme.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
 import 'privacy_policy_screen.dart';
 import 'terms_of_use_screen.dart';
+import '../widgets/cookie_consent_banner.dart';
 
 
 class WelcomeScreen extends StatefulWidget {
@@ -101,15 +103,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
-    final isDesktop = size.width >= 960;
-    final isTablet = size.width >= 600 && size.width < 960;
-
-    final bgGradientColors = isDark
-        ? [const Color(0xFF162B43), const Color(0xFF13253A), const Color(0xFF101F31)]
-        : [const Color(0xFFFBF8EE), const Color(0xFFF7F1D0), const Color(0xFFF4EFE0)];
+    final isDesktop = size.width >= 1024;
+    final isTablet = size.width >= 700 && size.width < 1024;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       body: MouseRegion(
         onHover: (event) {
           if (isDesktop) {
@@ -117,48 +115,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
           }
         },
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: bgGradientColors,
-            ),
-          ),
-          child: Stack(
-            children: [
-              // Subtle interactive ambient glow for desktop
-              if (isDesktop)
-                ValueListenableBuilder<Offset>(
-                  valueListenable: _mousePosNotifier,
-                  builder: (context, mousePos, _) {
-                    return Positioned(
-                      left: mousePos.dx - 350,
-                      top: mousePos.dy - 350,
-                      child: IgnorePointer(
-                        child: Container(
-                          width: 700,
-                          height: 700,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: RadialGradient(
-                              colors: [
-                                const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.05 : 0.03),
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              SingleChildScrollView(
-                controller: _scrollController,
-                physics: const ClampingScrollPhysics(),
-                child: Column(
-                  children: [
-              // Top Navigation Header
-              _buildTopHeader(isDark, isDesktop),
+          color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+          child: SingleChildScrollView(
+            controller: _scrollController,
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                // Top Navigation Header
+                _buildTopHeader(isDark, isDesktop),
 
               // 1. "BEYOND"-Inspired Cinematic LegalTech Hero
               _buildHeroSection(isDark, isDesktop, isTablet),
@@ -188,31 +152,147 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
               // 7. Bottom CTA Callout Card
               _buildBottomCtaBanner(isDark, isDesktop),
 
-                    const SizedBox(height: 60),
-
-                    // 9. Footer & Legal Disclaimer
-                    _buildFooter(isDark),
-                  ],
-                ),
-              ),
+              const SizedBox(height: 56),
             ],
           ),
         ),
       ),
+    ),
+  );
+}
+
+  // ==========================================
+  // TOP NAVIGATION HEADER & LEGAL INTEGRATION
+  // ==========================================
+  void _showLegalDisclaimerDialog(BuildContext context, bool isDark) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.gavel_rounded,
+                size: 20,
+                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Legal Disclaimer',
+              style: GoogleFonts.inter(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
+            ),
+          ],
+        ),
+        content: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 480),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'This application provides AI-generated information for preliminary document review and educational purposes only. It does not constitute legal advice or create an advocate-client relationship. For important property transactions, consult a qualified legal professional.',
+                style: GoogleFonts.inter(
+                  fontSize: 13.5,
+                  height: 1.5,
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                ),
+              ),
+              const SizedBox(height: 18),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.shield_outlined, size: 14),
+                    label: const Text('Privacy Policy'),
+                    style: OutlinedButton.styleFrom(
+                      textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+                      foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    ),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
+                      );
+                    },
+                    icon: const Icon(Icons.description_outlined, size: 14),
+                    label: const Text('Terms of Use'),
+                    style: OutlinedButton.styleFrom(
+                      textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+                      foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    ),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                      showPrivacyPreferencesDialog(context);
+                    },
+                    icon: const Icon(Icons.tune_rounded, size: 14),
+                    label: const Text('Storage Preferences'),
+                    style: OutlinedButton.styleFrom(
+                      textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+                      foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            style: FilledButton.styleFrom(
+              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Text('Understood', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
     );
   }
 
-  // ==========================================
-  // TOP NAVIGATION HEADER
-  // ==========================================
   Widget _buildTopHeader(bool isDark, bool isDesktop) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 20 : 12,
+        vertical: 12,
+      ),
       decoration: BoxDecoration(
-        color: (isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE)).withValues(alpha: 0.95),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         border: Border(
           bottom: BorderSide(
-            color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+            color: isDark ? AppColors.darkBorder.withValues(alpha: 0.40) : AppColors.lightBorder,
             width: 1,
           ),
         ),
@@ -221,129 +301,206 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Brand Logo + Title
-              Expanded(
-                child: InkWell(
-                  onTap: () {
-                    _scrollController.animateTo(
-                      0,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.easeOut,
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF91ADCD), Color(0xFF708CAE)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF91ADCD).withValues(alpha: 0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Brand Logo + Title
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        _scrollController.animateTo(
+                          0,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeOut,
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 34,
+                            height: 34,
+                            decoration: BoxDecoration(
+                              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.gavel_rounded,
-                          size: 18,
-                          color: Colors.white,
-                        ),
+                            child: const Icon(
+                              Icons.gavel_rounded,
+                              size: 17,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'LawBuddy',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 15.5,
+                                    fontWeight: FontWeight.w800,
+                                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Container(
+                                  width: 20,
+                                  height: 1.5,
+                                  decoration: BoxDecoration(
+                                    color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.65),
+                                    borderRadius: BorderRadius.circular(1),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'REAL ESTATE AI TECH',
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.w700,
+                                    color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                    letterSpacing: 1.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  // Desktop Navigation Links
+                  if (isDesktop)
+                    Flexible(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              'LawBuddy',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: GoogleFonts.inter(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            Text(
-                              'REAL ESTATE AI TECH',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: GoogleFonts.inter(
-                                fontSize: 8.5,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF91ADCD),
-                                letterSpacing: 1.1,
-                              ),
-                            ),
+                            _buildNavButton('Features', () => _scrollToSection(_featuresKey), isDark),
+                            _buildNavButton('How It Works', () => _scrollToSection(_howItWorksKey), isDark),
+                            _buildNavButton('Risk System', () => _scrollToSection(_riskSystemKey), isDark),
+                            _buildNavButton('Privacy Policy', () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+                              );
+                            }, isDark),
+                            _buildNavButton('Terms of Use', () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
+                              );
+                            }, isDark),
+                            _buildNavButton('Disclaimer', () => _showLegalDisclaimerDialog(context, isDark), isDark),
                           ],
                         ),
                       ),
+                    ),
+
+                  // Right Actions (Sign In + Mobile Menu)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      OutlinedButton(
+                        onPressed: _navigateToLogin,
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(0, 36),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          side: BorderSide(
+                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
+                        child: Text(
+                          'Sign In',
+                          style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      if (!isDesktop) ...[
+                        const SizedBox(width: 6),
+                        PopupMenuButton<String>(
+                          icon: Icon(
+                            Icons.menu_rounded,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
+                          color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(
+                              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            ),
+                          ),
+                          onSelected: (value) {
+                            switch (value) {
+                              case 'features':
+                                _scrollToSection(_featuresKey);
+                                break;
+                              case 'howItWorks':
+                                _scrollToSection(_howItWorksKey);
+                                break;
+                              case 'riskSystem':
+                                _scrollToSection(_riskSystemKey);
+                                break;
+                              case 'privacy':
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+                                );
+                                break;
+                              case 'terms':
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
+                                );
+                                break;
+                              case 'disclaimer':
+                                _showLegalDisclaimerDialog(context, isDark);
+                                break;
+                              case 'storage':
+                                showPrivacyPreferencesDialog(context);
+                                break;
+                            }
+                          },
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(value: 'features', child: Text('Features')),
+                            const PopupMenuItem(value: 'howItWorks', child: Text('How It Works')),
+                            const PopupMenuItem(value: 'riskSystem', child: Text('Risk System')),
+                            const PopupMenuDivider(),
+                            const PopupMenuItem(value: 'privacy', child: Text('Privacy Policy')),
+                            const PopupMenuItem(value: 'terms', child: Text('Terms of Use')),
+                            const PopupMenuItem(value: 'disclaimer', child: Text('Legal Disclaimer')),
+                            const PopupMenuItem(value: 'storage', child: Text('Storage Preferences')),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
-                ),
+                ],
               ),
-
-              const SizedBox(width: 12),
-
-              // Desktop Navigation Links
-              if (isDesktop)
-                Row(
-                  children: [
-                    _buildNavButton('Features', () => _scrollToSection(_featuresKey), isDark),
-                    _buildNavButton('How It Works', () => _scrollToSection(_howItWorksKey), isDark),
-                    _buildNavButton('Risk System', () => _scrollToSection(_riskSystemKey), isDark),
-                  ],
-                ),
-
-              // Right Action Button
-              OutlinedButton(
-                onPressed: _navigateToLogin,
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size(0, 38),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  side: BorderSide(
-                    color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
-                  ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  foregroundColor: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
-                ),
-                child: Text(
-                  'Sign In',
-                  style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   Widget _buildNavButton(String label, VoidCallback onTap, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: TextButton(
         onPressed: onTap,
         style: TextButton.styleFrom(
-          foregroundColor: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          foregroundColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
         ),
         child: Text(
           label,
-          style: GoogleFonts.inter(fontSize: 13.5, fontWeight: FontWeight.w500),
+          style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
     );
@@ -379,28 +536,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                 alignment: Alignment.center,
                 clipBehavior: Clip.none,
                 children: [
-                  // Layer 1: Atmospheric Background Glow behind Central Document
-                  Positioned.fill(
-                    child: Center(
-                      child: Container(
-                        width: isDesktop ? 800 : 440,
-                        height: isDesktop ? 540 : 360,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: RadialGradient(
-                            colors: [
-                              const Color(0xFF91ADCD).withValues(alpha: isDark ? 0.22 : 0.12),
-                              const Color(0xFFFFDF8C).withValues(alpha: isDark ? 0.10 : 0.05),
-                              Colors.transparent,
-                            ],
-                            radius: 0.85,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Layer 2: Main Content Column (Eyebrow, Layered Typography, Document, Narrative, CTAs)
+                  // Main Content Column (Eyebrow, Layered Typography, Document, Narrative, CTAs)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -408,10 +544,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF91ADCD).withValues(alpha: isDark ? 0.2 : 0.1),
+                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.2 : 0.08),
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                            color: const Color(0xFF91ADCD).withValues(alpha: isDark ? 0.4 : 0.25),
+                            color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.35 : 0.20),
                           ),
                         ),
                         child: Row(
@@ -422,7 +558,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                               height: 7,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isDark ? const Color(0xFFC5A85E) : const Color(0xFF92764B),
+                                color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -436,7 +572,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                                 style: GoogleFonts.inter(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w700,
-                                  color: isDark ? const Color(0xFF5F7895) : const Color(0xFF244A78),
+                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                   letterSpacing: 0.8,
                                 ),
                               ),
@@ -480,7 +616,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                           style: GoogleFonts.inter(
                             fontSize: isDesktop ? 15.0 : 13.5,
                             height: 1.6,
-                            color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                       ),
@@ -497,12 +633,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                           ElevatedButton(
                             onPressed: _navigateToSignup,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: isDark ? const Color(0xFF5F7895) : const Color(0xFF244A78),
-                              foregroundColor: Colors.white,
+                              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                              foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
                               padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 15),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 4,
-                              shadowColor: (isDark ? const Color(0xFF5F7895) : const Color(0xFF244A78)).withValues(alpha: 0.3),
+                              elevation: 0,
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -520,13 +655,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                             onPressed: _navigateToLogin,
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                              foregroundColor: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                              foregroundColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                             ),
                             child: RichText(
                               text: TextSpan(
                                 style: GoogleFonts.inter(
                                   fontSize: 13.5,
-                                  color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                                 ),
                                 children: [
                                   const TextSpan(text: 'Already have an account? '),
@@ -534,7 +669,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                                     text: 'Sign in',
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
-                                      color: isDark ? const Color(0xFF5F7895) : const Color(0xFF244A78),
+                                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                                       decoration: TextDecoration.underline,
                                     ),
                                   ),
@@ -632,7 +767,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
       letterSpacing: -1.5,
     );
 
-    Widget buildHeadlineLine(String lineText, Animation<double> anim) {
+    Widget buildHeadlineLine(String lineText, Animation<double> anim, {String? prefix, String? accentWord, String? suffix}) {
       return ClipRect(
         child: AnimatedBuilder(
           animation: anim,
@@ -649,57 +784,70 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Layer 1: Back Deep Blue
+              // Layer 1: Back Deep Slate Tone
               Transform.translate(
                 offset: Offset(0, backOffsetY),
                 child: Text(
                   lineText,
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(
-                    color: const Color(0xFF1E3A8A).withValues(alpha: isDark ? 0.45 : 0.25),
+                    color: (isDark ? AppColors.darkSurface : AppColors.lightBorder).withValues(alpha: 0.5),
                   ),
                 ),
               ),
 
-              // Layer 2: Second Electric Blue / Cyan
+              // Layer 2: Second Muted Olive Gray Tone
               Transform.translate(
                 offset: Offset(0, secOffsetY),
                 child: Text(
                   lineText,
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(
-                    color: const Color(0xFF0EA5E9).withValues(alpha: isDark ? 0.35 : 0.20),
+                    color: (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.3),
                   ),
                 ),
               ),
 
-              // Layer 3: Third Brighter Cyan/Green-Blue
+              // Layer 3: Third Brand Warm Tone
               Transform.translate(
                 offset: Offset(0, thirdOffsetY),
                 child: Text(
                   lineText,
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(
-                    color: const Color(0xFF06B6D4).withValues(alpha: isDark ? 0.25 : 0.15),
+                    color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
                   ),
                 ),
               ),
 
               // Layer 4: Front Crisp Dominant Layer
-              Text(
-                lineText,
-                textAlign: TextAlign.center,
-                style: baseStyle.copyWith(
-                  color: isDark ? Colors.white : const Color(0xFF0F172A),
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.1),
-                      blurRadius: 18,
-                      offset: const Offset(0, 4),
+              if (accentWord != null)
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: baseStyle.copyWith(
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
-                  ],
+                    children: [
+                      if (prefix != null) TextSpan(text: prefix),
+                      TextSpan(
+                        text: accentWord,
+                        style: TextStyle(
+                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                        ),
+                      ),
+                      if (suffix != null) TextSpan(text: suffix),
+                    ],
+                  ),
+                )
+              else
+                Text(
+                  lineText,
+                  textAlign: TextAlign.center,
+                  style: baseStyle.copyWith(
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -711,7 +859,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         buildHeadlineLine('UNDERSTAND', _headlineLine1),
-        buildHeadlineLine('YOUR PROPERTY', _headlineLine2),
+        buildHeadlineLine('YOUR PROPERTY', _headlineLine2, prefix: 'YOUR ', accentWord: 'PROPERTY'),
         buildHeadlineLine('BEFORE YOU SIGN.', _headlineLine3),
       ],
     );
@@ -739,7 +887,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
               fontSize: isDesktop ? 26.0 : (isTablet ? 18.0 : 12.0),
               fontWeight: FontWeight.w900,
               letterSpacing: isDesktop ? 5.5 : 3.5,
-              color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF475569),
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
             ),
           ),
         );
@@ -747,51 +895,52 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
     );
   }
 
-
-
   // ==========================================
   // CORE FEATURES SECTION (6-CARD SUITE)
   // ==========================================
   Widget _buildCoreFeaturesSection(bool isDark, bool isDesktop, bool isTablet) {
+    final pColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final aColor = isDark ? AppColors.darkAccent : AppColors.lightAccent;
+
     final features = [
-      const _FeatureCard(
+      _FeatureCard(
         icon: Icons.document_scanner_outlined,
-        accentColor: Color(0xFF3B82F6),
+        accentColor: pColor,
         tag: 'OCR & PDF',
         title: 'Scan & Extract',
         description: 'Upload PDF agreements, capture physical contracts via OCR camera, or paste legal text directly.',
       ),
-      const _FeatureCard(
+      _FeatureCard(
         icon: Icons.shield_outlined,
-        accentColor: Color(0xFFEF4444),
+        accentColor: aColor,
         tag: 'AI AUDIT',
         title: 'Detect Legal Risks',
         description: 'Identify potentially unfair, non-compliant, or one-sided builder clauses with RERA-trained AI.',
       ),
-      const _FeatureCard(
+      _FeatureCard(
         icon: Icons.lightbulb_outline_rounded,
-        accentColor: Color(0xFF10B981),
+        accentColor: pColor,
         tag: 'SIMPLIFIED',
         title: 'Plain-English Insights',
         description: 'Demystify dense legal jargon into 2-3 sentence layman explanations and negotiation advice.',
       ),
-      const _FeatureCard(
+      _FeatureCard(
         icon: Icons.calculate_outlined,
-        accentColor: Color(0xFFC5A85E),
+        accentColor: aColor,
         tag: 'STATE-WISE',
         title: 'Stamp Duty Calculator',
         description: 'Compute state-wise stamp duty, registration charges, local cess, and female buyer discounts across India.',
       ),
-      const _FeatureCard(
+      _FeatureCard(
         icon: Icons.forum_outlined,
-        accentColor: Color(0xFFF59E0B),
+        accentColor: pColor,
         tag: '24/7 CHAT',
         title: 'AI Legal Assistant',
         description: 'Get instant 24/7 answers on property laws, tenancy disputes, builder notices, and contract clauses.',
       ),
-      const _FeatureCard(
+      _FeatureCard(
         icon: Icons.checklist_rounded,
-        accentColor: Color(0xFF06B6D4),
+        accentColor: aColor,
         tag: 'CHECKLIST',
         title: 'Due Diligence Checklists',
         description: 'Step-by-step buyer verification covering title clearance, RERA approvals, encumbrance & OC records.',
@@ -811,28 +960,28 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                 style: GoogleFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF3B82F6),
+                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                   letterSpacing: 1.2,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                'Everything You Need to Review Property Contracts',
+                'Complete Legal Protection Suite',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
-                  fontSize: isDesktop ? 30 : 22,
+                  fontSize: isDesktop ? 34.0 : 26.0,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
-                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                  letterSpacing: -0.8,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 10),
               Text(
-                'A comprehensive LegalTech suite designed specifically for real estate buyers, tenants, and property investors.',
+                'Six specialized AI tools built to simplify Indian real estate transactions.',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
-                  fontSize: 14.5,
-                  color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                  fontSize: isDesktop ? 15.0 : 13.5,
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 ),
               ),
               const SizedBox(height: 36),
@@ -927,7 +1076,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                 style: GoogleFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF3B82F6),
+                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                   letterSpacing: 1.2,
                 ),
               ),
@@ -937,7 +1086,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                 style: GoogleFonts.inter(
                   fontSize: isDesktop ? 30 : 22,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 36),
@@ -979,7 +1128,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
       child: Icon(
         Icons.chevron_right_rounded,
         size: 22,
-        color: isDark ? const Color(0xFF475569) : const Color(0xFF94A3B8),
+        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
       ),
     );
   }
@@ -1001,7 +1150,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                 style: GoogleFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF3B82F6),
+                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                   letterSpacing: 1.2,
                 ),
               ),
@@ -1013,7 +1162,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                   fontSize: isDesktop ? 30 : 22,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -0.5,
-                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 10),
@@ -1022,7 +1171,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 14.5,
-                  color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 ),
               ),
               const SizedBox(height: 36),
@@ -1035,8 +1184,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
       ),
     );
   }
-
-
 
   // ==========================================
   // BOTTOM CTA CALLOUT BANNER
@@ -1053,23 +1200,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
               vertical: isDesktop ? 42 : 30,
             ),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: isDark
-                    ? [const Color(0xFF1E3A8A), const Color(0xFF1E293B)]
-                    : [const Color(0xFF2563EB), const Color(0xFF1D4ED8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: isDark ? AppColors.darkSurface : AppColors.lightPrimary,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: const Color(0xFF3B82F6).withValues(alpha: 0.3),
+                color: isDark ? AppColors.darkBorder : AppColors.lightPrimary,
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF2563EB).withValues(alpha: 0.35),
-                  blurRadius: 28,
-                  offset: const Offset(0, 12),
+                  color: Colors.black.withValues(alpha: 0.25),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
@@ -1085,7 +1226,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                               style: GoogleFonts.inter(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w800,
-                                color: Colors.white,
+                                color: AppColors.darkTextPrimary,
                                 height: 1.2,
                                 letterSpacing: -0.5,
                               ),
@@ -1096,7 +1237,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                               style: GoogleFonts.inter(
                                 fontSize: 14.5,
                                 height: 1.45,
-                                color: Colors.white.withValues(alpha: 0.88),
+                                color: AppColors.darkTextSecondary,
                               ),
                             ),
                           ],
@@ -1108,8 +1249,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                           OutlinedButton(
                             onPressed: () => _scrollToSection(_featuresKey),
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Colors.white70, width: 1.2),
-                              foregroundColor: Colors.white,
+                              side: BorderSide(color: AppColors.darkBorder, width: 1.2),
+                              foregroundColor: AppColors.darkTextPrimary,
                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
@@ -1122,11 +1263,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                           ElevatedButton(
                             onPressed: _navigateToSignup,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: const Color(0xFF1D4ED8),
+                              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                              foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
                               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 2,
+                              elevation: 0,
                             ),
                             child: Text(
                               'Analyze Your Document →',
@@ -1145,7 +1286,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                         style: GoogleFonts.inter(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
-                          color: Colors.white,
+                          color: AppColors.darkTextPrimary,
                           height: 1.2,
                           letterSpacing: -0.4,
                         ),
@@ -1156,17 +1297,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                         style: GoogleFonts.inter(
                           fontSize: 13.5,
                           height: 1.45,
-                          color: Colors.white.withValues(alpha: 0.88),
+                          color: AppColors.darkTextSecondary,
                         ),
                       ),
                       const SizedBox(height: 22),
                       ElevatedButton(
                         onPressed: _navigateToSignup,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF1D4ED8),
+                          backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          elevation: 0,
                         ),
                         child: Text(
                           'Analyze Your Document →',
@@ -1177,8 +1319,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
                       OutlinedButton(
                         onPressed: () => _scrollToSection(_featuresKey),
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.white70, width: 1.2),
-                          foregroundColor: Colors.white,
+                          side: BorderSide(color: AppColors.darkBorder, width: 1.2),
+                          foregroundColor: AppColors.darkTextPrimary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
@@ -1195,193 +1337,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
     );
   }
 
-  // ==========================================
-  // FOOTER & LEGAL DISCLAIMER
-  // ==========================================
-  Widget _buildFooter(bool isDark) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      decoration: BoxDecoration(
-        color: (isDark ? const Color(0xFF020617) : const Color(0xFFF1F5F9)),
-        border: Border(
-          top: BorderSide(
-            color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
-            width: 1,
-          ),
-        ),
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: Column(
-            children: [
-              // Muted Disclaimer Box
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: (isDark ? const Color(0xFF0F172A) : Colors.white).withValues(alpha: 0.7),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
-                  ),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(Icons.gavel_outlined, size: 16, color: Color(0xFF94A3B8)),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Legal Disclaimer',
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: isDark ? Colors.white : const Color(0xFF0F172A),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'This application provides AI-generated information for preliminary document review and educational purposes only. It does not constitute legal advice or create an advocate-client relationship. For important property transactions, consult a qualified legal professional.',
-                            style: GoogleFonts.inter(
-                              fontSize: 11.5,
-                              height: 1.45,
-                              color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Bottom Brand & Navigation Footer
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final isNarrow = constraints.maxWidth < 700;
-                  final brandInfo = Column(
-                    crossAxisAlignment: isNarrow ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFC5A85E).withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Icon(Icons.shield_outlined, color: Color(0xFFC5A85E), size: 16),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'LawBuddy',
-                            style: GoogleFonts.inter(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w800,
-                              color: isDark ? Colors.white : const Color(0xFF0F172A),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Understand your property documents before you sign.',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
-                        ),
-                        textAlign: isNarrow ? TextAlign.center : TextAlign.start,
-                      ),
-                    ],
-                  );
-
-                  final navLinks = Wrap(
-                    spacing: 20,
-                    runSpacing: 10,
-                    alignment: isNarrow ? WrapAlignment.center : WrapAlignment.end,
-                    children: [
-                      _buildFooterLink('Features', isDark, () {
-                        if (_featuresKey.currentContext != null) {
-                          Scrollable.ensureVisible(
-                            _featuresKey.currentContext!,
-                            duration: const Duration(milliseconds: 600),
-                            curve: Curves.easeInOut,
-                          );
-                        }
-                      }),
-                      _buildFooterLink('How It Works', isDark, () {
-                        if (_howItWorksKey.currentContext != null) {
-                          Scrollable.ensureVisible(
-                            _howItWorksKey.currentContext!,
-                            duration: const Duration(milliseconds: 600),
-                            curve: Curves.easeInOut,
-                          );
-                        }
-                      }),
-                      _buildFooterLink('Privacy Policy', isDark, () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
-                        );
-                      }),
-                      _buildFooterLink('Terms of Use', isDark, () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
-                        );
-                      }),
-                    ],
-                  );
-
-                  if (isNarrow) {
-                    return Column(
-                      children: [
-                        brandInfo,
-                        const SizedBox(height: 16),
-                        navLinks,
-                      ],
-                    );
-                  }
-
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(child: brandInfo),
-                      const SizedBox(width: 24),
-                      navLinks,
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFooterLink(String label, bool isDark, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(6),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        child: Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 12.5,
-            fontWeight: FontWeight.w600,
-            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 // ==========================================
@@ -1437,334 +1392,296 @@ class _HeroDocumentScanVisualState extends State<_HeroDocumentScanVisual>
           transform: Matrix4.translationValues(0, _isHovered ? -4 : 0, 0),
           constraints: BoxConstraints(maxWidth: isDesktop ? 540 : (isTablet ? 460 : 360)),
           child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF91ADCD).withValues(alpha: _isHovered ? 0.45 : (isDark ? 0.35 : 0.15)),
-                        blurRadius: _isHovered ? 54 : 42,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: isDark ? 0.10 : 0.06),
+                  blurRadius: 20,
+                  spreadRadius: 0,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(isDesktop ? 22 : 18),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: isDark ? AppColors.darkBorder.withValues(alpha: 0.5) : AppColors.lightBorder,
+                        width: 1.0,
                       ),
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.1),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Stack(
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
+                        // Top Header with pulsating AI Scan Active indicator
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.15 : 0.12),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      Icons.description_outlined,
+                                      size: 16,
+                                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'PROPERTY SALE AGREEMENT',
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      style: GoogleFonts.inter(
+                                        fontSize: 11.5,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 0.5,
+                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            // AI Scan Active Badge with subtle pulsing light
+                            AnimatedBuilder(
+                              animation: _scanController,
+                              builder: (context, child) {
+                                final pulse = 0.6 + 0.4 * _scanController.value;
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.12 : 0.08),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: (isDark ? 0.35 : 0.25) * pulse),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        width: 6,
+                                        height: 6,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        'AI Scan Active',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 9.5,
+                                          fontWeight: FontWeight.w600,
+                                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Progress bar
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            minHeight: 3,
+                            backgroundColor: isDark ? AppColors.darkBorder.withValues(alpha: 0.4) : AppColors.lightBorder,
+                            valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                          ),
+                        ),
+
+                        const SizedBox(height: 14),
+
+                        // Clause 7.2 Header
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                'Clause 7.2 — Forfeiture',
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.inter(
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.14 : 0.08),
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(
+                                  color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.35 : 0.2),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                'Relevant Property Law',
+                                style: GoogleFonts.inter(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        // Clause Body with subtle border
                         Container(
-                          padding: EdgeInsets.all(isDesktop ? 22 : 18),
+                          padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF2B2920) : const Color(0xFFF7F1D0),
-                            borderRadius: BorderRadius.circular(20),
+                            color: isDark ? AppColors.darkSurface : AppColors.lightError.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
-                              width: 1.5,
+                              color: isDark ? AppColors.darkError : AppColors.lightError.withValues(alpha: 0.4),
+                              width: 1.2,
+                            ),
+                          ),
+                          child: Text(
+                            '"In case of delay beyond 30 days, 100% of earnest deposit shall be forfeited without notice."',
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              height: 1.45,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightError,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 14),
+
+                        // AI Assessment Card
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: isDark ? AppColors.darkSurface : AppColors.lightElevatedSurface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isDark ? AppColors.darkBorder.withValues(alpha: 0.45) : AppColors.lightBorder,
+                              width: 1,
                             ),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              // Top Header with pulsating AI Scan Active indicator
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              Wrap(
+                                alignment: WrapAlignment.spaceBetween,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                spacing: 6,
+                                runSpacing: 4,
                                 children: [
-                                  Expanded(
-                                    child: Row(
+                                  if (isDark)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.darkError,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(Icons.warning_amber_rounded, size: 13, color: AppColors.darkErrorText),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            'High Legal Risk Detected',
+                                            style: GoogleFonts.inter(
+                                              fontSize: 10.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.darkErrorText,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  else
+                                    Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(6),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF91ADCD).withValues(alpha: 0.15),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: const Icon(
-                                            Icons.description_outlined,
-                                            size: 16,
-                                            color: Color(0xFF91ADCD),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            'PROPERTY SALE AGREEMENT',
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: GoogleFonts.inter(
-                                              fontSize: 11.5,
-                                              fontWeight: FontWeight.w700,
-                                              letterSpacing: 0.5,
-                                              color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
-                                            ),
+                                        Icon(Icons.shield_outlined, size: 14, color: AppColors.lightError),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'High Legal Risk Detected',
+                                          style: GoogleFonts.inter(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w700,
+                                            color: AppColors.lightError,
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  // AI Scan Active Badge with subtle pulsing light
-                                  AnimatedBuilder(
-                                    animation: _scanController,
-                                    builder: (context, child) {
-                                      final pulse = 0.6 + 0.4 * _scanController.value;
-                                      return Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFF10B981).withValues(alpha: 0.15),
-                                          borderRadius: BorderRadius.circular(12),
-                                          border: Border.all(
-                                            color: const Color(0xFF10B981).withValues(alpha: 0.4 * pulse),
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: const Color(0xFF10B981).withValues(alpha: 0.25 * pulse),
-                                              blurRadius: 8,
-                                            ),
-                                          ],
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Container(
-                                              width: 6,
-                                              height: 6,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: const Color(0xFF10B981),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: const Color(0xFF10B981).withValues(alpha: 0.8 * pulse),
-                                                    blurRadius: 4,
-                                                    spreadRadius: 1,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 5),
-                                            Text(
-                                              'AI Scan Active',
-                                              style: GoogleFonts.inter(
-                                                fontSize: 9.5,
-                                                fontWeight: FontWeight.w600,
-                                                color: const Color(0xFF10B981),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
+                                  Text(
+                                    'Score: 84/100',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightError,
+                                    ),
                                   ),
                                 ],
                               ),
-
-                              const SizedBox(height: 12),
-
-                              // Progress bar
+                              const SizedBox(height: 8),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(4),
                                 child: LinearProgressIndicator(
-                                  minHeight: 3,
-                                  backgroundColor: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-                                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF38BDF8)),
+                                  value: 0.68,
+                                  minHeight: 6,
+                                  backgroundColor: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: isDark ? 0.2 : 0.15),
+                                  valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkError : AppColors.lightError),
                                 ),
                               ),
-
-                              const SizedBox(height: 14),
-
-                              // Clause 7.2 Header
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      'Clause 7.2 — Forfeiture',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.inter(
-                                        fontSize: 11.5,
-                                        fontWeight: FontWeight.w600,
-                                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFF2563EB).withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Text(
-                                      'Relevant Property Law',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF3B82F6),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
                               const SizedBox(height: 8),
-
-                              // Clause Body with subtle border pulse
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: isDark
-                                      ? const Color(0xFF162B43).withValues(alpha: 0.7)
-                                      : const Color(0xFFFFFFFF).withValues(alpha: 0.9),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: const Color(0xFFEF4444).withValues(alpha: 0.4),
-                                    width: 1.2,
-                                  ),
-                                ),
-                                child: Text(
-                                  '"In case of delay beyond 30 days, 100% of earnest deposit shall be forfeited without notice."',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 12,
-                                    height: 1.45,
-                                    color: isDark ? const Color(0xFFFCA5A5) : const Color(0xFFB91C1C),
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(height: 14),
-
-                              // AI Assessment Card
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: isDark
-                                      ? const Color(0xFF1E293B).withValues(alpha: 0.9)
-                                      : const Color(0xFFF1F5F9),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Wrap(
-                                      alignment: WrapAlignment.spaceBetween,
-                                      crossAxisAlignment: WrapCrossAlignment.center,
-                                      spacing: 6,
-                                      runSpacing: 4,
-                                      children: [
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(Icons.shield_outlined, size: 14, color: Color(0xFFEF4444)),
-                                            const SizedBox(width: 6),
-                                            Text(
-                                              'High Legal Risk Detected',
-                                              style: GoogleFonts.inter(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w700,
-                                                color: const Color(0xFFEF4444),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          'Score: 84/100',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w700,
-                                            color: const Color(0xFFEF4444),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: LinearProgressIndicator(
-                                        value: 0.68,
-                                        minHeight: 6,
-                                        backgroundColor: const Color(0xFFEF4444).withValues(alpha: 0.15),
-                                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFEF4444)),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Plain English: The builder can confiscate all your advance money even for minor payment delays.',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 11,
-                                        height: 1.4,
-                                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
-                                      ),
-                                    ),
-                                  ],
+                              Text(
+                                'Plain English: The builder can confiscate all your advance money even for minor payment delays.',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  height: 1.4,
+                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                                 ),
                               ),
                             ],
                           ),
                         ),
-
-                        // Animated scanning laser line sweeping across the card
-                        Positioned.fill(
-                          child: IgnorePointer(
-                            child: AnimatedBuilder(
-                              animation: _scanController,
-                              builder: (context, _) {
-                                final topOffset = _scanController.value * 320.0;
-                                return Stack(
-                                  children: [
-                                    Positioned(
-                                      top: topOffset,
-                                      left: 0,
-                                      right: 0,
-                                      child: Container(
-                                        height: 2.5,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [
-                                              Colors.transparent,
-                                              const Color(0xFF38BDF8).withValues(alpha: 0.8),
-                                              Colors.transparent,
-                                            ],
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: const Color(0xFF38BDF8).withValues(alpha: 0.6),
-                                              blurRadius: 10,
-                                              spreadRadius: 2,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 }
 
-
-
-// ==========================================
-// REUSABLE FEATURE CARD WITH HOVER EFFECT & TAG
-// ==========================================
 // ==========================================
 // REUSABLE FEATURE CARD WITH HOVER EFFECT & TAG
 // ==========================================
@@ -1802,20 +1719,20 @@ class _FeatureCardState extends State<_FeatureCard> {
         constraints: const BoxConstraints(minHeight: 185),
         padding: const EdgeInsets.all(22),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1E293B) : Colors.white,
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: _isHovered
                 ? widget.accentColor.withValues(alpha: 0.8)
-                : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
             width: _isHovered ? 1.5 : 1,
           ),
           boxShadow: [
             if (_isHovered)
               BoxShadow(
-                color: widget.accentColor.withValues(alpha: 0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 6),
+                color: widget.accentColor.withValues(alpha: 0.15),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
               ),
           ],
         ),
@@ -1866,7 +1783,7 @@ class _FeatureCardState extends State<_FeatureCard> {
               style: GoogleFonts.inter(
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
-                color: isDark ? Colors.white : const Color(0xFF0F172A),
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
             const SizedBox(height: 6),
@@ -1875,7 +1792,7 @@ class _FeatureCardState extends State<_FeatureCard> {
               style: GoogleFonts.inter(
                 fontSize: 13.5,
                 height: 1.5,
-                color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -1923,20 +1840,20 @@ class _StepCardState extends State<_StepCard> {
         constraints: const BoxConstraints(minHeight: 165),
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: (isDark ? const Color(0xFF1E293B) : Colors.white).withValues(alpha: _isHovered ? 1.0 : 0.85),
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: _isHovered
-                ? const Color(0xFF3B82F6).withValues(alpha: 0.8)
-                : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+                ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
             width: _isHovered ? 1.5 : 1.0,
           ),
           boxShadow: [
             if (_isHovered)
               BoxShadow(
-                color: const Color(0xFF3B82F6).withValues(alpha: 0.2),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.15),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
               ),
           ],
         ),
@@ -1947,7 +1864,7 @@ class _StepCardState extends State<_StepCard> {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
               decoration: BoxDecoration(
-                color: const Color(0xFF2563EB).withValues(alpha: _isHovered ? 0.35 : (isDark ? 0.2 : 0.1)),
+                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -1955,7 +1872,7 @@ class _StepCardState extends State<_StepCard> {
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   fontWeight: FontWeight.w800,
-                  color: _isHovered ? const Color(0xFF60A5FA) : const Color(0xFF3B82F6),
+                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                 ),
               ),
             ),
@@ -1965,7 +1882,7 @@ class _StepCardState extends State<_StepCard> {
               style: GoogleFonts.inter(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: isDark ? Colors.white : const Color(0xFF0F172A),
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
             const SizedBox(height: 6),
@@ -1974,7 +1891,7 @@ class _StepCardState extends State<_StepCard> {
               style: GoogleFonts.inter(
                 fontSize: 13,
                 height: 1.45,
-                color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -2004,7 +1921,6 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animController;
   late final Animation<double> _scoreAnim;
-  late final Animation<double> _scanLineAnim;
 
   @override
   void initState() {
@@ -2018,13 +1934,6 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
       CurvedAnimation(
         parent: _animController,
         curve: const Interval(0.0, 0.6, curve: Curves.easeOutCubic),
-      ),
-    );
-
-    _scanLineAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animController,
-        curve: Curves.easeInOutSine,
       ),
     );
   }
@@ -2043,10 +1952,10 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
     return Container(
       padding: EdgeInsets.all(isDesktop ? 24 : 16),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E293B) : Colors.white,
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
         boxShadow: [
           BoxShadow(
@@ -2076,165 +1985,112 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
   }
 
   Widget _buildMockDocumentPanel(bool isDark) {
+    final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF162B43) : const Color(0xFFF8FAFC),
+        color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isDark ? const Color(0xFF274366) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
             children: [
-              Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 8,
-                runSpacing: 6,
-                children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.article_outlined, size: 16, color: Color(0xFF3B82F6)),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Text(
-                          'AGREEMENT FOR SALE (EXTRACT)',
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.8,
-                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  AnimatedBuilder(
-                    animation: _animController,
-                    builder: (context, _) {
-                      final pulse = 0.7 + 0.3 * _animController.value;
-                      return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFEF4444).withValues(alpha: isDark ? 0.25 * pulse : 0.15 * pulse),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: const Color(0xFFEF4444).withValues(alpha: 0.5 * pulse),
-                          ),
-                        ),
-                        child: Text(
-                          'POTENTIAL RISK DETECTED',
-                          style: GoogleFonts.inter(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFFEF4444),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Clause 7.2 — Default & Forfeiture of Earnest Deposit',
-                style: GoogleFonts.inter(
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w700,
-                  color: isDark ? Colors.white : const Color(0xFF0F172A),
-                ),
-              ),
-              const SizedBox(height: 10),
-              AnimatedBuilder(
-                animation: _animController,
-                builder: (context, child) {
-                  final glow = 0.3 + 0.4 * _animController.value;
-                  return Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEF4444).withValues(alpha: isDark ? 0.14 : 0.08),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: const Color(0xFFEF4444).withValues(alpha: glow),
-                        width: 1.2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFEF4444).withValues(alpha: 0.15 * glow),
-                          blurRadius: 10,
-                        ),
-                      ],
-                    ),
-                    child: child,
-                  );
-                },
-                child: Text(
-                  '"In the event of any delay in milestone payment exceeding 15 days, the Promoter shall have the unilateral right to cancel the allotment and forfeit 100% of the Earnest Money Deposit and accrued interest without further notice."',
-                  style: GoogleFonts.inter(
-                    fontSize: 12.5,
-                    height: 1.5,
-                    color: isDark ? const Color(0xFFFCA5A5) : const Color(0xFFB91C1C),
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 14),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.warning_amber_rounded, size: 16, color: Color(0xFFEF4444)),
+                  Icon(Icons.article_outlined, size: 16, color: isDark ? AppColors.darkAccent : AppColors.lightPrimary),
                   const SizedBox(width: 8),
-                  Expanded(
+                  Flexible(
                     child: Text(
-                      'Excessive forfeiture clause exceeds statutory 10% ceiling prescribed under Section 13(1) of RERA Model Rules.',
+                      'AGREEMENT FOR SALE (EXTRACT)',
+                      overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
-                        fontSize: 12,
-                        height: 1.45,
-                        color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF475569),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.8,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                   ),
                 ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: errorColor.withValues(alpha: isDark ? 0.2 : 0.12),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: errorColor.withValues(alpha: 0.4),
+                  ),
+                ),
+                child: Text(
+                  'POTENTIAL RISK DETECTED',
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    color: errorColor,
+                  ),
+                ),
               ),
             ],
           ),
-
-          // Scanning sweep beam across the extract
-          Positioned.fill(
-            child: IgnorePointer(
-              child: AnimatedBuilder(
-                animation: _scanLineAnim,
-                builder: (context, _) {
-                  return Stack(
-                    children: [
-                      Positioned(
-                        top: _scanLineAnim.value * 200.0,
-                        left: 0,
-                        right: 0,
-                        child: Container(
-                          height: 2.0,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.transparent,
-                                const Color(0xFF38BDF8).withValues(alpha: 0.7),
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
+          const SizedBox(height: 16),
+          Text(
+            'Clause 7.2 — Default & Forfeiture of Earnest Deposit',
+            style: GoogleFonts.inter(
+              fontSize: 14.5,
+              fontWeight: FontWeight.w700,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: errorColor.withValues(alpha: isDark ? 0.12 : 0.08),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: errorColor.withValues(alpha: 0.4),
+                width: 1.2,
               ),
             ),
+            child: Text(
+              '"In the event of any delay in milestone payment exceeding 15 days, the Promoter shall have the unilateral right to cancel the allotment and forfeit 100% of the Earnest Money Deposit and accrued interest without further notice."',
+              style: GoogleFonts.inter(
+                fontSize: 12.5,
+                height: 1.5,
+                color: errorColor,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.warning_amber_rounded, size: 16, color: errorColor),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Excessive forfeiture clause exceeds statutory 10% ceiling prescribed under Section 13(1) of RERA Model Rules.',
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    height: 1.45,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -2242,13 +2098,17 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
   }
 
   Widget _buildRiskScorePanel(bool isDark) {
+    final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
+    final cautionColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
+    final successColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF162B43) : const Color(0xFFF8FAFC),
+        color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isDark ? const Color(0xFF274366) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
       ),
       child: Column(
@@ -2265,7 +2125,7 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: isDark ? Colors.white : const Color(0xFF0F172A),
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
               ),
               AnimatedBuilder(
@@ -2275,7 +2135,7 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEF4444).withValues(alpha: isDark ? 0.2 : 0.1),
+                      color: errorColor.withValues(alpha: isDark ? 0.2 : 0.1),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
@@ -2283,7 +2143,7 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
                       style: GoogleFonts.inter(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFFEF4444),
+                        color: errorColor,
                       ),
                     ),
                   );
@@ -2301,32 +2161,32 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
                 child: LinearProgressIndicator(
                   value: progress,
                   minHeight: 6,
-                  backgroundColor: const Color(0xFFEF4444).withValues(alpha: 0.15),
-                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFEF4444)),
+                  backgroundColor: errorColor.withValues(alpha: 0.15),
+                  valueColor: AlwaysStoppedAnimation<Color>(errorColor),
                 ),
               );
             },
           ),
           const SizedBox(height: 16),
-          _buildRiskItemRow('🔴 High Risk', 'Clause 7.2: Unilateral earnest forfeiture (100%)', const Color(0xFFEF4444), isDark),
+          _buildRiskItemRow('🔴 High Risk', 'Clause 7.2: Unilateral earnest forfeiture (100%)', errorColor, isDark),
           const SizedBox(height: 8),
-          _buildRiskItemRow('🟡 Caution', 'Clause 14.1: Asymmetric delay penalty compensation', const Color(0xFFF59E0B), isDark),
+          _buildRiskItemRow('🟡 Caution', 'Clause 14.1: Asymmetric delay penalty compensation', cautionColor, isDark),
           const SizedBox(height: 8),
-          _buildRiskItemRow('🟢 Standard', 'Clause 3.1: Carpet area specification & RERA warranty', const Color(0xFF10B981), isDark),
+          _buildRiskItemRow('🟢 Standard', 'Clause 3.1: Carpet area specification & RERA warranty', successColor, isDark),
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFF2563EB).withValues(alpha: isDark ? 0.15 : 0.08),
+              color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.12 : 0.08),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: const Color(0xFF2563EB).withValues(alpha: isDark ? 0.3 : 0.2),
+                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.3 : 0.2),
               ),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.lightbulb_outline_rounded, size: 16, color: Color(0xFF3B82F6)),
+                Icon(Icons.lightbulb_outline_rounded, size: 16, color: isDark ? AppColors.darkAccent : AppColors.lightPrimary),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -2334,7 +2194,7 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
                     style: GoogleFonts.inter(
                       fontSize: 11.5,
                       height: 1.4,
-                      color: isDark ? const Color(0xFF93C5FD) : const Color(0xFF1E40AF),
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                   ),
                 ),
@@ -2367,7 +2227,7 @@ class _RiskSystemShowcaseState extends State<_RiskSystemShowcase>
             style: GoogleFonts.inter(
               fontSize: 12,
               height: 1.35,
-              color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF475569),
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             ),
           ),
         ),
@@ -2419,77 +2279,31 @@ class _DualDirectionMarqueeState extends State<_DualDirectionMarquee>
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
-        color: (isDark ? const Color(0xFF132338) : const Color(0xFFF4EFE0)).withValues(alpha: 0.65),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         border: Border.symmetric(
           horizontal: BorderSide(
-            color: isDark ? const Color(0xFF334356).withValues(alpha: 0.5) : const Color(0xFFE4DDD0),
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
             width: 1,
           ),
         ),
       ),
-      child: Stack(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Line 1: Moving Left
-              _buildMarqueeTrack(
-                text: _track1Text,
-                moveLeft: true,
-                isDark: isDark,
-                color: isDark ? const Color(0xFF93C5FD) : const Color(0xFF244A78),
-              ),
-              const SizedBox(height: 10),
-              // Line 2: Moving Right (Opposite Direction)
-              _buildMarqueeTrack(
-                text: _track2Text,
-                moveLeft: false,
-                isDark: isDark,
-                color: isDark ? const Color(0xFF93C5FD) : const Color(0xFF244A78),
-              ),
-            ],
+          // Line 1: Moving Left
+          _buildMarqueeTrack(
+            text: _track1Text,
+            moveLeft: true,
+            isDark: isDark,
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
           ),
-          // Left Fade Gradient Mask
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: 90,
-            child: IgnorePointer(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
-                      Colors.transparent,
-                    ],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // Right Fade Gradient Mask
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: 90,
-            child: IgnorePointer(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.transparent,
-                      isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
-                    ],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                ),
-              ),
-            ),
+          const SizedBox(height: 10),
+          // Line 2: Moving Right (Opposite Direction)
+          _buildMarqueeTrack(
+            text: _track2Text,
+            moveLeft: false,
+            isDark: isDark,
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
           ),
         ],
       ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/locale_provider.dart';
+import '../widgets/cookie_consent_banner.dart';
+import '../theme/app_theme.dart';
 
 class PrivacyPolicyScreen extends ConsumerWidget {
   const PrivacyPolicyScreen({super.key});
@@ -14,17 +16,17 @@ class PrivacyPolicyScreen extends ConsumerWidget {
     final currentLanguage = ref.watch(localeProvider);
     final isHindi = currentLanguage == AppLanguage.hindi;
 
-    final bgColor = isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE);
-    final cardColor = isDark ? const Color(0xFF1B2F48) : const Color(0xFFF7F1D0);
-    final primaryTextColor = isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78);
-    final secondaryTextColor = isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A);
-    final borderColor = isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0);
-    const accentGold = Color(0xFFC5A85E);
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final cardColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final primaryTextColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryTextColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final accentColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+        backgroundColor: bgColor,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: primaryTextColor),
@@ -37,10 +39,10 @@ class PrivacyPolicyScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: accentGold.withValues(alpha: 0.15),
+                color: accentColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.shield_outlined, color: accentGold, size: 18),
+              child: Icon(Icons.shield_outlined, color: accentColor, size: 18),
             ),
             const SizedBox(width: 8),
             Text(
@@ -74,9 +76,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: accentGold.withValues(alpha: 0.15),
+                    color: accentColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: accentGold.withValues(alpha: 0.3)),
+                    border: Border.all(color: accentColor.withValues(alpha: 0.3)),
                   ),
                   child: Text(
                     isHindi ? 'कानूनी दस्तावेज' : 'LEGAL & PRIVACY',
@@ -84,7 +86,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.8,
-                      color: accentGold,
+                      color: accentColor,
                     ),
                   ),
                 ),
@@ -108,7 +110,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                   style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: accentGold,
+                    color: accentColor,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -124,7 +126,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.privacy_tip_outlined, color: accentGold, size: 22),
+                      Icon(Icons.privacy_tip_outlined, color: accentColor, size: 22),
                       const SizedBox(width: 14),
                       Expanded(
                         child: Column(
@@ -165,6 +167,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       'Welcome to LawBuddy ("we", "our", or "us"). LawBuddy is an Indian property and legal technology assistant designed to assist users in analyzing property agreements, understanding clause-level risks, reviewing RERA and statutory citations, estimating stamp duty, and tracking due diligence checklists.\n\nThis Privacy Policy explains what information is collected, how it is stored and processed, how AI and OCR technologies are utilized, and what controls you have over your data.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
@@ -182,6 +185,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       '• User Preferences: UI theme preference (Light/Dark) and language preference (English/Hindi).',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
@@ -197,6 +201,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       '• To store and maintain your saved document history and transaction due diligence checklists.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
@@ -213,6 +218,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       'Uploaded documents are processed in their submitted form to perform legal risk analysis. Document records and analysis results are associated with your authenticated account in our database.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
@@ -226,6 +232,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       '• Vision Fallback: For scanned documents, photographs, or PDFs where on-device text recognition is not utilized, document image data is transmitted to the Gemini API for multimodal vision extraction.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
@@ -239,6 +246,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       'However, no method of electronic transmission or digital storage is 100% secure. While we strive to protect your data, we cannot guarantee absolute security.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
@@ -252,6 +260,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       '• SMTP Email Service: For sending email verification codes where configured.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
@@ -264,6 +273,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       '• Account Removal: For full account deletion or assistance, please contact the administrator via the contact information below.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
@@ -277,38 +287,97 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       '• For data inquiries or account deletion requests, you may reach out using the contact details provided in this policy.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
                   number: '10',
+                  title: isHindi ? 'ब्राउज़र संग्रहण और प्राथमिकताएं (Device Storage & Preferences)' : 'Device Storage, Preferences & Cookies',
+                  content:
+                      'LawBuddy utilizes local storage mechanisms on your device (via SharedPreferences, which maps securely to browser storage on Flutter Web) to ensure essential operation:\n\n'
+                      '• Strictly Necessary Session Data: Authentication information is stored locally to maintain your signed-in session and authorize document analysis requests. This data is essential for account security.\n'
+                      '• Functional Preferences: Your theme preference (Light or Dark mode) and language selection (English or Hindi) may be retained locally so your interface choices persist between visits.\n'
+                      '• No Tracking or Marketing Trackers: LawBuddy currently does not use advertising cookies, marketing pixels, cross-site trackers, or behavioral analytics beacons.\n'
+                      '• Privacy & Storage Controls: You can view or adjust your functional storage preference at any time directly within the application.',
+                  primaryColor: primaryTextColor,
+                  secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
+                ),
+
+                // Interactive Manage Storage Preferences Banner
+                Container(
+                  margin: const EdgeInsets.only(left: 40, bottom: 28),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: borderColor),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.tune_rounded, size: 18, color: accentColor),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          isHindi ? 'अपनी संग्रहण प्राथमिकताएं अनुकूलित करें' : 'Manage your local storage and cookie preferences',
+                          style: GoogleFonts.inter(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                            color: primaryTextColor,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      OutlinedButton(
+                        onPressed: () => showPrivacyPreferencesDialog(context),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: primaryTextColor,
+                          side: BorderSide(color: borderColor),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        child: Text(
+                          isHindi ? 'प्राथमिकताएं प्रबंधित करें' : 'Manage Preferences',
+                          style: GoogleFonts.inter(fontSize: 11.5, fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                _buildPolicySection(
+                  number: '11',
                   title: isHindi ? "बच्चों की गोपनीयता (Children's Privacy)" : "Children's Privacy",
                   content:
                       'LawBuddy is designed for adult individuals, property buyers, tenants, and property owners managing real estate agreements. We do not intentionally or knowingly collect personal data from individuals under 18 years of age.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
-                  number: '11',
+                  number: '12',
                   title: isHindi ? 'कानूनी अस्वीकरण (Legal Disclaimer)' : 'Legal Disclaimer & Non-Advocate Notice',
                   content:
                       'IMPORTANT NOTICE: LawBuddy provides automated document analysis and legal information for preliminary awareness and informational purposes only. LawBuddy is NOT a law firm and does NOT provide formal legal advice, legal representation, or advocate-client privileged counsel.\n\n'
                       'Property laws, municipal regulations, and stamp duty rates vary across Indian states and may change over time. For formal property conveyance, title searches, litigation, registration, or execution of high-value contracts, users must consult a licensed advocate or qualified legal professional.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
-                  number: '12',
+                  number: '13',
                   title: isHindi ? 'गोपनीयता नीति में परिवर्तन (Changes to This Privacy Policy)' : 'Changes to This Privacy Policy',
                   content:
                       'We may update this Privacy Policy from time to time to reflect changes in our implementation, technology stack, or statutory requirements. When updates occur, the "Last Updated" date at the top of this policy will be revised.',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 _buildPolicySection(
-                  number: '13',
+                  number: '14',
                   title: isHindi ? 'संपर्क करें (Contact Us)' : 'Contact Us',
                   content:
                       'If you have questions, feedback, or data requests regarding this Privacy Policy, please contact:\n\n'
@@ -317,10 +386,11 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       '• Project Jurisdiction: India',
                   primaryColor: primaryTextColor,
                   secondaryColor: secondaryTextColor,
+                  accentColor: accentColor,
                 ),
 
                 const SizedBox(height: 24),
-                const Divider(),
+                Divider(color: borderColor),
                 const SizedBox(height: 20),
 
                 // Back Action
@@ -355,9 +425,10 @@ class PrivacyPolicyScreen extends ConsumerWidget {
     required String content,
     required Color primaryColor,
     required Color secondaryColor,
+    required Color accentColor,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 28),
+      padding: const EdgeInsets.only(bottom: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -365,29 +436,28 @@ class PrivacyPolicyScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                width: 26,
-                height: 26,
-                alignment: Alignment.center,
+                width: 28,
+                height: 28,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFC5A85E).withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFFC5A85E).withValues(alpha: 0.4)),
+                  color: accentColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                alignment: Alignment.center,
                 child: Text(
                   number,
                   style: GoogleFonts.inter(
-                    fontSize: 12,
+                    fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFFC5A85E),
+                    color: accentColor,
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
                   title,
                   style: GoogleFonts.inter(
-                    fontSize: 17,
+                    fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: primaryColor,
                   ),
@@ -395,14 +465,14 @@ class PrivacyPolicyScreen extends ConsumerWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Padding(
-            padding: const EdgeInsets.only(left: 36),
+            padding: const EdgeInsets.only(left: 40),
             child: Text(
               content,
               style: GoogleFonts.inter(
                 fontSize: 13.5,
-                height: 1.6,
+                height: 1.55,
                 color: secondaryColor,
               ),
             ),

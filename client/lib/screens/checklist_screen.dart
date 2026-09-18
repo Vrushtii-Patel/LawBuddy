@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
 import '../services/api_service.dart';
 import '../widgets/user_profile_button.dart';
+import '../theme/app_theme.dart';
 
 class ChecklistScreen extends ConsumerStatefulWidget {
   final String type;
@@ -57,6 +58,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
 
     final item = items[index];
     final String itemId = (item['id'] ?? item['_id'] ?? '').toString();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Optimistic UI update
     setState(() {
@@ -74,7 +76,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to update: $e'),
-            backgroundColor: const Color(0xFFEF4444),
+            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -96,91 +98,93 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
       builder: (ctx) {
         final isDark = Theme.of(ctx).brightness == Brightness.dark;
         return AlertDialog(
-          backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
+          backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text(tr('checklists.deleteItem')),
-          content: Text('${tr('checklists.deleteItemConfirm')}\n\n"$itemTitle"'),
+          title: Text(tr('checklists.deleteTaskTitle'), style: const TextStyle(fontWeight: FontWeight.w700)),
+          content: Text(tr('checklists.deleteTaskConfirm', {'task': itemTitle})),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: Text(tr('common.cancel')),
+              child: Text(tr('checklists.cancel')),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEF4444),
+                backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               onPressed: () => Navigator.pop(ctx, true),
-              child: Text(tr('common.delete')),
+              child: Text(tr('checklists.delete')),
             ),
           ],
         );
       },
     );
 
-    if (confirm != true) return;
-
-    // Optimistic deletion
-    final removedItem = items.removeAt(index);
-    setState(() {});
-
-    try {
-      await ApiService.deleteChecklistItem(widget.type, itemId);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(tr('checklists.itemDeleted')),
-            backgroundColor: const Color(0xFF10B981),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
+    if (confirm == true) {
+      if (!mounted) return;
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      try {
+        await ApiService.deleteChecklistItem(widget.type, itemId);
+        if (!mounted) return;
         setState(() {
-          items.insert(index, removedItem);
+          items.removeAt(index);
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete item: $e'),
-            backgroundColor: const Color(0xFFEF4444),
+            content: Text(tr('checklists.taskDeletedSuccess')),
+            backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
             behavior: SnackBarBehavior.floating,
           ),
         );
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(tr('checklists.failedToDelete', {'error': e.toString()})),
+              backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       }
     }
   }
 
   void _showAddItemDialog() {
+    final titleController = TextEditingController();
     final tr = ref.read(localeProvider.notifier).translate;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final TextEditingController controller = TextEditingController();
-    bool isAdding = false;
+    final messenger = ScaffoldMessenger.of(context);
+    final isDarkOuter = Theme.of(context).brightness == Brightness.dark;
+    bool isSubmitting = false;
 
     showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (dialogCtx) {
         return StatefulBuilder(
-          builder: (context, setDialogState) {
+          builder: (builderCtx, setDialogState) {
+            final isDark = Theme.of(builderCtx).brightness == Brightness.dark;
+            final colorScheme = Theme.of(builderCtx).colorScheme;
+
             return AlertDialog(
-              backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              ),
               title: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2563EB).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(8),
+                      color: AppColors.lightPrimary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.add_task_rounded, color: Color(0xFF2563EB), size: 20),
+                    child: const Icon(Icons.add_task_rounded, color: AppColors.lightPrimary, size: 20),
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    tr('checklists.addNewItem'),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    tr('checklists.addNewTask'),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
@@ -189,103 +193,103 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    tr('checklists.enterTitle'),
+                    tr('checklists.taskDescription'),
                     style: TextStyle(
                       fontSize: 13,
-                      color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 8),
                   TextField(
-                    controller: controller,
+                    controller: titleController,
                     autofocus: true,
-                    enabled: !isAdding,
+                    maxLines: 2,
+                    style: TextStyle(fontSize: 14, color: colorScheme.onSurface),
                     decoration: InputDecoration(
-                      hintText: tr('checklists.verifyTitleDeed'),
+                      hintText: tr('checklists.taskHint'),
                       filled: true,
-                      fillColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+                      fillColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-                        ),
+                        borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(
-                          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-                        ),
+                        borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF2563EB), width: 1.5),
+                        borderSide: const BorderSide(color: AppColors.lightPrimary, width: 1.5),
                       ),
                     ),
-                    onSubmitted: (_) async {
-                      if (controller.text.trim().isEmpty) return;
-                      setDialogState(() => isAdding = true);
-                      try {
-                        await ApiService.addChecklistItem(widget.type, controller.text.trim());
-                        if (dialogCtx.mounted) {
-                          Navigator.pop(dialogCtx);
-                          _loadChecklist();
-                        }
-                      } catch (e) {
-                        setDialogState(() => isAdding = false);
-                      }
-                    },
                   ),
-                  if (isAdding)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 18),
-                      child: Center(
-                        child: SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2.5, color: Color(0xFF2563EB)),
-                        ),
-                      ),
-                    ),
                 ],
               ),
               actions: [
-                if (!isAdding)
-                  TextButton(
-                    onPressed: () => Navigator.pop(dialogCtx),
-                    child: Text(tr('common.cancel')),
+                TextButton(
+                  onPressed: isSubmitting ? null : () => Navigator.pop(dialogCtx),
+                  child: Text(
+                    tr('checklists.cancel'),
+                    style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                   ),
-                if (!isAdding)
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF2563EB),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                    ),
-                    onPressed: () async {
-                      if (controller.text.trim().isEmpty) return;
-                      setDialogState(() => isAdding = true);
-                      try {
-                        await ApiService.addChecklistItem(widget.type, controller.text.trim());
-                        if (dialogCtx.mounted) {
-                          Navigator.pop(dialogCtx);
-                          _loadChecklist();
-                        }
-                      } catch (e) {
-                        setDialogState(() => isAdding = false);
-                        if (dialogCtx.mounted) {
-                          ScaffoldMessenger.of(dialogCtx).showSnackBar(
-                            SnackBar(
-                              content: Text('Error: $e'),
-                              backgroundColor: const Color(0xFFEF4444),
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    child: Text(tr('common.add')),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
+                  onPressed: isSubmitting
+                      ? null
+                      : () async {
+                          final text = titleController.text.trim();
+                          if (text.isEmpty) return;
+
+                          setDialogState(() => isSubmitting = true);
+
+                          try {
+                            final newItem = await ApiService.addChecklistItem(widget.type, text);
+                            if (dialogCtx.mounted) {
+                              Navigator.pop(dialogCtx);
+                            }
+                            if (mounted) {
+                              setState(() {
+                                final items = _checklistData?['items'] as List<dynamic>? ?? [];
+                                items.add(newItem);
+                              });
+                              messenger.showSnackBar(
+                                SnackBar(
+                                  content: Text(tr('checklists.taskAddedSuccess')),
+                                  backgroundColor: isDarkOuter ? AppColors.darkSecondary : AppColors.lightSecondary,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            if (dialogCtx.mounted) {
+                              setDialogState(() => isSubmitting = false);
+                            }
+                            if (mounted) {
+                              messenger.showSnackBar(
+                                SnackBar(
+                                  content: Text(tr('checklists.failedToAdd', {'error': e.toString()})),
+                                  backgroundColor: isDarkOuter ? AppColors.darkError : AppColors.lightError,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : Text(tr('checklists.addTaskAction')),
+                ),
               ],
             );
           },
@@ -296,135 +300,136 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
 
   void _showRenameDialog() {
     final tr = ref.read(localeProvider.notifier).translate;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final currentTitle = (_checklistData?['title'] ?? widget.initialTitle ?? 'Property Checklist').toString();
+    final currentTitle = _checklistData?['title'] ?? widget.initialTitle ?? '';
     final controller = TextEditingController(text: currentTitle);
-    bool isSaving = false;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showDialog(
       context: context,
-      builder: (dialogCtx) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              title: Text(tr('checklists.renameChecklist')),
-              content: TextField(
-                controller: controller,
-                autofocus: true,
-                enabled: !isSaving,
-                decoration: InputDecoration(
-                  hintText: tr('checklists.enterNewName'),
-                  filled: true,
-                  fillColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                ),
+      builder: (ctx) {
+        return AlertDialog(
+          backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(tr('checklists.renameChecklistTitle'), style: const TextStyle(fontWeight: FontWeight.w700)),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            decoration: InputDecoration(
+              hintText: tr('checklists.newTitleHint'),
+              filled: true,
+              fillColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(tr('checklists.cancel')),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.lightPrimary,
+                foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
               ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogCtx),
-                  child: Text(tr('common.cancel')),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                  onPressed: isSaving
-                      ? null
-                      : () async {
-                          final newTitle = controller.text.trim();
-                          if (newTitle.isEmpty) return;
-                          setDialogState(() => isSaving = true);
-                          try {
-                            await ApiService.renameChecklist(widget.type, newTitle);
-                            if (mounted) {
-                              setState(() {
-                                if (_checklistData != null) {
-                                  _checklistData!['title'] = newTitle;
-                                }
-                              });
-                            }
-                            if (dialogCtx.mounted) {
-                              Navigator.pop(dialogCtx);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(tr('checklists.renamedSuccess')),
-                                  backgroundColor: const Color(0xFF10B981),
-                                  behavior: SnackBarBehavior.floating,
-                                ),
-                              );
-                            }
-                          } catch (e) {
-                            setDialogState(() => isSaving = false);
-                          }
-                        },
-                  child: Text(tr('recentDocs.save')),
-                ),
-              ],
-            );
-          },
+              onPressed: () async {
+                final newTitle = controller.text.trim();
+                if (newTitle.isNotEmpty && newTitle != currentTitle) {
+                  try {
+                    await ApiService.renameChecklist(widget.type, newTitle);
+                    if (ctx.mounted) {
+                      Navigator.pop(ctx);
+                    }
+                    if (mounted) {
+                      setState(() {
+                        if (_checklistData != null) {
+                          _checklistData!['title'] = newTitle;
+                        }
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(tr('checklists.renameSuccess')),
+                          backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(tr('checklists.renameFailed', {'error': e.toString()})),
+                          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+                          behavior: SnackBarBehavior.floating,
+                        ),
+                      );
+                    }
+                  }
+                } else {
+                  Navigator.pop(ctx);
+                }
+              },
+              child: Text(tr('checklists.saveAction')),
+            ),
+          ],
         );
       },
     );
   }
 
-  Future<void> _deleteEntireChecklist() async {
+  void _confirmDeleteChecklist() async {
     final tr = ref.read(localeProvider.notifier).translate;
+    final currentTitle = _checklistData?['title'] ?? widget.initialTitle ?? tr('checklists.untitledChecklist');
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
+          backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text(tr('checklists.deleteChecklist')),
-          content: Text(tr('checklists.deleteConfirm')),
+          title: Text(tr('checklists.deleteChecklistTitle'), style: const TextStyle(fontWeight: FontWeight.w700)),
+          content: Text(tr('checklists.deleteChecklistConfirm', {'title': currentTitle})),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: Text(tr('common.cancel')),
+              child: Text(tr('checklists.cancel')),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEF4444),
+                backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               onPressed: () => Navigator.pop(ctx, true),
-              child: Text(tr('common.delete')),
+              child: Text(tr('checklists.deleteAction')),
             ),
           ],
         );
       },
     );
 
-    if (confirm != true) return;
-
-    try {
-      await ApiService.deleteChecklist(widget.type);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(tr('checklists.deletedSuccess')),
-            backgroundColor: const Color(0xFF10B981),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        Navigator.pop(context, true);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to delete checklist: $e'),
-            backgroundColor: const Color(0xFFEF4444),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+    if (confirm == true) {
+      try {
+        await ApiService.deleteChecklist(widget.type);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(tr('checklists.checklistDeletedSuccess')),
+              backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          Navigator.pop(context, true); // Pop back to list screen
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(tr('checklists.failedToDelete', {'error': e.toString()})),
+              backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       }
     }
   }
@@ -436,115 +441,122 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final colorScheme = Theme.of(context).colorScheme;
 
-    final title = _checklistData?['title'] ?? widget.initialTitle ?? tr('checklists.title');
-    final allItems = (_checklistData?['items'] as List<dynamic>?) ?? [];
-    final totalCount = allItems.length;
-    final completedCount = allItems.where((i) => i['isCompleted'] == true).length;
+    final rawTitle = _checklistData?['title'] ?? widget.initialTitle;
+    final title = (rawTitle != null && rawTitle.toString().startsWith('checklists.'))
+        ? tr(rawTitle.toString())
+        : (rawTitle ?? tr('checklists.defaultTitle'));
+
+    final items = _checklistData?['items'] as List<dynamic>? ?? [];
+
+    // Filter items
+    final filteredItems = items.asMap().entries.where((entry) {
+      final item = entry.value;
+      final isComp = item['isCompleted'] == true;
+      if (_selectedFilter == 'Pending') return !isComp;
+      if (_selectedFilter == 'Completed') return isComp;
+      return true;
+    }).map((entry) {
+      final item = Map<String, dynamic>.from(entry.value);
+      item['_originalIndex'] = entry.key;
+      return item;
+    }).toList();
+
+    final totalCount = items.length;
+    final completedCount = items.where((i) => i['isCompleted'] == true).length;
     final pendingCount = totalCount - completedCount;
     final progressRatio = totalCount > 0 ? (completedCount / totalCount) : 0.0;
 
-    // Filter items based on selected tab
-    final filteredItems = <Map<String, dynamic>>[];
-    for (int i = 0; i < allItems.length; i++) {
-      final item = allItems[i] as Map<String, dynamic>;
-      final isComp = item['isCompleted'] == true;
-      if (_selectedFilter == 'Pending' && isComp) continue;
-      if (_selectedFilter == 'Completed' && !isComp) continue;
-      filteredItems.add({...item, '_originalIndex': i});
-    }
-
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
+        backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () => Navigator.maybePop(context),
+          icon: Icon(Icons.arrow_back_rounded, color: colorScheme.onSurface),
+          onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           title,
-          style: const TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.3),
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: colorScheme.onSurface,
+          ),
         ),
         actions: [
           PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert_rounded),
+            icon: Icon(Icons.more_vert_rounded, color: colorScheme.onSurface),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             onSelected: (val) {
-              if (val == 'rename') {
-                _showRenameDialog();
-              } else if (val == 'delete') {
-                _deleteEntireChecklist();
-              }
+              if (val == 'rename') _showRenameDialog();
+              if (val == 'delete') _confirmDeleteChecklist();
             },
             itemBuilder: (ctx) => [
               PopupMenuItem(
                 value: 'rename',
                 child: Row(
                   children: [
-                    const Icon(Icons.edit_outlined, size: 18, color: Color(0xFF2563EB)),
-                    const SizedBox(width: 10),
-                    Text(tr('checklists.renameChecklist'), style: const TextStyle(fontSize: 13)),
+                    const Icon(Icons.edit_outlined, size: 18, color: AppColors.lightPrimary),
+                    const SizedBox(width: 8),
+                    Text(tr('checklists.renameChecklist'), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
-              const PopupMenuDivider(),
               PopupMenuItem(
                 value: 'delete',
                 child: Row(
                   children: [
-                    const Icon(Icons.delete_outline_rounded, size: 18, color: Color(0xFFEF4444)),
-                    const SizedBox(width: 10),
-                    Text(tr('checklists.deleteChecklist'), style: const TextStyle(fontSize: 13, color: Color(0xFFEF4444))),
+                    Icon(Icons.delete_outline_rounded, size: 18, color: isDark ? AppColors.darkError : AppColors.lightError),
+                    const SizedBox(width: 8),
+                    Text(tr('checklists.deleteChecklist'), style: TextStyle(fontSize: 13, color: isDark ? AppColors.darkError : AppColors.lightError)),
                   ],
                 ),
               ),
             ],
           ),
+          const SizedBox(width: 4),
           const UserProfileButton(),
           const SizedBox(width: 12),
         ],
       ),
-      floatingActionButton: _checklistData != null && !_isLoading
-          ? FloatingActionButton.extended(
-              onPressed: _showAddItemDialog,
-              backgroundColor: const Color(0xFF2563EB),
-              foregroundColor: Colors.white,
-              elevation: 3,
-              icon: const Icon(Icons.add_task_rounded, size: 20),
-              label: Text(
-                tr('checklists.addItem'),
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-            )
-          : null,
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAddItemDialog,
+        backgroundColor: AppColors.lightPrimary,
+        foregroundColor: Colors.white,
+        tooltip: tr('checklists.addNewTask'),
+        elevation: 0,
+        child: const Icon(Icons.add_rounded, size: 24),
+      ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFF2563EB)))
+          ? const Center(child: CircularProgressIndicator(color: AppColors.lightPrimary))
           : _error != null
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline_rounded, size: 48, color: Color(0xFFEF4444)),
+                      Icon(Icons.error_outline_rounded, size: 48, color: isDark ? AppColors.darkError : AppColors.lightError),
                       const SizedBox(height: 12),
-                      Text(_error!, style: const TextStyle(color: Color(0xFFEF4444))),
+                      Text(_error!, style: TextStyle(color: isDark ? AppColors.darkError : AppColors.lightError)),
                       const SizedBox(height: 16),
-                      ElevatedButton.icon(
+                      ElevatedButton(
                         onPressed: _loadChecklist,
-                        icon: const Icon(Icons.refresh_rounded),
-                        label: Text(tr('common.retry')),
+                        child: Text(tr('checklists.retryAction')),
                       ),
                     ],
                   ),
                 )
-              : Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 860),
-                    child: ListView(
-                      padding: const EdgeInsets.fromLTRB(18, 14, 18, 96),
+              : SafeArea(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Progress Summary Card
+                        // Progress Card
                         _buildProgressCard(tr, isDark, colorScheme, completedCount, totalCount, progressRatio),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 20),
 
-                        // Filter Segment
+                        // Filters row
                         _buildFilterRow(tr, isDark, totalCount, pendingCount, completedCount),
                         const SizedBox(height: 16),
 
@@ -554,10 +566,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                             padding: const EdgeInsets.all(32),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                              color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                               ),
                             ),
                             child: Column(
@@ -566,7 +578,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                                 Icon(
                                   _selectedFilter == 'Completed' ? Icons.check_circle_outline_rounded : Icons.task_alt_rounded,
                                   size: 40,
-                                  color: const Color(0xFF10B981),
+                                  color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
                                 ),
                                 const SizedBox(height: 12),
                                 Text(
@@ -593,47 +605,45 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                             return Container(
                               margin: const EdgeInsets.only(bottom: 10),
                               decoration: BoxDecoration(
-                                color: isDark ? const Color(0xFF1E293B) : Colors.white,
+                                color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                                 borderRadius: BorderRadius.circular(14),
                                 border: Border.all(
                                   color: isComp
-                                      ? const Color(0xFF10B981).withValues(alpha: isDark ? 0.35 : 0.25)
-                                      : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
-                                  width: isComp ? 1.2 : 1.0,
+                                      ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: isDark ? 0.4 : 0.3)
+                                      : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                  width: 1.0,
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.02),
-                                    blurRadius: 6,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
                               ),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-                                leading: Checkbox(
-                                  value: isComp,
-                                  activeColor: const Color(0xFF10B981),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                  onChanged: (val) => _toggleItem(origIndex, val),
-                                ),
-                                title: Text(
-                                  itemTitle,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: isComp ? FontWeight.w500 : FontWeight.w600,
-                                    decoration: isComp ? TextDecoration.lineThrough : null,
-                                    color: isComp
-                                        ? (isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8))
-                                        : colorScheme.onSurface,
+                              child: Material(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(14),
+                                clipBehavior: Clip.antiAlias,
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                                  leading: Checkbox(
+                                    value: isComp,
+                                    activeColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                    onChanged: (val) => _toggleItem(origIndex, val),
                                   ),
-                                ),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.delete_outline_rounded, size: 18),
-                                  color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
-                                  hoverColor: const Color(0xFFEF4444).withValues(alpha: 0.1),
-                                  tooltip: tr('checklists.deleteItem'),
-                                  onPressed: () => _deleteItem(origIndex),
+                                  title: Text(
+                                    itemTitle,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: isComp ? FontWeight.w500 : FontWeight.w600,
+                                      decoration: isComp ? TextDecoration.lineThrough : null,
+                                      color: isComp
+                                          ? (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)
+                                          : colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                    hoverColor: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.1),
+                                    tooltip: tr('checklists.deleteItem'),
+                                    onPressed: () => _deleteItem(origIndex),
+                                  ),
                                 ),
                               ),
                             );
@@ -658,16 +668,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? [const Color(0xFF1E293B), const Color(0xFF172554)]
-              : [const Color(0xFFF0FDF4), const Color(0xFFEFF6FF)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFF2563EB).withValues(alpha: isDark ? 0.35 : 0.2),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
       ),
       child: Column(
@@ -681,10 +685,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                      color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.task_alt_rounded, color: Color(0xFF10B981), size: 18),
+                    child: Icon(Icons.task_alt_rounded, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary, size: 18),
                   ),
                   const SizedBox(width: 10),
                   Text(
@@ -696,7 +700,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: (percent == 100 ? const Color(0xFF10B981) : const Color(0xFF2563EB)).withValues(alpha: 0.15),
+                  color: (percent == 100
+                          ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
+                          : AppColors.lightPrimary)
+                      .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -704,7 +711,9 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: percent == 100 ? const Color(0xFF10B981) : const Color(0xFF2563EB),
+                    color: percent == 100
+                        ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
+                        : (isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary),
                   ),
                 ),
               ),
@@ -716,9 +725,11 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
             child: LinearProgressIndicator(
               value: ratio,
               minHeight: 8,
-              backgroundColor: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+              backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
               valueColor: AlwaysStoppedAnimation<Color>(
-                percent == 100 ? const Color(0xFF10B981) : const Color(0xFF2563EB),
+                percent == 100
+                    ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
+                    : AppColors.lightPrimary,
               ),
             ),
           ),
@@ -728,7 +739,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
             ),
           ),
         ],
@@ -750,16 +761,18 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
         children: [
           _buildChip('All', '${tr('checklists.filterAll')} ($total)', isDark),
           const SizedBox(width: 8),
-          _buildChip('Pending', '${tr('checklists.filterPending')} ($pending)', isDark, color: const Color(0xFFF59E0B)),
+          _buildChip('Pending', '${tr('checklists.filterPending')} ($pending)', isDark, color: isDark ? AppColors.darkCaution : AppColors.lightCaution),
           const SizedBox(width: 8),
-          _buildChip('Completed', '${tr('checklists.filterCompleted')} ($completed)', isDark, color: const Color(0xFF10B981)),
+          _buildChip('Completed', '${tr('checklists.filterCompleted')} ($completed)', isDark, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
         ],
       ),
     );
   }
 
-  Widget _buildChip(String key, String label, bool isDark, {Color color = const Color(0xFF2563EB)}) {
+  Widget _buildChip(String key, String label, bool isDark, {Color? color}) {
     final isSelected = _selectedFilter == key;
+    final effectiveColor = color ?? AppColors.lightPrimary;
+
     return InkWell(
       onTap: () => setState(() => _selectedFilter = key),
       borderRadius: BorderRadius.circular(20),
@@ -767,11 +780,11 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
           color: isSelected
-              ? color.withValues(alpha: isDark ? 0.25 : 0.15)
-              : (isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9)),
+              ? effectiveColor.withValues(alpha: isDark ? 0.25 : 0.12)
+              : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? color : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+            color: isSelected ? effectiveColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
             width: isSelected ? 1.4 : 1.0,
           ),
         ),
@@ -780,7 +793,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
           style: TextStyle(
             fontSize: 12,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? color : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B)),
+            color: isSelected ? effectiveColor : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
           ),
         ),
       ),

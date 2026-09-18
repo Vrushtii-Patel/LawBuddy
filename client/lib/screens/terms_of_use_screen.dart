@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/locale_provider.dart';
+import '../theme/app_theme.dart';
 
 class TermsOfUseScreen extends ConsumerWidget {
   const TermsOfUseScreen({super.key});
@@ -14,17 +15,17 @@ class TermsOfUseScreen extends ConsumerWidget {
     final currentLanguage = ref.watch(localeProvider);
     final isHindi = currentLanguage == AppLanguage.hindi;
 
-    final bgColor = isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE);
-    final cardColor = isDark ? const Color(0xFF1B2F48) : const Color(0xFFF7F1D0);
-    final primaryTextColor = isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78);
-    final secondaryTextColor = isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A);
-    final borderColor = isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0);
-    const accentGold = Color(0xFFC5A85E);
+    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final cardColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final primaryTextColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryTextColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final accentColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+        backgroundColor: bgColor,
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: primaryTextColor),
@@ -37,10 +38,10 @@ class TermsOfUseScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: accentGold.withValues(alpha: 0.15),
+                color: accentColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.description_outlined, color: accentGold, size: 18),
+              child: Icon(Icons.description_outlined, color: accentColor, size: 18),
             ),
             const SizedBox(width: 8),
             Text(
@@ -74,9 +75,9 @@ class TermsOfUseScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: accentGold.withValues(alpha: 0.15),
+                    color: accentColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: accentGold.withValues(alpha: 0.3)),
+                    border: Border.all(color: accentColor.withValues(alpha: 0.3)),
                   ),
                   child: Text(
                     isHindi ? 'उपयोग की शर्तें' : 'TERMS OF SERVICE',
@@ -84,7 +85,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.8,
-                      color: accentGold,
+                      color: accentColor,
                     ),
                   ),
                 ),
@@ -108,7 +109,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                   style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: accentGold,
+                    color: accentColor,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -117,14 +118,14 @@ class TermsOfUseScreen extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: accentGold.withValues(alpha: 0.12),
+                    color: accentColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: accentGold.withValues(alpha: 0.4)),
+                    border: Border.all(color: accentColor.withValues(alpha: 0.4)),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.gavel_rounded, color: accentGold, size: 22),
+                      Icon(Icons.gavel_rounded, color: accentColor, size: 22),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -169,6 +170,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                   primaryTextColor: primaryTextColor,
                   secondaryTextColor: secondaryTextColor,
                   borderColor: borderColor,
+                  accentColor: accentColor,
                 ),
                 _buildSection(
                   number: '2',
@@ -181,6 +183,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                   primaryTextColor: primaryTextColor,
                   secondaryTextColor: secondaryTextColor,
                   borderColor: borderColor,
+                  accentColor: accentColor,
                 ),
                 _buildSection(
                   number: '3',
@@ -193,6 +196,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                   primaryTextColor: primaryTextColor,
                   secondaryTextColor: secondaryTextColor,
                   borderColor: borderColor,
+                  accentColor: accentColor,
                 ),
                 _buildSection(
                   number: '4',
@@ -205,6 +209,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                   primaryTextColor: primaryTextColor,
                   secondaryTextColor: secondaryTextColor,
                   borderColor: borderColor,
+                  accentColor: accentColor,
                 ),
                 _buildSection(
                   number: '5',
@@ -217,6 +222,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                   primaryTextColor: primaryTextColor,
                   secondaryTextColor: secondaryTextColor,
                   borderColor: borderColor,
+                  accentColor: accentColor,
                 ),
                 _buildSection(
                   number: '6',
@@ -229,6 +235,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                   primaryTextColor: primaryTextColor,
                   secondaryTextColor: secondaryTextColor,
                   borderColor: borderColor,
+                  accentColor: accentColor,
                 ),
                 const SizedBox(height: 40),
 
@@ -267,6 +274,7 @@ class TermsOfUseScreen extends ConsumerWidget {
     required Color primaryTextColor,
     required Color secondaryTextColor,
     required Color borderColor,
+    required Color accentColor,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -285,7 +293,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                 width: 28,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFC5A85E).withValues(alpha: 0.2),
+                  color: accentColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 alignment: Alignment.center,
@@ -294,7 +302,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                   style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFFC5A85E),
+                    color: accentColor,
                   ),
                 ),
               ),

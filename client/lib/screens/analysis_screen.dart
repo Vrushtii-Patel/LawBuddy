@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../providers/locale_provider.dart';
 import '../services/api_service.dart';
 import '../services/pdf_export_service.dart';
+import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
 
 class AnalysisScreen extends ConsumerStatefulWidget {
@@ -53,13 +54,19 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     switch (category.toLowerCase().trim()) {
       case 'green':
-        return isDark ? Colors.green.withValues(alpha: 0.15) : const Color(0xFFECFDF5);
+      case 'compliant':
+      case 'low':
+        return (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: isDark ? 0.15 : 0.08);
       case 'yellow':
-        return isDark ? Colors.orange.withValues(alpha: 0.15) : const Color(0xFFFFFBEB);
+      case 'caution':
+      case 'medium':
+        return (isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: isDark ? 0.15 : 0.08);
       case 'red':
-        return isDark ? Colors.red.withValues(alpha: 0.15) : const Color(0xFFFEF2F2);
+      case 'high':
+      case 'high_risk':
+        return isDark ? AppColors.darkSurface : AppColors.lightError.withValues(alpha: 0.08);
       default:
-        return isDark ? Colors.grey.withValues(alpha: 0.15) : const Color(0xFFF1F5F9);
+        return isDark ? AppColors.darkSurface : AppColors.lightSurface;
     }
   }
 
@@ -67,18 +74,25 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     switch (category.toLowerCase().trim()) {
       case 'green':
-        return isDark ? const Color(0xFF4ADE80) : const Color(0xFF16A34A);
+      case 'compliant':
+      case 'low':
+        return isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
       case 'yellow':
-        return isDark ? const Color(0xFFFBBF24) : const Color(0xFFD97706);
+      case 'caution':
+      case 'medium':
+        return isDark ? AppColors.darkCaution : AppColors.lightCaution;
       case 'red':
-        return isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626);
+      case 'high':
+      case 'high_risk':
+        return isDark ? AppColors.darkError : AppColors.lightError;
       default:
-        return isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
+        return isDark ? AppColors.darkBorder : AppColors.lightBorder;
     }
   }
 
   Future<void> _exportPdf() async {
     final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     setState(() => _isExportingPdf = true);
     try {
       final docTitle = widget.documentTitle ??
@@ -102,7 +116,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
               Expanded(child: Text(tr('analysis.pdfSuccess'))),
             ],
           ),
-          backgroundColor: const Color(0xFF16A34A),
+          backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
@@ -112,7 +126,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(tr('analysis.pdfFailed', {'error': '$e'})),
-          backgroundColor: Colors.redAccent,
+          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -142,14 +156,16 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
 
   void _showExplanationModal(String snippet, String explanation) {
     final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        final isDark = Theme.of(context).brightness == Brightness.dark;
         return Padding(
           padding: EdgeInsets.only(
             left: 24,
@@ -166,10 +182,10 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1E293B) : const Color(0xFFEFF6FF),
+                      color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.auto_awesome, color: Color(0xFF3B82F6), size: 22),
+                    child: Icon(Icons.auto_awesome, color: isDark ? AppColors.darkAccent : AppColors.lightAccent, size: 22),
                   ),
                   const SizedBox(width: 12),
                   Text(
@@ -177,7 +193,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSurface,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                   ),
                 ],
@@ -187,10 +203,10 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+                  color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Text(
@@ -198,7 +214,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                     fontSize: 13,
-                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF475569),
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
                 ),
               ),
@@ -208,21 +224,23 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                 style: TextStyle(
                   fontSize: 15,
                   height: 1.5,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton.icon(
+                child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.check),
-                  label: Text(tr('analysis.gotIt')),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  child: Text(
+                    tr('common.gotIt'),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -239,11 +257,11 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // Calculate breakdown strictly from the analysis array
     int redCount = 0;
     int yellowCount = 0;
     int greenCount = 0;
-    for (final item in widget.analysis) {
+
+    for (var item in widget.analysis) {
       final risk = (item['riskLevel'] ?? '').toString().toUpperCase();
       final cat = (item['category'] ?? '').toString().toLowerCase();
       if (risk == 'HIGH_RISK' || cat.contains('red')) {
@@ -255,9 +273,22 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       }
     }
 
+    final summaryColor = redCount > 0
+        ? (isDark ? AppColors.darkError : AppColors.lightError)
+        : (yellowCount > 0 ? (isDark ? AppColors.darkCaution : AppColors.lightCaution) : (isDark ? AppColors.darkSecondary : AppColors.lightSecondary));
+
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
-        title: Text(tr('analysis.reportTitle'), style: const TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          tr('analysis.reportTitle'),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          ),
+        ),
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        elevation: 0,
         actions: const [
           UserProfileButton(),
           SizedBox(width: 8),
@@ -271,18 +302,12 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
               // Executive Summary Banner
               Container(
                 margin: const EdgeInsets.only(bottom: 20),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: isDark
-                        ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
-                        : [const Color(0xFFEFF6FF), const Color(0xFFDBEAFE)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF334155) : const Color(0xFFBFDBFE),
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Column(
@@ -297,9 +322,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                               redCount > 0
                                   ? Icons.warning_amber_rounded
                                   : (yellowCount > 0 ? Icons.info_outline : Icons.verified_user_outlined),
-                              color: redCount > 0
-                                  ? const Color(0xFFDC2626)
-                                  : (yellowCount > 0 ? const Color(0xFFD97706) : const Color(0xFF16A34A)),
+                              color: summaryColor,
                               size: 24,
                             ),
                             const SizedBox(width: 8),
@@ -310,9 +333,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: redCount > 0
-                                    ? const Color(0xFFDC2626)
-                                    : (yellowCount > 0 ? const Color(0xFFD97706) : const Color(0xFF16A34A)),
+                                color: summaryColor,
                               ),
                             ),
                           ],
@@ -322,10 +343,10 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                           icon: const Icon(Icons.download, size: 16),
                           label: Text(tr('analysis.exportPdf')),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF2563EB),
-                            foregroundColor: Colors.white,
+                            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                            foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                             textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -337,10 +358,26 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                       spacing: 8,
                       runSpacing: 8,
                       children: [
-                        _buildStatPill(tr('analysis.highRiskCount', {'count': '$redCount'}), const Color(0xFFFEF2F2), const Color(0xFFDC2626), isDark),
-                        _buildStatPill(tr('analysis.cautionCount', {'count': '$yellowCount'}), const Color(0xFFFFFBEB), const Color(0xFFD97706), isDark),
-                        _buildStatPill(tr('analysis.compliantCount', {'count': '$greenCount'}), const Color(0xFFECFDF5), const Color(0xFF16A34A), isDark),
-                        _buildStatPill(tr('analysis.clausesTotal', {'count': '${widget.analysis.length}'}), const Color(0xFFF1F5F9), const Color(0xFF64748B), isDark),
+                        _buildStatPill(
+                          tr('analysis.highRiskCount', {'count': '$redCount'}),
+                          isDark ? AppColors.darkError : AppColors.lightError,
+                          isDark,
+                        ),
+                        _buildStatPill(
+                          tr('analysis.cautionCount', {'count': '$yellowCount'}),
+                          isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                          isDark,
+                        ),
+                        _buildStatPill(
+                          tr('analysis.compliantCount', {'count': '$greenCount'}),
+                          isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                          isDark,
+                        ),
+                        _buildStatPill(
+                          tr('analysis.clausesTotal', {'count': '${widget.analysis.length}'}),
+                          isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          isDark,
+                        ),
                       ],
                     ),
                   ],
@@ -353,18 +390,11 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                   margin: const EdgeInsets.only(bottom: 20),
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC),
+                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,14 +405,14 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF2563EB).withValues(alpha: 0.12),
+                              color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Icon(
                               _effectiveSourceType == 'Photo Scan'
                                   ? Icons.image_rounded
                                   : (_effectiveSourceType == 'Text Description' ? Icons.notes_rounded : Icons.picture_as_pdf_rounded),
-                              color: const Color(0xFF2563EB),
+                              color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                               size: 22,
                             ),
                           ),
@@ -401,7 +431,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                         style: TextStyle(
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold,
-                                          color: Theme.of(context).colorScheme.onSurface,
+                                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                         ),
                                       ),
                                     ),
@@ -409,15 +439,15 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF2563EB).withValues(alpha: 0.15),
-                                        borderRadius: BorderRadius.circular(12),
+                                        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Text(
                                         _effectiveSourceType,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
-                                          color: Color(0xFF2563EB),
+                                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                                         ),
                                       ),
                                     ),
@@ -428,7 +458,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                   tr('analysis.originalUploaded'),
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                                   ),
                                 ),
                               ],
@@ -440,17 +470,17 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                             icon: const Icon(Icons.open_in_full_rounded, size: 14),
                             label: Text(tr('analysis.expandWindow')),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF2563EB),
-                              foregroundColor: Colors.white,
+                              backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                              foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                               textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
-                      const Divider(),
+                      Divider(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                       const SizedBox(height: 14),
 
                       // Inline Photo Preview (if Photo Scan & fileData present)
@@ -465,7 +495,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                 child: Container(
                                   constraints: const BoxConstraints(maxHeight: 320),
                                   width: double.infinity,
-                                  color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+                                  color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                                   child: Image.memory(
                                     imgBytes,
                                     fit: BoxFit.contain,
@@ -492,7 +522,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                   height: 380,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1)),
+                                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: SfPdfViewer.memory(
@@ -519,7 +549,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                         const SizedBox(height: 6),
@@ -528,10 +558,10 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                           constraints: const BoxConstraints(maxHeight: 220),
                           padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
-                            color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+                            color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                             ),
                           ),
                           child: SingleChildScrollView(
@@ -541,7 +571,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                 fontSize: 13,
                                 height: 1.6,
                                 fontFamily: 'monospace',
-                                color: isDark ? const Color(0xFFE2E8F0) : const Color(0xFF334155),
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                               ),
                             ),
                           ),
@@ -557,14 +587,18 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                 padding: const EdgeInsets.only(left: 4, bottom: 12),
                 child: Row(
                   children: [
-                    const Icon(Icons.rule_rounded, size: 18, color: Color(0xFF2563EB)),
+                    Icon(
+                      Icons.rule_rounded,
+                      size: 18,
+                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       tr('analysis.analyzedClauses'),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                   ],
@@ -579,12 +613,14 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                 final text = (item['text'] ?? '').toString();
                 final reason = (item['reason'] ?? '').toString();
                 final reraRefs = (item['reraReferences'] is List) ? (item['reraReferences'] as List).join(', ') : '';
+                final borderColor = _getBorderColor(context, category);
 
                 return Card(
                   margin: const EdgeInsets.only(bottom: 14),
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
-                    side: BorderSide(color: _getBorderColor(context, category), width: 1.5),
+                    side: BorderSide(color: borderColor, width: 1.2),
                   ),
                   color: _getColorForCategory(context, category),
                   child: InkWell(
@@ -613,38 +649,72 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 11,
-                                          color: Theme.of(context).colorScheme.onSurface,
+                                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                         ),
                                       ),
                                     ),
                                   ],
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: _getBorderColor(context, category).withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Text(
-                                      category.toUpperCase(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                        color: _getBorderColor(context, category),
+                                  Builder(builder: (context) {
+                                    final isHighRisk = category.toLowerCase() == 'red' || category.toLowerCase() == 'high' || category.toLowerCase() == 'high_risk';
+                                    if (isDark && isHighRisk) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.darkError,
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(
+                                              Icons.warning_amber_rounded,
+                                              size: 14,
+                                              color: AppColors.darkErrorText,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              category.toUpperCase() == 'RED' ? 'HIGH' : category.toUpperCase(),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                                color: AppColors.darkErrorText,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: borderColor.withValues(alpha: 0.15),
+                                        borderRadius: BorderRadius.circular(6),
                                       ),
-                                    ),
-                                  ),
+                                      child: Text(
+                                        category.toUpperCase(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          color: borderColor,
+                                        ),
+                                      ),
+                                    );
+                                  }),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Icon(Icons.touch_app_outlined,
-                                      size: 15, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                                  Icon(
+                                    Icons.touch_app_outlined,
+                                    size: 15,
+                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(
                                     tr('analysis.tapToExplain'),
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                                     ),
                                   ),
                                 ],
@@ -657,20 +727,25 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                             style: TextStyle(
                               fontSize: 14,
                               height: 1.4,
-                              color: Theme.of(context).colorScheme.onSurface,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                           ),
                           const SizedBox(height: 10),
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: isDark ? const Color(0xFF0F172A).withValues(alpha: 0.6) : Colors.white.withValues(alpha: 0.8),
+                              color: isDark ? AppColors.darkSurface : Colors.white,
                               borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                             ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Icon(Icons.info_outline, size: 16, color: Color(0xFF2563EB)),
+                                Icon(
+                                  Icons.info_outline,
+                                  size: 16,
+                                  color: borderColor,
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
@@ -681,17 +756,17 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                         style: TextStyle(
                                           fontSize: 12.5,
                                           fontWeight: FontWeight.w500,
-                                          color: Theme.of(context).colorScheme.onSurface,
+                                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                         ),
                                       ),
                                       if (reraRefs.isNotEmpty) ...[
                                         const SizedBox(height: 4),
                                         Text(
                                           'RERA Citations: $reraRefs',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 11.5,
                                             fontWeight: FontWeight.w600,
-                                            color: Color(0xFF2563EB),
+                                            color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                                           ),
                                         ),
                                       ],
@@ -714,14 +789,22 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
               color: Colors.black54,
               child: Center(
                 child: Card(
+                  color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const CircularProgressIndicator(),
+                        CircularProgressIndicator(
+                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                        ),
                         const SizedBox(height: 16),
-                        Text(tr('analysis.simplifyingJargon')),
+                        Text(
+                          tr('analysis.simplifyingJargon'),
+                          style: TextStyle(
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -733,20 +816,21 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     );
   }
 
-  Widget _buildStatPill(String label, Color lightBg, Color textColor, bool isDark) {
+  Widget _buildStatPill(String label, Color color, bool isDark) {
+    final bool isDarkHighRisk = isDark && (color == AppColors.darkError || label.toLowerCase().contains('high'));
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: isDark ? textColor.withValues(alpha: 0.15) : lightBg,
+        color: isDarkHighRisk ? AppColors.darkError : color.withValues(alpha: isDark ? 0.15 : 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: textColor.withValues(alpha: 0.3)),
+        border: Border.all(color: isDarkHighRisk ? AppColors.darkError : color.withValues(alpha: 0.35)),
       ),
       child: Text(
         label,
         style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600,
-          color: textColor,
+          color: isDarkHighRisk ? AppColors.darkErrorText : color,
         ),
       ),
     );
@@ -768,7 +852,6 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
 
   void _showDocumentViewerModal(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colorScheme = Theme.of(context).colorScheme;
     final title = widget.documentTitle ?? 'Property Legal Document';
     final sourceType = _effectiveSourceType;
 
@@ -785,19 +868,12 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
             width: 920,
             height: MediaQuery.of(context).size.height * 0.88,
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
-              borderRadius: BorderRadius.circular(20),
+              color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+              borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
-                width: 1.5,
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                width: 1.0,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.35),
-                  blurRadius: 24,
-                  offset: const Offset(0, 10),
-                ),
-              ],
             ),
             child: DefaultTabController(
               length: 2,
@@ -807,11 +883,11 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+                      color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                       border: Border(
                         bottom: BorderSide(
-                          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                         ),
                       ),
                     ),
@@ -820,14 +896,14 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF2563EB).withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(10),
+                            color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
                             sourceType == 'Photo Scan'
                                 ? Icons.image_rounded
                                 : (sourceType == 'Text Description' ? Icons.description_rounded : Icons.picture_as_pdf_rounded),
-                            color: const Color(0xFF2563EB),
+                            color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                             size: 22,
                           ),
                         ),
@@ -844,7 +920,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: colorScheme.onSurface,
+                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                 ),
                               ),
                               const SizedBox(height: 2),
@@ -853,15 +929,15 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFF2563EB).withValues(alpha: 0.15),
+                                      color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
                                       sourceType,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 10,
-                                        fontWeight: FontWeight.w700,
-                                        color: Color(0xFF2563EB),
+                                        fontWeight: FontWeight.bold,
+                                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                                       ),
                                     ),
                                   ),
@@ -870,7 +946,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                     'In-App Document Viewer',
                                     style: TextStyle(
                                       fontSize: 11,
-                                      color: colorScheme.onSurfaceVariant,
+                                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                                     ),
                                   ),
                                 ],
@@ -880,7 +956,10 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                         ),
                         const SizedBox(width: 12),
                         IconButton(
-                          icon: const Icon(Icons.close_rounded),
+                          icon: Icon(
+                            Icons.close_rounded,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
                           onPressed: () => Navigator.pop(ctx),
                           tooltip: 'Close Modal',
                         ),
@@ -890,12 +969,12 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
 
                   // --- In-Modal Tab Bar ---
                   Container(
-                    color: isDark ? const Color(0xFF0F172A) : const Color(0xFFE2E8F0),
+                    color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                     child: TabBar(
-                      labelColor: const Color(0xFF2563EB),
-                      unselectedLabelColor: colorScheme.onSurfaceVariant,
-                      indicatorColor: const Color(0xFF2563EB),
-                      indicatorWeight: 3,
+                      labelColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      unselectedLabelColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      indicatorColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      indicatorWeight: 2,
                       tabs: [
                         Tab(
                           icon: Icon(
@@ -922,7 +1001,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                         _buildFileViewerTab(context, isDark, sourceType, rawBytes),
 
                         // Tab 2: Extracted Original Text
-                        _buildExtractedTextTab(context, isDark, colorScheme),
+                        _buildExtractedTextTab(context, isDark),
                       ],
                     ),
                   ),
@@ -946,7 +1025,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
               height: MediaQuery.of(context).size.height * 0.7,
               width: double.infinity,
               decoration: BoxDecoration(
-                border: Border.all(color: isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1)),
+                border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: SfPdfViewer.memory(
@@ -969,7 +1048,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
             child: Container(
               constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.7),
               width: double.infinity,
-              color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
+              color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
               child: Image.memory(
                 rawBytes,
                 fit: BoxFit.contain,
@@ -981,12 +1060,11 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       }
     }
 
-    // Interactive Digital Page Layout View (for PDF or Photo documents without base64 or Text Description)
     final bool isPdf = sourceType == 'PDF Document';
     final bool isPhoto = sourceType == 'Photo Scan';
 
     return Container(
-      color: isDark ? const Color(0xFF0F172A) : const Color(0xFFE2E8F0),
+      color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       child: Center(
         child: ConstrainedBox(
@@ -995,19 +1073,12 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(28),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1E293B) : Colors.white,
+              color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1),
-                width: 1.5,
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                width: 1.0,
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
-                  blurRadius: 18,
-                  offset: const Offset(0, 8),
-                ),
-              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1020,7 +1091,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                       children: [
                         Icon(
                           isPdf ? Icons.picture_as_pdf_rounded : (isPhoto ? Icons.camera_alt_rounded : Icons.description_rounded),
-                          color: const Color(0xFF2563EB),
+                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                           size: 24,
                         ),
                         const SizedBox(width: 10),
@@ -1029,11 +1100,11 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                           children: [
                             Text(
                               isPdf ? 'OFFICIAL PDF DOCUMENT RECORD' : (isPhoto ? 'SCANNED PHOTO DOCUMENT RECORD' : 'LEGAL TEXT DOCUMENT RECORD'),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 0.8,
-                                color: Color(0xFF2563EB),
+                                color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                               ),
                             ),
                             Text(
@@ -1041,7 +1112,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.onSurface,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                               ),
                             ),
                           ],
@@ -1051,17 +1122,21 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF16A34A).withValues(alpha: 0.12),
+                        color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: const Color(0xFF16A34A).withValues(alpha: 0.3)),
+                        border: Border.all(color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.3)),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.verified_outlined, size: 12, color: Color(0xFF16A34A)),
+                          Icon(Icons.verified_outlined, size: 12, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
                           const SizedBox(width: 4),
                           Text(
                             ref.read(localeProvider.notifier).translate('analysis.pageOneOfOne'),
-                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Color(0xFF16A34A)),
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                            ),
                           ),
                         ],
                       ),
@@ -1069,7 +1144,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                   ],
                 ),
                 const SizedBox(height: 14),
-                const Divider(),
+                Divider(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                 const SizedBox(height: 14),
 
                 // Formatted Page Body Text
@@ -1077,9 +1152,9 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+                      color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
+                      border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                     ),
                     child: SingleChildScrollView(
                       child: SelectableText(
@@ -1088,7 +1163,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                           fontSize: 13.5,
                           height: 1.65,
                           fontFamily: 'serif',
-                          color: Theme.of(context).colorScheme.onSurface,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                         ),
                       ),
                     ),
@@ -1102,18 +1177,18 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     );
   }
 
-  Widget _buildExtractedTextTab(BuildContext context, bool isDark, ColorScheme colorScheme) {
+  Widget _buildExtractedTextTab(BuildContext context, bool isDark) {
     final tr = ref.read(localeProvider.notifier).translate;
     final wordCount = widget.originalText.trim().isEmpty ? 0 : widget.originalText.trim().split(RegExp(r'\s+')).length;
 
     return Container(
-      color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+      color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       child: Column(
         children: [
           // Sub-header bar
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+            color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -1122,7 +1197,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurfaceVariant,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
                 ),
                 ElevatedButton.icon(
@@ -1138,8 +1213,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                   icon: const Icon(Icons.copy_rounded, size: 14),
                   label: Text(tr('analysis.copyText')),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
+                    backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -1156,10 +1231,10 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF162B43) : Colors.white,
+                  color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF334356) : const Color(0xFFE2E8F0),
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: SingleChildScrollView(
@@ -1169,7 +1244,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                       fontSize: 13,
                       height: 1.6,
                       fontFamily: 'monospace',
-                      color: colorScheme.onSurface,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                   ),
                 ),
@@ -1181,5 +1256,3 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     );
   }
 }
-
-

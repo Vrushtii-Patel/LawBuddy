@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
+import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
 import '../services/api_service.dart';
 import 'scan_screen.dart';
@@ -27,15 +28,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
 
-  late AnimationController _ambientController;
-  late Animation<double> _pulseAnimation;
-
   List<_RecentDocItem> _recentDocs = [];
   List<dynamic> _checklists = [];
   List<dynamic> _legalNews = [];
   bool _isLoadingDocs = false;
   bool _isLoadingNews = false;
-  Offset _mousePos = const Offset(600, 300);
 
   @override
   void initState() {
@@ -52,16 +49,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
     _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.02), end: Offset.zero).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic),
-    );
-
-    // Ambient breathing animation
-    _ambientController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 5500),
-    )..repeat(reverse: true);
-
-    _pulseAnimation = Tween<double>(begin: 0.85, end: 1.15).animate(
-      CurvedAnimation(parent: _ambientController, curve: Curves.easeInOutSine),
     );
 
     _animationController.forward();
@@ -126,7 +113,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   @override
   void dispose() {
     _animationController.dispose();
-    _ambientController.dispose();
     super.dispose();
   }
 
@@ -161,7 +147,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(localeProvider);
     final authState = ref.watch(authProvider);
     final user = authState.user;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -172,22 +157,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         ? user.fullName.trim().split(' ').first
         : 'User';
 
-    final bgGradientColors = isDark
-        ? const [
-            Color(0xFF162B43),
-            Color(0xFF13253A),
-            Color(0xFF101F31),
-          ]
-        : const [
-            Color(0xFFFBF8EE),
-            Color(0xFFF7F1D0),
-            Color(0xFFF4EFE0),
-          ];
-
     return Scaffold(
       key: _scaffoldKey,
       drawer: !isDesktop ? _buildSidebarDrawer(context, isDark, user) : null,
-      backgroundColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -201,98 +174,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
           // 2. INTELLIGENT WORKSPACE / DASHBOARD
           // ==========================================
           Expanded(
-            child: MouseRegion(
-              onHover: (event) {
-                if (isDesktop) {
-                  setState(() => _mousePos = event.position);
-                }
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: bgGradientColors,
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    // Subtle Ambient Aurora
-                    AnimatedBuilder(
-                      animation: _ambientController,
-                      builder: (context, child) {
-                        final pulse = _pulseAnimation.value;
-                        return Stack(
-                          children: [
-                            Positioned(
-                              top: -120 + (20 * _ambientController.value),
-                              left: -100 + (15 * _ambientController.value),
-                              child: IgnorePointer(
-                                child: Container(
-                                  width: 520 * pulse,
-                                  height: 520 * pulse,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: RadialGradient(
-                                      colors: [
-                                        const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.10 : 0.06),
-                                        const Color(0xFF1D4ED8).withValues(alpha: isDark ? 0.05 : 0.02),
-                                        Colors.transparent,
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 60 + (25 * (1.0 - _ambientController.value)),
-                              right: -120,
-                              child: IgnorePointer(
-                                child: Container(
-                                  width: 560 * (2.0 - pulse),
-                                  height: 560 * (2.0 - pulse),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    gradient: RadialGradient(
-                                      colors: [
-                                        const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.07 : 0.04),
-                                        const Color(0xFFFFDF8C).withValues(alpha: isDark ? 0.03 : 0.015),
-                                        Colors.transparent,
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            if (isDesktop)
-                              Positioned(
-                                left: _mousePos.dx - 300,
-                                top: _mousePos.dy - 300,
-                                child: IgnorePointer(
-                                  child: Container(
-                                    width: 600,
-                                    height: 600,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      gradient: RadialGradient(
-                                        colors: [
-                                          const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.045 : 0.025),
-                                          Colors.transparent,
-                                        ],
-                                        radius: 0.85,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-
-                    SafeArea(
-                      child: Column(
-                        children: [
+            child: Container(
+              color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+              child: SafeArea(
+                child: Column(
+                    children: [
                           // Top Navigation Bar (Mobile / Drawer only)
                           if (!isDesktop) _buildTopNav(context, isDark, isDesktop),
 
@@ -389,14 +275,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                         ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
   }
 
   // ==========================================
@@ -406,10 +289,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
     return Container(
       width: 240,
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF13253A) : const Color(0xFFF7F1D0),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         border: Border(
           right: BorderSide(
-            color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
             width: 1,
           ),
         ),
@@ -425,7 +308,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
   // ==========================================
   Widget _buildSidebarDrawer(BuildContext context, bool isDark, dynamic user) {
     return Drawer(
-      backgroundColor: isDark ? const Color(0xFF13253A) : const Color(0xFFF7F1D0),
+      backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
       child: SafeArea(
         child: _buildSidebarContent(context, isDark, user, isDrawer: true),
       ),
@@ -456,19 +339,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF91ADCD), Color(0xFF708CAE)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF91ADCD).withValues(alpha: 0.35),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
                 ),
                 child: const Icon(
                   Icons.gavel_rounded,
@@ -487,7 +359,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       style: GoogleFonts.inter(
                         fontSize: 16.5,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                         letterSpacing: -0.3,
                       ),
                     ),
@@ -496,7 +368,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       style: GoogleFonts.inter(
                         fontSize: 8,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF91ADCD),
+                        color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                         letterSpacing: 1.1,
                       ),
                     ),
@@ -508,7 +380,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         ),
 
         Divider(
-          color: isDark ? const Color(0xFF334356).withValues(alpha: 0.6) : const Color(0xFFE4DDD0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           height: 1,
         ),
 
@@ -605,7 +477,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         ),
 
         Divider(
-          color: isDark ? const Color(0xFF334356).withValues(alpha: 0.6) : const Color(0xFFE4DDD0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           height: 1,
         ),
 
@@ -637,11 +509,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     children: [
                       CircleAvatar(
                         radius: 14,
-                        backgroundColor: const Color(0xFF91ADCD).withValues(alpha: 0.2),
+                        backgroundColor: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.15),
                         child: Text(
                           initial,
                           style: TextStyle(
-                            color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             fontWeight: FontWeight.w700,
                             fontSize: 11,
                           ),
@@ -658,7 +530,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.inter(
-                                color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                 fontSize: 12.5,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -666,7 +538,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                             Text(
                               loc.translate('sidebar.profile'),
                               style: GoogleFonts.inter(
-                                color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                                 fontSize: 10.5,
                               ),
                             ),
@@ -692,7 +564,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         style: GoogleFonts.inter(
           fontSize: 9.5,
           fontWeight: FontWeight.w700,
-          color: isDark ? const Color(0xFF91ADCD).withValues(alpha: 0.75) : const Color(0xFF63748A),
+          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
           letterSpacing: 1.1,
         ),
       ),
@@ -732,10 +604,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: (isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE)).withValues(alpha: 0.94),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         border: Border(
           bottom: BorderSide(
-            color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
             width: 1,
           ),
         ),
@@ -748,7 +620,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               IconButton(
                 icon: Icon(
                   Icons.menu_rounded,
-                  color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
                 onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                 tooltip: 'Menu',
@@ -759,7 +631,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 style: GoogleFonts.inter(
                   fontSize: 16.5,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   letterSpacing: -0.3,
                 ),
               ),
@@ -773,17 +645,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   width: 1.5,
                 ),
               ),
               child: CircleAvatar(
                 radius: 14,
-                backgroundColor: const Color(0xFF91ADCD).withValues(alpha: 0.2),
+                backgroundColor: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.15),
                 child: Text(
                   initial,
                   style: TextStyle(
-                    color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     fontWeight: FontWeight.w700,
                     fontSize: 11,
                   ),
@@ -805,137 +677,118 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
     return Container(
       decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  const Color(0xFF38BDF8).withValues(alpha: 0.22),
-                  const Color(0xFFC5A85E).withValues(alpha: 0.14),
-                  const Color(0xFF334356).withValues(alpha: 0.28),
-                ]
-              : [
-                  const Color(0xFFE4DDD0),
-                  const Color(0xFFD4AF37).withValues(alpha: 0.2),
-                  const Color(0xFFE4DDD0),
-                ],
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 6),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(1.2),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDark
-              ? const Color(0xFF1B2F48).withValues(alpha: 0.94)
-              : const Color(0xFFFBF8EE).withValues(alpha: 0.96),
-          borderRadius: BorderRadius.circular(18.8),
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: isDesktop ? 28.0 : 18.0,
-          vertical: isDesktop ? 22.0 : 18.0,
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final showIllustration = constraints.maxWidth >= 720;
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Eyebrow Tag
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3.5),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF91ADCD).withValues(alpha: isDark ? 0.16 : 0.12),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: const Color(0xFF91ADCD).withValues(alpha: isDark ? 0.35 : 0.25),
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 28.0 : 18.0,
+        vertical: isDesktop ? 22.0 : 18.0,
+      ),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final showIllustration = constraints.maxWidth >= 720;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Eyebrow Tag
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3.5),
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.2 : 0.08),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.35 : 0.2),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 5.5,
+                            height: 5.5,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 5.5,
-                              height: 5.5,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isDark ? const Color(0xFFC5A85E) : const Color(0xFF92764B),
+                          const SizedBox(width: 6),
+                          Flexible(
+                            child: Text(
+                              loc.translate('home.heroTag'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.inter(
+                                fontSize: 9.5,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
+                                letterSpacing: 0.8,
                               ),
                             ),
-                            const SizedBox(width: 6),
-                            Flexible(
-                              child: Text(
-                                loc.translate('home.heroTag'),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.inter(
-                                  fontSize: 9.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: isDark ? const Color(0xFFC5A85E) : const Color(0xFF244A78),
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Greeting Headline
-                      Text(
-                        loc.translate('home.greeting', {'greeting': _getGreeting(), 'name': userName}),
-                        style: GoogleFonts.inter(
-                          fontSize: isDesktop ? 24 : 19,
-                          fontWeight: FontWeight.w800,
-                          color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
-                          letterSpacing: -0.4,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-
-                      // Workspace Subtitle
-                      Text(
-                        loc.translate('home.heroSub'),
-                        style: GoogleFonts.inter(
-                          fontSize: isDesktop ? 13 : 12,
-                          height: 1.4,
-                          color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                if (showIllustration) ...[
-                  const SizedBox(width: 24),
-                  SizedBox(
-                    width: 190,
-                    height: 80,
-                    child: CustomPaint(
-                      painter: _LegalPropertyIllustrationPainter(
-                        accentBlue: const Color(0xFF91ADCD),
-                        accentGold: const Color(0xFFC5A85E),
-                        isDark: isDark,
+                          ),
+                        ],
                       ),
                     ),
+                    const SizedBox(height: 10),
+
+                    // Greeting Headline
+                    Text(
+                      loc.translate('home.greeting', {'greeting': _getGreeting(), 'name': userName}),
+                      style: GoogleFonts.inter(
+                        fontSize: isDesktop ? 24 : 19,
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        letterSpacing: -0.4,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+
+                    // Workspace Subtitle
+                    Text(
+                      loc.translate('home.heroSub'),
+                      style: GoogleFonts.inter(
+                        fontSize: isDesktop ? 13 : 12,
+                        height: 1.4,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              if (showIllustration) ...[
+                const SizedBox(width: 24),
+                SizedBox(
+                  width: 190,
+                  height: 80,
+                  child: CustomPaint(
+                    painter: _LegalPropertyIllustrationPainter(
+                      accentBlue: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      accentGold: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      isDark: isDark,
+                    ),
                   ),
-                ],
+                ),
               ],
-            );
-          },
-        ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -984,7 +837,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         title: loc.translate('home.totalScannedDocs'),
         value: analyzedDocsCount.toString(),
         subtitle: loc.translate('home.totalScannedDocsSub'),
-        accentColor: const Color(0xFF38BDF8),
+        accentColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
       ),
       _WorkspaceMetricData(
         icon: highRiskFlags > 0 ? Icons.warning_amber_rounded : Icons.shield_outlined,
@@ -993,14 +846,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         subtitle: highRiskFlags > 0
             ? '$highRiskFlags ${loc.translate('home.highRiskCountSub')}'
             : loc.translate('home.noHighRisks'),
-        accentColor: highRiskFlags > 0 ? const Color(0xFFEF4444) : const Color(0xFF10B981),
+        accentColor: highRiskFlags > 0
+            ? (isDark ? AppColors.darkError : AppColors.lightError)
+            : (isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
       ),
       _WorkspaceMetricData(
         icon: Icons.checklist_rounded,
         title: loc.translate('home.dueDiligenceProgress'),
         value: '${(checklistProgress * 100).toInt()}%',
         subtitle: totalTasks > 0 ? '$completedTasks of $totalTasks tasks done' : loc.translate('home.checklistZeroTasks'),
-        accentColor: const Color(0xFFC5A85E),
+        accentColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
       ),
       _WorkspaceMetricData(
         icon: Icons.assignment_outlined,
@@ -1012,7 +867,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 'count': checklistCount.toString(),
                 'unit': loc.translate(checklistCount == 1 ? 'home.checklistUnitSingular' : 'home.checklistUnitPlural'),
               }),
-        accentColor: const Color(0xFF91ADCD),
+        accentColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
       ),
     ];
 
@@ -1076,327 +931,309 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
     return Container(
       decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isDark
-              ? [
-                  const Color(0xFF38BDF8).withValues(alpha: 0.22),
-                  const Color(0xFF334356).withValues(alpha: 0.35),
-                  const Color(0xFF16263B).withValues(alpha: 0.2),
-                ]
-              : [
-                  const Color(0xFFE4DDD0),
-                  const Color(0xFF91ADCD).withValues(alpha: 0.2),
-                ],
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 6),
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(1.2),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDark
-              ? const Color(0xFF1B2F48).withValues(alpha: 0.95)
-              : const Color(0xFFFBF8EE).withValues(alpha: 0.97),
-          borderRadius: BorderRadius.circular(18.8),
-        ),
-        padding: const EdgeInsets.all(22),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Section Header
-            Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(7),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF38BDF8).withValues(alpha: 0.14),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(0xFF38BDF8).withValues(alpha: 0.3),
-                          ),
+      padding: const EdgeInsets.all(22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section Header
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(7),
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.25),
                         ),
-                        child: const Icon(Icons.analytics_outlined, color: Color(0xFF38BDF8), size: 18),
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              loc.translate('home.latestAnalysisReview'),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.inter(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
-                                letterSpacing: -0.3,
-                              ),
+                      child: Icon(Icons.analytics_outlined, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary, size: 18),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            loc.translate('home.latestAnalysisReview'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              letterSpacing: -0.3,
                             ),
-                            Text(
-                              loc.translate('home.latestAnalysisSub'),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
-                              ),
+                          ),
+                          Text(
+                            loc.translate('home.latestAnalysisSub'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontSize: 11,
+                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (hasDocs) ...[
+                const SizedBox(width: 8),
+                TextButton(
+                  onPressed: () => _navigateTo(const RecentDocumentsScreen()),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    minimumSize: Size.zero,
+                    foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        loc.translate('home.viewAll', {'count': _recentDocs.length.toString()}),
+                        style: GoogleFonts.inter(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                         ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 13,
+                        color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                       ),
                     ],
                   ),
                 ),
-                if (hasDocs) ...[
-                  const SizedBox(width: 8),
-                  TextButton(
-                    onPressed: () => _navigateTo(const RecentDocumentsScreen()),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      minimumSize: Size.zero,
-                      foregroundColor: const Color(0xFF91ADCD),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          loc.translate('home.viewAll', {'count': _recentDocs.length.toString()}),
-                          style: GoogleFonts.inter(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? const Color(0xFF91ADCD) : const Color(0xFF244A78),
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Icon(
-                          Icons.arrow_forward_rounded,
-                          size: 13,
-                          color: isDark ? const Color(0xFF91ADCD) : const Color(0xFF244A78),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
               ],
-            ),
-            const SizedBox(height: 18),
+            ],
+          ),
+          const SizedBox(height: 18),
 
-            // Content: Active Latest Document vs Empty State
-            if (_isLoadingDocs && _recentDocs.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(32.0),
-                child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF91ADCD)),
-                  ),
+          // Content: Active Latest Document vs Empty State
+          if (_isLoadingDocs && _recentDocs.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
                 ),
-              )
-            else if (!hasDocs || latestDoc == null)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF91ADCD).withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.description_outlined,
-                          size: 26,
-                          color: Color(0xFF91ADCD),
-                        ),
+              ),
+            )
+          else if (!hasDocs || latestDoc == null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 12),
+                      child: Icon(
+                        Icons.description_outlined,
+                        size: 26,
+                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      loc.translate('home.noAgreementsScanned'),
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      loc.translate('home.uploadOrScanAgreement'),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    ElevatedButton.icon(
+                      onPressed: () => _navigateTo(const ScanScreen()),
+                      icon: const Icon(Icons.document_scanner_outlined, size: 15),
+                      label: Text(
+                        loc.translate('home.scanNewDocument'),
+                        style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w700),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          else
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
+              ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isNarrow = constraints.maxWidth < 600;
+
+                  final docInfo = Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                            decoration: BoxDecoration(
+                              color: latestDoc.riskColor.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: latestDoc.riskColor.withValues(alpha: 0.4),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(latestDoc.riskIcon, size: 12, color: latestDoc.riskColor),
+                                const SizedBox(width: 4),
+                                Text(
+                                  latestDoc.riskLabel,
+                                  style: GoogleFonts.inter(
+                                    color: latestDoc.riskColor,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 10.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              '${latestDoc.sourceType} • ${latestDoc.dateText}',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.inter(
+                                fontSize: 11.5,
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
                       Text(
-                        loc.translate('home.noAgreementsScanned'),
+                        latestDoc.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.inter(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        loc.translate('home.uploadOrScanAgreement'),
-                        textAlign: TextAlign.center,
+                        latestDoc.analysis.isNotEmpty
+                            ? loc.translate('home.clausesEvaluated', {'count': latestDoc.analysis.length.toString()})
+                            : loc.translate('home.assessmentComplete'),
                         style: GoogleFonts.inter(
                           fontSize: 12,
-                          color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      ElevatedButton.icon(
-                        onPressed: () => _navigateTo(const ScanScreen()),
-                        icon: const Icon(Icons.document_scanner_outlined, size: 15),
-                        label: Text(
-                          loc.translate('home.scanNewDocument'),
-                          style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w700),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isDark ? const Color(0xFF244A78) : const Color(0xFF244A78),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                     ],
-                  ),
-                ),
-              )
-            else
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF16273C) : const Color(0xFFF6F1E3),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: isDark ? const Color(0xFF334356).withValues(alpha: 0.8) : const Color(0xFFE4DDD0),
-                  ),
-                ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final isNarrow = constraints.maxWidth < 600;
+                  );
 
-                    final docInfo = Column(
+                  final actionButton = ElevatedButton.icon(
+                    onPressed: () {
+                      if (latestDoc.analysis.isNotEmpty && latestDoc.originalText.isNotEmpty) {
+                        _navigateTo(
+                          AnalysisScreen(
+                            originalText: latestDoc.originalText,
+                            analysis: latestDoc.analysis,
+                            documentTitle: latestDoc.title,
+                            sourceType: latestDoc.sourceType,
+                            fileData: latestDoc.fileData,
+                            mimeType: latestDoc.mimeType,
+                          ),
+                        );
+                      } else {
+                        _navigateTo(const RecentDocumentsScreen());
+                      }
+                    },
+                    icon: const Icon(Icons.visibility_outlined, size: 15),
+                    label: Text(
+                      loc.translate('home.viewFullAnalysis'),
+                      style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w700),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                  );
+
+                  if (isNarrow) {
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
-                              decoration: BoxDecoration(
-                                color: latestDoc.riskColor.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: latestDoc.riskColor.withValues(alpha: 0.4),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(latestDoc.riskIcon, size: 12, color: latestDoc.riskColor),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    latestDoc.riskLabel,
-                                    style: GoogleFonts.inter(
-                                      color: latestDoc.riskColor,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 10.5,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                '${latestDoc.sourceType} • ${latestDoc.dateText}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.inter(
-                                  fontSize: 11.5,
-                                  color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          latestDoc.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          latestDoc.analysis.isNotEmpty
-                              ? loc.translate('home.clausesEvaluated', {'count': latestDoc.analysis.length.toString()})
-                              : loc.translate('home.assessmentComplete'),
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
-                          ),
-                        ),
-                      ],
-                    );
-
-                    final actionButton = ElevatedButton.icon(
-                      onPressed: () {
-                        if (latestDoc.analysis.isNotEmpty && latestDoc.originalText.isNotEmpty) {
-                          _navigateTo(
-                            AnalysisScreen(
-                              originalText: latestDoc.originalText,
-                              analysis: latestDoc.analysis,
-                              documentTitle: latestDoc.title,
-                              sourceType: latestDoc.sourceType,
-                              fileData: latestDoc.fileData,
-                              mimeType: latestDoc.mimeType,
-                            ),
-                          );
-                        } else {
-                          _navigateTo(const RecentDocumentsScreen());
-                        }
-                      },
-                      icon: const Icon(Icons.visibility_outlined, size: 15),
-                      label: Text(
-                        loc.translate('home.viewFullAnalysis'),
-                        style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w700),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isDark ? const Color(0xFF244A78) : const Color(0xFF244A78),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      ),
-                    );
-
-                    if (isNarrow) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          docInfo,
-                          const SizedBox(height: 14),
-                          actionButton,
-                        ],
-                      );
-                    }
-
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(child: docInfo),
-                        const SizedBox(width: 16),
+                        docInfo,
+                        const SizedBox(height: 14),
                         actionButton,
                       ],
                     );
-                  },
-                ),
+                  }
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(child: docInfo),
+                      const SizedBox(width: 16),
+                      actionButton,
+                    ],
+                  );
+                },
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
@@ -1417,12 +1254,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
     final double medPct = total > 0 ? (mediumRisk / total) : 0.0;
     final double lowPct = total > 0 ? (lowRisk / total) : (total == 0 ? 1.0 : 0.0);
 
+    final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
+    final cautionColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
+    final successColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
+
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1B2F48) : const Color(0xFFFBF8EE),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
         boxShadow: [
           BoxShadow(
@@ -1441,10 +1282,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               Container(
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEF4444).withValues(alpha: 0.12),
+                  color: errorColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.pie_chart_outline_rounded, color: Color(0xFFEF4444), size: 17),
+                child: Icon(Icons.pie_chart_outline_rounded, color: errorColor, size: 17),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -1458,7 +1299,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       style: GoogleFonts.inter(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                     Text(
@@ -1467,7 +1308,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
                         fontSize: 11,
-                        color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -1488,17 +1329,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                   if (highPct > 0)
                     Flexible(
                       flex: (highPct * 100).toInt(),
-                      child: Container(color: const Color(0xFFEF4444)),
+                      child: Container(color: errorColor),
                     ),
                   if (medPct > 0)
                     Flexible(
                       flex: (medPct * 100).toInt(),
-                      child: Container(color: const Color(0xFFF59E0B)),
+                      child: Container(color: cautionColor),
                     ),
                   if (lowPct > 0)
                     Flexible(
                       flex: (lowPct * 100).toInt(),
-                      child: Container(color: const Color(0xFF10B981)),
+                      child: Container(color: successColor),
                     ),
                 ],
               ),
@@ -1512,19 +1353,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
             runSpacing: 8,
             children: [
               _buildRiskLegendItem(
-                color: const Color(0xFFEF4444),
+                color: errorColor,
                 label: loc.translate('home.highRiskLabel'),
                 count: highRisk,
                 isDark: isDark,
               ),
               _buildRiskLegendItem(
-                color: const Color(0xFFF59E0B),
+                color: cautionColor,
                 label: loc.translate('home.mediumRiskLabel'),
                 count: mediumRisk,
                 isDark: isDark,
               ),
               _buildRiskLegendItem(
-                color: const Color(0xFF10B981),
+                color: successColor,
                 label: loc.translate('home.lowRiskLabel'),
                 count: total > 0 ? lowRisk : 0,
                 isDark: isDark,
@@ -1538,13 +1379,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: highRisk > 0
-                  ? const Color(0xFFEF4444).withValues(alpha: isDark ? 0.12 : 0.08)
-                  : const Color(0xFF10B981).withValues(alpha: isDark ? 0.12 : 0.08),
+                  ? errorColor.withValues(alpha: isDark ? 0.12 : 0.08)
+                  : successColor.withValues(alpha: isDark ? 0.12 : 0.08),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: highRisk > 0
-                    ? const Color(0xFFEF4444).withValues(alpha: 0.25)
-                    : const Color(0xFF10B981).withValues(alpha: 0.25),
+                    ? errorColor.withValues(alpha: 0.25)
+                    : successColor.withValues(alpha: 0.25),
               ),
             ),
             child: Row(
@@ -1552,7 +1393,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 Icon(
                   highRisk > 0 ? Icons.warning_amber_rounded : Icons.verified_user_outlined,
                   size: 15,
-                  color: highRisk > 0 ? const Color(0xFFEF4444) : const Color(0xFF10B981),
+                  color: highRisk > 0 ? errorColor : successColor,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -1563,7 +1404,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     style: GoogleFonts.inter(
                       fontSize: 11.5,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                   ),
                 ),
@@ -1598,7 +1439,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
           style: GoogleFonts.inter(
             fontSize: 11.5,
             fontWeight: FontWeight.w600,
-            color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
           ),
         ),
       ],
@@ -1635,10 +1476,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1B2F48) : const Color(0xFFFBF8EE),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
         boxShadow: [
           BoxShadow(
@@ -1660,10 +1501,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     Container(
                       padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFC5A85E).withValues(alpha: 0.14),
+                        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.18),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Icons.checklist_rounded, color: Color(0xFFC5A85E), size: 17),
+                      child: Icon(Icons.checklist_rounded, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary, size: 17),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -1677,7 +1518,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                             style: GoogleFonts.inter(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                           ),
                           Text(
@@ -1686,7 +1527,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.inter(
                               fontSize: 11,
-                              color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                             ),
                           ),
                         ],
@@ -1701,7 +1542,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFFC5A85E),
+                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                 ),
               ),
             ],
@@ -1714,11 +1555,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
             child: Container(
               height: 6,
               width: double.infinity,
-              color: const Color(0xFFC5A85E).withValues(alpha: 0.15),
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               child: FractionallySizedBox(
                 alignment: Alignment.centerLeft,
                 widthFactor: checklistProgress > 0 ? checklistProgress : 0.0,
-                child: Container(color: const Color(0xFFC5A85E)),
+                child: Container(color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
               ),
             ),
           ),
@@ -1731,18 +1572,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 margin: const EdgeInsets.only(bottom: 8),
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF132235) : const Color(0xFFF3ECE0),
+                  color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF283B50) : const Color(0xFFE3D9C9),
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.radio_button_unchecked_rounded,
                       size: 15,
-                      color: Color(0xFFC5A85E),
+                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -1753,7 +1594,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                         style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                         ),
                       ),
                     ),
@@ -1765,7 +1606,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               totalTasks > 0 ? loc.translate('home.allTasksDone') : loc.translate('home.noActiveChecklists'),
               style: GoogleFonts.inter(
                 fontSize: 12,
-                color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -1782,7 +1623,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700),
               ),
               style: TextButton.styleFrom(
-                foregroundColor: const Color(0xFFC5A85E),
+                foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               ),
             ),
@@ -1806,7 +1647,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         'title': 'Document scanned: ${d.title}',
         'time': d.dateText.replaceAll('Scanned ', ''),
         'icon': Icons.description_outlined,
-        'color': const Color(0xFF38BDF8),
+        'color': isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
       });
     }
 
@@ -1815,16 +1656,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         'title': 'Workspace initialized',
         'time': 'Recent',
         'icon': Icons.check_circle_outline_rounded,
-        'color': const Color(0xFF10B981),
+        'color': isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
       });
     }
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1B2F48) : const Color(0xFFFBF8EE),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
         boxShadow: [
           BoxShadow(
@@ -1843,10 +1684,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               Container(
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF91ADCD).withValues(alpha: 0.14),
+                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.14),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.history_rounded, color: Color(0xFF91ADCD), size: 17),
+                child: Icon(Icons.history_rounded, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary, size: 17),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -1860,7 +1701,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       style: GoogleFonts.inter(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                     Text(
@@ -1869,7 +1710,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
                         fontSize: 11,
-                        color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -1884,10 +1725,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               margin: EdgeInsets.only(bottom: i < activities.length - 1 ? 8 : 0),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF132235) : const Color(0xFFF3ECE0),
+                color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isDark ? const Color(0xFF283B50) : const Color(0xFFE3D9C9),
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
               ),
               child: Row(
@@ -1917,7 +1758,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                           style: GoogleFonts.inter(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -1925,7 +1766,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                           activities[i]['time'] as String,
                           style: GoogleFonts.inter(
                             fontSize: 11,
-                            color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],
@@ -1951,10 +1792,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1B2F48) : const Color(0xFFFBF8EE),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
         boxShadow: [
           BoxShadow(
@@ -1976,10 +1817,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     Container(
                       padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withValues(alpha: 0.14),
+                        color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.14),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Icon(Icons.feed_outlined, color: Color(0xFF10B981), size: 17),
+                      child: Icon(Icons.feed_outlined, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary, size: 17),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -1993,7 +1834,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                             style: GoogleFonts.inter(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                           ),
                           Text(
@@ -2002,7 +1843,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.inter(
                               fontSize: 11,
-                              color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                             ),
                           ),
                         ],
@@ -2015,13 +1856,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF10B981).withValues(alpha: 0.15),
+                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   loc.translate('common.live'),
                   style: GoogleFonts.inter(
-                    color: const Color(0xFF10B981),
+                    color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                   ),
@@ -2032,12 +1873,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
           const SizedBox(height: 14),
 
           if (_isLoadingNews && _legalNews.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF91ADCD)),
+                  valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
                 ),
               ),
             )
@@ -2047,7 +1888,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               child: Text(
                 loc.translate('home.noLegalUpdates'),
                 style: GoogleFonts.inter(
-                  color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   fontSize: 12,
                 ),
               ),
@@ -2057,10 +1898,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               Container(
                 margin: EdgeInsets.only(bottom: i < news.take(2).length - 1 ? 8 : 0),
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF132235) : const Color(0xFFF3ECE0),
+                  color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF283B50) : const Color(0xFFE3D9C9),
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Material(
@@ -2089,7 +1930,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.inter(
-                                    color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12.5,
                                   ),
@@ -2098,7 +1939,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                                 Text(
                                   '${news[i]['source'] ?? 'Legal News'} • ${_formatRelativeTime(news[i]['pubDate'])}',
                                   style: GoogleFonts.inter(
-                                    color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                                     fontSize: 11,
                                   ),
                                 ),
@@ -2109,7 +1950,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                           Icon(
                             Icons.open_in_new_rounded,
                             size: 14,
-                            color: isDark ? const Color(0xFF91ADCD) : const Color(0xFF63748A),
+                            color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                           ),
                         ],
                       ),
@@ -2148,236 +1989,223 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
     return Container(
       decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(18),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.35 : 0.25),
-            const Color(0xFFFFDF8C).withValues(alpha: isDark ? 0.2 : 0.12),
-            const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.12 : 0.08),
-          ],
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.1 : 0.04),
-            blurRadius: 20,
+            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+            blurRadius: 16,
             offset: const Offset(0, 4),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(1.2),
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDark
-              ? const Color(0xFF1B2F48).withValues(alpha: 0.95)
-              : const Color(0xFFFBF8EE).withValues(alpha: 0.97),
-          borderRadius: BorderRadius.circular(16.8),
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: isDesktop ? 22 : 16,
-          vertical: isDesktop ? 18 : 16,
-        ),
-        child: LayoutBuilder(
-          builder: (context, reraConstraints) {
-            final isNarrow = reraConstraints.maxWidth < 620;
+      padding: EdgeInsets.symmetric(
+        horizontal: isDesktop ? 22 : 16,
+        vertical: isDesktop ? 18 : 16,
+      ),
+      child: LayoutBuilder(
+        builder: (context, reraConstraints) {
+          final isNarrow = reraConstraints.maxWidth < 620;
 
-            if (isNarrow) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFC5A85E).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(0xFFC5A85E).withValues(alpha: 0.35),
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.shield_outlined,
-                          color: Color(0xFFC5A85E),
-                          size: 18,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFC5A85E).withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          loc.translate('home.reraAlert'),
-                          style: GoogleFonts.inter(
-                            color: const Color(0xFFC5A85E),
-                            fontWeight: FontWeight.w800,
-                            fontSize: 9.5,
-                            letterSpacing: 0.8,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    alertTitle,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
-                      color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    alertDesc,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
-                      color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
-                      fontSize: 12,
-                      height: 1.35,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: OutlinedButton(
-                      onPressed: () => _handleReraDetails(context, alertLink, alertTitle, alertDesc),
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(
-                          color: const Color(0xFFC5A85E).withValues(alpha: 0.6),
-                        ),
-                        foregroundColor: const Color(0xFFC5A85E),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            loc.translate('common.viewDetails'),
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFFC5A85E),
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          const Icon(Icons.arrow_forward_rounded, size: 13, color: Color(0xFFC5A85E)),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }
-
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+          if (isNarrow) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC5A85E).withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: const Color(0xFFC5A85E).withValues(alpha: 0.35),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.25),
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.shield_outlined,
+                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        size: 18,
+                      ),
                     ),
-                  ),
-                  child: const Icon(
-                    Icons.shield_outlined,
-                    color: Color(0xFFC5A85E),
-                    size: 22,
+                    const SizedBox(width: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        loc.translate('home.reraAlert'),
+                        style: GoogleFonts.inter(
+                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 9.5,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  alertTitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.inter(
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFC5A85E).withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                              loc.translate('home.reraAlert'),
-                              style: GoogleFonts.inter(
-                                color: const Color(0xFFC5A85E),
-                                fontWeight: FontWeight.w800,
-                                fontSize: 9.5,
-                                letterSpacing: 0.8,
-                              ),
-                            ),
+                const SizedBox(height: 4),
+                Text(
+                  alertDesc,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.inter(
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    fontSize: 12,
+                    height: 1.35,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: OutlinedButton(
+                    onPressed: () => _handleReraDetails(context, alertLink, alertTitle, alertDesc),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      ),
+                      foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          loc.translate('common.viewDetails'),
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        alertTitle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                          color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
                         ),
-                      ),
-                      const SizedBox(height: 3),
-                      Text(
-                        alertDesc,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                          color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
-                          fontSize: 12,
-                          height: 1.35,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                OutlinedButton(
-                  onPressed: () => _handleReraDetails(context, alertLink, alertTitle, alertDesc),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: const Color(0xFFC5A85E).withValues(alpha: 0.6),
+                        const SizedBox(width: 4),
+                        Icon(Icons.arrow_forward_rounded, size: 13, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+                      ],
                     ),
-                    foregroundColor: const Color(0xFFC5A85E),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        loc.translate('common.viewDetails'),
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xFFC5A85E),
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      const Icon(Icons.arrow_forward_rounded, size: 13, color: Color(0xFFC5A85E)),
-                    ],
                   ),
                 ),
               ],
             );
-          },
-        ),
+          }
+
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.25),
+                  ),
+                ),
+                child: Icon(
+                  Icons.shield_outlined,
+                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          decoration: BoxDecoration(
+                            color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            loc.translate('home.reraAlert'),
+                            style: GoogleFonts.inter(
+                              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 9.5,
+                              letterSpacing: 0.8,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      alertTitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      alertDesc,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        fontSize: 12,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              OutlinedButton(
+                onPressed: () => _handleReraDetails(context, alertLink, alertTitle, alertDesc),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  ),
+                  foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      loc.translate('common.viewDetails'),
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(Icons.arrow_forward_rounded, size: 13, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -2402,16 +2230,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
         builder: (dialogContext) {
           final loc = ref.read(localeProvider.notifier);
           return AlertDialog(
-            backgroundColor: isDark ? const Color(0xFF1B2F48) : const Color(0xFFFBF8EE),
+            backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
               side: BorderSide(
-                color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               ),
             ),
             title: Row(
               children: [
-                const Icon(Icons.shield_outlined, color: Color(0xFFC5A85E)),
+                Icon(Icons.shield_outlined, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
@@ -2419,7 +2247,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                     style: GoogleFonts.inter(
                       fontSize: 17,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                   ),
                 ),
@@ -2430,14 +2258,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               style: GoogleFonts.inter(
                 fontSize: 13.5,
                 height: 1.5,
-                color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
             actions: [
               ElevatedButton(
                 onPressed: () => Navigator.pop(dialogContext),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? const Color(0xFF5F7895) : const Color(0xFF244A78),
+                  backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                   foregroundColor: Colors.white,
                 ),
                 child: Text(loc.translate('common.understood')),
@@ -2482,22 +2310,18 @@ class _SidebarNavItemState extends State<_SidebarNavItem> {
 
     Color itemColor;
     if (isActive) {
-      itemColor = isDark ? const Color(0xFF38BDF8) : const Color(0xFF244A78);
+      itemColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
     } else if (_isHovered) {
-      itemColor = isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78);
+      itemColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     } else {
-      itemColor = isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A);
+      itemColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     }
 
     Color bgColor;
     if (isActive) {
-      bgColor = isDark
-          ? const Color(0xFF38BDF8).withValues(alpha: 0.14)
-          : const Color(0xFF244A78).withValues(alpha: 0.1);
+      bgColor = (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.12);
     } else if (_isHovered) {
-      bgColor = isDark
-          ? const Color(0xFF91ADCD).withValues(alpha: 0.1)
-          : const Color(0xFFE4DDD0).withValues(alpha: 0.4);
+      bgColor = (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.06);
     } else {
       bgColor = Colors.transparent;
     }
@@ -2519,7 +2343,7 @@ class _SidebarNavItemState extends State<_SidebarNavItem> {
               border: Border(
                 left: BorderSide(
                   color: isActive
-                      ? (isDark ? const Color(0xFF38BDF8) : const Color(0xFF244A78))
+                      ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
                       : Colors.transparent,
                   width: 3,
                 ),
@@ -2590,10 +2414,10 @@ class _WorkspaceMetricCard extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 110),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1B2F48) : const Color(0xFFFBF8EE),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
         boxShadow: [
           BoxShadow(
@@ -2628,7 +2452,7 @@ class _WorkspaceMetricCard extends StatelessWidget {
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                   height: 1.0,
-                  color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -2647,7 +2471,7 @@ class _WorkspaceMetricCard extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   height: 1.2,
-                  color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 3),
@@ -2659,7 +2483,7 @@ class _WorkspaceMetricCard extends StatelessWidget {
                   fontSize: 10.5,
                   fontWeight: FontWeight.w500,
                   height: 1.2,
-                  color: isDark ? const Color(0xFFA5B4C7) : const Color(0xFF63748A),
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 ),
               ),
             ],
@@ -2717,14 +2541,14 @@ class _RecentDocItem {
     final mimeType = json['mimeType'] as String?;
     final analysisStatus = (json['analysisStatus'] as String?) ?? 'completed';
 
-    Color riskColor = const Color(0xFF10B981);
+    Color riskColor = AppColors.lightSecondary;
     IconData riskIcon = Icons.check_circle_outline_rounded;
     final rLower = riskLevel.toLowerCase();
     if (rLower.contains('high') || rLower.contains('red')) {
-      riskColor = const Color(0xFFEF4444);
+      riskColor = AppColors.lightError;
       riskIcon = Icons.error_outline_rounded;
-    } else if (rLower.contains('medium') || rLower.contains('yellow')) {
-      riskColor = const Color(0xFFF59E0B);
+    } else if (rLower.contains('medium') || rLower.contains('yellow') || rLower.contains('caution')) {
+      riskColor = AppColors.lightCaution;
       riskIcon = Icons.warning_amber_rounded;
     }
 

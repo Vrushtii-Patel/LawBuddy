@@ -10,7 +10,15 @@ import 'package:legal_scanner/screens/recent_documents_screen.dart';
 import 'package:legal_scanner/screens/checklists_list_screen.dart';
 import 'package:legal_scanner/screens/checklist_screen.dart';
 import 'package:legal_scanner/screens/privacy_policy_screen.dart';
-import 'package:legal_scanner/screens/terms_of_use_screen.dart';
+import 'package:legal_scanner/screens/login_screen.dart';
+import 'package:legal_scanner/screens/signup_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:legal_scanner/providers/consent_provider.dart';
+import 'package:legal_scanner/providers/theme_provider.dart';
+import 'package:legal_scanner/providers/locale_provider.dart';
+import 'package:legal_scanner/screens/stamp_duty_calculator_screen.dart';
+import 'package:legal_scanner/widgets/cookie_consent_banner.dart';
+import 'package:legal_scanner/theme/app_theme.dart';
 
 void main() {
   testWidgets('RecentDocumentsScreen renders with summary stats, search, and documents', (WidgetTester tester) async {
@@ -131,7 +139,7 @@ void main() {
 
     expect(find.byType(WelcomeScreen), findsOneWidget);
     expect(find.text('Get Started'), findsOneWidget);
-    expect(find.text('Sign In'), findsOneWidget);
+    expect(find.text('Sign In'), findsWidgets);
     expect(find.text('Scan & Extract'), findsOneWidget);
     expect(find.text('Detect Legal Risks'), findsOneWidget);
     expect(find.text('Plain-English Insights'), findsWidgets);
@@ -340,7 +348,36 @@ void main() {
     expect(find.text('Legal Disclaimer & Non-Advocate Notice'), findsOneWidget);
   });
 
-  testWidgets('TermsOfUseScreen renders terms and conditions', (WidgetTester tester) async {
+  testWidgets('WelcomeScreen renders dark mode with nav, elevated preview card, and secondary badges', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.darkTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.dark,
+          home: const WelcomeScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(find.text('LawBuddy'), findsWidgets);
+    expect(find.text('REAL ESTATE AI TECH'), findsWidgets);
+    expect(find.text('PROPERTY SALE AGREEMENT'), findsOneWidget);
+    expect(find.text('AI Scan Active'), findsOneWidget);
+    expect(find.text('Relevant Property Law'), findsOneWidget);
+    expect(find.text('Clause 7.2 — Forfeiture'), findsOneWidget);
+    expect(find.text('High Legal Risk Detected'), findsWidgets);
+  });
+
+  testWidgets('LoginScreen renders translated human-readable text without raw auth keys', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1200, 900);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -348,16 +385,291 @@ void main() {
     await tester.pumpWidget(
       const ProviderScope(
         child: MaterialApp(
-          home: TermsOfUseScreen(),
+          home: LoginScreen(),
         ),
       ),
     );
 
     await tester.pump();
-    expect(find.byType(TermsOfUseScreen), findsOneWidget);
-    expect(find.text('Terms of Use'), findsOneWidget);
-    expect(find.text('Last Updated: 15 September 2026'), findsOneWidget);
-    expect(find.text('Acceptance of Terms'), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 600));
+
+    expect(find.byType(LoginScreen), findsOneWidget);
+    expect(find.text('Welcome Back'), findsOneWidget);
+    expect(find.text('Intelligent Protection for Property Agreements.'), findsOneWidget);
+    expect(find.text('Sign in to your account to continue'), findsOneWidget);
+    expect(find.text('RERA Compliance Verification'), findsOneWidget);
+    expect(find.text('Instant Risk Audit'), findsOneWidget);
+    expect(find.text('Due Diligence Checklists'), findsOneWidget);
+    expect(find.text('256-bit Encrypted • Strict Confidentiality'), findsOneWidget);
+
+    // Verify that raw translation keys are NOT rendered
+    expect(find.text('auth.loginHeroSub'), findsNothing);
+    expect(find.text('auth.pillarRera'), findsNothing);
+    expect(find.text('auth.pillarAudit'), findsNothing);
+    expect(find.text('auth.pillarDueDiligence'), findsNothing);
+    expect(find.text('auth.bankGradeSecurity'), findsNothing);
+    expect(find.text('auth.loginToAccount'), findsNothing);
+  });
+
+  testWidgets('SignupScreen renders translated human-readable text without raw auth keys', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: SignupScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    expect(find.byType(SignupScreen), findsOneWidget);
+    expect(find.text('Create Account'), findsWidgets);
+    expect(find.text('Build a Safer Property Journey.'), findsOneWidget);
+    expect(find.text('Instant Document Audits'), findsOneWidget);
+    expect(find.text('Plain-Language Explanations'), findsOneWidget);
+    expect(find.text('Custom Legal Checklists'), findsOneWidget);
+    expect(find.text('256-bit Encrypted • Strict Confidentiality'), findsOneWidget);
+
+    // Verify raw keys are absent
+    expect(find.text('auth.signupHeroTitle'), findsNothing);
+    expect(find.text('auth.signupHeroSub'), findsNothing);
+    expect(find.text('auth.signupFeatureInstantAudit'), findsNothing);
+  });
+
+  testWidgets('StampDutyCalculatorScreen renders translated human-readable text without raw calc keys', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: StampDutyCalculatorScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+
+    expect(find.byType(StampDutyCalculatorScreen), findsOneWidget);
+    expect(find.text('Stamp Duty & Registration Calculator'), findsOneWidget);
+    expect(find.text('Property & Transaction Details'), findsOneWidget);
+    expect(find.text('Calculate Charges'), findsOneWidget);
+    expect(find.text('Reset All'), findsOneWidget);
+
+    // Verify raw keys are absent
+    expect(find.text('calc.calcButton'), findsNothing);
+    expect(find.text('calc.resetButton'), findsNothing);
+    expect(find.text('calc.propertyTypeLabel'), findsNothing);
+    expect(find.text('calc.circleRateLabel'), findsNothing);
+  });
+
+  testWidgets('CookieConsentBanner renders for new users and handles choices', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Stack(
+              children: [
+                Center(child: Text('App Content')),
+                CookieConsentBanner(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('Your Privacy Matters'), findsOneWidget);
+    expect(find.textContaining('LawBuddy uses browser storage'), findsOneWidget);
+    expect(find.text('Necessary Only'), findsOneWidget);
+    expect(find.text('Accept Preferences'), findsOneWidget);
+    expect(find.text('Customize'), findsOneWidget);
+
+    // Click Necessary Only
+    await tester.tap(find.text('Necessary Only'));
+    await tester.pumpAndSettle();
+
+    // Banner should be dismissed
+    expect(find.text('Your Privacy Matters'), findsNothing);
+  });
+
+  testWidgets('showPrivacyPreferencesDialog displays all 4 categories with correct states', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => ElevatedButton(
+                onPressed: () => showPrivacyPreferencesDialog(context),
+                child: const Text('Open Settings'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.tap(find.text('Open Settings'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Privacy & Storage Preferences'), findsOneWidget);
+    expect(find.text('STRICTLY NECESSARY'), findsOneWidget);
+    expect(find.text('Always On'), findsOneWidget);
+    expect(find.text('FUNCTIONAL / PREFERENCES'), findsOneWidget);
+    expect(find.text('ANALYTICS'), findsOneWidget);
+    expect(find.text('MARKETING'), findsOneWidget);
+    expect(find.text('Not currently used'), findsNWidgets(2));
+    expect(find.text('Save Preferences'), findsOneWidget);
+  });
+
+  test('Accept functional storage persists theme and language preferences', () async {
+    SharedPreferences.setMockInitialValues({
+      'storage_consent_status': 'accepted_all',
+      'storage_consent_functional': true,
+    });
+    final themeNotifier = ThemeNotifier();
+    themeNotifier.setTheme(ThemeMode.dark);
+    final localeNotifier = LocaleNotifier();
+    await localeNotifier.setLanguage(AppLanguage.hindi);
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('theme_preference'), true);
+    expect(prefs.getString('app_language_preference'), 'hi');
+  });
+
+  test('Revoking functional storage purges theme and language but preserves auth data', () async {
+    SharedPreferences.setMockInitialValues({
+      'theme_preference': true,
+      'app_language_preference': 'hi',
+      'jwt_token': 'jwt_secure_session_token_123',
+      'userId': 'usr_test_999',
+    });
+    final consentNotifier = ConsentNotifier();
+    await consentNotifier.necessaryOnly();
+
+    final prefs = await SharedPreferences.getInstance();
+    // Functional keys must be cleared
+    expect(prefs.getBool('theme_preference'), isNull);
+    expect(prefs.getString('app_language_preference'), isNull);
+    expect(prefs.getString('storage_consent_status'), 'necessary_only');
+    expect(prefs.getBool('storage_consent_functional'), false);
+
+    // Authentication data MUST remain untouched
+    expect(prefs.getString('jwt_token'), 'jwt_secure_session_token_123');
+    expect(prefs.getString('userId'), 'usr_test_999');
+  });
+
+  test('Boot after revocation does not restore old stored values', () async {
+    SharedPreferences.setMockInitialValues({
+      'storage_consent_status': 'necessary_only',
+      'storage_consent_functional': false,
+      'theme_preference': true,
+      'app_language_preference': 'hi',
+    });
+    final themeNotifier = ThemeNotifier();
+    final localeNotifier = LocaleNotifier();
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    expect(themeNotifier.state, ThemeMode.system);
+    expect(localeNotifier.state, AppLanguage.english);
+  });
+
+  test('Boot with functional consent restores saved preferences', () async {
+    SharedPreferences.setMockInitialValues({
+      'storage_consent_status': 'accepted_all',
+      'storage_consent_functional': true,
+      'theme_preference': true,
+      'app_language_preference': 'hi',
+    });
+    final themeNotifier = ThemeNotifier();
+    final localeNotifier = LocaleNotifier();
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    expect(themeNotifier.state, ThemeMode.dark);
+    expect(localeNotifier.state, AppLanguage.hindi);
+  });
+
+  test('In-memory theme and language switching works during session when functional storage is disabled', () async {
+    SharedPreferences.setMockInitialValues({
+      'storage_consent_status': 'necessary_only',
+      'storage_consent_functional': false,
+    });
+    final themeNotifier = ThemeNotifier();
+    themeNotifier.setTheme(ThemeMode.light);
+    expect(themeNotifier.state, ThemeMode.light);
+
+    final localeNotifier = LocaleNotifier();
+    await localeNotifier.setLanguage(AppLanguage.hindi);
+    expect(localeNotifier.state, AppLanguage.hindi);
+
+    // Verify nothing was written to storage
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('theme_preference'), isNull);
+    expect(prefs.getString('app_language_preference'), isNull);
+  });
+
+  testWidgets('Tapping Customize in CookieConsentBanner opens Privacy Preferences dialog with all 4 categories', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    SharedPreferences.setMockInitialValues({});
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          navigatorKey: rootNavigatorKey,
+          home: const Scaffold(
+            body: Center(child: Text('LawBuddy Landing')),
+          ),
+          builder: (context, child) {
+            return Stack(
+              children: [
+                if (child != null) child,
+                const CookieConsentBanner(),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('Your Privacy Matters'), findsOneWidget);
+    expect(find.text('Customize'), findsOneWidget);
+
+    // Tap Customize
+    await tester.tap(find.text('Customize'));
+    await tester.pumpAndSettle();
+
+    // Dialog must open immediately on top
+    expect(find.text('Privacy & Storage Preferences'), findsOneWidget);
+    expect(find.text('STRICTLY NECESSARY'), findsOneWidget);
+    expect(find.text('Always On'), findsOneWidget);
+    expect(find.text('FUNCTIONAL / PREFERENCES'), findsOneWidget);
+    expect(find.text('ANALYTICS'), findsOneWidget);
+    expect(find.text('MARKETING'), findsOneWidget);
+    expect(find.text('Not currently used'), findsNWidgets(2));
   });
 }
 

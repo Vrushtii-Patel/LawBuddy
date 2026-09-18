@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/api_service.dart';
 import '../providers/locale_provider.dart';
+import '../theme/app_theme.dart';
 import 'checklist_screen.dart';
 import '../widgets/user_profile_button.dart';
 
@@ -17,11 +18,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
   List<dynamic> _checklists = [];
   bool _isLoading = true;
   String? _error;
-  Offset _mousePos = const Offset(600, 300);
 
   // Animation Controllers
-  AnimationController? _ambientController;
-  Animation<double>? _pulseAnimation;
   AnimationController? _entryController;
   Animation<double>? _fadeAnimation;
   Animation<Offset>? _slideAnimation;
@@ -30,25 +28,16 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
     if (_entryController == null) {
       _entryController = AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 400),
       );
       _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(parent: _entryController!, curve: Curves.easeOutCubic),
       );
-      _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.04), end: Offset.zero).animate(
+      _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.03), end: Offset.zero).animate(
         CurvedAnimation(parent: _entryController!, curve: Curves.easeOutCubic),
       );
       _entryController!.forward();
     }
-
-    _ambientController ??= AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 5500),
-    )..repeat(reverse: true);
-
-    _pulseAnimation ??= Tween<double>(begin: 0.85, end: 1.15).animate(
-      CurvedAnimation(parent: _ambientController!, curve: Curves.easeInOutSine),
-    );
   }
 
   @override
@@ -61,7 +50,6 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
   @override
   void dispose() {
     _entryController?.dispose();
-    _ambientController?.dispose();
     super.dispose();
   }
 
@@ -110,22 +98,26 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          backgroundColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+          backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.4) : const Color(0xFFEF4444).withValues(alpha: 0.3),
+              color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.3),
             ),
           ),
           title: Text(
             tr('checklists.deleteChecklist'),
-            style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 18),
+            style: GoogleFonts.plusJakartaSans(
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
           ),
           content: Text(
             '${tr('checklists.deleteConfirm')}\n\n"$title"',
             style: GoogleFonts.inter(
               fontSize: 14,
-              color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF475569),
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
             ),
           ),
           actions: [
@@ -134,16 +126,17 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               child: Text(
                 tr('common.cancel'),
                 style: GoogleFonts.inter(
-                  color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEF4444),
+                backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                elevation: 0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
               ),
               onPressed: () => Navigator.pop(ctx, true),
@@ -168,7 +161,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(tr('checklists.deletedSuccess')),
-            backgroundColor: const Color(0xFF10B981),
+            backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -178,7 +171,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to delete checklist: $e'),
-            backgroundColor: const Color(0xFFEF4444),
+            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -198,35 +191,47 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              backgroundColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+              backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(16),
                 side: BorderSide(
-                  color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
               ),
               title: Text(
                 tr('checklists.renameChecklist'),
-                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, fontSize: 18),
+                style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
               ),
               content: TextField(
                 controller: controller,
                 autofocus: true,
-                enabled: !isSaving,
-                style: GoogleFonts.inter(fontSize: 14, color: isDark ? const Color(0xFFF1F5F9) : const Color(0xFF0F172A)),
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
                 decoration: InputDecoration(
-                  hintText: tr('checklists.enterNewName'),
+                  labelText: tr('checklists.titleLabel'),
+                  labelStyle: TextStyle(
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  ),
                   filled: true,
-                  fillColor: isDark ? const Color(0xFF101F31) : Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  fillColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: isDark ? const Color(0xFF334356) : const Color(0xFFCBD5E1),
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFFC5A85E), width: 1.5),
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      width: 1.5,
+                    ),
                   ),
                 ),
               ),
@@ -236,52 +241,69 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   child: Text(
                     tr('common.cancel'),
                     style: GoogleFonts.inter(
-                      color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFC5A85E),
-                    foregroundColor: const Color(0xFF101F31),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+                    backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
                   ),
                   onPressed: isSaving
                       ? null
                       : () async {
                           final newTitle = controller.text.trim();
-                          if (newTitle.isEmpty) return;
+                          if (newTitle.isEmpty || newTitle == currentTitle) {
+                            Navigator.pop(dialogCtx);
+                            return;
+                          }
                           setDialogState(() => isSaving = true);
                           try {
-                            await ApiService.renameChecklist(type, newTitle);
-                            if (mounted) {
+                            final success = await ApiService.renameChecklist(type, newTitle);
+                            if (success.isNotEmpty && mounted) {
                               setState(() {
-                                final index = _checklists.indexWhere((c) => c['type'] == type);
-                                if (index != -1) {
-                                  _checklists[index]['title'] = newTitle;
+                                final idx = _checklists.indexWhere((c) => c['type'] == type);
+                                if (idx != -1) {
+                                  _checklists[idx]['title'] = newTitle;
                                 }
                               });
-                            }
-                            if (dialogCtx.mounted) {
-                              Navigator.pop(dialogCtx);
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              if (dialogCtx.mounted) Navigator.pop(dialogCtx);
+                              ScaffoldMessenger.of(this.context).showSnackBar(
                                 SnackBar(
                                   content: Text(tr('checklists.renamedSuccess')),
-                                  backgroundColor: const Color(0xFF10B981),
+                                  backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
                                   behavior: SnackBarBehavior.floating,
                                 ),
                               );
                             }
                           } catch (e) {
                             setDialogState(() => isSaving = false);
+                            if (dialogCtx.mounted) {
+                              ScaffoldMessenger.of(dialogCtx).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed: $e'),
+                                  backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
                           }
                         },
-                  child: Text(
-                    tr('recentDocs.save'),
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w700),
-                  ),
+                  child: isSaving
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : Text(
+                          tr('common.save'),
+                          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+                        ),
                 ),
               ],
             );
@@ -291,63 +313,66 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
     );
   }
 
-  void _showCreateChecklistDialog(BuildContext context, [String? presetPrompt]) {
+  void _showCreateChecklistDialog(BuildContext context, [String? initialPrompt]) {
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final TextEditingController controller = TextEditingController(text: presetPrompt ?? '');
-    bool isGenerating = false;
+    final controller = TextEditingController(text: initialPrompt ?? '');
+    bool isSubmitting = false;
 
     showDialog(
       context: context,
-      barrierDismissible: false,
       builder: (dialogCtx) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              backgroundColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+              backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(16),
                 side: BorderSide(
-                  color: isDark ? const Color(0xFFC5A85E).withValues(alpha: 0.35) : const Color(0xFFC5A85E).withValues(alpha: 0.25),
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
               ),
               title: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.2 : 0.12),
-                      borderRadius: BorderRadius.circular(12),
+                      color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: const Color(0xFFC5A85E).withValues(alpha: 0.4),
+                        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
                       ),
                     ),
-                    child: const Icon(Icons.auto_awesome_rounded, color: Color(0xFFC5A85E), size: 20),
+                    child: Icon(
+                      Icons.auto_awesome_rounded,
+                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      tr('checklists.newChecklist'),
+                      tr('checklists.createTitle'),
                       style: GoogleFonts.plusJakartaSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w800,
-                        color: isDark ? Colors.white : const Color(0xFF101F31),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 17,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                   ),
                 ],
               ),
               content: SizedBox(
-                width: 480,
+                width: 440,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      tr('checklists.question'),
+                      tr('checklists.createPromptDesc'),
                       style: GoogleFonts.inter(
                         fontSize: 13,
-                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         height: 1.4,
                       ),
                     ),
@@ -355,143 +380,116 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     TextField(
                       controller: controller,
                       autofocus: true,
-                      enabled: !isGenerating,
-                      maxLines: 1,
-                      textAlignVertical: TextAlignVertical.center,
+                      maxLines: 3,
                       style: GoogleFonts.inter(
                         fontSize: 14,
-                        color: isDark ? const Color(0xFFF1F5F9) : const Color(0xFF0F172A),
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                       decoration: InputDecoration(
-                        hintText: tr('checklists.hint'),
-                        hintStyle: GoogleFonts.inter(
-                          color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
-                          fontSize: 14,
+                        hintText: tr('checklists.createHint'),
+                        hintStyle: TextStyle(
+                          color: (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.6),
+                          fontSize: 13,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                         filled: true,
-                        fillColor: isDark ? const Color(0xFF101F31) : Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide(
-                            color: isDark ? const Color(0xFF334356) : const Color(0xFFCBD5E1),
-                          ),
-                        ),
+                        fillColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                         enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
-                            color: isDark ? const Color(0xFF334356) : const Color(0xFFCBD5E1),
+                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                          borderSide: const BorderSide(color: Color(0xFFC5A85E), width: 1.5),
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                            width: 1.5,
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 14),
                     Text(
-                      tr('checklists.starterTitle'),
+                      tr('checklists.quickPresets'),
                       style: GoogleFonts.inter(
                         fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5,
-                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                      spacing: 6,
+                      runSpacing: 6,
                       children: [
-                        _buildPresetChip(tr('checklists.template1'), controller, isDark),
-                        _buildPresetChip(tr('checklists.template2'), controller, isDark),
-                        _buildPresetChip(tr('checklists.template3'), controller, isDark),
-                        _buildPresetChip(tr('checklists.template4'), controller, isDark),
+                        _buildPresetChip('Resale Apartment', controller, isDark),
+                        _buildPresetChip('RERA Builder Flat', controller, isDark),
+                        _buildPresetChip('Commercial Lease', controller, isDark),
+                        _buildPresetChip('Open Plot Purchase', controller, isDark),
                       ],
                     ),
-                    if (isGenerating)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 22),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              const SizedBox(
-                                width: 28,
-                                height: 28,
-                                child: CircularProgressIndicator(strokeWidth: 2.8, color: Color(0xFFC5A85E)),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'AI is generating custom legal due-diligence steps...',
-                                style: GoogleFonts.inter(fontSize: 12, color: const Color(0xFFC5A85E), fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                   ],
                 ),
               ),
               actions: [
-                if (!isGenerating)
-                  TextButton(
-                    onPressed: () => Navigator.pop(dialogCtx),
-                    child: Text(
-                      tr('common.cancel'),
-                      style: GoogleFonts.inter(
-                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
-                        fontWeight: FontWeight.w600,
-                      ),
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogCtx),
+                  child: Text(
+                    tr('common.cancel'),
+                    style: GoogleFonts.inter(
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                if (!isGenerating)
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFC5A85E),
-                      foregroundColor: const Color(0xFF101F31),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-                      elevation: 2,
-                    ),
-                    onPressed: () async {
-                      final promptText = controller.text.trim();
-                      if (promptText.isEmpty) return;
-                      setDialogState(() => isGenerating = true);
-                      try {
-                        final result = await ApiService.generateChecklist(promptText);
-                        if (dialogCtx.mounted) {
-                          Navigator.pop(dialogCtx);
-                          _navigateTo(ChecklistScreen(
-                            type: result['type'],
-                            initialTitle: result['title'],
-                          ));
-                        }
-                      } catch (e) {
-                        setDialogState(() => isGenerating = false);
-                        if (dialogCtx.mounted) {
-                          ScaffoldMessenger.of(dialogCtx).showSnackBar(
-                            SnackBar(
-                              content: Text('Error: $e'),
-                              backgroundColor: const Color(0xFFEF4444),
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.auto_awesome_rounded, size: 16),
-                        const SizedBox(width: 8),
-                        Text(
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+                  ),
+                  onPressed: isSubmitting
+                      ? null
+                      : () async {
+                          final prompt = controller.text.trim();
+                          if (prompt.isEmpty) return;
+                          setDialogState(() => isSubmitting = true);
+                          try {
+                            final res = await ApiService.generateChecklist(prompt);
+                            if (dialogCtx.mounted) Navigator.pop(dialogCtx);
+                            if (mounted) {
+                              _loadChecklists();
+                              _navigateTo(ChecklistScreen(
+                                type: (res['type'] ?? prompt).toString(),
+                                initialTitle: (res['title'] ?? prompt).toString(),
+                              ));
+                            }
+                          } catch (e) {
+                            setDialogState(() => isSubmitting = false);
+                            if (dialogCtx.mounted) {
+                              ScaffoldMessenger.of(dialogCtx).showSnackBar(
+                                SnackBar(
+                                  content: Text('Failed: $e'),
+                                  backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : Text(
                           tr('checklists.generateBtn'),
                           style: GoogleFonts.inter(fontWeight: FontWeight.w700),
                         ),
-                      ],
-                    ),
-                  ),
+                ),
               ],
             );
           },
@@ -503,21 +501,21 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
   Widget _buildPresetChip(String text, TextEditingController controller, bool isDark) {
     return InkWell(
       onTap: () => controller.text = text,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF101F31) : const Color(0xFFF1F5F9),
-          borderRadius: BorderRadius.circular(10),
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isDark ? const Color(0xFF334356) : const Color(0xFFCBD5E1),
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           ),
         ),
         child: Text(
           text,
           style: GoogleFonts.inter(
             fontSize: 11,
-            color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF475569),
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -534,158 +532,47 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 960;
 
-    final bgGradientColors = isDark
-        ? const [
-            Color(0xFF162B43),
-            Color(0xFF13253A),
-            Color(0xFF101F31),
-          ]
-        : const [
-            Color(0xFFFBF8EE),
-            Color(0xFFF7F1D0),
-            Color(0xFFF4EFE0),
-          ];
-
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showCreateChecklistDialog(context),
-        backgroundColor: const Color(0xFFC5A85E),
-        foregroundColor: const Color(0xFF101F31),
-        elevation: 4,
-        hoverElevation: 8,
+        backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+        foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+        elevation: 2,
+        hoverElevation: 4,
         icon: const Icon(Icons.add_rounded, size: 20),
         label: Text(
           tr('checklists.newBtn'),
           style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, letterSpacing: 0.3),
         ),
       ),
-      body: MouseRegion(
-        onHover: (event) {
-          if (isDesktop) {
-            setState(() => _mousePos = event.position);
-          }
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: bgGradientColors,
-            ),
-          ),
-          child: Stack(
+      body: Container(
+        color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        child: SafeArea(
+          child: Column(
             children: [
-              // ==========================================
-              // AMBIENT LIGHTING (MATCHING DASHBOARD)
-              // ==========================================
-              AnimatedBuilder(
-                animation: _ambientController!,
-                builder: (context, child) {
-                  final pulse = _pulseAnimation?.value ?? 1.0;
-                  return Stack(
-                    children: [
-                      // Orb 1: Top-Left Gold Ambient Aurora
-                      Positioned(
-                        top: -140 + (25 * _ambientController!.value),
-                        left: -120 + (20 * _ambientController!.value),
-                        child: IgnorePointer(
-                          child: Container(
-                            width: 580 * pulse,
-                            height: 580 * pulse,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: RadialGradient(
-                                colors: [
-                                  const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.13 : 0.08),
-                                  const Color(0xFFB38938).withValues(alpha: isDark ? 0.06 : 0.03),
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+              // TOP BAR
+              _buildTopBar(context, isDark, tr),
 
-                      // Orb 2: Bottom-Right Cyan Ambient Aurora
-                      Positioned(
-                        bottom: -100 + (30 * (1.0 - _ambientController!.value)),
-                        right: -140,
-                        child: IgnorePointer(
-                          child: Container(
-                            width: 620 * (2.0 - pulse),
-                            height: 620 * (2.0 - pulse),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: RadialGradient(
-                                colors: [
-                                  const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.09 : 0.05),
-                                  const Color(0xFF1D4ED8).withValues(alpha: isDark ? 0.04 : 0.02),
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Orb 3: Mouse-responsive Interactive Spotlight (Desktop)
-                      if (isDesktop)
-                        Positioned(
-                          left: _mousePos.dx - 350,
-                          top: _mousePos.dy - 350,
-                          child: IgnorePointer(
-                            child: Container(
-                              width: 700,
-                              height: 700,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(
-                                  colors: [
-                                    const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.045 : 0.025),
-                                    Colors.transparent,
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                },
-              ),
-
-              // ==========================================
-              // MAIN CONTENT
-              // ==========================================
-              SafeArea(
-                child: Column(
-                  children: [
-                    // TOP BAR
-                    _buildTopBar(context, isDark, tr),
-
-                    // BODY CONTENT
-                    Expanded(
-                      child: FadeTransition(
-                        opacity: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
-                        child: SlideTransition(
-                          position: _slideAnimation ?? const AlwaysStoppedAnimation(Offset.zero),
-                          child: Center(
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 920),
-                              child: _isLoading
-                                  ? _buildLoadingSkeleton(isDark)
-                                  : _error != null
-                                      ? _buildErrorState(tr, isDark)
-                                      : _checklists.isEmpty
-                                          ? _buildEmptyState(tr, isDark, isDesktop)
-                                          : _buildChecklistCollection(tr, isDark, isDesktop),
-                            ),
-                          ),
-                        ),
+              // BODY CONTENT
+              Expanded(
+                child: FadeTransition(
+                  opacity: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
+                  child: SlideTransition(
+                    position: _slideAnimation ?? const AlwaysStoppedAnimation(Offset.zero),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 920),
+                        child: _isLoading
+                            ? _buildLoadingSkeleton(isDark)
+                            : _error != null
+                                ? _buildErrorState(tr, isDark)
+                                : _checklists.isEmpty
+                                    ? _buildEmptyState(tr, isDark, isDesktop)
+                                    : _buildChecklistCollection(tr, isDark, isDesktop),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -716,14 +603,14 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 children: [
                   Icon(
                     Icons.arrow_back_rounded,
-                    color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     size: 18,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     tr('common.back'),
                     style: GoogleFonts.inter(
-                      color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
@@ -738,10 +625,10 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
-                color: const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.12 : 0.08),
+                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.35 : 0.25),
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
               ),
               child: Row(
@@ -750,15 +637,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   Container(
                     width: 6,
                     height: 6,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFFC5A85E),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xFFC5A85E),
-                          blurRadius: 6,
-                        ),
-                      ],
+                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -767,7 +648,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     style: GoogleFonts.inter(
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
-                      color: const Color(0xFFC5A85E),
+                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                       letterSpacing: 0.9,
                     ),
                   ),
@@ -794,19 +675,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1B2F48).withValues(alpha: 0.95) : const Color(0xFFFBF8EE),
-        borderRadius: BorderRadius.circular(22),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.35 : 0.25),
-          width: 1.2,
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.0,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.08 : 0.04),
-            blurRadius: 18,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -814,16 +688,16 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.2 : 0.12),
-              borderRadius: BorderRadius.circular(16),
+              color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: const Color(0xFFC5A85E).withValues(alpha: 0.4),
+                color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.3),
               ),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.verified_user_rounded,
-              color: Color(0xFFC5A85E),
-              size: 28,
+              color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+              size: 26,
             ),
           ),
           const SizedBox(width: 18),
@@ -835,10 +709,10 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFC5A85E).withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(8),
+                        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         tr('checklists.heroTitle'),
@@ -846,7 +720,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                           fontSize: 10,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.8,
-                          color: const Color(0xFFC5A85E),
+                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
                         ),
                       ),
                     ),
@@ -859,7 +733,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.3,
-                    color: isDark ? Colors.white : const Color(0xFF101F31),
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(height: 3),
@@ -868,7 +742,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   style: GoogleFonts.inter(
                     fontSize: 13,
                     height: 1.4,
-                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
                 ),
               ],
@@ -906,17 +780,17 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.2,
-                    color: isDark ? Colors.white : const Color(0xFF101F31),
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(width: 10),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.22 : 0.12),
+                    color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: const Color(0xFFC5A85E).withValues(alpha: 0.3),
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                     ),
                   ),
                   child: Text(
@@ -924,7 +798,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
-                      color: const Color(0xFFC5A85E),
+                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                     ),
                   ),
                 ),
@@ -988,7 +862,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               fontSize: 20,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.3,
-              color: isDark ? Colors.white : const Color(0xFF101F31),
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -1000,7 +874,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               style: GoogleFonts.inter(
                 fontSize: 13,
                 height: 1.5,
-                color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
           ),
@@ -1015,11 +889,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, letterSpacing: 0.2),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFC5A85E),
-              foregroundColor: const Color(0xFF101F31),
-              elevation: 4,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 14),
+              backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+              foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
             ),
           ),
           const SizedBox(height: 40),
@@ -1036,7 +910,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.2,
-                    color: isDark ? Colors.white : const Color(0xFF101F31),
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(height: 3),
@@ -1044,7 +918,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   tr('checklists.quickStartSub'),
                   style: GoogleFonts.inter(
                     fontSize: 12,
-                    color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   ),
                 ),
               ],
@@ -1091,13 +965,13 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
 
   Widget _buildLayeredDocumentMotif(bool isDark) {
     return Container(
-      width: 90,
-      height: 90,
+      width: 80,
+      height: 80,
       decoration: BoxDecoration(
-        color: const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.16 : 0.08),
+        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
         shape: BoxShape.circle,
         border: Border.all(
-          color: const Color(0xFFC5A85E).withValues(alpha: 0.3),
+          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
         ),
       ),
       child: Center(
@@ -1107,38 +981,32 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
             Transform.rotate(
               angle: -0.1,
               child: Container(
-                width: 38,
-                height: 48,
+                width: 34,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1B2F48) : const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(8),
+                  color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+                  borderRadius: BorderRadius.circular(6),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF334356) : const Color(0xFFCBD5E1),
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
               ),
             ),
             Container(
-              width: 42,
-              height: 52,
+              width: 38,
+              height: 48,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF101F31) : Colors.white,
-                borderRadius: BorderRadius.circular(8),
+                color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: const Color(0xFFC5A85E).withValues(alpha: 0.6),
+                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFC5A85E).withValues(alpha: 0.2),
-                    blurRadius: 8,
-                  ),
-                ],
               ),
-              child: const Center(
+              child: Center(
                 child: Icon(
                   Icons.checklist_rounded,
-                  size: 26,
-                  color: Color(0xFFC5A85E),
+                  size: 24,
+                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                 ),
               ),
             ),
@@ -1175,18 +1043,20 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         Container(
           height: 90,
           decoration: BoxDecoration(
-            color: (isDark ? const Color(0xFF1B2F48) : const Color(0xFFE2E8F0)).withValues(alpha: 0.6),
-            borderRadius: BorderRadius.circular(22),
+            color: (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         for (int i = 0; i < 3; i++) ...[
           Container(
-            height: 150,
+            height: 140,
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
-              color: (isDark ? const Color(0xFF1B2F48) : const Color(0xFFE2E8F0)).withValues(alpha: 0.6),
-              borderRadius: BorderRadius.circular(20),
+              color: (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
             ),
           ),
         ],
@@ -1206,10 +1076,10 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         margin: const EdgeInsets.all(24),
         padding: const EdgeInsets.all(28),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF1B2F48) : Colors.white,
-          borderRadius: BorderRadius.circular(22),
+          color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: const Color(0xFFEF4444).withValues(alpha: 0.4),
+            color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -1218,15 +1088,19 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: const Color(0xFFEF4444).withValues(alpha: 0.12),
+                color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.warning_amber_rounded, size: 36, color: Color(0xFFEF4444)),
+              child: Icon(Icons.warning_amber_rounded, size: 36, color: isDark ? AppColors.darkError : AppColors.lightError),
             ),
             const SizedBox(height: 16),
             Text(
               'Unable to Load Checklists',
-              style: GoogleFonts.plusJakartaSans(fontSize: 16, fontWeight: FontWeight.w700),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
             const SizedBox(height: 6),
             Text(
@@ -1234,7 +1108,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
-                color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
             const SizedBox(height: 20),
@@ -1243,9 +1117,10 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               icon: const Icon(Icons.refresh_rounded, size: 18),
               label: Text(tr('common.retry'), style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFC5A85E),
-                foregroundColor: const Color(0xFF101F31),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
               ),
             ),
@@ -1293,7 +1168,9 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
     final percent = (ratio * 100).toInt();
     final isAllDone = totalCount > 0 && completedCount == totalCount;
 
-    final accentColor = isAllDone ? const Color(0xFF10B981) : const Color(0xFFC5A85E);
+    final accentColor = isAllDone
+        ? (widget.isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
+        : (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary);
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -1303,28 +1180,19 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          margin: const EdgeInsets.only(bottom: 16),
-          transform: Matrix4.translationValues(0, _isHovered ? -3.0 : 0, 0),
+          margin: const EdgeInsets.only(bottom: 14),
+          transform: Matrix4.translationValues(0, _isHovered ? -2.0 : 0, 0),
           decoration: BoxDecoration(
-            color: widget.isDark ? const Color(0xFF1B2F48).withValues(alpha: 0.95) : const Color(0xFFFBF8EE),
-            borderRadius: BorderRadius.circular(20),
+            color: widget.isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: _isHovered
                   ? accentColor.withValues(alpha: 0.8)
                   : (isAllDone
-                      ? const Color(0xFF10B981).withValues(alpha: widget.isDark ? 0.45 : 0.35)
-                      : (widget.isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0))),
-              width: _isHovered || isAllDone ? 1.5 : 1.0,
+                      ? (widget.isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.5)
+                      : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder)),
+              width: 1.0,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: _isHovered
-                    ? accentColor.withValues(alpha: widget.isDark ? 0.2 : 0.1)
-                    : Colors.black.withValues(alpha: widget.isDark ? 0.15 : 0.03),
-                blurRadius: _isHovered ? 16 : 8,
-                offset: Offset(0, _isHovered ? 6 : 3),
-              ),
-            ],
           ),
           child: Padding(
             padding: const EdgeInsets.all(18),
@@ -1336,18 +1204,18 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: accentColor.withValues(alpha: widget.isDark ? 0.2 : 0.12),
-                        borderRadius: BorderRadius.circular(14),
+                        color: accentColor.withValues(alpha: widget.isDark ? 0.15 : 0.1),
+                        borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: accentColor.withValues(alpha: 0.35),
+                          color: accentColor.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Icon(
                         isAllDone ? Icons.verified_user_rounded : Icons.folder_shared_rounded,
                         color: accentColor,
-                        size: 24,
+                        size: 22,
                       ),
                     ),
                     const SizedBox(width: 14),
@@ -1370,10 +1238,10 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.plusJakartaSans(
-                              fontSize: 16,
+                              fontSize: 15,
                               fontWeight: FontWeight.w700,
                               letterSpacing: -0.2,
-                              color: widget.isDark ? Colors.white : const Color(0xFF101F31),
+                              color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                           ),
                         ],
@@ -1383,13 +1251,13 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                       icon: Icon(
                         Icons.more_vert_rounded,
                         size: 20,
-                        color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                        color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
-                      color: widget.isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+                      color: widget.isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(12),
                         side: BorderSide(
-                          color: widget.isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+                          color: widget.isDark ? AppColors.darkBorder : AppColors.lightBorder,
                         ),
                       ),
                       onSelected: (val) {
@@ -1404,11 +1272,19 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                           value: 'rename',
                           child: Row(
                             children: [
-                              const Icon(Icons.edit_outlined, size: 17, color: Color(0xFFC5A85E)),
+                              Icon(
+                                Icons.edit_outlined,
+                                size: 17,
+                                color: widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                              ),
                               const SizedBox(width: 10),
                               Text(
                                 widget.tr('checklists.renameChecklist'),
-                                style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+                                style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                ),
                               ),
                             ],
                           ),
@@ -1418,11 +1294,19 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                           value: 'delete',
                           child: Row(
                             children: [
-                              const Icon(Icons.delete_outline_rounded, size: 17, color: Color(0xFFEF4444)),
+                              Icon(
+                                Icons.delete_outline_rounded,
+                                size: 17,
+                                color: widget.isDark ? AppColors.darkError : AppColors.lightError,
+                              ),
                               const SizedBox(width: 10),
                               Text(
                                 widget.tr('checklists.deleteChecklist'),
-                                style: GoogleFonts.inter(fontSize: 13, color: const Color(0xFFEF4444), fontWeight: FontWeight.w600),
+                                style: GoogleFonts.inter(
+                                  fontSize: 13,
+                                  color: widget.isDark ? AppColors.darkError : AppColors.lightError,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ],
                           ),
@@ -1431,15 +1315,15 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
 
                 // Fine Divider
                 Divider(
                   height: 1,
                   thickness: 0.8,
-                  color: widget.isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+                  color: widget.isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 12),
 
                 // Progress Info Row
                 Row(
@@ -1450,7 +1334,7 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                        color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                     Text(
@@ -1467,11 +1351,11 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
 
                 // Smooth Linear Progress Bar
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(4),
                   child: LinearProgressIndicator(
                     value: ratio,
-                    minHeight: 7,
-                    backgroundColor: widget.isDark ? const Color(0xFF101F31) : const Color(0xFFE2E8F0),
+                    minHeight: 6,
+                    backgroundColor: widget.isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
                     valueColor: AlwaysStoppedAnimation<Color>(accentColor),
                   ),
                 ),
@@ -1486,16 +1370,16 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                        color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: accentColor.withValues(alpha: widget.isDark ? 0.18 : 0.1),
-                        borderRadius: BorderRadius.circular(12),
+                        color: accentColor.withValues(alpha: widget.isDark ? 0.15 : 0.1),
+                        borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: accentColor.withValues(alpha: 0.35),
+                          color: accentColor.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
@@ -1567,38 +1451,33 @@ class _HoverStarterCardState extends State<_HoverStarterCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           transform: Matrix4.translationValues(0, _isHovered ? -2.0 : 0, 0),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: widget.isDark ? const Color(0xFF1B2F48).withValues(alpha: 0.95) : const Color(0xFFFBF8EE),
-            borderRadius: BorderRadius.circular(16),
+            color: widget.isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: _isHovered
-                  ? const Color(0xFFC5A85E).withValues(alpha: 0.8)
-                  : (widget.isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0)),
-              width: _isHovered ? 1.4 : 1.0,
+                  ? (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                  : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              width: 1.0,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: _isHovered
-                    ? const Color(0xFFC5A85E).withValues(alpha: widget.isDark ? 0.15 : 0.08)
-                    : Colors.black.withValues(alpha: widget.isDark ? 0.1 : 0.02),
-                blurRadius: _isHovered ? 12 : 6,
-                offset: Offset(0, _isHovered ? 4 : 2),
-              ),
-            ],
           ),
           child: Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(9),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFC5A85E).withValues(alpha: widget.isDark ? 0.2 : 0.12),
-                  borderRadius: BorderRadius.circular(12),
+                  color: (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: const Color(0xFFC5A85E).withValues(alpha: 0.35),
+                    color: (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.25),
                   ),
                 ),
-                child: Icon(widget.icon, color: const Color(0xFFC5A85E), size: 20),
+                child: Icon(
+                  widget.icon,
+                  color: widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -1610,7 +1489,7 @@ class _HoverStarterCardState extends State<_HoverStarterCard> {
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: widget.isDark ? Colors.white : const Color(0xFF101F31),
+                        color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -1618,7 +1497,7 @@ class _HoverStarterCardState extends State<_HoverStarterCard> {
                       widget.subtitle,
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                        color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -1627,8 +1506,10 @@ class _HoverStarterCardState extends State<_HoverStarterCard> {
               const SizedBox(width: 8),
               Icon(
                 Icons.arrow_forward_rounded,
-                size: 18,
-                color: _isHovered ? const Color(0xFFC5A85E) : (widget.isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8)),
+                size: 16,
+                color: _isHovered
+                    ? (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                    : (widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
               ),
             ],
           ),
@@ -1672,23 +1553,14 @@ class _HoverGlassButtonState extends State<_HoverGlassButton> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color: _isHovered
-                ? (widget.isDark ? const Color(0xFFC5A85E).withValues(alpha: 0.22) : const Color(0xFFC5A85E).withValues(alpha: 0.18))
-                : (widget.isDark ? const Color(0xFF1B2F48).withValues(alpha: 0.7) : const Color(0xFFFBF8EE).withValues(alpha: 0.9)),
-            borderRadius: BorderRadius.circular(12),
+                ? (widget.isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface)
+                : (widget.isDark ? AppColors.darkSurface : AppColors.lightSurface),
+            borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: _isHovered
-                  ? const Color(0xFFC5A85E).withValues(alpha: 0.6)
-                  : (widget.isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0)),
+                  ? (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                  : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder),
             ),
-            boxShadow: _isHovered
-                ? [
-                    BoxShadow(
-                      color: const Color(0xFFC5A85E).withValues(alpha: 0.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : null,
           ),
           child: widget.child,
         ),

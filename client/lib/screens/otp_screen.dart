@@ -1,12 +1,12 @@
 import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pinput/pinput.dart';
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
 import 'home_screen.dart';
-
+import '../theme/app_theme.dart';
 
 class OtpScreen extends ConsumerStatefulWidget {
   final String email;
@@ -100,15 +100,19 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
     final success = await ref.read(authProvider.notifier).resendOtp(widget.email);
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(tr('auth.otpSentSuccess')), behavior: SnackBarBehavior.floating),
+        SnackBar(
+          content: Text(tr('auth.otpResentSuccess')),
+          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSecondary : AppColors.lightSecondary,
+          behavior: SnackBarBehavior.floating,
+        ),
       );
       _startTimer();
     } else if (mounted) {
       final error = ref.read(authProvider).errorMessage;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(error ?? tr('auth.otpResendFailed')),
-          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(error ?? tr('auth.resendFailed')),
+          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkError : AppColors.lightError,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -116,13 +120,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
   }
 
   void _verifyOtp() async {
+    final otp = _pinController.text.trim();
     final tr = ref.read(localeProvider.notifier).translate;
-    final otp = _pinController.text;
+    
     if (otp.length != 6) {
-       ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(tr('auth.enterValidOtp')),
-          backgroundColor: Theme.of(context).colorScheme.error,
+          content: Text(tr('auth.enterComplete6Digit')),
+          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkError : AppColors.lightError,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -141,7 +146,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(tr('auth.verificationSuccess')),
-          backgroundColor: Colors.green,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSecondary : AppColors.lightSecondary,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -165,7 +170,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(error ?? tr('auth.invalidOtp')),
-          backgroundColor: Theme.of(context).colorScheme.error,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkError : AppColors.lightError,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -179,15 +184,16 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
     ref.watch(localeProvider);
     final tr = ref.read(localeProvider.notifier).translate;
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final colorScheme = theme.colorScheme;
     final authState = ref.watch(authProvider);
 
     final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 64,
-      textStyle: TextStyle(fontSize: 24, color: colorScheme.onSurface, fontWeight: FontWeight.w600),
+      width: 54,
+      height: 60,
+      textStyle: TextStyle(fontSize: 22, color: colorScheme.onSurface, fontWeight: FontWeight.w700),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerHighest,
+        color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colorScheme.outline),
       ),
@@ -195,206 +201,158 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
 
     final focusedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration!.copyWith(
-        border: Border.all(color: colorScheme.primary),
-        boxShadow: [
-          BoxShadow(
-            color: colorScheme.primary.withValues(alpha: 0.2),
-            blurRadius: 8,
-            spreadRadius: 2,
-          ),
-        ],
+        border: Border.all(color: colorScheme.primary, width: 1.5),
       ),
     );
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration!.copyWith(
-        color: colorScheme.surfaceContainerHighest,
+        color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
         border: Border.all(color: colorScheme.outline),
       ),
     );
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onSurface, size: 20),
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: colorScheme.onSurface, size: 18),
           onPressed: () => Navigator.pop(context),
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: const [],
       ),
-      body: Stack(
-        children: [
-          // Background Gradient Orbs
-          Positioned(
-            top: -100,
-            left: -100,
-            child: Container(
-              width: 300,
-              height: 300,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.primary.withValues(alpha: 0.3),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -150,
-            right: -100,
-            child: Container(
-              width: 400,
-              height: 400,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.secondary.withValues(alpha: 0.2),
-              ),
-            ),
-          ),
-          // Blur Layer
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
-              child: Container(
-                color: Colors.transparent,
-              ),
-            ),
-          ),
-          SafeArea(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 480),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
               child: FadeTransition(
                 opacity: _fadeAnimation,
                 child: SlideTransition(
                   position: _slideAnimation,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(40.0),
-                        decoration: BoxDecoration(
-                          color: colorScheme.surface,
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(color: colorScheme.outline),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 30,
-                              offset: const Offset(0, 10),
+                  child: Container(
+                    padding: const EdgeInsets.all(32.0),
+                    decoration: BoxDecoration(
+                      color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: colorScheme.outline),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Center(
+                          child: Container(
+                            width: 64,
+                            height: 64,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: colorScheme.primary.withValues(alpha: 0.1),
+                              border: Border.all(
+                                color: colorScheme.primary.withValues(alpha: 0.25),
+                              ),
                             ),
-                          ],
+                            child: Icon(
+                              Icons.mark_email_read_outlined,
+                              size: 32,
+                              color: colorScheme.primary,
+                            ),
+                          ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                        const SizedBox(height: 24),
+                        Text(
+                          tr('auth.verifyYourEmail'),
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: colorScheme.onSurface,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          tr('auth.enter6Digit', {'email': widget.email}),
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: colorScheme.onSurfaceVariant,
+                            height: 1.4,
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        
+                        Center(
+                          child: Pinput(
+                            length: 6,
+                            controller: _pinController,
+                            focusNode: _focusNode,
+                            defaultPinTheme: defaultPinTheme,
+                            focusedPinTheme: focusedPinTheme,
+                            submittedPinTheme: submittedPinTheme,
+                            pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                            showCursor: true,
+                            onCompleted: (pin) => _verifyOtp(),
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 24),
+                        
+                        Text(
+                          _start > 0 ? tr('auth.codeExpiresIn', {'time': _formattedTime}) : tr('auth.codeExpired'),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: _start > 0 ? colorScheme.onSurfaceVariant : colorScheme.error,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 24),
+                        
+                        ElevatedButton(
+                          onPressed: authState.status == AuthStatus.loading || _start == 0 ? null : _verifyOtp,
+                          child: authState.status == AuthStatus.loading
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
+                                  ),
+                                )
+                              : Text(
+                                  tr('auth.verify'),
+                                  style: const TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                        ),
+
+                        const SizedBox(height: 24),
+                        
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Center(
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      colorScheme.primary.withValues(alpha: 0.2),
-                                      colorScheme.primary.withValues(alpha: 0.05),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  border: Border.all(
-                                    color: colorScheme.primary.withValues(alpha: 0.3),
-                                  ),
-                                ),
-                                child: Icon(
-                                  Icons.mark_email_read_outlined,
-                                  size: 48,
-                                  color: colorScheme.primary,
+                            Text(
+                              tr('auth.didntReceiveCode'),
+                              style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13),
+                            ),
+                            const SizedBox(width: 4),
+                            GestureDetector(
+                              onTap: _canResend ? _resendOtp : null,
+                              child: Text(
+                                _canResend ? tr('auth.resend') : tr('auth.waitCooldown', {'seconds': '$_resendCooldown'}),
+                                style: TextStyle(
+                                  color: _canResend ? (isDark ? AppColors.darkAccent : AppColors.lightAccent) : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13,
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 32),
-                            Text(
-                              tr('auth.verifyYourEmail'),
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.displayLarge?.copyWith(fontSize: 32),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              tr('auth.enter6Digit', {'email': widget.email}),
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 16),
-                            ),
-                            const SizedBox(height: 36),
-                            
-                            Center(
-                              child: Pinput(
-                                length: 6,
-                                controller: _pinController,
-                                focusNode: _focusNode,
-                                defaultPinTheme: defaultPinTheme,
-                                focusedPinTheme: focusedPinTheme,
-                                submittedPinTheme: submittedPinTheme,
-                                pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                                showCursor: true,
-                                onCompleted: (pin) => _verifyOtp(),
-                              ),
-                            ),
-                            
-                            const SizedBox(height: 32),
-                            
-                            Text(
-                              _start > 0 ? tr('auth.codeExpiresIn', {'time': _formattedTime}) : tr('auth.codeExpired'),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: _start > 0 ? colorScheme.onSurfaceVariant : theme.colorScheme.error,
-                                fontSize: 14,
-                              ),
-                            ),
-                            
-                            const SizedBox(height: 32),
-                            
-                            ElevatedButton(
-                              onPressed: authState.status == AuthStatus.loading || _start == 0 ? null : _verifyOtp,
-                              child: authState.status == AuthStatus.loading
-                                  ? SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
-                                      ),
-                                    )
-                                  : Text(tr('auth.verify')),
                             ),
                           ],
                         ),
-                      ),
-                      
-                      const SizedBox(height: 28),
-                      
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            tr('auth.didntReceiveCode'),
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                          GestureDetector(
-                            onTap: _canResend ? _resendOtp : null,
-                            child: Text(
-                              _canResend ? tr('auth.resend') : tr('auth.waitCooldown', {'seconds': '$_resendCooldown'}),
-                              style: TextStyle(
-                                color: _canResend ? colorScheme.primary : colorScheme.onSurface.withValues(alpha: 0.38),
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -402,9 +360,6 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
           ),
         ),
       ),
-        ],
-      ),
     );
   }
 }
-

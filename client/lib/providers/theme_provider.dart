@@ -15,9 +15,12 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
 
   Future<void> _loadThemePreference() async {
     final prefs = await SharedPreferences.getInstance();
-    final isDark = prefs.getBool(_themePrefKey);
-    if (isDark != null) {
-      state = isDark ? ThemeMode.dark : ThemeMode.light;
+    final functionalAllowed = prefs.getBool('storage_consent_functional');
+    if (functionalAllowed == true) {
+      final isDark = prefs.getBool(_themePrefKey);
+      if (isDark != null) {
+        state = isDark ? ThemeMode.dark : ThemeMode.light;
+      }
     }
   }
 
@@ -28,7 +31,10 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
     state = newTheme;
     
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_themePrefKey, newTheme == ThemeMode.dark);
+    final functionalAllowed = prefs.getBool('storage_consent_functional');
+    if (functionalAllowed == true) {
+      await prefs.setBool(_themePrefKey, newTheme == ThemeMode.dark);
+    }
   }
 
   void setTheme(ThemeMode mode) async {
@@ -37,7 +43,10 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
     if (mode == ThemeMode.system) {
       await prefs.remove(_themePrefKey);
     } else {
-      await prefs.setBool(_themePrefKey, mode == ThemeMode.dark);
+      final functionalAllowed = prefs.getBool('storage_consent_functional');
+      if (functionalAllowed == true) {
+        await prefs.setBool(_themePrefKey, mode == ThemeMode.dark);
+      }
     }
   }
 }

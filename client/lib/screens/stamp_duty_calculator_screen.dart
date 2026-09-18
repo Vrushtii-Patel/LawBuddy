@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/user_profile_button.dart';
 import '../services/api_service.dart';
 import '../providers/locale_provider.dart';
+import '../theme/app_theme.dart';
 
 class StampDutyCalculatorScreen extends ConsumerStatefulWidget {
   const StampDutyCalculatorScreen({super.key});
@@ -25,11 +26,8 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
   String? _isFirstTimeBuyer;
 
   bool _hasCalculated = false;
-  Offset _mousePos = const Offset(600, 300);
 
   // Animation Controllers
-  AnimationController? _ambientController;
-  Animation<double>? _pulseAnimation;
   AnimationController? _entryController;
   Animation<double>? _fadeAnimation;
   Animation<Offset>? _slideAnimation;
@@ -58,109 +56,84 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
     'Gujarat',
     'Tamil Nadu',
     'West Bengal',
-    'Rajasthan',
     'Uttar Pradesh',
+    'Haryana',
+    'Telangana',
+    'Rajasthan',
+    'Kerala',
+    'Madhya Pradesh',
+    'Punjab',
     'Other',
   ];
 
   final List<String> _genders = [
     'Male',
     'Female',
-    'Joint',
+    'Joint (Male + Female)',
+    'Other / Entity',
   ];
 
-  final List<String> _yesNoOptions = [
+  final List<String> _firstTimeOptions = [
     'Yes',
     'No',
   ];
 
-  void _initControllers() {
-    if (_entryController == null) {
-      _entryController = AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 600),
-      );
-      _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: _entryController!, curve: Curves.easeOutCubic),
-      );
-      _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.04), end: Offset.zero).animate(
-        CurvedAnimation(parent: _entryController!, curve: Curves.easeOutCubic),
-      );
-      _entryController!.forward();
-    }
-
-    _ambientController ??= AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 5500),
-    )..repeat(reverse: true);
-
-    _pulseAnimation ??= Tween<double>(begin: 0.85, end: 1.15).animate(
-      CurvedAnimation(parent: _ambientController!, curve: Curves.easeInOutSine),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
-    _initControllers();
+
+    _entryController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _entryController!,
+      curve: Curves.easeOutCubic,
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.03),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _entryController!,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _entryController!.forward();
   }
 
   @override
   void dispose() {
     _entryController?.dispose();
-    _ambientController?.dispose();
     _propertyValueController.dispose();
     _circleRateController.dispose();
     super.dispose();
   }
 
-  String _getPropertyTypeDisplay(String type, LocaleNotifier loc) {
-    switch (type) {
-      case 'Residential':
-        return loc.translate('calc.typeResidential');
-      case 'Commercial':
-        return loc.translate('calc.typeCommercial');
-      case 'Agricultural':
-        return loc.translate('calc.typeAgricultural');
-      case 'Other':
-        return loc.translate('calc.typeOther');
-      default:
-        return type;
+  String _formatIndianRupee(double amount) {
+    if (amount.isNaN || amount.isInfinite) return '₹0';
+    final int rounded = amount.round();
+    final String s = rounded.toString();
+    if (s.length <= 3) return '₹$s';
+
+    final String lastThree = s.substring(s.length - 3);
+    final String remaining = s.substring(0, s.length - 3);
+
+    final StringBuffer formatted = StringBuffer();
+    for (int i = 0; i < remaining.length; i++) {
+      if ((remaining.length - i) % 2 == 0 && i != 0) {
+        formatted.write(',');
+      }
+      formatted.write(remaining[i]);
     }
+    formatted.write(',$lastThree');
+    return '₹${formatted.toString()}';
   }
 
-  String _getGenderDisplay(String gender, LocaleNotifier loc) {
-    switch (gender) {
-      case 'Male':
-        return loc.translate('calc.genderMale');
-      case 'Female':
-        return loc.translate('calc.genderFemale');
-      case 'Joint':
-        return loc.translate('calc.genderJoint');
-      default:
-        return gender;
-    }
-  }
-
-  String _getYesNoDisplay(String opt, LocaleNotifier loc) {
-    switch (opt) {
-      case 'Yes':
-        return loc.translate('calc.yes');
-      case 'No':
-        return loc.translate('calc.no');
-      default:
-        return opt;
-    }
-  }
-
-  // State-specific and Property-type-specific calculation logic configuration
   void _calculateStampDuty() {
-    FocusScope.of(context).unfocus();
     final loc = ref.read(localeProvider.notifier);
-
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final double propVal = double.tryParse(_propertyValueController.text.replaceAll(',', '')) ?? 0.0;
     final double circleVal = double.tryParse(_circleRateController.text.replaceAll(',', '')) ?? 0.0;
@@ -169,7 +142,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(loc.translate('calc.fillAllError')),
-          backgroundColor: const Color(0xFFEF4444),
+          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -180,7 +153,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(loc.translate('calc.validValueError')),
-          backgroundColor: const Color(0xFFEF4444),
+          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -193,76 +166,103 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
     // Base Stamp Duty Rate determination
     double baseRate = 5.0; // Default Residential
 
-    switch (_selectedPropertyType) {
-      case 'Residential':
-        baseRate = 5.0;
+    switch (_selectedState) {
+      case 'Maharashtra':
+        baseRate = 6.0;
+        if (_selectedGender == 'Female') baseRate -= 1.0;
         break;
-      case 'Commercial':
+      case 'Karnataka':
+        if (applicableVal <= 2000000) {
+          baseRate = 2.0;
+        } else if (applicableVal <= 4500000) {
+          baseRate = 3.0;
+        } else {
+          baseRate = 5.0;
+        }
+        break;
+      case 'Delhi':
+        if (_selectedGender == 'Female') {
+          baseRate = 4.0;
+        } else if (_selectedGender == 'Joint (Male + Female)') {
+          baseRate = 5.0;
+        } else {
+          baseRate = 6.0;
+        }
+        break;
+      case 'Gujarat':
+        baseRate = 4.9;
+        if (_selectedGender == 'Female') baseRate = 0.0; // 100% exemption for women in GJ
+        break;
+      case 'Tamil Nadu':
+        baseRate = 7.0;
+        break;
+      case 'West Bengal':
+        baseRate = applicableVal > 4000000 ? 6.0 : 5.0;
+        break;
+      case 'Uttar Pradesh':
+        baseRate = 7.0;
+        if (_selectedGender == 'Female') baseRate -= 1.0;
+        break;
+      case 'Haryana':
+        if (_selectedGender == 'Female') {
+          baseRate = 5.0;
+        } else if (_selectedGender == 'Joint (Male + Female)') {
+          baseRate = 6.0;
+        } else {
+          baseRate = 7.0;
+        }
+        break;
+      case 'Telangana':
         baseRate = 6.0;
         break;
-      case 'Agricultural':
-        baseRate = 3.0;
+      case 'Rajasthan':
+        baseRate = 6.0;
+        if (_selectedGender == 'Female') baseRate -= 1.0;
         break;
-      case 'Other':
-        baseRate = 4.0;
+      case 'Kerala':
+        baseRate = 8.0;
         break;
+      case 'Madhya Pradesh':
+        baseRate = 7.5;
+        break;
+      case 'Punjab':
+        baseRate = _selectedGender == 'Female' ? 5.0 : 7.0;
+        break;
+      default:
+        baseRate = 5.0;
     }
 
-    // State specific adjustments
-    Map<String, double> stateRateMap = {
-      'Maharashtra': 6.0,
-      'Karnataka': 5.0,
-      'Delhi': 6.0,
-      'Gujarat': 4.9,
-      'Tamil Nadu': 7.0,
-      'West Bengal': 5.0,
-      'Rajasthan': 6.0,
-      'Uttar Pradesh': 7.0,
-      'Other': 5.0,
-    };
-
-    double effectiveStampRate = stateRateMap[_selectedState] ?? baseRate;
-
-    // Property type adjustment if non-residential
+    // Property Type Adjustments
     if (_selectedPropertyType == 'Commercial') {
-      effectiveStampRate += 1.0;
+      baseRate += 1.0;
     } else if (_selectedPropertyType == 'Agricultural') {
-      effectiveStampRate = (effectiveStampRate - 1.5).clamp(1.0, 10.0);
+      baseRate = (baseRate * 0.7).clamp(1.0, 10.0);
     }
 
-    // Gender Discount Logic
-    if (_selectedGender == 'Female') {
-      effectiveStampRate -= 1.0; // 1% concession for female buyers
-    } else if (_selectedGender == 'Joint') {
-      effectiveStampRate -= 0.5; // 0.5% concession for joint registration
+    // First-time buyer concession (e.g., 0.5% rebate where applicable)
+    if (_isFirstTimeBuyer == 'Yes' && baseRate > 2.0) {
+      baseRate = (baseRate - 0.5).clamp(1.0, 15.0);
     }
 
-    // First-Time Buyer Discount Logic
-    if (_isFirstTimeBuyer == 'Yes') {
-      effectiveStampRate -= 0.5;
-    }
-
-    // Ensure rate does not drop below 1%
-    effectiveStampRate = effectiveStampRate.clamp(1.0, 15.0);
-
-    // Registration Fee: 1% standard
+    // Registration fee calculation (Standard: 1% capped at 30,000 in MH/certain states, or flat 1%)
     double regRate = 1.0;
     double regAmount = applicableVal * (regRate / 100.0);
 
-    // Maharashtra registration fee cap rule (1% up to ₹30,000)
     if (_selectedState == 'Maharashtra' && regAmount > 30000) {
       regAmount = 30000;
-      regRate = (regAmount / applicableVal) * 100.0;
+    } else if (_selectedState == 'Tamil Nadu') {
+      regRate = 4.0;
+      regAmount = applicableVal * (regRate / 100.0);
     }
 
-    double stampAmount = applicableVal * (effectiveStampRate / 100.0);
-    double total = stampAmount + regAmount;
+    final double stampAmount = applicableVal * (baseRate / 100.0);
+    final double total = stampAmount + regAmount;
 
     setState(() {
       _enteredPropertyValue = propVal;
       _enteredCircleRate = circleVal;
       _applicableMarketValue = applicableVal;
-      _stampDutyRate = effectiveStampRate;
+      _stampDutyRate = baseRate;
       _stampDutyAmount = stampAmount;
       _registrationRate = regRate;
       _registrationAmount = regAmount;
@@ -270,24 +270,16 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
       _hasCalculated = true;
     });
 
-    // Sync calculation with MongoDB database
+    // Save calculation event to backend
     ApiService.saveStampDutyCalculation({
-      'propertyType': _selectedPropertyType,
       'state': _selectedState,
-      'agreementValue': propVal,
-      'circleRate': circleVal,
-      'applicableMarketValue': applicableVal,
-      'gender': _selectedGender,
-      'firstTimeBuyer': _isFirstTimeBuyer,
-      'stampDutyRate': effectiveStampRate,
-      'stampDutyAmount': stampAmount,
-      'registrationRate': regRate,
-      'registrationAmount': regAmount,
+      'propertyType': _selectedPropertyType,
+      'applicableValue': applicableVal,
       'totalPayable': total,
     });
   }
 
-  void _resetForm() {
+  void _resetCalculator() {
     _formKey.currentState?.reset();
     _propertyValueController.clear();
     _circleRateController.clear();
@@ -297,207 +289,102 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
       _selectedGender = null;
       _isFirstTimeBuyer = null;
       _hasCalculated = false;
+      _enteredPropertyValue = 0.0;
+      _enteredCircleRate = 0.0;
+      _applicableMarketValue = 0.0;
+      _stampDutyRate = 0.0;
+      _stampDutyAmount = 0.0;
+      _registrationRate = 0.0;
+      _registrationAmount = 0.0;
+      _totalPayable = 0.0;
     });
-  }
-
-  // Indian Rupee currency formatter (Lakhs & Crores format)
-  String _formatIndianRupee(double amount) {
-    if (amount <= 0) return '₹ 0';
-
-    final int val = amount.round();
-    final String s = val.toString();
-    if (s.length <= 3) return '₹ $s';
-
-    final String lastThree = s.substring(s.length - 3);
-    final String remaining = s.substring(0, s.length - 3);
-
-    final StringBuffer result = StringBuffer();
-    for (int i = 0; i < remaining.length; i++) {
-      if (i > 0 && (remaining.length - i) % 2 == 0) {
-        result.write(',');
-      }
-      result.write(remaining[i]);
-    }
-    result.write(',$lastThree');
-    return '₹ ${result.toString()}';
   }
 
   @override
   Widget build(BuildContext context) {
-    _initControllers();
     ref.watch(localeProvider);
     final loc = ref.read(localeProvider.notifier);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 960;
 
-    final bgGradientColors = isDark
-        ? const [
-            Color(0xFF162B43),
-            Color(0xFF13253A),
-            Color(0xFF101F31),
-          ]
-        : const [
-            Color(0xFFFBF8EE),
-            Color(0xFFF7F1D0),
-            Color(0xFFF4EFE0),
-          ];
-
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
-      body: MouseRegion(
-        onHover: (event) {
-          if (isDesktop) {
-            setState(() => _mousePos = event.position);
-          }
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: bgGradientColors,
-            ),
-          ),
-          child: Stack(
-            children: [
-              // ==========================================
-              // AMBIENT LIGHTING (CYAN PRIMARY FOR STAMP DUTY)
-              // ==========================================
-              AnimatedBuilder(
-                animation: _ambientController!,
-                builder: (context, child) {
-                  final pulse = _pulseAnimation?.value ?? 1.0;
-                  return Stack(
-                    children: [
-                      // Orb 1: Top-Left Cyan Ambient Aurora
-                      Positioned(
-                        top: -140 + (25 * _ambientController!.value),
-                        left: -120 + (20 * _ambientController!.value),
-                        child: IgnorePointer(
-                          child: Container(
-                            width: 580 * pulse,
-                            height: 580 * pulse,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: RadialGradient(
-                                colors: [
-                                  const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.14 : 0.08),
-                                  const Color(0xFF1D4ED8).withValues(alpha: isDark ? 0.06 : 0.03),
-                                  Colors.transparent,
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // TOP BAR
+            _buildTopBar(context, isDark, loc),
+
+            // BODY CONTENT
+            Expanded(
+              child: FadeTransition(
+                opacity: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
+                child: SlideTransition(
+                  position: _slideAnimation ?? const AlwaysStoppedAnimation(Offset.zero),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isDesktop ? 48.0 : 16.0,
+                      vertical: 24.0,
+                    ),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 1160),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // HERO HEADER
+                            _buildHeroHeader(isDark, loc, isDesktop),
+                            const SizedBox(height: 32),
+
+                            // TWO COLUMN OR STACKED LAYOUT
+                            if (isDesktop)
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Left Column: Calculator Inputs
+                                  Expanded(
+                                    flex: 6,
+                                    child: _buildCalculatorFormCard(context, isDark, loc, isDesktop),
+                                  ),
+                                  const SizedBox(width: 28),
+
+                                  // Right Column: Result Summary & Breakdown
+                                  Expanded(
+                                    flex: 5,
+                                    child: Column(
+                                      children: [
+                                        if (_hasCalculated) ...[
+                                          _buildResultSummaryCard(context, isDark, loc),
+                                          const SizedBox(height: 20),
+                                        ],
+                                        _buildDisclaimerBox(context, isDark, loc),
+                                      ],
+                                    ),
+                                  ),
                                 ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Orb 2: Bottom-Right Gold Ambient Aurora
-                      Positioned(
-                        bottom: -100 + (30 * (1.0 - _ambientController!.value)),
-                        right: -140,
-                        child: IgnorePointer(
-                          child: Container(
-                            width: 620 * (2.0 - pulse),
-                            height: 620 * (2.0 - pulse),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: RadialGradient(
-                                colors: [
-                                  const Color(0xFFC5A85E).withValues(alpha: isDark ? 0.09 : 0.05),
-                                  const Color(0xFFFFDF8C).withValues(alpha: isDark ? 0.04 : 0.02),
-                                  Colors.transparent,
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      // Orb 3: Mouse-responsive Interactive Spotlight (Desktop)
-                      if (isDesktop)
-                        Positioned(
-                          left: _mousePos.dx - 350,
-                          top: _mousePos.dy - 350,
-                          child: IgnorePointer(
-                            child: Container(
-                              width: 700,
-                              height: 700,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(
-                                  colors: [
-                                    const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.045 : 0.025),
-                                    Colors.transparent,
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                },
-              ),
-
-              // ==========================================
-              // MAIN CONTENT
-              // ==========================================
-              SafeArea(
-                child: Column(
-                  children: [
-                    // TOP BAR
-                    _buildTopBar(context, isDark, loc),
-
-                    // BODY CONTENT
-                    Expanded(
-                      child: FadeTransition(
-                        opacity: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
-                        child: SlideTransition(
-                          position: _slideAnimation ?? const AlwaysStoppedAnimation(Offset.zero),
-                          child: SingleChildScrollView(
-                            physics: const BouncingScrollPhysics(),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: isDesktop ? 48.0 : 20.0,
-                              vertical: 16.0,
-                            ),
-                            child: Center(
-                              child: ConstrainedBox(
-                                constraints: const BoxConstraints(maxWidth: 880),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  children: [
-                                    // HERO HEADER
-                                    _buildHeroHeader(isDark, loc, isDesktop),
-                                    const SizedBox(height: 24),
-
-                                    // CALCULATOR FORM CARD
-                                    _buildCalculatorFormCard(context, isDark, loc, isDesktop),
-
-                                    // RESULTS BREAKDOWN SECTION
-                                    if (_hasCalculated) ...[
-                                      const SizedBox(height: 28),
-                                      _buildResultSummaryCard(context, isDark, loc),
-                                    ],
-
-                                    const SizedBox(height: 24),
-
-                                    // STATUTORY DISCLAIMER
-                                    _buildDisclaimerBox(context, isDark, loc),
-                                    const SizedBox(height: 48),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                              )
+                            else ...[
+                              // Mobile / Tablet Stacked Layout
+                              _buildCalculatorFormCard(context, isDark, loc, isDesktop),
+                              const SizedBox(height: 24),
+                              if (_hasCalculated) ...[
+                                _buildResultSummaryCard(context, isDark, loc),
+                                const SizedBox(height: 20),
+                              ],
+                              _buildDisclaimerBox(context, isDark, loc),
+                            ],
+                            const SizedBox(height: 48),
+                          ],
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -524,14 +411,14 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                 children: [
                   Icon(
                     Icons.arrow_back_rounded,
-                    color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextPrimary,
                     size: 18,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     loc.translate('common.back'),
                     style: GoogleFonts.inter(
-                      color: isDark ? const Color(0xFFE8E1D0) : const Color(0xFF244A78),
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextPrimary,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
@@ -546,10 +433,10 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
               decoration: BoxDecoration(
-                color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.12 : 0.08),
+                color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.2 : 0.08),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.35 : 0.25),
+                  color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.35 : 0.2),
                 ),
               ),
               child: Row(
@@ -560,13 +447,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                     height: 6,
                     decoration: const BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFF38BDF8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xFF38BDF8),
-                          blurRadius: 6,
-                        ),
-                      ],
+                      color: AppColors.lightPrimary,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -575,7 +456,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                     style: GoogleFonts.inter(
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
-                      color: const Color(0xFF38BDF8),
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
                       letterSpacing: 0.9,
                     ),
                   ),
@@ -605,10 +486,10 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
-            color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.14 : 0.1),
+            color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.2 : 0.08),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.35 : 0.25),
+              color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.35 : 0.2),
             ),
           ),
           child: Row(
@@ -619,13 +500,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                 height: 6,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color(0xFF38BDF8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xFF38BDF8),
-                      blurRadius: 6,
-                    ),
-                  ],
+                  color: AppColors.lightPrimary,
                 ),
               ),
               const SizedBox(width: 7),
@@ -635,7 +510,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                   fontSize: 10,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.8,
-                  color: const Color(0xFF38BDF8),
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
                 ),
               ),
             ],
@@ -651,7 +526,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
             fontSize: isDesktop ? 30 : 24,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.8,
-            color: isDark ? Colors.white : const Color(0xFF101F31),
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
         ),
         const SizedBox(height: 8),
@@ -665,7 +540,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
             style: GoogleFonts.inter(
               fontSize: isDesktop ? 14 : 13,
               height: 1.5,
-              color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
             ),
           ),
         ),
@@ -679,19 +554,12 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
   Widget _buildCalculatorFormCard(BuildContext context, bool isDark, LocaleNotifier loc, bool isDesktop) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1B2F48).withValues(alpha: 0.95) : const Color(0xFFFBF8EE),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.35 : 0.25),
-          width: 1.2,
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.0,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.08 : 0.04),
-            blurRadius: 20,
-            offset: const Offset(0, 6),
-          ),
-        ],
       ),
       padding: EdgeInsets.all(isDesktop ? 32.0 : 20.0),
       child: Form(
@@ -705,13 +573,10 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.2 : 0.12),
+                    color: AppColors.lightPrimary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: const Color(0xFF38BDF8).withValues(alpha: 0.4),
-                    ),
                   ),
-                  child: const Icon(Icons.calculate_rounded, color: Color(0xFF38BDF8), size: 24),
+                  child: const Icon(Icons.calculate_rounded, color: AppColors.lightPrimary, size: 24),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -721,7 +586,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                       Text(
                         loc.translate('calc.cardTitle'),
                         style: GoogleFonts.plusJakartaSans(
-                          color: isDark ? Colors.white : const Color(0xFF101F31),
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                           letterSpacing: -0.3,
@@ -731,7 +596,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                       Text(
                         'Input deed consideration, circle valuation & concessions',
                         style: GoogleFonts.inter(
-                          color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           fontSize: 12,
                         ),
                       ),
@@ -748,72 +613,72 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                 final isTwoCol = constraints.maxWidth > 560;
 
                 Widget propertyTypeField = _buildDropdownField(
-                  label: loc.translate('calc.propertyType'),
+                  label: loc.translate('calc.propertyTypeLabel'),
                   value: _selectedPropertyType,
-                  hintText: loc.translate('calc.selectPropertyType'),
+                  hintText: loc.translate('calc.selectPropertyTypeHint'),
                   items: _propertyTypes,
-                  itemLabelBuilder: (val) => _getPropertyTypeDisplay(val, loc),
-                  icon: Icons.home_work_rounded,
+                  itemLabelBuilder: (item) => loc.translate('calc.propertyType$item'),
+                  icon: Icons.apartment_rounded,
                   isDark: isDark,
                   onChanged: (val) => setState(() => _selectedPropertyType = val),
                 );
 
                 Widget stateField = _buildDropdownField(
-                  label: loc.translate('calc.state'),
+                  label: loc.translate('calc.stateLabel'),
                   value: _selectedState,
-                  hintText: loc.translate('calc.selectState'),
+                  hintText: loc.translate('calc.selectStateHint'),
                   items: _states,
-                  icon: Icons.location_on_rounded,
+                  icon: Icons.location_city_rounded,
                   isDark: isDark,
                   onChanged: (val) => setState(() => _selectedState = val),
                 );
 
-                Widget propertyValueField = _buildTextField(
-                  label: loc.translate('calc.agreementValue'),
-                  hint: loc.translate('calc.enterAgreementValue'),
+                Widget propertyValField = _buildTextField(
+                  label: loc.translate('calc.propValueLabel'),
+                  hint: 'e.g. 75,00,000',
                   controller: _propertyValueController,
                   icon: Icons.currency_rupee_rounded,
                   isDark: isDark,
                   validator: (val) {
-                    if ((val == null || val.trim().isEmpty) && _circleRateController.text.trim().isEmpty) {
-                      return loc.translate('calc.enterAgreementValue');
+                    if (val == null || val.isEmpty) {
+                      return loc.translate('calc.enterPropValError');
                     }
                     return null;
                   },
                 );
 
                 Widget circleRateField = _buildTextField(
-                  label: loc.translate('calc.circleRate'),
-                  hint: loc.translate('calc.enterCircleRate'),
+                  label: loc.translate('calc.circleRateLabel'),
+                  hint: 'e.g. 68,00,000',
                   controller: _circleRateController,
-                  icon: Icons.account_balance_rounded,
+                  icon: Icons.domain_verification_rounded,
                   isDark: isDark,
-                  validator: (val) {
-                    if ((val == null || val.trim().isEmpty) && _propertyValueController.text.trim().isEmpty) {
-                      return loc.translate('calc.enterCircleRate');
-                    }
-                    return null;
-                  },
+                  validator: (val) => null,
                 );
 
                 Widget genderField = _buildDropdownField(
-                  label: loc.translate('calc.gender'),
+                  label: loc.translate('calc.genderLabel'),
                   value: _selectedGender,
-                  hintText: loc.translate('calc.selectGender'),
+                  hintText: loc.translate('calc.selectGenderHint'),
                   items: _genders,
-                  itemLabelBuilder: (val) => _getGenderDisplay(val, loc),
-                  icon: Icons.person_rounded,
+                  itemLabelBuilder: (item) {
+                    if (item.startsWith('Male')) return loc.translate('calc.genderMale');
+                    if (item.startsWith('Female')) return loc.translate('calc.genderFemale');
+                    if (item.startsWith('Joint')) return loc.translate('calc.genderJoint');
+                    return loc.translate('calc.genderOther');
+                  },
+                  icon: Icons.wc_rounded,
                   isDark: isDark,
                   onChanged: (val) => setState(() => _selectedGender = val),
                 );
 
                 Widget firstTimeBuyerField = _buildDropdownField(
-                  label: loc.translate('calc.firstTimeBuyer'),
+                  label: loc.translate('calc.firstTimeLabel'),
                   value: _isFirstTimeBuyer,
-                  hintText: loc.translate('calc.selectOption'),
-                  items: _yesNoOptions,
-                  itemLabelBuilder: (val) => _getYesNoDisplay(val, loc),
-                  icon: Icons.verified_user_rounded,
+                  hintText: loc.translate('calc.selectOptionHint'),
+                  items: _firstTimeOptions,
+                  itemLabelBuilder: (item) => item == 'Yes' ? loc.translate('common.yes') : loc.translate('common.no'),
+                  icon: Icons.key_rounded,
                   isDark: isDark,
                   onChanged: (val) => setState(() => _isFirstTimeBuyer = val),
                 );
@@ -833,7 +698,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(child: propertyValueField),
+                          Expanded(child: propertyValField),
                           const SizedBox(width: 18),
                           Expanded(child: circleRateField),
                         ],
@@ -856,7 +721,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                       const SizedBox(height: 16),
                       stateField,
                       const SizedBox(height: 16),
-                      propertyValueField,
+                      propertyValField,
                       const SizedBox(height: 16),
                       circleRateField,
                       const SizedBox(height: 16),
@@ -868,27 +733,26 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                 }
               },
             ),
-
             const SizedBox(height: 30),
 
-            // Action Buttons: Calculate & Reset
+            // Action Buttons
             Row(
               children: [
                 Expanded(
                   flex: 3,
                   child: _HoverCalculateButton(
-                    onTap: _calculateStampDuty,
-                    label: loc.translate('calc.calculateBtn'),
+                    label: loc.translate('calc.calcButton'),
                     isDark: isDark,
+                    onTap: _calculateStampDuty,
                   ),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
-                  flex: 1,
+                  flex: 2,
                   child: _HoverResetButton(
-                    onTap: _resetForm,
-                    label: loc.translate('calc.resetBtn'),
+                    label: loc.translate('calc.resetButton'),
                     isDark: isDark,
+                    onTap: _resetCalculator,
                   ),
                 ),
               ],
@@ -917,7 +781,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
           style: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.w700,
-            color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF334155),
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
         ),
         const SizedBox(height: 8),
@@ -925,10 +789,10 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
           height: 50,
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF101F31) : Colors.white,
+            color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: isDark ? const Color(0xFF334356) : const Color(0xFFCBD5E1),
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
             ),
           ),
           child: DropdownButtonHideUnderline(
@@ -936,23 +800,23 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
               value: value,
               hint: Row(
                 children: [
-                  Icon(icon, size: 18, color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8)),
+                  Icon(icon, size: 18, color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                   const SizedBox(width: 10),
                   Text(
                     hintText,
                     style: GoogleFonts.inter(
                       fontSize: 13,
-                      color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
               ),
               isExpanded: true,
-              dropdownColor: isDark ? const Color(0xFF162B43) : const Color(0xFFFBF8EE),
+              dropdownColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
               icon: Icon(
                 Icons.keyboard_arrow_down_rounded,
-                color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
               items: items.map((String item) {
                 final display = itemLabelBuilder != null ? itemLabelBuilder(item) : item;
@@ -960,13 +824,13 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                   value: item,
                   child: Row(
                     children: [
-                      Icon(icon, size: 18, color: const Color(0xFF38BDF8)),
+                      Icon(icon, size: 18, color: AppColors.lightPrimary),
                       const SizedBox(width: 10),
                       Text(
                         display,
                         style: GoogleFonts.inter(
                           fontSize: 13,
-                          color: isDark ? const Color(0xFFF1F5F9) : const Color(0xFF0F172A),
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -998,7 +862,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
           style: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.w700,
-            color: isDark ? const Color(0xFFCBD5E1) : const Color(0xFF334155),
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
         ),
         const SizedBox(height: 8),
@@ -1008,7 +872,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           style: GoogleFonts.inter(
             fontSize: 14,
-            color: isDark ? const Color(0xFFF1F5F9) : const Color(0xFF0F172A),
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             fontWeight: FontWeight.w600,
           ),
           validator: validator,
@@ -1016,27 +880,27 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
             isDense: true,
             hintText: hint,
             hintStyle: GoogleFonts.inter(
-              color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               fontSize: 13,
             ),
             filled: true,
-            fillColor: isDark ? const Color(0xFF101F31) : Colors.white,
-            prefixIcon: Icon(icon, size: 18, color: const Color(0xFF38BDF8)),
+            fillColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+            prefixIcon: Icon(icon, size: 18, color: AppColors.lightPrimary),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide(
-                color: isDark ? const Color(0xFF334356) : const Color(0xFFCBD5E1),
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
               borderSide: BorderSide(
-                color: isDark ? const Color(0xFF334356) : const Color(0xFFCBD5E1),
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(14),
-              borderSide: const BorderSide(color: Color(0xFF38BDF8), width: 1.5),
+              borderSide: const BorderSide(color: AppColors.lightPrimary, width: 1.5),
             ),
           ),
         ),
@@ -1050,19 +914,12 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
   Widget _buildResultSummaryCard(BuildContext context, bool isDark, LocaleNotifier loc) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1B2F48).withValues(alpha: 0.95) : const Color(0xFFFBF8EE),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.45 : 0.35),
-          width: 1.4,
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.0,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.12 : 0.06),
-            blurRadius: 22,
-            offset: const Offset(0, 6),
-          ),
-        ],
       ),
       padding: const EdgeInsets.all(28.0),
       child: Column(
@@ -1077,19 +934,16 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withValues(alpha: isDark ? 0.2 : 0.12),
+                      color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: const Color(0xFF10B981).withValues(alpha: 0.4),
-                      ),
                     ),
-                    child: const Icon(Icons.receipt_long_rounded, color: Color(0xFF10B981), size: 22),
+                    child: Icon(Icons.receipt_long_rounded, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary, size: 22),
                   ),
                   const SizedBox(width: 12),
                   Text(
                     loc.translate('calc.summaryTitle'),
                     style: GoogleFonts.plusJakartaSans(
-                      color: isDark ? Colors.white : const Color(0xFF101F31),
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -0.3,
@@ -1100,21 +954,21 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF38BDF8).withValues(alpha: isDark ? 0.2 : 0.12),
+                  color: AppColors.lightPrimary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: const Color(0xFF38BDF8).withValues(alpha: 0.35),
+                    color: AppColors.lightPrimary.withValues(alpha: 0.2),
                   ),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.place_rounded, size: 13, color: Color(0xFF38BDF8)),
+                    const Icon(Icons.place_rounded, size: 13, color: AppColors.lightPrimary),
                     const SizedBox(width: 5),
                     Text(
                       _selectedState ?? '',
                       style: GoogleFonts.inter(
-                        color: const Color(0xFF38BDF8),
+                        color: AppColors.lightPrimary,
                         fontWeight: FontWeight.w800,
                         fontSize: 12,
                       ),
@@ -1135,10 +989,10 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
             _formatIndianRupee(_applicableMarketValue),
             isDark,
             isBold: true,
-            highlightColor: const Color(0xFF38BDF8),
+            highlightColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
           ),
           const SizedBox(height: 16),
-          Divider(height: 1, thickness: 0.8, color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0)),
+          Divider(height: 1, thickness: 0.8, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
           const SizedBox(height: 16),
 
           _buildResultRow(
@@ -1158,21 +1012,11 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: isDark
-                    ? [
-                        const Color(0xFF38BDF8).withValues(alpha: 0.18),
-                        const Color(0xFF1D4ED8).withValues(alpha: 0.12),
-                      ]
-                    : [
-                        const Color(0xFF38BDF8).withValues(alpha: 0.12),
-                        const Color(0xFF1D4ED8).withValues(alpha: 0.06),
-                      ],
-              ),
+              color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFF38BDF8).withValues(alpha: 0.4),
-                width: 1.2,
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                width: 1.0,
               ),
             ),
             child: Row(
@@ -1184,7 +1028,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                     Text(
                       loc.translate('calc.totalPayable'),
                       style: GoogleFonts.inter(
-                        color: const Color(0xFF38BDF8),
+                        color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.9,
@@ -1194,7 +1038,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                     Text(
                       loc.translate('calc.stampPlusReg'),
                       style: GoogleFonts.inter(
-                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         fontSize: 12,
                       ),
                     ),
@@ -1203,7 +1047,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                 Text(
                   _formatIndianRupee(_totalPayable),
                   style: GoogleFonts.plusJakartaSans(
-                    color: isDark ? Colors.white : const Color(0xFF101F31),
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.6,
@@ -1231,8 +1075,8 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
           label,
           style: GoogleFonts.inter(
             color: isBold
-                ? (isDark ? Colors.white : const Color(0xFF101F31))
-                : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B)),
+                ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
             fontSize: 14,
             fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
           ),
@@ -1240,7 +1084,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
         Text(
           value,
           style: GoogleFonts.plusJakartaSans(
-            color: highlightColor ?? (isDark ? Colors.white : const Color(0xFF101F31)),
+            color: highlightColor ?? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
             fontSize: 15,
             fontWeight: isBold ? FontWeight.w800 : FontWeight.w700,
           ),
@@ -1256,22 +1100,22 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1B2F48).withValues(alpha: 0.6) : const Color(0xFFFBF8EE),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline_rounded, color: Color(0xFF38BDF8), size: 19),
+          Icon(Icons.info_outline_rounded, color: isDark ? AppColors.darkAccent : AppColors.lightPrimary, size: 19),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               loc.translate('calc.disclaimer'),
               style: GoogleFonts.inter(
-                color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 fontSize: 12,
                 height: 1.45,
               ),
@@ -1317,31 +1161,24 @@ class _HoverCalculateButtonState extends State<_HoverCalculateButton> {
           height: 50,
           transform: Matrix4.translationValues(0, _isHovered ? -2.0 : 0, 0),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF38BDF8), Color(0xFF0284C7)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary,
             borderRadius: BorderRadius.circular(14),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF38BDF8).withValues(alpha: _isHovered ? 0.35 : 0.2),
-                blurRadius: _isHovered ? 14 : 8,
-                offset: Offset(0, _isHovered ? 4 : 2),
-              ),
-            ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.calculate_rounded, size: 20, color: Colors.white),
+              Icon(
+                Icons.calculate_rounded,
+                size: 20,
+                color: widget.isDark ? AppColors.darkBackground : Colors.white,
+              ),
               const SizedBox(width: 8),
               Text(
                 widget.label,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: widget.isDark ? AppColors.darkBackground : Colors.white,
                 ),
               ),
             ],
@@ -1386,11 +1223,11 @@ class _HoverResetButtonState extends State<_HoverResetButton> {
           height: 50,
           decoration: BoxDecoration(
             color: _isHovered
-                ? (widget.isDark ? const Color(0xFF334356).withValues(alpha: 0.5) : const Color(0xFFE2E8F0))
-                : (widget.isDark ? const Color(0xFF101F31) : Colors.white),
+                ? (widget.isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated)
+                : (widget.isDark ? AppColors.darkSurface : AppColors.lightSurface),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: widget.isDark ? const Color(0xFF334356) : const Color(0xFFCBD5E1),
+              color: widget.isDark ? AppColors.darkBorder : AppColors.lightBorder,
             ),
           ),
           child: Row(
@@ -1399,7 +1236,7 @@ class _HoverResetButtonState extends State<_HoverResetButton> {
               Icon(
                 Icons.restart_alt_rounded,
                 size: 18,
-                color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
               const SizedBox(width: 6),
               Text(
@@ -1407,7 +1244,7 @@ class _HoverResetButtonState extends State<_HoverResetButton> {
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                  color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 ),
               ),
             ],
@@ -1452,23 +1289,12 @@ class _HoverGlassButtonState extends State<_HoverGlassButton> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color: _isHovered
-                ? (widget.isDark ? const Color(0xFF38BDF8).withValues(alpha: 0.22) : const Color(0xFF38BDF8).withValues(alpha: 0.18))
-                : (widget.isDark ? const Color(0xFF1B2F48).withValues(alpha: 0.7) : const Color(0xFFFBF8EE).withValues(alpha: 0.9)),
+                ? (widget.isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated)
+                : (widget.isDark ? AppColors.darkSurface : AppColors.lightSurface),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: _isHovered
-                  ? const Color(0xFF38BDF8).withValues(alpha: 0.6)
-                  : (widget.isDark ? const Color(0xFF334356) : const Color(0xFFE4DDD0)),
+              color: widget.isDark ? AppColors.darkBorder : AppColors.lightBorder,
             ),
-            boxShadow: _isHovered
-                ? [
-                    BoxShadow(
-                      color: const Color(0xFF38BDF8).withValues(alpha: 0.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : null,
           ),
           child: widget.child,
         ),

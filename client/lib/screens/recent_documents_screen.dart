@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
 import '../services/api_service.dart';
 import '../services/pdf_export_service.dart';
+import '../theme/app_theme.dart';
 import 'analysis_screen.dart';
 import 'scan_screen.dart';
 import '../widgets/user_profile_button.dart';
@@ -146,6 +147,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
   // --- ACTION 3: DOWNLOAD RISK REPORT PDF ---
   Future<void> _downloadRiskReport(Map<String, dynamic> doc) async {
     final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final title = (doc['title'] ?? 'Scanned Agreement').toString();
     final originalText = (doc['originalText'] ?? '').toString();
     final analysis = (doc['analysis'] as List<dynamic>?) ?? [];
@@ -198,7 +200,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                 ),
               ],
             ),
-            backgroundColor: const Color(0xFF10B981),
+            backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -209,7 +211,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to download PDF report: $e'),
-            backgroundColor: const Color(0xFFEF4444),
+            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -231,22 +233,33 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         return StatefulBuilder(
           builder: (_, setDialogState) {
             return AlertDialog(
-              backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+                side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              ),
               title: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF2563EB).withValues(alpha: 0.12),
+                      color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Icon(Icons.edit_rounded, color: Color(0xFF2563EB), size: 20),
+                    child: Icon(
+                      Icons.edit_rounded,
+                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      size: 20,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Text(
                     tr('recentDocs.renameTitle'),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    ),
                   ),
                 ],
               ),
@@ -258,25 +271,32 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                     controller: controller,
                     autofocus: true,
                     textInputAction: TextInputAction.done,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    ),
                     decoration: InputDecoration(
                       hintText: tr('recentDocs.renameHint'),
                       filled: true,
-                      fillColor: isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC),
+                      fillColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(
-                          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide(
-                          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Color(0xFF2563EB), width: 1.5),
+                        borderSide: BorderSide(
+                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                          width: 1.5,
+                        ),
                       ),
                     ),
                     onSubmitted: (val) async {
@@ -294,7 +314,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(tr('recentDocs.renamedSuccess')),
-                              backgroundColor: const Color(0xFF10B981),
+                              backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
                               behavior: SnackBarBehavior.floating,
                             ),
                           );
@@ -310,14 +330,14 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                   child: Text(
                     tr('recentDocs.cancel'),
                     style: TextStyle(
-                      color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                     ),
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    foregroundColor: Colors.white,
+                    backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   onPressed: isSaving
@@ -338,7 +358,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(tr('recentDocs.renamedSuccess')),
-                                backgroundColor: const Color(0xFF10B981),
+                                backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
                                 behavior: SnackBarBehavior.floating,
                               ),
                             );
@@ -359,6 +379,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
   // --- ACTION 5: RE-ANALYZE DOCUMENT WITH AI ---
   Future<void> _reanalyzeDocument(Map<String, dynamic> doc) async {
     final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final title = (doc['title'] ?? 'Scanned Agreement').toString();
     final originalText = (doc['originalText'] ?? '').toString();
     final sourceType = (doc['sourceType'] as String?) ?? 'PDF Document';
@@ -433,7 +454,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                 ),
               ],
             ),
-            backgroundColor: const Color(0xFF10B981),
+            backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -444,7 +465,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${tr('recentDocs.reanalyzeFailed')}: $e'),
-            backgroundColor: const Color(0xFFEF4444),
+            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -463,39 +484,52 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
       context: context,
       builder: (dialogCtx) {
         return AlertDialog(
-          backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.3)),
+          ),
           title: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEF4444).withValues(alpha: 0.12),
+                  color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.delete_outline_rounded, color: Color(0xFFEF4444), size: 20),
+                child: Icon(Icons.delete_outline_rounded, color: isDark ? AppColors.darkError : AppColors.lightError, size: 20),
               ),
               const SizedBox(width: 12),
               Text(
                 tr('recentDocs.delete'),
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
               ),
             ],
           ),
-          content: Text('${tr('recentDocs.deleteConfirm')}\n\n"$title"'),
+          content: Text(
+            '${tr('recentDocs.deleteConfirm')}\n\n"$title"',
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogCtx),
               child: Text(
                 tr('recentDocs.cancel'),
                 style: TextStyle(
-                  color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                 ),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEF4444),
+                backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
@@ -509,7 +543,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(tr('recentDocs.deletedSuccess')),
-                      backgroundColor: const Color(0xFF10B981),
+                      backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -528,20 +562,28 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
     ref.watch(localeProvider);
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colorScheme = Theme.of(context).colorScheme;
     final displayDocs = _filteredDocs;
 
     return Scaffold(
+      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          ),
           tooltip: 'Back',
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: Text(
           tr('recentDocs.title'),
-          style: const TextStyle(fontWeight: FontWeight.w700, letterSpacing: -0.3),
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.3,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          ),
         ),
+        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         elevation: 0,
         actions: const [
           UserProfileButton(),
@@ -565,106 +607,87 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
           tr('recentDocs.scanNew'),
           style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.2),
         ),
-        backgroundColor: const Color(0xFF2563EB),
-        foregroundColor: Colors.white,
-        elevation: 3,
-        hoverElevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+        foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+        elevation: 2,
+        hoverElevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      body: Stack(
-        children: [
-          // Subtle vault ambient motif in the background
-          Positioned.fill(
-            child: CustomPaint(
-              painter: _VaultBackgroundPainter(isDark: isDark),
-            ),
-          ),
-          RefreshIndicator(
-            onRefresh: _fetchDocuments,
-            color: const Color(0xFF2563EB),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1060),
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
-                  children: [
-                    // ==========================================
-                    // 1. EDITORIAL LEGAL REPOSITORY COMMAND VAULT
-                    // ==========================================
-                    _buildRepositorySummaryCard(tr, isDark, colorScheme),
-                    const SizedBox(height: 18),
+      body: RefreshIndicator(
+        onRefresh: _fetchDocuments,
+        color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1060),
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
+              children: [
+                // 1. EDITORIAL LEGAL REPOSITORY COMMAND VAULT
+                _buildRepositorySummaryCard(tr, isDark),
+                const SizedBox(height: 18),
 
-                    // ==========================================
-                    // 2. SEARCH BAR WITH KEYBOARD SHORTCUT HINT
-                    // ==========================================
-                    _buildSearchBar(tr, isDark, colorScheme),
-                    const SizedBox(height: 14),
+                // 2. SEARCH BAR WITH KEYBOARD SHORTCUT HINT
+                _buildSearchBar(tr, isDark),
+                const SizedBox(height: 14),
 
-                    // ==========================================
-                    // 3. REFINED SEGMENTED FILTER BAR
-                    // ==========================================
-                    _buildFilterSegment(tr, isDark),
-                    const SizedBox(height: 18),
+                // 3. REFINED SEGMENTED FILTER BAR
+                _buildFilterSegment(tr, isDark),
+                const SizedBox(height: 18),
 
-                    // ==========================================
-                    // 4. DOCUMENT CARDS LIST & EMPTY STATES
-                    // ==========================================
-                    if (_isLoading)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 60),
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            color: Color(0xFF2563EB),
-                            strokeWidth: 2.5,
-                          ),
-                        ),
-                      )
-                    else if (displayDocs.isEmpty)
-                      _buildEmptyState(tr, isDark, colorScheme)
-                    else
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: displayDocs.length,
-                        separatorBuilder: (context, index) => const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final doc = displayDocs[index] as Map<String, dynamic>;
-                          return TweenAnimationBuilder<double>(
-                            duration: Duration(milliseconds: 220 + (index * 40).clamp(0, 300)),
-                            curve: Curves.easeOutCubic,
-                            tween: Tween(begin: 0.0, end: 1.0),
-                            builder: (context, val, child) {
-                              return Opacity(
-                                opacity: val,
-                                child: Transform.translate(
-                                  offset: Offset(0, 12 * (1 - val)),
-                                  child: child,
-                                ),
-                              );
-                            },
-                            child: _DocumentCardItem(
-                              key: ValueKey(doc['_id'] ?? doc['id'] ?? index),
-                              doc: doc,
-                              isDark: isDark,
-                              colorScheme: colorScheme,
-                              formattedDate: _formatRelativeTime(doc['createdAt']),
-                              onOpenAnalysis: () => _openAnalysis(doc),
-                              onViewDocument: () => _openAnalysis(doc),
-                              onDownloadReport: () => _downloadRiskReport(doc),
-                              onRename: () => _showRenameDialog(doc),
-                              onReanalyze: () => _reanalyzeDocument(doc),
-                              onDelete: () => _confirmDelete(doc),
-                              tr: tr,
+                // 4. DOCUMENT CARDS LIST & EMPTY STATES
+                if (_isLoading)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 60),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                        strokeWidth: 2.5,
+                      ),
+                    ),
+                  )
+                else if (displayDocs.isEmpty)
+                  _buildEmptyState(tr, isDark)
+                else
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: displayDocs.length,
+                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    itemBuilder: (context, index) {
+                      final doc = displayDocs[index] as Map<String, dynamic>;
+                      return TweenAnimationBuilder<double>(
+                        duration: Duration(milliseconds: 220 + (index * 40).clamp(0, 300)),
+                        curve: Curves.easeOutCubic,
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        builder: (context, val, child) {
+                          return Opacity(
+                            opacity: val,
+                            child: Transform.translate(
+                              offset: Offset(0, 12 * (1 - val)),
+                              child: child,
                             ),
                           );
                         },
-                      ),
-                  ],
-                ),
-              ),
+                        child: _DocumentCardItem(
+                          key: ValueKey(doc['_id'] ?? doc['id'] ?? index),
+                          doc: doc,
+                          isDark: isDark,
+                          formattedDate: _formatRelativeTime(doc['createdAt']),
+                          onOpenAnalysis: () => _openAnalysis(doc),
+                          onViewDocument: () => _openAnalysis(doc),
+                          onDownloadReport: () => _downloadRiskReport(doc),
+                          onRename: () => _showRenameDialog(doc),
+                          onReanalyze: () => _reanalyzeDocument(doc),
+                          onDelete: () => _confirmDelete(doc),
+                          tr: tr,
+                        ),
+                      );
+                    },
+                  ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -673,198 +696,170 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
   Widget _buildRepositorySummaryCard(
     String Function(String, [Map<String, String>?]) tr,
     bool isDark,
-    ColorScheme colorScheme,
   ) {
     final stats = [
       _StatItemData(
         label: tr('recentDocs.total').toUpperCase(),
         subLabel: tr('recentDocs.documents'),
         count: '${_allDocs.length}',
-        color: const Color(0xFF3B82F6),
+        color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
         category: 'All',
       ),
       _StatItemData(
         label: tr('recentDocs.highRisk').toUpperCase(),
         subLabel: 'CRITICAL',
         count: _redCount < 10 ? '0$_redCount' : '$_redCount',
-        color: const Color(0xFFEF4444),
+        color: isDark ? AppColors.darkError : AppColors.lightError,
         category: 'High Risk',
       ),
       _StatItemData(
         label: tr('recentDocs.caution').toUpperCase(),
         subLabel: 'ATTENTION',
         count: _yellowCount < 10 ? '0$_yellowCount' : '$_yellowCount',
-        color: const Color(0xFFF59E0B),
+        color: isDark ? AppColors.darkCaution : AppColors.lightCaution,
         category: 'Caution',
       ),
       _StatItemData(
         label: tr('recentDocs.compliant').toUpperCase(),
         subLabel: 'VERIFIED',
         count: _greenCount < 10 ? '0$_greenCount' : '$_greenCount',
-        color: const Color(0xFF10B981),
+        color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
         category: 'Compliant',
       ),
     ];
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E293B) : Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           width: 1.0,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.28 : 0.04),
-            blurRadius: 14,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: Stack(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Subtle top corner ambient glow
-            Positioned(
-              top: -30,
-              right: -30,
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFF2563EB).withValues(alpha: isDark ? 0.12 : 0.05),
+            // Editorial Header Area
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Stacked Vault Shield Emblem
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.folder_special_rounded,
+                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      size: 22,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Editorial Header Area
-                  Row(
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Stacked Vault Shield Emblem
-                      Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF2563EB).withValues(alpha: isDark ? 0.16 : 0.10),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: const Color(0xFF2563EB).withValues(alpha: isDark ? 0.35 : 0.25),
-                          ),
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.folder_special_rounded,
-                            color: Color(0xFF2563EB),
-                            size: 24,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  tr('recentDocs.repository'),
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                    letterSpacing: -0.3,
-                                    color: colorScheme.onSurface,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF2563EB).withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                      color: const Color(0xFF2563EB).withValues(alpha: 0.25),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    tr('recentDocs.secureVault'),
-                                    style: const TextStyle(
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.w800,
-                                      letterSpacing: 0.6,
-                                      color: Color(0xFF2563EB),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                      Row(
+                        children: [
+                          Text(
+                            tr('recentDocs.repository'),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: -0.3,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              tr('recentDocs.vaultSubtitle'),
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
                               ),
                             ),
-                          ],
+                            child: Text(
+                              tr('recentDocs.secureVault'),
+                              style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 0.6,
+                                color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        tr('recentDocs.vaultSubtitle'),
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                ),
+              ],
+            ),
+            const SizedBox(height: 18),
 
-                  // Legal Status Indicators Command Strip
-                  Container(
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF0F172A).withValues(alpha: 0.65) : const Color(0xFFF8FAFC),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: isDark ? const Color(0xFF334155).withValues(alpha: 0.6) : const Color(0xFFE2E8F0),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final isWide = constraints.maxWidth > 520;
-                        if (isWide) {
-                          return Row(
-                            children: [
-                              for (int i = 0; i < stats.length; i++) ...[
-                                Expanded(
-                                  child: _buildCommandStatCell(stats[i], isDark),
-                                ),
-                                if (i < stats.length - 1)
-                                  Container(
-                                    width: 1,
-                                    height: 38,
-                                    color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-                                  ),
-                              ],
-                            ],
-                          );
-                        } else {
-                          return GridView.count(
-                            crossAxisCount: 2,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            childAspectRatio: 2.2,
-                            children: stats.map((item) => _buildCommandStatCell(item, isDark)).toList(),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
+            // Legal Status Indicators Command Strip
+            Container(
+              decoration: BoxDecoration(
+                color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final isWide = constraints.maxWidth > 520;
+                  if (isWide) {
+                    return Row(
+                      children: [
+                        for (int i = 0; i < stats.length; i++) ...[
+                          Expanded(
+                            child: _buildCommandStatCell(stats[i], isDark),
+                          ),
+                          if (i < stats.length - 1)
+                            Container(
+                              width: 1,
+                              height: 38,
+                              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            ),
+                        ],
+                      ],
+                    );
+                  } else {
+                    return GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      childAspectRatio: 2.2,
+                      children: stats.map((item) => _buildCommandStatCell(item, isDark)).toList(),
+                    );
+                  }
+                },
               ),
             ),
           ],
@@ -884,15 +879,15 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
             _selectedCategory = item.category;
           });
         },
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           decoration: BoxDecoration(
             color: isSelected
                 ? item.color.withValues(alpha: isDark ? 0.16 : 0.10)
                 : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: isSelected
                   ? item.color.withValues(alpha: 0.5)
@@ -912,7 +907,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.5,
-                      color: isSelected ? item.color : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B)),
+                      color: isSelected ? item.color : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                     ),
                   ),
                   Container(
@@ -921,14 +916,6 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                     decoration: BoxDecoration(
                       color: item.color,
                       shape: BoxShape.circle,
-                      boxShadow: [
-                        if (isSelected)
-                          BoxShadow(
-                            color: item.color.withValues(alpha: 0.6),
-                            blurRadius: 4,
-                            spreadRadius: 1,
-                          ),
-                      ],
                     ),
                   ),
                 ],
@@ -955,7 +942,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                         fontSize: 9,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.4,
-                        color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -972,82 +959,56 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
   Widget _buildSearchBar(
     String Function(String, [Map<String, String>?]) tr,
     bool isDark,
-    ColorScheme colorScheme,
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E293B) : Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.16 : 0.02),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: TextField(
         controller: _searchController,
         focusNode: _searchFocusNode,
         onChanged: (val) => setState(() => _searchQuery = val),
-        style: TextStyle(fontSize: 14, color: colorScheme.onSurface, fontWeight: FontWeight.w500),
+        style: TextStyle(
+          fontSize: 14,
+          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+          fontWeight: FontWeight.w500,
+        ),
         decoration: InputDecoration(
           hintText: tr('recentDocs.searchHint'),
           hintStyle: TextStyle(
             fontSize: 13,
-            color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
           ),
           prefixIcon: Icon(
             Icons.search_rounded,
             size: 20,
-            color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
           ),
           suffixIcon: _searchQuery.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.clear_rounded, size: 18),
-                  color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   onPressed: () {
                     _searchController.clear();
                     setState(() => _searchQuery = '');
                   },
                 )
-              : Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                        decoration: BoxDecoration(
-                          color: isDark ? const Color(0xFF0F172A) : const Color(0xFFF1F5F9),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-                          ),
-                        ),
-                        child: Text(
-                          '⌘K',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              : null,
           filled: true,
           fillColor: Colors.transparent,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(color: Color(0xFF2563EB), width: 1.5),
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+              color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+              width: 1.5,
+            ),
           ),
         ),
       ),
@@ -1064,13 +1025,13 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
       physics: const BouncingScrollPhysics(),
       child: Row(
         children: [
-          _buildFilterChip('All', tr('recentDocs.all'), _allDocs.length, isDark, activeColor: const Color(0xFF2563EB)),
+          _buildFilterChip('All', tr('recentDocs.all'), _allDocs.length, isDark, activeColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary),
           const SizedBox(width: 8),
-          _buildFilterChip('High Risk', tr('recentDocs.highRisk'), _redCount, isDark, activeColor: const Color(0xFFEF4444)),
+          _buildFilterChip('High Risk', tr('recentDocs.highRisk'), _redCount, isDark, activeColor: isDark ? AppColors.darkError : AppColors.lightError),
           const SizedBox(width: 8),
-          _buildFilterChip('Caution', tr('recentDocs.caution'), _yellowCount, isDark, activeColor: const Color(0xFFF59E0B)),
+          _buildFilterChip('Caution', tr('recentDocs.caution'), _yellowCount, isDark, activeColor: isDark ? AppColors.darkCaution : AppColors.lightCaution),
           const SizedBox(width: 8),
-          _buildFilterChip('Compliant', tr('recentDocs.compliant'), _greenCount, isDark, activeColor: const Color(0xFF10B981)),
+          _buildFilterChip('Compliant', tr('recentDocs.compliant'), _greenCount, isDark, activeColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
         ],
       ),
     );
@@ -1091,20 +1052,20 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         onTap: () {
           setState(() => _selectedCategory = categoryId);
         },
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: isSelected
                 ? activeColor.withValues(alpha: isDark ? 0.22 : 0.12)
-                : (isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9)),
-            borderRadius: BorderRadius.circular(24),
+                : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
+            borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: isSelected
                   ? activeColor.withValues(alpha: 0.6)
-                  : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
-              width: isSelected ? 1.3 : 1.0,
+                  : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              width: 1.0,
             ),
           ),
           child: Row(
@@ -1117,13 +1078,6 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                   decoration: BoxDecoration(
                     color: activeColor,
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      if (isSelected)
-                        BoxShadow(
-                          color: activeColor.withValues(alpha: 0.5),
-                          blurRadius: 4,
-                        ),
-                    ],
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -1134,8 +1088,8 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                   fontSize: 12,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   color: isSelected
-                      ? (isDark ? Colors.white : activeColor)
-                      : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B)),
+                      ? (isDark ? AppColors.darkTextPrimary : activeColor)
+                      : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                 ),
               ),
               const SizedBox(width: 6),
@@ -1144,8 +1098,8 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                 decoration: BoxDecoration(
                   color: isSelected
                       ? activeColor.withValues(alpha: 0.25)
-                      : (isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
-                  borderRadius: BorderRadius.circular(10),
+                      : (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   '$count',
@@ -1153,8 +1107,8 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: isSelected
-                        ? (isDark ? Colors.white : activeColor)
-                        : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B)),
+                        ? (isDark ? AppColors.darkTextPrimary : activeColor)
+                        : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                   ),
                 ),
               ),
@@ -1169,7 +1123,6 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
   Widget _buildEmptyState(
     String Function(String, [Map<String, String>?]) tr,
     bool isDark,
-    ColorScheme colorScheme,
   ) {
     final isSearching = _searchQuery.trim().isNotEmpty;
     final isCategoryFiltered = _selectedCategory != 'All';
@@ -1192,28 +1145,28 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
       margin: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF1E293B) : Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF2563EB).withValues(alpha: isDark ? 0.15 : 0.08),
+              color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
               shape: BoxShape.circle,
               border: Border.all(
-                color: const Color(0xFF2563EB).withValues(alpha: 0.2),
+                color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.25),
               ),
             ),
             child: Icon(
               icon,
-              size: 38,
-              color: const Color(0xFF2563EB),
+              size: 36,
+              color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
             ),
           ),
           const SizedBox(height: 18),
@@ -1223,7 +1176,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: colorScheme.onSurface,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             ),
           ),
           const SizedBox(height: 6),
@@ -1235,7 +1188,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
               style: TextStyle(
                 fontSize: 13,
                 height: 1.4,
-                color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
           ),
@@ -1252,8 +1205,8 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
               icon: const Icon(Icons.refresh_rounded, size: 16),
               label: Text(tr('recentDocs.resetFilters')),
               style: OutlinedButton.styleFrom(
-                foregroundColor: const Color(0xFF2563EB),
-                side: const BorderSide(color: Color(0xFF2563EB)),
+                foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                side: BorderSide(color: isDark ? AppColors.darkAccent : AppColors.lightPrimary),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
             ),
@@ -1274,9 +1227,9 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
               icon: const Icon(Icons.document_scanner_rounded, size: 18),
               label: Text(tr('recentDocs.scanNew')),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2563EB),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
             ),
@@ -1285,32 +1238,6 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
       ),
     );
   }
-}
-
-// Background painter for subtle vault geometric grid lines
-class _VaultBackgroundPainter extends CustomPainter {
-  final bool isDark;
-
-  _VaultBackgroundPainter({required this.isDark});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final linePaint = Paint()
-      ..color = isDark
-          ? const Color(0xFF334155).withValues(alpha: 0.15)
-          : const Color(0xFFE2E8F0).withValues(alpha: 0.4)
-      ..strokeWidth = 0.8
-      ..style = PaintingStyle.stroke;
-
-    // Subtle faint geometric dossier grid lines
-    const double spacing = 48.0;
-    for (double x = 0; x < size.width; x += spacing * 2) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), linePaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _VaultBackgroundPainter oldDelegate) => oldDelegate.isDark != isDark;
 }
 
 // Data holder for repository statistics
@@ -1336,7 +1263,6 @@ class _StatItemData {
 class _DocumentCardItem extends StatefulWidget {
   final Map<String, dynamic> doc;
   final bool isDark;
-  final ColorScheme colorScheme;
   final String formattedDate;
   final VoidCallback onOpenAnalysis;
   final VoidCallback onViewDocument;
@@ -1350,7 +1276,6 @@ class _DocumentCardItem extends StatefulWidget {
     super.key,
     required this.doc,
     required this.isDark,
-    required this.colorScheme,
     required this.formattedDate,
     required this.onOpenAnalysis,
     required this.onViewDocument,
@@ -1390,29 +1315,29 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
         (title.toLowerCase().endsWith('.pdf') ? 'PDF Document' : 'Document');
 
     // Risk badge configuration
-    Color badgeColor = const Color(0xFF10B981);
+    Color badgeColor = widget.isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
     IconData badgeIcon = Icons.check_circle_rounded;
     final rLower = riskLevel.toLowerCase();
 
     if (rLower.contains('high') || rLower.contains('red')) {
-      badgeColor = const Color(0xFFEF4444);
+      badgeColor = widget.isDark ? AppColors.darkError : AppColors.lightError;
       badgeIcon = Icons.error_outline_rounded;
     } else if (rLower.contains('medium') || rLower.contains('yellow') || rLower.contains('caution')) {
-      badgeColor = const Color(0xFFF59E0B);
+      badgeColor = widget.isDark ? AppColors.darkCaution : AppColors.lightCaution;
       badgeIcon = Icons.warning_amber_rounded;
     }
 
     // Format badge configuration
     IconData formatIcon = Icons.picture_as_pdf_rounded;
-    Color formatColor = const Color(0xFFEF4444); // PDF Red
+    Color formatColor = widget.isDark ? AppColors.darkError : AppColors.lightError;
 
     final sLower = sourceType.toLowerCase();
     if (sLower.contains('photo') || sLower.contains('image')) {
       formatIcon = Icons.image_rounded;
-      formatColor = const Color(0xFF38BDF8);
+      formatColor = widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     } else if (sLower.contains('text')) {
       formatIcon = Icons.notes_rounded;
-      formatColor = const Color(0xFF0EA5E9);
+      formatColor = widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary;
     }
 
     return MouseRegion(
@@ -1422,25 +1347,18 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
       child: GestureDetector(
         onTap: widget.onOpenAnalysis,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          transform: Matrix4.translationValues(0, _isHovered ? -2.5 : 0, 0),
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
+          duration: const Duration(milliseconds: 180),
+          transform: Matrix4.translationValues(0, _isHovered ? -2.0 : 0, 0),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: widget.isDark ? const Color(0xFF1E293B) : Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            color: widget.isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: _isHovered
-                  ? const Color(0xFF2563EB).withValues(alpha: 0.55)
-                  : (widget.isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0)),
-              width: _isHovered ? 1.4 : 1.0,
+                  ? (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.6)
+                  : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              width: 1.0,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: _isHovered ? (widget.isDark ? 0.32 : 0.08) : (widget.isDark ? 0.15 : 0.02)),
-                blurRadius: _isHovered ? 12 : 4,
-                offset: Offset(0, _isHovered ? 5 : 2),
-              ),
-            ],
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -1463,7 +1381,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                         letterSpacing: -0.2,
-                        color: widget.colorScheme.onSurface,
+                        color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -1492,7 +1410,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                           '•',
                           style: TextStyle(
                             fontSize: 10,
-                            color: widget.isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+                            color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                         // Scanned time
@@ -1500,14 +1418,14 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                           dateText,
                           style: TextStyle(
                             fontSize: 12,
-                            color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                            color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                         Text(
                           '•',
                           style: TextStyle(
                             fontSize: 10,
-                            color: widget.isDark ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+                            color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                         // Doc Size
@@ -1515,7 +1433,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                           docSize,
                           style: TextStyle(
                             fontSize: 12,
-                            color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
+                            color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],
@@ -1527,10 +1445,10 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
 
               // 3. RISK STATUS BADGE WITH PULSE DOT
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: badgeColor.withValues(alpha: widget.isDark ? 0.14 : 0.10),
-                  borderRadius: BorderRadius.circular(20),
+                  color: badgeColor.withValues(alpha: widget.isDark ? 0.15 : 0.10),
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: badgeColor.withValues(alpha: 0.35),
                   ),
@@ -1538,7 +1456,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(badgeIcon, size: 13, color: badgeColor),
+                    Icon(badgeIcon, size: 12, color: badgeColor),
                     const SizedBox(width: 5),
                     Text(
                       riskLevel,
@@ -1553,28 +1471,20 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
               ),
               const SizedBox(width: 6),
 
-              // 4. PROFESSIONAL THREE-DOT MENU
+              // 4. THREE-DOT MENU
               PopupMenuButton<String>(
-                icon: AnimatedContainer(
-                  duration: const Duration(milliseconds: 150),
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: _isHovered
-                        ? (widget.isDark ? const Color(0xFF334155).withValues(alpha: 0.6) : const Color(0xFFF1F5F9))
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.more_vert_rounded,
-                    color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B),
-                    size: 20,
-                  ),
+                icon: Icon(
+                  Icons.more_vert_rounded,
+                  color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  size: 20,
                 ),
                 tooltip: widget.tr('recentDocs.actions'),
-                splashRadius: 18,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                color: widget.isDark ? const Color(0xFF1E293B) : Colors.white,
-                elevation: 6,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: widget.isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                ),
+                color: widget.isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+                elevation: 4,
                 onSelected: (value) {
                   switch (value) {
                     case 'view_document':
@@ -1598,7 +1508,6 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                   }
                 },
                 itemBuilder: (context) => [
-                  // 1. View Document
                   PopupMenuItem(
                     value: 'view_document',
                     child: Row(
@@ -1607,7 +1516,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                         Icon(
                           Icons.visibility_outlined,
                           size: 18,
-                          color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF475569),
+                          color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -1616,7 +1525,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: widget.colorScheme.onSurface,
+                              color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1624,17 +1533,15 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                       ],
                     ),
                   ),
-
-                  // 2. View Analysis
                   PopupMenuItem(
                     value: 'view_analysis',
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.analytics_outlined,
                           size: 18,
-                          color: Color(0xFF2563EB),
+                          color: widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -1643,7 +1550,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: widget.colorScheme.onSurface,
+                              color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1651,17 +1558,15 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                       ],
                     ),
                   ),
-
-                  // 3. Download Risk Report
                   PopupMenuItem(
                     value: 'download_report',
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.download_rounded,
                           size: 18,
-                          color: Color(0xFF3B82F6),
+                          color: widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -1670,7 +1575,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: widget.colorScheme.onSurface,
+                              color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1678,8 +1583,6 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                       ],
                     ),
                   ),
-
-                  // 4. Rename Document
                   PopupMenuItem(
                     value: 'rename',
                     child: Row(
@@ -1688,7 +1591,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                         Icon(
                           Icons.edit_outlined,
                           size: 18,
-                          color: widget.isDark ? const Color(0xFF94A3B8) : const Color(0xFF475569),
+                          color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -1697,7 +1600,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: widget.colorScheme.onSurface,
+                              color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1705,17 +1608,15 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                       ],
                     ),
                   ),
-
-                  // 5. Re-analyze Document
                   PopupMenuItem(
                     value: 'reanalyze',
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.refresh_rounded,
                           size: 18,
-                          color: Color(0xFF38BDF8),
+                          color: widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -1724,7 +1625,7 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: widget.colorScheme.onSurface,
+                              color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1732,29 +1633,25 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
                       ],
                     ),
                   ),
-
-                  // Divider before Destructive Delete Action
                   const PopupMenuDivider(height: 1),
-
-                  // 6. Delete Document (Destructive)
                   PopupMenuItem(
                     value: 'delete',
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.delete_outline_rounded,
                           size: 18,
-                          color: Color(0xFFEF4444),
+                          color: widget.isDark ? AppColors.darkError : AppColors.lightError,
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             widget.tr('recentDocs.delete'),
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFFEF4444),
+                              color: widget.isDark ? AppColors.darkError : AppColors.lightError,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1774,77 +1671,28 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
   // Tactile stacked paper sheet badge
   Widget _buildTactilePaperBadge(IconData formatIcon, Color formatColor, bool isDark) {
     return SizedBox(
-      width: 44,
-      height: 44,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Background offset sheet 2
-          Positioned(
-            top: 2,
-            right: 2,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF334155).withValues(alpha: 0.5) : const Color(0xFFCBD5E1),
-                borderRadius: BorderRadius.circular(8),
-              ),
+      width: 40,
+      height: 40,
+      child: Center(
+        child: Container(
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: formatColor.withValues(alpha: isDark ? 0.16 : 0.12),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: formatColor.withValues(alpha: 0.3),
+              width: 1.0,
             ),
           ),
-          // Background offset sheet 1
-          Positioned(
-            top: 4,
-            right: 4,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE2E8F0),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1),
-                  width: 0.8,
-                ),
-              ),
+          child: Center(
+            child: Icon(
+              formatIcon,
+              color: formatColor,
+              size: 20,
             ),
           ),
-          // Forefront Main Sheet
-          Positioned(
-            top: 6,
-            left: 2,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              transform: Matrix4.rotationZ(_isHovered ? -0.04 : 0.0),
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(
-                color: formatColor.withValues(alpha: isDark ? 0.16 : 0.12),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: formatColor.withValues(alpha: _isHovered ? 0.45 : 0.25),
-                  width: 1.0,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-                    blurRadius: 3,
-                    offset: const Offset(0, 1),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Icon(
-                  formatIcon,
-                  color: formatColor,
-                  size: 20,
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
