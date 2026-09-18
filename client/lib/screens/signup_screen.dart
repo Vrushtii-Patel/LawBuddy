@@ -6,6 +6,7 @@ import '../providers/locale_provider.dart';
 import 'login_screen.dart';
 import 'otp_screen.dart';
 import '../theme/app_theme.dart';
+import '../widgets/form_consent_widget.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -24,6 +25,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
 
   bool _isEmailMode = true;
   bool _isHoveredButton = false;
+  bool _termsAccepted = false;
+  bool _showConsentError = false;
 
   late AnimationController _entranceController;
   late Animation<double> _fadeAnimation;
@@ -65,6 +68,20 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
+      if (!_termsAccepted) {
+        setState(() => _showConsentError = true);
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Please agree to the Terms of Use and Privacy Policy to continue.'),
+            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        );
+        return;
+      }
+
       if (!_isEmailMode) {
         final loc = ref.read(localeProvider.notifier);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -809,7 +826,24 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                   },
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 18),
+
+                // Mandatory Terms & Privacy Consent Checkbox (Initially unchecked)
+                FormConsentCheckbox(
+                  value: _termsAccepted,
+                  hasError: _showConsentError,
+                  errorMessage: 'Please accept the Terms of Use and Privacy Policy.',
+                  onChanged: (val) {
+                    setState(() {
+                      _termsAccepted = val ?? false;
+                      if (_termsAccepted) {
+                        _showConsentError = false;
+                      }
+                    });
+                  },
+                ),
+
+                const SizedBox(height: 20),
 
                 // Submit Button
                 MouseRegion(

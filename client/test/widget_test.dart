@@ -10,6 +10,7 @@ import 'package:legal_scanner/screens/recent_documents_screen.dart';
 import 'package:legal_scanner/screens/checklists_list_screen.dart';
 import 'package:legal_scanner/screens/checklist_screen.dart';
 import 'package:legal_scanner/screens/privacy_policy_screen.dart';
+import 'package:legal_scanner/screens/terms_of_use_screen.dart';
 import 'package:legal_scanner/screens/login_screen.dart';
 import 'package:legal_scanner/screens/signup_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +18,9 @@ import 'package:legal_scanner/providers/consent_provider.dart';
 import 'package:legal_scanner/providers/theme_provider.dart';
 import 'package:legal_scanner/providers/locale_provider.dart';
 import 'package:legal_scanner/screens/stamp_duty_calculator_screen.dart';
+import 'package:legal_scanner/screens/scan_screen.dart';
 import 'package:legal_scanner/widgets/cookie_consent_banner.dart';
+import 'package:legal_scanner/widgets/form_consent_widget.dart';
 import 'package:legal_scanner/theme/app_theme.dart';
 
 void main() {
@@ -670,6 +673,212 @@ void main() {
     expect(find.text('ANALYTICS'), findsOneWidget);
     expect(find.text('MARKETING'), findsOneWidget);
     expect(find.text('Not currently used'), findsNWidgets(2));
+  });
+
+  testWidgets('SignupScreen requires explicit consent checkbox unchecked by default', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: SignupScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 700));
+
+    // Verify checkbox is present and initially unchecked
+    final checkboxFinder = find.byType(Checkbox);
+    expect(checkboxFinder, findsOneWidget);
+    final Checkbox checkboxWidget = tester.widget(checkboxFinder);
+    expect(checkboxWidget.value, false);
+
+    // Verify text contains Terms of Use and Privacy Policy
+    expect(find.textContaining('I agree to the'), findsOneWidget);
+    expect(find.text('Create Account'), findsWidgets);
+  });
+
+  testWidgets('SignupScreen blocks submission when required consent is missing', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: SignupScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 700));
+
+    // Fill valid form fields
+    final textFields = find.byType(TextFormField);
+    expect(textFields, findsNWidgets(2));
+
+    await tester.enterText(textFields.at(0), 'Test Legal User');
+    await tester.enterText(textFields.at(1), 'testuser@example.com');
+    await tester.pump();
+
+    // Find submit button and tap WITHOUT checking consent
+    final submitButton = find.widgetWithText(ElevatedButton, 'Create Account');
+    expect(submitButton, findsOneWidget);
+
+    await tester.tap(submitButton);
+    await tester.pump();
+
+    // Error message must appear
+    expect(find.text('Please accept the Terms of Use and Privacy Policy.'), findsOneWidget);
+  });
+
+  testWidgets('SignupScreen allows checking consent and clears error', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: SignupScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 700));
+
+    // Tap the consent checkbox
+    final checkboxFinder = find.byType(Checkbox);
+    expect(checkboxFinder, findsOneWidget);
+
+    await tester.tap(checkboxFinder);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    // Checkbox is now checked
+    final Checkbox updatedCheckbox = tester.widget(checkboxFinder);
+    expect(updatedCheckbox.value, true);
+  });
+
+  testWidgets('FormConsentAcknowledgement renders in ChatScreen with links', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: ChatScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    // Verify informational consent is displayed near input
+    expect(
+      find.textContaining('I understand that the information I provide may be processed by LawBuddy'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('FormConsentAcknowledgement renders in ScanScreen for document uploads', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: ScanScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    // Verify single document upload acknowledgement notice is displayed
+    expect(
+      find.textContaining('I understand that the document I submit will be processed by LawBuddy'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('FormConsentCheckbox standalone toggle, error state, and text rendering', (WidgetTester tester) async {
+    bool agreed = false;
+
+    await tester.pumpWidget(
+      StatefulBuilder(
+        builder: (context, setState) {
+          return MaterialApp(
+            home: Scaffold(
+              body: FormConsentCheckbox(
+                value: agreed,
+                hasError: !agreed,
+                errorMessage: 'Consent required',
+                onChanged: (val) => setState(() => agreed = val ?? false),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('Consent required'), findsOneWidget);
+    expect(agreed, false);
+
+    // Tap to agree
+    await tester.tap(find.byType(Checkbox));
+    await tester.pumpAndSettle();
+
+    expect(agreed, true);
+    expect(find.text('Consent required'), findsNothing);
+  });
+
+  testWidgets('FormConsentAcknowledgement renders custom text and links', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: FormConsentAcknowledgement(
+            type: FormConsentType.custom,
+            customText: 'Custom acknowledgment text',
+            showTerms: true,
+            showPrivacy: true,
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Custom acknowledgment text'), findsOneWidget);
+    expect(find.byType(FormConsentAcknowledgement), findsOneWidget);
+  });
+
+  testWidgets('TermsOfUseScreen renders terms content and back button', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: TermsOfUseScreen(),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TermsOfUseScreen), findsOneWidget);
+    expect(find.text('Terms of Use'), findsWidgets);
+    expect(find.byIcon(Icons.arrow_back_rounded), findsWidgets);
   });
 }
 

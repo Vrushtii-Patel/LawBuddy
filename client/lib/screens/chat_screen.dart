@@ -9,6 +9,7 @@ import '../services/api_service.dart';
 import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
+import '../widgets/form_consent_widget.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final String? initialPrompt;
@@ -339,6 +340,19 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
                           isLoading: _isTyping,
                           onSend: () => _sendMessage(),
                           isMobile: isMobile,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: isMobile ? 16 : 32,
+                            right: isMobile ? 16 : 32,
+                            bottom: 10,
+                          ),
+                          child: const FormConsentAcknowledgement(
+                            type: FormConsentType.legalQuestion,
+                            showTerms: true,
+                            showPrivacy: true,
+                            margin: EdgeInsets.zero,
+                          ),
                         ),
                       ],
                     ),

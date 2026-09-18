@@ -13,6 +13,7 @@ import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import 'analysis_screen.dart';
 import '../widgets/user_profile_button.dart';
+import '../widgets/form_consent_widget.dart';
 
 class ScanScreen extends ConsumerStatefulWidget {
   const ScanScreen({super.key});
@@ -804,7 +805,15 @@ The Developer represents that necessary zoning approvals are under application w
             hintText: loc.translate('scan.pasteHint'),
             isDark: isDark,
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
+
+          // Document Processing Consent Acknowledgement
+          const FormConsentAcknowledgement(
+            type: FormConsentType.documentUpload,
+            showTerms: false,
+            showPrivacy: true,
+          ),
+          const SizedBox(height: 14),
 
           // Bottom CTA Action Bar
           Row(
@@ -870,13 +879,15 @@ The Developer represents that necessary zoning approvals are under application w
           color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
         ),
         const SizedBox(width: 6),
-        Text(
-          'End-to-End Encrypted • Legal Documents Are Processed Confidentially Under Indian Privacy Norms',
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+        Flexible(
+          child: Text(
+            'End-to-End Encrypted • Legal Documents Are Processed Confidentially Under Indian Privacy Norms',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            ),
           ),
         ),
       ],

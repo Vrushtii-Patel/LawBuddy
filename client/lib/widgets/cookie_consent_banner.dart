@@ -26,15 +26,19 @@ class CookieConsentBanner extends ConsumerWidget {
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final primaryBtnColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
-    return Positioned(
-      bottom: isDesktop ? 20 : 0,
-      left: isDesktop ? 24 : 0,
-      right: isDesktop ? 24 : 0,
-      child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: isDesktop ? 1080 : double.infinity,
-          ),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: isDesktop ? 20 : 0,
+          left: isDesktop ? 24 : 0,
+          right: isDesktop ? 24 : 0,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: isDesktop ? 1080 : double.infinity,
+            ),
           child: Material(
             elevation: 8,
             shadowColor: Colors.black.withValues(alpha: isDark ? 0.45 : 0.15),
@@ -76,8 +80,9 @@ class CookieConsentBanner extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildDesktopLayout(
     BuildContext context,
