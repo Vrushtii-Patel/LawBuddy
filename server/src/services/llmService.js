@@ -1228,50 +1228,95 @@ exports.chat = async (historyArray) => {
         if (cachedResponse) {
             return {
                 reply: cachedResponse.reply,
-                suggestions: cachedResponse.suggestions
+                suggestions: cachedResponse.suggestions,
+                sources: cachedResponse.sources || []
             };
         }
 
-        let contextLaws = "Indian Property Laws and RERA guidelines.";
+        let contextLaws = "";
+        let retrievedSources = [];
+        let hasSufficientContext = false;
+        const RAG_SIMILARITY_THRESHOLD = 0.80; // Minimum cosine similarity for authoritative grounding
+
         try {
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
             // Must match the embedding model used in scripts/ingestLaws.js (gemini-embedding-2),
-            // since query vectors and stored vectors have to come from the same model to be
-            // comparable. text-embedding-004 was shut down by Google on Jan 14, 2026.
+            // since query vectors and stored vectors have to come from the same model to be comparable.
             const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-2" });
             const embeddingResult = await embeddingModel.embedContent(latestMessage);
             const queryVector = embeddingResult.embedding.values;
 
-            const searchResults = await LawSnippet.aggregate([
+            const pipeline = [
                 {
-                    "$vectorSearch": {
-                        "index": "vector_index",
-                        "path": "embedding",
-                        "queryVector": queryVector,
-                        "numCandidates": 10,
-                        "limit": 3
+                    $vectorSearch: {
+                        index: "vector_index",
+                        path: "embedding",
+                        queryVector: queryVector,
+                        numCandidates: 25,
+                        limit: 3
                     }
                 },
                 {
-                    "$project": {
-                        "text": 1,
-                        "source": 1,
-                        "score": { "$meta": "vectorSearchScore" }
+                    $project: {
+                        text: 1,
+                        document: 1,
+                        actOrRule: 1,
+                        section: 1,
+                        subsection: 1,
+                        rule: 1,
+                        title: 1,
+                        jurisdiction: 1,
+                        authority: 1,
+                        sourceUrl: 1,
+                        score: { $meta: "vectorSearchScore" }
                     }
                 }
-            ]);
+            ];
 
-            if (searchResults && searchResults.length > 0) {
-                contextLaws = searchResults.map(doc => doc.text).join('\n\n');
+            const searchResults = await LawSnippet.aggregate(pipeline);
+
+            // Filter results based on confidence/similarity threshold
+            const relevantResults = (searchResults || []).filter(doc => (doc.score || 0) >= RAG_SIMILARITY_THRESHOLD);
+
+            if (relevantResults.length > 0) {
+                hasSufficientContext = true;
+                retrievedSources = relevantResults.map(doc => ({
+                    document: doc.document || 'Statutory Law',
+                    section: doc.section || null,
+                    rule: doc.rule || null,
+                    title: doc.title || null,
+                    jurisdiction: doc.jurisdiction || 'India',
+                    authority: doc.authority || 'India Code',
+                    sourceUrl: doc.sourceUrl || null,
+                    score: doc.score ? Number(doc.score.toFixed(4)) : null
+                }));
+
+                contextLaws = relevantResults.map((doc, idx) => {
+                    const citation = doc.section
+                        ? `${doc.document} (Section ${doc.section}${doc.subsection ? ', Sub-section ' + doc.subsection : ''})`
+                        : `${doc.document} (${doc.rule || doc.title})`;
+                    return `[Authoritative Source ${idx + 1}]: ${citation}\nJurisdiction: ${doc.jurisdiction} | Authority: ${doc.authority}\nOfficial Reference URL: ${doc.sourceUrl || 'Official Gazette / India Code'}\nStatutory Text:\n${doc.text}`;
+                }).join('\n\n---\n\n');
+            } else {
+                hasSufficientContext = false;
+                contextLaws = "NO_RELEVANT_STATUTORY_PROVISIONS_FOUND: The knowledge base does not have statutory records meeting the relevance threshold for this specific query.";
             }
         } catch (ragError) {
-            // Vector search fallback — log so a broken embedding model or
-            // Atlas vector index doesn't fail silently like this did before.
-            console.warn('RAG law lookup failed, using generic fallback context:', ragError.message);
+            console.warn('RAG vector search lookup failed:', ragError.message);
+            contextLaws = "RAG_LOOKUP_UNAVAILABLE: Vector search service is temporarily unreachable.";
         }
 
         const systemInstruction = `
-You are a senior, meticulously accurate Indian Real Estate and Property Law legal specialist. Your foundational mandate is strict statutory accuracy, factual precision, objective legal reasoning, and clear, qualified analysis.
+You are LawBuddy, an authoritative Indian Real Estate and Property Law legal assistant.
+Your mandate is strict statutory accuracy, factual precision, objective legal reasoning, and clear, qualified analysis.
+
+=== RETRIEVAL & FACTUAL GROUNDING RULES ===
+1. PRIMARY BASIS: When authoritative legal context is provided under "--- Authoritative Legal Reference Context ---", use it as your primary factual basis. Quote or cite the exact Act name, Section, Sub-section, or Rule number.
+2. STRICT ANTI-HALLUCINATION: Do NOT invent, assume, or hallucinate sections, rules, regulations, penalties, or statutory provisions that are not in the retrieved context or official Indian statutes.
+3. DISTINGUISH FACTS: Clearly distinguish between verified statutory provisions (e.g. "Under Section 18 of the RERA Act, 2016...") and general legal explanation or procedural commentary.
+4. INSUFFICIENT CONTEXT: If the reference context indicates NO_RELEVANT_STATUTORY_PROVISIONS_FOUND or does not cover the user's specific inquiry, explicitly state that the available knowledge base does not contain the specific statutory provision for this query. Provide general, preliminary legal orientation without fabricating sections or fake citations.
+5. OUT-OF-DOMAIN QUERIES: If the user asks a completely non-legal question (e.g., cooking, coding, gaming), politely state that LawBuddy specializes in Indian real estate and property law and cannot advise on that topic.
+6. MANDATORY LEGAL DISCLAIMER: Conclude your response with: "Disclaimer: This response is generated via RAG-grounded retrieval of authoritative Indian legal sources for informational purposes and does not constitute formal legal advice or replace consultation with a qualified advocate."
 
 === OUTPUT FORMAT ===
 You MUST return your response as a valid JSON object:
@@ -1283,13 +1328,13 @@ Do NOT include markdown code block backticks around the JSON. Return ONLY the JS
 `;
 
         const prompt = `
-            --- Legal Reference Context ---
-            ${contextLaws}
-            -------------------------------
+--- Authoritative Legal Reference Context ---
+${contextLaws}
+---------------------------------------------
 
-            User Query:
-            ${latestMessage}
-        `;
+User Query:
+${latestMessage}
+`;
 
         const fallbackHistory = [...historyArray];
         fallbackHistory[fallbackHistory.length - 1] = {
@@ -1298,10 +1343,10 @@ Do NOT include markdown code block backticks around the JSON. Return ONLY the JS
         };
 
         const result = await withRetry(
-            () => {
+            (activeModel = MODEL_NAME) => {
                 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
                 const model = genAI.getGenerativeModel({
-                    model: MODEL_NAME,
+                    model: activeModel,
                     systemInstruction: systemInstruction
                 });
 
@@ -1317,16 +1362,23 @@ Do NOT include markdown code block backticks around the JSON. Return ONLY the JS
         );
 
         const rawText = result.response.text();
-        const finalResponse = safeParseJson(rawText, {
+        const parsedResponse = safeParseJson(rawText, {
             reply: rawText,
             suggestions: ["Explain key legal terms", "Check RERA compliance", "What documents are required?"]
         });
+
+        const finalResponse = {
+            reply: parsedResponse.reply,
+            suggestions: parsedResponse.suggestions || [],
+            sources: retrievedSources
+        };
 
         try {
             const newCache = new ChatCache({
                 query: latestMessage,
                 reply: finalResponse.reply,
-                suggestions: finalResponse.suggestions
+                suggestions: finalResponse.suggestions,
+                sources: finalResponse.sources
             });
             await newCache.save();
         } catch (cacheErr) {
@@ -1337,8 +1389,9 @@ Do NOT include markdown code block backticks around the JSON. Return ONLY the JS
     } catch (e) {
         console.error("AI API error in chat:", e.message);
         return {
-            reply: "I am ready to help you with property laws, RERA rules, and contract reviews. Could you please rephrase or ask your question again?",
-            suggestions: ["What is RERA?", "Rental agreement checklist", "How to verify a title deed?"]
+            reply: "I am ready to help you with property laws, RERA rules, and contract reviews. Could you please rephrase or ask your question again?\n\n*Disclaimer: LawBuddy provides general legal information based on authoritative Indian sources and is not a substitute for a qualified lawyer.*",
+            suggestions: ["What is RERA?", "Rental agreement checklist", "How to verify a title deed?"],
+            sources: []
         };
     }
 };

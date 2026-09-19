@@ -24,6 +24,7 @@ router.post('/chat', requireAuth, async (req, res) => {
                 role: 'ai',
                 text: response.reply,
                 suggestions: response.suggestions || [],
+                sources: response.sources || [],
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
 

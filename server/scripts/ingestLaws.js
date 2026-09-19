@@ -1,114 +1,119 @@
-require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const mongoose = require('mongoose');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const LawSnippet = require('../src/models/LawSnippet');
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-// Note: We use 'gemini-embedding-2' as it is the stable embedding model
+// Note: We use 'gemini-embedding-2' which produces 3072-dimensional embeddings
 const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-2" });
 
-const DELAY_BETWEEN_REQUESTS_MS = 1500; // stay well under free-tier rate limits
+const DELAY_BETWEEN_REQUESTS_MS = 400;
 const MAX_RETRIES = 5;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// Embeds a chunk with exponential backoff on 429 (rate limit) errors.
-async function embedWithRetry(chunk, attempt = 1) {
+// Embeds legal text with exponential backoff on 429 / rate limits
+async function embedWithRetry(textToEmbed, attempt = 1) {
     try {
-        const result = await embeddingModel.embedContent(chunk);
+        const result = await embeddingModel.embedContent(textToEmbed);
         return result.embedding.values;
     } catch (error) {
         const isRateLimit = error?.status === 429 || /429|Resource exhausted|Too Many Requests/i.test(error?.message || '');
         if (isRateLimit && attempt <= MAX_RETRIES) {
-            const backoffMs = 5000 * Math.pow(2, attempt - 1); // 5s, 10s, 20s, 40s, 80s
+            const backoffMs = 2000 * Math.pow(2, attempt - 1); // 2s, 4s, 8s, 16s, 32s
             console.log(`  Rate limited, waiting ${backoffMs / 1000}s before retry ${attempt}/${MAX_RETRIES}...`);
             await sleep(backoffMs);
-            return embedWithRetry(chunk, attempt + 1);
+            return embedWithRetry(textToEmbed, attempt + 1);
         }
         throw error;
     }
 }
 
 async function ingest() {
-    let skipped = 0;
-    let inserted = 0;
-    let failed = 0;
-
     try {
+        console.log('--- Starting Authoritative Legal Corpus Ingestion ---');
         // Connect to MongoDB
         await mongoose.connect(process.env.MONGODB_URI, { family: 4 });
-        console.log('Connected to MongoDB for ingestion');
+        console.log('Connected to MongoDB for ingestion.');
 
-        // Read laws.txt
-        const filePath = path.join(__dirname, '../data/laws.txt');
-        const textData = fs.readFileSync(filePath, 'utf-8');
+        // 1. Remove all old/dummy law snippets
+        const deleteResult = await LawSnippet.deleteMany({});
+        console.log(`Cleared ${deleteResult.deletedCount} old/dummy law snippets from LawSnippet collection.`);
 
-        // Very basic chunking: split by newlines and filter empty lines
-        const chunks = textData.split('\n')
-            .map(line => line.trim())
-            .filter(line => line.length > 20); // ignore very short lines
-
-        console.log(`Found ${chunks.length} chunks to process.`);
-
-        // Resume support: skip chunks that are already ingested (matched by
-        // exact text), so a rate-limit failure partway through doesn't force
-        // re-embedding everything (and re-burning API quota) on the next run.
-        const existingTexts = new Set(
-            (await LawSnippet.find({ text: { $in: chunks } }, 'text')).map(doc => doc.text)
-        );
-        if (existingTexts.size > 0) {
-            console.log(`${existingTexts.size} chunks already ingested — resuming, will skip those.`);
+        // 2. Load authoritative_laws.json
+        const filePath = path.join(__dirname, '../data/authoritative_laws.json');
+        if (!fs.existsSync(filePath)) {
+            throw new Error(`Authoritative laws file not found at: ${filePath}`);
         }
+        const legalData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        console.log(`Loaded ${legalData.length} authoritative statutory provisions.`);
 
-        for (let i = 0; i < chunks.length; i++) {
-            const chunk = chunks[i];
-
-            if (existingTexts.has(chunk)) {
-                skipped++;
+        let count = 0;
+        for (const item of legalData) {
+            // Validate required fields
+            if (!item.text || !item.document) {
+                console.warn(`Skipping invalid item at index ${count}: missing text or document`);
                 continue;
             }
 
-            try {
-                const embedding = await embedWithRetry(chunk);
+            const citationLabel = item.section
+                ? `${item.document} - Section ${item.section}`
+                : `${item.document} - ${item.rule || item.title}`;
+            
+            console.log(`[${count + 1}/${legalData.length}] Embedding: ${citationLabel}...`);
 
-                const snippet = new LawSnippet({
-                    text: chunk,
-                    source: 'Indian Property Laws & RERA (Curated Reference)',
-                    embedding: embedding
-                });
-                await snippet.save();
-                inserted++;
-            } catch (error) {
-                // Log and continue rather than letting one bad/rate-limited
-                // chunk take down the whole ingestion run.
-                console.error(`  Failed to ingest chunk ${i + 1}: ${error.message}`);
-                failed++;
+            // Generate embedding for the legal text + context
+            const textToEmbed = `${item.document} ${item.section ? 'Section ' + item.section : ''} ${item.title || ''}: ${item.text}`.trim();
+            const embeddingValues = await embedWithRetry(textToEmbed);
+
+            if (!embeddingValues) {
+                throw new Error(`Failed to generate embedding for "${citationLabel}".`);
             }
 
-            if ((inserted + skipped + failed) % 10 === 0) {
-                console.log(`Progress: ${inserted + skipped + failed}/${chunks.length} (inserted: ${inserted}, skipped: ${skipped}, failed: ${failed})`);
-            }
+            // Save structured LawSnippet with all metadata
+            const snippet = new LawSnippet({
+                text: item.text,
+                document: item.document,
+                actOrRule: item.actOrRule || 'Act',
+                section: item.section || null,
+                subsection: item.subsection || null,
+                rule: item.rule || null,
+                title: item.title || null,
+                jurisdiction: item.jurisdiction || 'India',
+                authority: item.authority || 'India Code',
+                sourceUrl: item.sourceUrl || null,
+                source: `${item.document}${item.section ? ' (Sec ' + item.section + ')' : ''}`,
+                embedding: embeddingValues
+            });
 
-            // Pace requests to stay under free-tier rate limits.
-            if (i < chunks.length - 1) {
+            await snippet.save();
+            count++;
+
+            if (count < legalData.length) {
                 await sleep(DELAY_BETWEEN_REQUESTS_MS);
             }
         }
 
-        console.log(`\nDone. Inserted: ${inserted}, already present: ${skipped}, failed: ${failed}, total: ${chunks.length}`);
-        if (failed > 0) {
-            console.log('Some chunks failed — re-run this script to retry just the missing ones.');
-        }
+        console.log('\n=============================================');
+        console.log(`✅ Ingestion Complete!`);
+        console.log(`Total authoritative legal snippets ingested: ${count}`);
+        console.log('=============================================\n');
+
     } catch (error) {
-        console.error('Error during ingestion:', error);
+        console.error('❌ Error during legal corpus ingestion:', error);
     } finally {
-        mongoose.disconnect();
+        await mongoose.disconnect();
+        console.log('Disconnected from MongoDB.');
     }
 }
 
-ingest();
+if (require.main === module) {
+    ingest();
+}
+
+module.exports = { ingest };

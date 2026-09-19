@@ -1,0 +1,917 @@
+const fs = require('fs');
+const path = require('path');
+
+const authoritativeLaws = [
+  // =========================================================================
+  // 1. REAL ESTATE (REGULATION AND DEVELOPMENT) ACT, 2016 (RERA ACT)
+  // =========================================================================
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "2",
+    "subsection": "d, k, n, zk, zn, zq",
+    "rule": null,
+    "title": "Definitions of Allottee, Carpet Area, Common Areas, Promoter, Real Estate Project, and Sanctioned Plan",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 2. Definitions.— In this Act, unless the context otherwise requires: (d) 'allottee' in relation to a real estate project, means the person to whom a plot, apartment or building, as the case may be, has been allotted, sold (whether as freehold or leasehold) or otherwise transferred by the promoter, and includes the person who subsequently acquires the said allotment through sale, transfer or otherwise, but does not include a person to whom such plot, apartment or building, as the case may be, is given on rent; (k) 'carpet area' means the net usable floor area of an apartment, excluding the area covered by the external walls, areas under services shafts, exclusive balcony or verandah area and exclusive open terrace area, but includes the area covered by the internal partition walls of the apartment; (n) 'common areas' mean the entire land for the project or where the project is developed in phases and registration under this Act is sought for a phase, the entire land for that phase, staircases, lifts, staircase and lift lobbies, fire escapes, and common entrances and exits of buildings, common basements, terraces, parks, play areas, open parking areas and common storage spaces, the premises for the lodging of persons employed for the management of the property including accommodation for watch and ward staffs or for the lodging of community service personnel; (zk) 'promoter' means a person who constructs or causes to be constructed an independent building or a building consisting of apartments, or converts an existing building or a part thereof into apartments, for the purpose of selling all or some of the apartments to other persons and includes his assignees; (zn) 'real estate project' means the development of a building or a building consisting of apartments, or converting an existing building or a part thereof into apartments, or the development of land into plots or apartments, as the case may be, for the purpose of selling all or some of the said apartments or plots or building and includes the common areas, the development works, all improvements and structures thereon, and all easement, rights and appurtenances belonging thereto; (zq) 'sanctioned plan' means the site plan, building plan, service plan, parking and circulation plan, landscape plan, layout plan, zoning plan and such other plan and includes structural designs, if applicable, permissions such as environment permission and such other permissions, and approvals or variations thereto, made by the competent authority."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "3",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "Prior registration of real estate project with Real Estate Regulatory Authority",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 3. Prior registration of real estate project with Real Estate Regulatory Authority.— (1) No promoter shall advertise, market, book, sell or offer for sale, or invite persons to purchase in any manner any plot, apartment or building, as the case may be, in any real estate project or part of it, in any planning area, without registering the real estate project with the Real Estate Regulatory Authority established under this Act. Provided that projects that are ongoing on the date of commencement of this Act and for which the completion certificate has not been issued, the promoter shall make an application to the Authority for registration of the said project within a period of three months from the date of commencement of this Act. (2) Notwithstanding anything contained in sub-section (1), no registration of the real estate project shall be required: (a) where the area of land proposed to be developed does not exceed five hundred square meters or the number of apartments proposed to be developed does not exceed eight inclusive of all phases; (b) where the promoter has received completion certificate for a real estate project prior to commencement of this Act; (c) for the purpose of renovation or repair or re-development which does not involve marketing, advertising, selling or new allotment of any apartment, plot or building, as the case may be, under the real estate project."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "4",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "Application for registration of real estate projects and 70% separate escrow account requirement",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 4. Application for registration of real estate projects.— (1) Every promoter shall make an application to the Authority for registration of the real estate project in such form, manner, within such time and accompanied by such fee as may be specified by the regulations made by the Authority. (2) The promoter shall enclose with the application a declaration, supported by an affidavit which shall be signed by the promoter or any person authorised by the promoter, stating: (a) that he has a legal title to the land on which the development is proposed; (b) that the land is free from all encumbrances, or details of encumbrances; (c) the time period within which he undertakes to complete the project or phase thereof; (l)(D) that seventy per cent. of the amounts realised for the real estate project from the allottees, from time to time, shall be deposited in a separate account to be maintained in a scheduled bank to cover the cost of construction and the land cost and shall be used only for that purpose: Provided that the promoter shall withdraw the amounts from the separate account, to cover the cost of the project, in proportion to the percentage of completion of the project: Provided further that the amounts from the separate account shall be withdrawn by the promoter after it is certified by an engineer, an architect and a chartered accountant in practice that the withdrawal is in proportion to the percentage of completion of the project: Provided also that the promoter shall get his accounts audited within six months after the end of every financial year by a chartered accountant in practice, and shall produce a statement of accounts duly certified and signed by such chartered accountant."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "5",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "Grant of registration, timeline of 30 days, and deemed registration",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 5. Grant of registration.— (1) On receipt of the application under sub-section (1) of section 4, the Authority shall within a period of thirty days: (a) grant registration subject to the provisions of this Act and the rules and regulations made thereunder, and provide a registration number, including a Login Id and password to the applicant for accessing the website of the Authority and to create his web page and to fill therein the details of the proposed project; or (b) reject the application for reasons to be recorded in writing, if such application does not conform to the provisions of this Act or the rules or regulations made thereunder: Provided that no application shall be rejected unless the applicant has been given an opportunity of being heard in the matter. (2) If the Authority fails to grant the registration or reject the application, as the case may be, within the period of thirty days specified under sub-section (1), the project shall be deemed to have been registered, and the Authority shall within a period of seven days upon the expiry of the said period of thirty days provide a registration number and a Login Id and password to the promoter for accessing the website of the Authority."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "6",
+    "subsection": null,
+    "rule": null,
+    "title": "Extension of registration of real estate projects on force majeure",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 6. Extension of registration.— The registration granted under section 5 may be extended by the Authority on an application made by the promoter due to force majeure, in such form and on payment of such fee as may be specified by regulations made by the Authority: Provided that the Authority may in reasonable circumstances, without default on the part of the promoter, based on the facts of each case, and for reasons to be recorded in writing, extend the registration granted to a project for such time as it considers necessary, which shall, in aggregate, not exceed a period of one year. Explanation.— For the purpose of this section, the expression 'force majeure' shall mean a case of war, flood, drought, fire, cyclone, earthquake or any other calamity caused by nature affecting the regular development of the real estate project."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "7",
+    "subsection": "1, 2, 3, 4",
+    "rule": null,
+    "title": "Revocation of registration of real estate project",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 7. Revocation of registration.— (1) The Authority may, on receipt of a complaint or suo motu in this behalf or on the recommendation of the competent authority, revoke the registration granted under section 5, after being satisfied that: (a) the promoter makes default in doing anything required by or under this Act or the rules or the regulations made thereunder; (b) the promoter violates any of the terms or conditions of the approval given by the competent authority; (c) the promoter is involved in any kind of unfair practice or irregularities including false representations or misleading advertisements. (2) The registration granted to the promoter under section 5 shall not be revoked unless the Authority has given to the promoter not less than thirty days notice, in writing, stating the grounds on which it is proposed to revoke the registration, and has considered any cause shown by the promoter within the period of that notice. (3) The Authority may, instead of revoking the registration under sub-section (1), permit it to remain in force subject to such further terms and conditions as it thinks fit to impose in the interest of the allottees. (4) Upon revocation of the registration, the Authority shall: (a) debar the promoter from accessing its website; (b) specify the project as a lapsed project or revoked project; (c) freeze the separate bank account of the promoter; (d) facilitate the remaining development works to be carried out in accordance with the provisions of section 8."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "8",
+    "subsection": null,
+    "rule": null,
+    "title": "Obligation of Authority consequent upon lapse or revocation of registration (Allottees right of first refusal)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 8. Obligation of Authority consequent upon lapse of or on revocation of registration.— Upon the lapse of the registration or on revocation of the registration under this Act, the Authority may consult the appropriate Government to take such action as it may deem fit including the carrying out of the remaining development works by competent authority or by the association of allottees or in any other manner as may be determined by the Authority: Provided that no direction, decision or order of the Authority under this section shall take effect until the expiry of the period of appeal provided under the provisions of this Act: Provided further that in case of revocation of registration of a project, the association of allottees shall have the first right of refusal for carrying out of the remaining development works."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "11",
+    "subsection": "1, 2, 3, 4",
+    "rule": null,
+    "title": "Functions and duties of promoter and quarterly project disclosures",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 11. Functions and duties of promoter.— (1) The promoter shall, upon receiving his Login Id and password, create his web page on the website of the Authority and enter all details of the proposed project as provided under sub-section (2) of section 4, in all the fields as provided, for public viewing, including: (a) details of the registration granted by the Authority; (b) quarterly up-to-date the list of number and types of apartments or plots, as the case may be, booked; (c) quarterly up-to-date the list of number of garages booked; (d) quarterly up-to-date the list of approvals taken and the approvals which are pending subsequent to commencement certificate; (e) quarterly up-to-date status of the project; and (f) such other information and documents as may be specified by the regulations made by the Authority. (2) The advertisement or prospectus issued or published by the promoter shall mention prominently the website address of the Authority, wherein all details of the registered project have been entered and include the registration number obtained from the Authority. (4) The promoter shall: (a) be responsible for all obligations, responsibilities and functions under the provisions of this Act or the rules and regulations made thereunder or to the allottees as per the agreement for sale; (b) be responsible to obtain the completion certificate or the occupancy certificate, or both, from the relevant competent authority as per local laws or other laws for the time being in force and to make it available to the allottees individually or to the association of allottees; (c) be responsible to obtain the lease certificate, where the real estate project is developed on a leasehold land; (d) be responsible for providing and maintaining the essential services, on reasonable charges, till the taking over of the maintenance of the project by the association of the allottees; (e) enable the formation of an association or society or co-operative society of the allottees, or a federation of the same under the applicable laws; (f) execute a registered conveyance deed of the apartment and common areas."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "12",
+    "subsection": null,
+    "rule": null,
+    "title": "Obligations of promoter regarding veracity of advertisement or prospectus and compensation for false claims",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 12. Obligations of promoter regarding veracity of the advertisement or prospectus.— Where any person makes an advance or a deposit on the basis of the information contained in the notice, advertisement or prospectus, or on the basis of any model apartment, plot or building, as the case may be, and sustains any loss or damage by reason of any incorrect, false statement included therein, he shall be compensated by the promoter in the manner as provided under this Act: Provided that if the person affected by such incorrect, false statement contained in the notice, advertisement or prospectus, or the model apartment, plot or building, as the case may be, intends to withdraw from the proposed project, he shall be returned his entire investment along with interest at such rate as may be prescribed and the penalty in the manner provided under this Act."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "13",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "No advance payment beyond 10% without entered registered agreement for sale",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 13. No deposit or advance to be taken by promoter without first entering into agreement for sale.— (1) A promoter shall not accept a sum more than ten per cent of the cost of the apartment, plot, or building as the case may be, as an advance payment or an application fee, from a person without first entering into a written agreement for sale with such person and register the said agreement for sale, under any law for the time being in force. (2) The agreement for sale referred to in sub-section (1) shall be in such form as may be prescribed and shall specify the particulars of development of the project including the construction of building and apartments, along with specifications and internal development works and external development works, the dates and the manner by which payments towards the cost of the apartment, plot, or building, as the case may be, are to be made by the allottees and the date on which the possession of the apartment, plot or building is to be handed over, the rates of interest payable by the promoter to the allottee and the allottee to the promoter in case of default, and such other particulars, as may be prescribed."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "14",
+    "subsection": "1, 2, 3",
+    "rule": null,
+    "title": "Adherence to sanctioned plans, 2/3rd consent for alterations, and 5-year defect liability period",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 14. Adherence to sanctioned plans and project specifications by the promoter.— (1) The proposed project shall be developed and completed by the promoter in accordance with the sanctioned plans, layout plans and specifications as approved by the competent authorities. (2) Notwithstanding anything contained in any law, contract or agreement, after the sanctioned plans, layout plans and specifications and the nature of the fixtures, fittings, amenities and common areas of the apartment, plot or building are disclosed to the person agreeing to take one or more of the said apartment, plot or building, the promoter shall not make: (i) any additions and alterations in the sanctioned plans, layout plans and specifications and the nature of fixtures, fittings and amenities described therein in respect of the apartment, plot or building which are agreed to be taken, without the previous consent of that person; (ii) any other alterations or additions in the sanctioned plans, layout plans and specifications of the buildings or the common areas within the project without the previous written consent of at least two-thirds of the allottees, other than the promoter, who have agreed to take apartments in such building. (3) In case any structural defect or any other defect in workmanship, quality or provision of services or any other obligations of the promoter as per the agreement for sale relating to such development is brought to the notice of the promoter within a period of five years by the allottee from the date of handing over possession, it shall be the duty of the promoter to rectify such defects without further charge, within thirty days, and in the event of promoter's failure to rectify such defects within such time, the aggrieved allottees shall be entitled to receive appropriate compensation in the manner as provided under this Act."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "15",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "Obligations of promoter in case of transfer of a real estate project to a third party (2/3rd allottee consent)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 15. Obligations of promoter in case of transfer of a real estate project to a third party.— (1) The promoter shall not transfer or assign his majority rights and liabilities in respect of a real estate project to a third party without obtaining prior written consent from two-thirds of the allottees, except the promoter, and without the prior written approval of the Authority: Provided that such transfer or assignment shall not affect the allotment or sale of the apartments, plots or buildings as the case may be, in the real estate project made by the erstwhile promoter. (2) On the transfer or assignment being permitted by the allottees and the Authority, the intending promoter shall be required to independently comply with all the pending obligations under the provisions of this Act or the rules and regulations made thereunder, and the pending obligations as per the agreement for sale entered into by the erstwhile promoter with the allottees: Provided that any transfer shall not result in extension of time for completion of the real estate project by the Authority, and the intending promoter shall be liable to the consequences of breach or delay."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "16",
+    "subsection": "1, 2, 3",
+    "rule": null,
+    "title": "Obligations of promoter regarding insurance of real estate project and title",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 16. Obligations of promoter regarding insurance of real estate project.— (1) The promoter shall obtain all such insurances as may be notified by the appropriate Government, including but not limited to insurance in respect of: (i) title of the land and building as a part of the real estate project; and (ii) construction of the real estate project. (2) The promoter shall be liable to pay the premium and charges in respect of the insurance specified in sub-section (1) and shall pay the same before transferring the insurance to the association of the allottees. (3) The insurance as specified under sub-section (1) shall stand transferred to the benefit of the allottee or the association of allottees, as the case may be, at the time of promoter entering into an agreement for sale or handing over physical possession of the project to the association of allottees."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "17",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "Transfer of title, conveyance deed execution, and handover of common areas",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 17. Transfer of title.— (1) The promoter shall execute a registered conveyance deed in favour of the allottee along with the undivided proportionate title in the common areas to the association of the allottees or the competent authority, as the case may be, and hand over the physical possession of the plot, apartment of building, as the case may be, to the allottees and the common areas to the association of the allottees or the competent authority, as the case may be, in a real estate project, and the other title documents pertaining thereto within specified period as per sanctioned plans as provided under the local laws: Provided that, in the absence of any local law, conveyance deed in favour of the allottee or the association of the allottees or the competent authority, as the case may be, under this section shall be carried out by the promoter within three months from date of issue of occupancy certificate. (2) After obtaining the occupancy certificate and handing over physical possession to the allottees in terms of sub-section (1), it shall be the responsibility of the promoter to hand over the necessary documents and plans, including common areas, to the association of the allottees or the competent authority, as the case may be, as per the local laws: Provided that, in the absence of any local law, the promoter shall hand over the necessary documents and plans, including common areas, to the association of the allottees or the competent authority, as the case may be, within thirty days after obtaining the occupancy certificate."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "18",
+    "subsection": "1, 2, 3",
+    "rule": null,
+    "title": "Return of amount and compensation for delayed possession, failure to complete, or defective title",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 18. Return of amount and compensation.— (1) If the promoter fails to complete or is unable to give possession of an apartment, plot or building,— (a) in accordance with the terms of the agreement for sale or, as the case may be, duly completed by the date specified therein; or (b) due to discontinuance of his business as a developer on account of suspension or revocation of the registration under this Act or for any other reason, he shall be liable on demand to the allottees, in case the allottee wishes to withdraw from the project, without prejudice to any other remedy available, to return the amount received by him in respect of that apartment, plot, building, as the case may be, with interest at such rate as may be prescribed in this behalf including compensation in the manner as provided under this Act: Provided that where an allottee does not intend to withdraw from the project, he shall be paid, by the promoter, interest for every month of delay, till the handing over of the possession, at such rate as may be prescribed. (2) The promoter shall compensate the allottees in case of any loss caused to him due to defective title of the land, on which the project is being developed or has been developed, in the manner as provided under this Act, and the claim for compensation under this subsection shall not be barred by limitation provided under any law for the time being in force. (3) If the promoter fails to discharge any other obligations imposed on him under this Act or the rules or regulations made thereunder or in accordance with the terms and conditions of the agreement for sale, he shall be liable to pay such compensation to the allottees, in the manner as provided under this Act. The Supreme Court in Newtech Promoters and Developers v. State of UP (2021) affirmed that the allottee's right to refund with interest under Section 18(1) is unconditional and absolute upon builder delay."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "19",
+    "subsection": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+    "rule": null,
+    "title": "Rights and duties of allottees (Information access, possession timeline, refund claim, and payment obligations)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 19. Rights and duties of allottees.— (1) The allottee shall be entitled to obtain the information relating to sanctioned plans, layout plans along with the specifications, approved by the competent authority and such other information as provided in this Act or the rules and regulations made thereunder or the agreement for sale signed with the promoter. (2) The allottee shall be entitled to know time schedule of completion of the project including the provisions for water, sanitation, electricity and other amenities and services as agreed to between the promoter and the allottee in accordance with the terms and conditions of the agreement for sale. (3) The allottee shall be entitled to claim the possession of apartment, plot or building, as the case may be, and the association of allottees shall be entitled to claim the possession of the common areas, as per the declaration given by the promoter under sub-clause (C) of clause (l) of sub-section (2) of section 4. (4) The allottee shall be entitled to claim the refund of amount paid along with interest at such rate as may be prescribed and compensation in the manner as provided under this Act, from the promoter, if the promoter fails to comply or is unable to give possession of the apartment, plot or building in accordance with the terms of agreement for sale or due to discontinuance of his business. (5) The allottee shall be entitled to have the necessary documents and plans, including that of common areas, after handing over the physical possession of the apartment or plot or building. (6) Every allottee, who has entered into an agreement for sale, shall be responsible to make necessary payments in the manner and within the time as specified in the agreement for sale and shall pay at the proper time and place, the share of the registration charges, municipal taxes, water and electricity charges, maintenance charges, ground rent, and other charges. (7) The allottee shall be liable to pay interest, at such rate as may be prescribed, for any delay in payment towards any amount or charges. (9) Every allottee shall take physical possession of the apartment, plot or building within a period of two months of the occupancy certificate issued for the said apartment, plot or building. (10) Every allottee shall participate towards the formation of an association or society or cooperative society of the allottees, or a federation of the same."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "31",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "Filing of complaints with the Real Estate Regulatory Authority or Adjudicating Officer",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 31. Filing of complaints with the Authority or the adjudicating officer.— (1) Any aggrieved person may file a complaint with the Authority or the adjudicating officer, as the case may be, for any violation or contravention of the provisions of this Act or the rules and regulations made thereunder against any promoter, allottee or real estate agent, as the case may be. Explanation.— For the purpose of this sub-section 'person' shall include the association of allottees or any voluntary consumer association registered under any law for the time being in force. (2) The form, manner and the fees for filing complaint under sub-section (1) shall be such as may be specified by regulations."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "37, 38",
+    "subsection": null,
+    "rule": null,
+    "title": "Powers of Authority to issue binding directions and impose penalty or interest",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Sections 37 & 38. Powers of Authority to issue directions and impose penalty.— Section 37: The Authority may, for the purpose of discharging its functions under the provisions of this Act or rules or regulations made thereunder, issue such directions from time to time, to the promoters or allottees or real estate agents, as the case may be, as it may consider necessary and such directions shall be binding on all concerned. Section 38: (1) The Authority shall have powers to impose penalty or interest, in regard to any contravention of obligations cast upon the promoters, the allottees and the real estate agents, under this Act or the rules and the regulations made thereunder. (2) The Authority shall be guided by the principles of natural justice and, subject to the other provisions of this Act and the rules made thereunder, the Authority shall have powers to regulate its own procedure."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "40",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "Recovery of interest or penalty or compensation as arrears of land revenue",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 40. Recovery of interest or penalty or compensation and enforcement of order.— (1) If a promoter or an allottee or a real estate agent, as the case may be, fails to pay any interest or penalty or compensation imposed on him, by the adjudicating officer or the Regulatory Authority or the Appellate Authority, as the case may be, under this Act or the rules and regulations made thereunder, it shall be recoverable from such promoter or allottee or real estate agent, in such manner as may be prescribed as an arrear of land revenue (via Revenue Recovery Certificate / Collector execution). (2) If any adjudicating officer or the Regulatory Authority or the Appellate Tribunal issues any order or directs any person to do any act, or refrain from doing any act, which it is empowered to do under this Act or the rules or regulations made thereunder, then in case of failure by any person to comply with such order or direction, the same shall be enforced in such manner as may be prescribed."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "43, 44",
+    "subsection": "43(5), 44(1)-(5)",
+    "rule": null,
+    "title": "Real Estate Appellate Tribunal, appeals, and mandatory promoter pre-deposit under Section 43(5)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Sections 43 & 44. Real Estate Appellate Tribunal and Appeals.— Section 43(5): Any person aggrieved by any direction or decision or order made by the Authority or by an adjudicating officer under this Act may prefer an appeal before the Appellate Tribunal: Provided that where a promoter files an appeal with the Appellate Tribunal, he shall not be entertained, without the promoter first having deposited with the Appellate Tribunal at least thirty per cent of the penalty, or such higher percentage as may be determined by the Appellate Tribunal, or the total amount to be paid to the allottee including interest and compensation imposed on him, if any, or with both, as the case may be, before the said appeal is heard. The Supreme Court in Newtech Promoters (2021) upheld this condition of mandatory pre-deposit as constitutional and non-waivable. Section 44: Every appeal shall be filed within a period of sixty days from the date on which a copy of the direction or order or decision made by the Authority or the adjudicating officer is received."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "59, 60, 61",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "Penalties for non-registration, false information, and contravention of RERA Act",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Sections 59, 60, 61. Penalties on Promoter.— Section 59(1): If any promoter contravenes the provisions of section 3 (failure to register real estate project), he shall be liable to a penalty which may extend up to ten per cent of the estimated cost of the real estate project as determined by the Authority. Section 59(2): If any promoter does not comply with the orders, decisions or directions issued under sub-section (1) or continues to violate section 3, he shall be punishable with imprisonment for a term which may extend up to three years or with fine which may extend up to a further ten per cent of the estimated cost of the real estate project, or with both. Section 60: If any promoter provides false information or contravenes the provisions of section 4 (application for registration), he shall be liable to a penalty which may extend up to five per cent of the estimated cost of the real estate project. Section 61: If any promoter contravenes any other provisions of this Act or rules/regulations, he shall be liable to a penalty up to five per cent of the estimated cost of the project."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "71, 72",
+    "subsection": null,
+    "rule": null,
+    "title": "Power to adjudicate compensation by Adjudicating Officer and factors to be considered",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Sections 71 & 72. Power to adjudicate compensation.— Section 71: For the purpose of adjudging compensation under sections 12, 14, 18 and section 19, the Authority shall appoint one or more judicial officers who is or has been a District Judge to be an adjudicating officer for holding an inquiry in the prescribed manner, after giving any person concerned a reasonable opportunity of being heard. The application for adjudging compensation shall be dealt with by the adjudicating officer as expeditiously as possible and dispose of the same within a period of sixty days. Section 72: While adjudging the quantum of compensation or interest under section 71, the adjudicating officer shall have due regard to the following factors, namely: (a) the amount of disproportionate gain or unfair advantage, wherever quantifiable, made as a result of the default; (b) the amount of loss caused as a result of the default; (c) the repetitive nature of the default; (d) such other factors which the adjudicating officer considers necessary to the case in furtherance of justice."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "79",
+    "subsection": null,
+    "rule": null,
+    "title": "Bar of jurisdiction of civil courts",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Section 79. Bar of jurisdiction.— No civil court shall have jurisdiction to entertain any suit or proceeding in respect of any matter which the Authority or the adjudicating officer or the Appellate Tribunal is empowered by or under this Act to determine and no injunction shall be granted by any court or other authority in respect of any action taken or to be taken in pursuance of any power conferred by or under this Act. Remedies under RERA are in addition to and not in derogation of remedies available under the Consumer Protection Act, 2019."
+  },
+  {
+    "document": "Real Estate (Regulation and Development) Act, 2016",
+    "actOrRule": "Act",
+    "section": "88, 89",
+    "subsection": null,
+    "rule": null,
+    "title": "Application of other laws not barred and overriding effect of RERA Act over inconsistent state laws",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2158",
+    "text": "Sections 88 & 89. Application of other laws not barred and Overriding effect.— Section 88: The provisions of this Act shall be in addition to, and not in derogation of, the provisions of any other law for the time being in force (meaning remedies before NCDRC / Consumer Forums, NCLT / IBC, and MOFA remain accessible in parallel). Section 89: The provisions of this Act shall have effect notwithstanding anything inconsistent therewith contained in any other law for the time being in force. In the event of any conflict between state enactments or agreements and RERA provisions, the provisions of the RERA Act, 2016 prevail."
+  },
+
+  // =========================================================================
+  // 2. MAHARASHTRA RERA RULES, 2017 & REGULATIONS
+  // =========================================================================
+  {
+    "document": "Maharashtra Real Estate (Regulation and Development) (Registration of real estate projects, Registration of real estate agents, rates of interest and disclosures on website) Rules, 2017",
+    "actOrRule": "Rules",
+    "section": null,
+    "subsection": null,
+    "rule": "3, 4",
+    "title": "Information and documents to be submitted for project registration with MahaRERA",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Rules 2017, Rule 3 & 4. Application for registration of real estate projects.— (1) The promoter shall apply for registration of a real estate project with MahaRERA along with authenticated copy of the approvals and commencement certificate from the competent authority, sanctioned plan, layout plan, specifications of the proposed project, encumbrance certificate or title certificate issued by an advocate having experience of not less than 10 years certifying title of the promoter to the land, 7/12 extract or property card, development agreement or power of attorney if the promoter is not the owner of the land, detailed list of layout plans, floor plans, number of covered parking spaces and garages, proforma of the agreement for sale and conveyance deed proposed to be executed, and details of the separate bank account opened in a scheduled bank as per Section 4(2)(l)(D)."
+  },
+  {
+    "document": "Maharashtra Real Estate (Regulation and Development) (Registration of real estate projects, Registration of real estate agents, rates of interest and disclosures on website) Rules, 2017",
+    "actOrRule": "Rules",
+    "section": null,
+    "subsection": null,
+    "rule": "5",
+    "title": "Withdrawal of amounts from 70% separate escrow bank account and required statutory certificates",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Rules 2017, Rule 5. Withdrawal of sums from separate account.— (1) For the purpose of sub-clause (D) of clause (l) of sub-section (2) of section 4 of the Act, the land cost shall be the acquisition cost or market value as per Ready Reckoner / stamp duty valuation, premium payable to authorities, and rehabilitation cost. (2) The cost of construction shall include all expenditures incurred by the promoter towards civil construction, MEP, on-site infrastructure, professional fees, and interest paid on project borrowing. (3) The promoter can withdraw funds from the 70% separate escrow bank account only in proportion to the percentage of project completion, after obtaining three mandatory certificates: Form 1 from the project Architect (certifying percentage of physical construction work completed), Form 2 from the project Engineer (certifying actual structural work and materials consumed), and Form 3 from a practicing Chartered Accountant (certifying the proportion of total cost incurred versus total estimated cost and allowable withdrawal amount). (4) The promoter must submit an annual audit report in Form 5 issued by a statutory auditor within six months of financial year close."
+  },
+  {
+    "document": "Maharashtra Real Estate (Regulation and Development) (Registration of real estate projects, Registration of real estate agents, rates of interest and disclosures on website) Rules, 2017",
+    "actOrRule": "Rules",
+    "section": null,
+    "subsection": null,
+    "rule": "6, 7",
+    "title": "Extension and Revocation of real estate project registration in Maharashtra",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Rules 2017, Rule 6 & 7. Extension and Revocation of Registration.— Rule 6: An application for extension of registration of the real estate project shall be made in Form 'E' along with an explanatory note setting out the circumstances and force majeure reasons for delay, along with the statutory fee. The Authority may grant extension up to an aggregate period of one year. Rule 7: Upon revocation of registration under Section 7, the Authority shall notify the promoter in Form 'F' after giving thirty days notice, publish the order on the MahaRERA web portal, mark the project as revoked, direct the scheduled bank to freeze the 70% separate escrow account, and invite the Association of Allottees to formulate a revival and completion scheme under Section 8."
+  },
+  {
+    "document": "Maharashtra Real Estate (Regulation and Development) (Registration of real estate projects, Registration of real estate agents, rates of interest and disclosures on website) Rules, 2017",
+    "actOrRule": "Rules",
+    "section": null,
+    "subsection": null,
+    "rule": "9",
+    "title": "Period for conveyance of title in Maharashtra to Allottees and Cooperative Housing Society",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Rules 2017, Rule 9. Period for conveyance of title.— (1) For the purpose of sub-section (1) of section 17 of the Act: (i) If no period for conveyance is specified in local law, the promoter shall execute the registered conveyance deed in favour of the allottee and the association of allottees within three months from the date of issue of occupancy certificate or fifty-one per cent of the total number of allottees in such building or wing have paid the full consideration to the promoter, whichever is earlier. (ii) Where a co-operative housing society is formed under Maharashtra Ownership Flats Act (MOFA), the promoter shall execute the conveyance within one month of formation of the society or within three months of occupancy certificate."
+  },
+  {
+    "document": "Maharashtra Real Estate (Regulation and Development) (Registration of real estate projects, Registration of real estate agents, rates of interest and disclosures on website) Rules, 2017",
+    "actOrRule": "Rules",
+    "section": null,
+    "subsection": null,
+    "rule": "10",
+    "title": "Agreement for Sale format and model agreement (Annexure A)",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Rules 2017, Rule 10. Details to be published on the website and Agreement for Sale.— (1) For the purpose of sub-section (2) of section 13 of the Act, the agreement for sale shall be in conformity with the model Form of Agreement for Sale in 'Annexure A' appended to these rules. (2) Any inconsistent or contradictory clause inserted in the agreement for sale that derogates from or waives the statutory rights of the allottee provided under the Act or the model agreement shall be void and ineffective against the allottee. The agreement must clearly set out carpet area dimensions, stage-wise payment milestones linked to actual slab construction, exact possession date, common areas title transfer timeline, and defect liability terms."
+  },
+  {
+    "document": "Maharashtra Real Estate (Regulation and Development) (Registration of real estate projects, Registration of real estate agents, rates of interest and disclosures on website) Rules, 2017",
+    "actOrRule": "Rules",
+    "section": null,
+    "subsection": null,
+    "rule": "18",
+    "title": "Rate of interest payable by promoter for delayed possession and by allottee for default",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Rules 2017, Rule 18. Rate of interest payable by the promoter and the allottee.— The rate of interest payable by the promoter to the allottee or by the allottee to the promoter, as the case may be, shall be the State Bank of India highest Marginal Cost of Funds Based Lending Rate (MCLR) plus two per cent. Explanation.— For the purposes of this rule, the rate of interest shall be uniform and reciprocal, meaning the promoter cannot charge a higher interest rate from allottees for delayed installment payments than the interest rate the promoter is legally required to pay allottees for delayed possession."
+  },
+  {
+    "document": "Maharashtra Real Estate (Regulation and Development) (Registration of real estate projects, Registration of real estate agents, rates of interest and disclosures on website) Rules, 2017",
+    "actOrRule": "Rules",
+    "section": null,
+    "subsection": null,
+    "rule": "24, 25",
+    "title": "Procedure for filing complaints and holding inquiries before MahaRERA and Adjudicating Officer",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Rules 2017, Rule 24 & 25. Complaint filing and adjudication.— (1) Any aggrieved person may file an online complaint with MahaRERA in Form 'A' accompanied by a fee of Rs. 5,000 for violations of RERA provisions, seeking directions, refunds, interest for delayed possession, or project completion orders. (2) An application for adjudging compensation under Sections 12, 14, 18 and 19 shall be filed before the Adjudicating Officer in Form 'B' accompanied by a fee of Rs. 5,000. (3) MahaRERA provides for online hearing, conciliation forum through MahaRERA Conciliation Benches (consisting of representatives of consumer groups and developer associations), and formal adjudication."
+  },
+
+  // =========================================================================
+  // 3. MAHARERA OFFICIAL CIRCULARS & ORDERS
+  // =========================================================================
+  {
+    "document": "MahaRERA Official Circulars & Orders",
+    "actOrRule": "Circular",
+    "section": null,
+    "subsection": null,
+    "rule": "Circular No. 36/2021 & Circular No. 37/2021",
+    "title": "Mandatory non-negotiable clauses in Agreement for Sale and Proscription of Open Parking Sale",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Circulars & Orders on Agreement for Sale and Parking: (1) Circular No. 36/2021 mandates that promoters must incorporate all non-negotiable standard clauses from MahaRERA Model Agreement (Annexure A) including statutory defect liability, possession timeline, title transfer, and right to refund with interest. Any clause giving the builder unilateral power to extend possession without force majeure or capping compensation is impermissible. (2) MahaRERA Circular on Parking Spaces: Promoters cannot sell open parking spaces or standalone parking bays as independent units. Open parking spaces form part of common areas and must be handed over to the housing society / association of allottees free of separate consideration. Covered garage/stilt parking can only be sold in accordance with sanctioned building plans."
+  },
+  {
+    "document": "MahaRERA Official Circulars & Orders",
+    "actOrRule": "Order",
+    "section": null,
+    "subsection": null,
+    "rule": "Order No. 33/2022 & Order No. 36/2022",
+    "title": "Prohibition on allotment of Open Parking Spaces and allocation rules for Covered / Garage Parking",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Order No. 33/2022 & 36/2022. Allocation of Parking Spaces.— (1) Promoters are strictly prohibited from selling or allocating open parking spaces for a separate monetary consideration. Open parking spaces form an integral part of the common areas of the real estate project and are to be transferred to the Association of Allottees / Society without cost. (2) Promoters can sell covered parking space or garage only if clearly demarcated in the sanctioned layout plan with specific number, floor, wing, and dimensions mentioned in the registered Agreement for Sale. (3) The allottee's parking space allotment letter must form an integral annexure to the registered agreement for sale to prevent subsequent unauthorized reassignment or double sale."
+  },
+  {
+    "document": "MahaRERA Official Circulars & Orders",
+    "actOrRule": "Circular",
+    "section": null,
+    "subsection": null,
+    "rule": "Circular No. 28/2021",
+    "title": "Operation and monitoring of 70% separate escrow bank account & 3-certificate framework",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Circular No. 28/2021. Directions on 70% Separate Escrow Bank Account.— (1) 70% of all amounts received from allottees towards booking and construction milestones must be directly deposited into the separate project bank account. (2) No withdrawal is permissible without simultaneous uploading of Form 1 (Architect certification of physical progress), Form 2 (Engineer certification of construction quality and expenditure incurred), and Form 3 (Chartered Accountant certification of proportionate completion and admissible expenditure). (3) The separate account cannot be attached or encumbered by lenders for external liabilities or other projects of the promoter. (4) Any interest accrued on the funds in the separate bank account must remain in the project account and be utilized exclusively for project development."
+  },
+  {
+    "document": "MahaRERA Official Circulars & Orders",
+    "actOrRule": "Order",
+    "section": null,
+    "subsection": null,
+    "rule": "Order No. 40/2022",
+    "title": "Separate maintenance account and handover of unspent maintenance corpus to Housing Society",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Order No. 40/2022. Maintenance Charges and Handover of Sinking Fund.— (1) Promoters collecting advance maintenance charges, property tax deposits, or sinking fund corpus from allottees at the time of possession must maintain these funds in a dedicated, separate interest-bearing bank account distinct from the 70% project account and promoter's operational account. (2) The promoter is legally obligated to provide a fully audited statement of maintenance expenses to the Association of Allottees / Cooperative Housing Society upon handover. (3) The promoter must transfer the entire unspent balance of the maintenance funds and sinking fund corpus along with accumulated interest to the newly formed society / association within thirty days of society handover."
+  },
+  {
+    "document": "MahaRERA Official Circulars & Orders",
+    "actOrRule": "Circular",
+    "section": null,
+    "subsection": null,
+    "rule": "Circular No. 41/2023 & Order No. 46/2023",
+    "title": "Standard non-derogable agreement terms and real estate project de-registration framework",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Circular No. 41/2023 & Order No. 46/2023: (1) Promoters cannot unilaterally terminate an agreement for sale or cancel allotment without serving a statutory thirty days written cure notice. Forfeiture of earnest money upon allottee cancellation is capped at reasonable limits (not exceeding 10% of total unit cost), and the balance amount must be refunded to the allottee within forty-five days. (2) Project De-Registration: A promoter seeking voluntary de-registration of a project or phase must demonstrate zero booked allottees or provide documentary proof of 100% written consent of existing allottees and full refund of all principal amounts together with statutory interest calculated at SBI MCLR + 2%."
+  },
+  {
+    "document": "MahaRERA Official Circulars & Orders",
+    "actOrRule": "Order",
+    "section": null,
+    "subsection": null,
+    "rule": "Order No. 50/2023 & Circular No. 44/2023",
+    "title": "Mandatory QR Code display on project advertisements and project information disclosure",
+    "jurisdiction": "Maharashtra",
+    "authority": "MahaRERA / Government of Maharashtra",
+    "sourceUrl": "https://maharera.maharashtra.gov.in/",
+    "text": "MahaRERA Order No. 50/2023 & Circular No. 44/2023. Mandatory Display of QR Code.— (1) Promoters must publish a scannable MahaRERA QR Code in all promotional materials, advertisements (print media, hoardings, brochures, social media, electronic websites), prospectus, and marketing channels. (2) Scanning the QR Code must directly navigate users to the official MahaRERA project web portal page displaying project registration status, sanctioned layout plans, approval dates, completion timeline, litigations, encumbrances, quarterly financial and construction progress reports, and professional certificates."
+  },
+
+  // =========================================================================
+  // 4. MAHARASHTRA OWNERSHIP FLATS ACT, 1963 (MOFA)
+  // =========================================================================
+  {
+    "document": "Maharashtra Ownership Flats (Regulation of the Promotion of Construction, Sale, Management and Transfer) Act, 1963 (MOFA)",
+    "actOrRule": "Act",
+    "section": "3",
+    "subsection": "1, 2",
+    "rule": null,
+    "title": "General liabilities of promoter and statutory disclosures under MOFA",
+    "jurisdiction": "Maharashtra",
+    "authority": "Government of Maharashtra",
+    "sourceUrl": "https://housing.maharashtra.gov.in/",
+    "text": "Maharashtra Ownership Flats Act, 1963 (MOFA), Section 3. General liabilities of promoter.— (1) Notwithstanding anything in any other law, a promoter who constructs or intends to construct a block or building of flats shall in all transactions with persons intending to take or taking one or more flats, be liable to adhere to the provisions of this Act. (2) The promoter shall: (a) make full and true disclosure of the nature of his title to the land on which the flats are constructed, such title having been duly certified by an Attorney-at-Law or Advocate of not less than three years standing; (b) make full and true disclosure of all encumbrances on such land; (c) give inspection of the plans and specifications of the building; (d) disclose the nature of fixtures, fittings and amenities provided; (e) disclose the date by which possession of the flat is to be handed over; (f) maintain a list of all flats with names and addresses of purchasers."
+  },
+  {
+    "document": "Maharashtra Ownership Flats (Regulation of the Promotion of Construction, Sale, Management and Transfer) Act, 1963 (MOFA)",
+    "actOrRule": "Act",
+    "section": "4",
+    "subsection": "1, 1A",
+    "rule": null,
+    "title": "Promoter before accepting advance payment exceeding 20% to enter into registered agreement",
+    "jurisdiction": "Maharashtra",
+    "authority": "Government of Maharashtra",
+    "sourceUrl": "https://housing.maharashtra.gov.in/",
+    "text": "Maharashtra Ownership Flats Act, 1963 (MOFA), Section 4. Promoter before accepting advance payment to enter into agreement and agreement to be registered.— (1) Notwithstanding anything contained in any other law, a promoter who intends to construct or constructs a block or building of flats shall, before he accepts any sum of money as advance payment or deposit, which shall not exceed 20 per cent of the sale price, enter into a written agreement for sale with each of such persons who are to take the flats, and the agreement shall be registered under the Registration Act, 1908. (1A) The agreement shall contain the particulars of the building, carpet area of the flat, price, timeline for completion, liability for taxes and local outgoings, and the date by which possession is to be handed over."
+  },
+  {
+    "document": "Maharashtra Ownership Flats (Regulation of the Promotion of Construction, Sale, Management and Transfer) Act, 1963 (MOFA)",
+    "actOrRule": "Act",
+    "section": "5",
+    "subsection": null,
+    "rule": null,
+    "title": "Promoter to maintain separate bank account of sums taken as advance or deposit and hold as trustee",
+    "jurisdiction": "Maharashtra",
+    "authority": "Government of Maharashtra",
+    "sourceUrl": "https://housing.maharashtra.gov.in/",
+    "text": "Maharashtra Ownership Flats Act, 1963 (MOFA), Section 5. Promoter to maintain separate account of sums taken as advance or deposit and to be trustee therefor.— The promoter shall maintain a separate account in any bank of sums taken by him from persons intending to take or who have taken flats, as advance or deposit, including any sums taken towards the share capital for the formation of a co-operative society or company, or towards the outgoings (including taxes, water and electricity charges, insurance); and the promoter shall hold the said moneys for the purposes for which they were given and shall disburse the moneys for those purposes only and shall on demand in writing by a competent authority, make full and true disclosure of all transactions in respect of that account."
+  },
+  {
+    "document": "Maharashtra Ownership Flats (Regulation of the Promotion of Construction, Sale, Management and Transfer) Act, 1963 (MOFA)",
+    "actOrRule": "Act",
+    "section": "7, 7A",
+    "subsection": null,
+    "rule": null,
+    "title": "Promoter not to make additions/alterations without consent and rectification of defects within 3 years",
+    "jurisdiction": "Maharashtra",
+    "authority": "Government of Maharashtra",
+    "sourceUrl": "https://housing.maharashtra.gov.in/",
+    "text": "Maharashtra Ownership Flats Act, 1963 (MOFA), Section 7 & 7A. Promoter not to alter plans without consent & Defect Liability.— (1) After the plans and specifications are disclosed to the flat purchaser, the promoter shall not make any alterations or additions in the structures of the flat without previous consent of that person, nor make any other alterations or additions in the building structure or common areas without previous consent of all persons who have agreed to take flats in such building. (2) Defect Rectification: If any defect in the building or material used, or any unauthorised change in construction is brought to the notice of the promoter within a period of three years from the date of handing over possession, it shall be rectified by the promoter without additional charge within a reasonable time, failing which the flat purchaser is entitled to compensation. Section 7A clarifies that promoter may develop additional structures only in accordance with disclosed layout plans."
+  },
+  {
+    "document": "Maharashtra Ownership Flats (Regulation of the Promotion of Construction, Sale, Management and Transfer) Act, 1963 (MOFA)",
+    "actOrRule": "Act",
+    "section": "10",
+    "subsection": "1",
+    "rule": null,
+    "title": "Promoter to take steps for formation of Co-operative Housing Society within 4 months",
+    "jurisdiction": "Maharashtra",
+    "authority": "Government of Maharashtra",
+    "sourceUrl": "https://housing.maharashtra.gov.in/",
+    "text": "Maharashtra Ownership Flats Act, 1963 (MOFA), Section 10. Promoter to take steps for formation of co-operative society or company.— (1) As soon as a minimum number of persons required to form a co-operative housing society or a company have taken flats, the promoter shall within the prescribed period (within four months from the date on which the minimum number of 60% of flat purchasers have taken possession or entered into agreements) submit an application to the Registrar for registration of the organization of flat purchasers as a Co-operative Housing Society or a Company. The promoter shall co-operate with flat purchasers in submitting all necessary land documents, property cards, and building plans for registration."
+  },
+  {
+    "document": "Maharashtra Ownership Flats (Regulation of the Promotion of Construction, Sale, Management and Transfer) Act, 1963 (MOFA)",
+    "actOrRule": "Act",
+    "section": "11",
+    "subsection": "1, 2, 3, 4, 5",
+    "rule": null,
+    "title": "Promoter's obligation to convey title to Housing Society and Unilateral Deemed Conveyance procedure",
+    "jurisdiction": "Maharashtra",
+    "authority": "Government of Maharashtra",
+    "sourceUrl": "https://housing.maharashtra.gov.in/",
+    "text": "Maharashtra Ownership Flats Act, 1963 (MOFA), Section 11. Promoter to convey title, etc., and execute documents according to agreement.— (1) A promoter shall take all necessary steps to complete his title and convey to the Co-operative Housing Society or association of flat purchasers, the right, title and interest of the promoter and owner in the land and building, and execute all relevant documents within the prescribed period of four months from date of society registration. (3) Deemed Conveyance: If the promoter fails to execute the conveyance deed in favor of the society within four months, the society or company of flat purchasers may make an application in writing to the Competent Authority (District Deputy Registrar of Co-operative Societies) for a certificate of Unilateral Deemed Conveyance. (4) The Competent Authority, after giving the promoter reasonable opportunity of being heard and verifying title documents, shall issue a Certificate of Deemed Conveyance. (5) The Sub-Registrar shall register the Deemed Conveyance Certificate as a valid conveyance of title in favor of the society without requiring the signature of the recalcitrant promoter."
+  },
+  {
+    "document": "Maharashtra Ownership Flats (Regulation of the Promotion of Construction, Sale, Management and Transfer) Act, 1963 (MOFA)",
+    "actOrRule": "Act",
+    "section": "13",
+    "subsection": null,
+    "rule": null,
+    "title": "Criminal offences and penalties against promoters for violating MOFA provisions",
+    "jurisdiction": "Maharashtra",
+    "authority": "Government of Maharashtra",
+    "sourceUrl": "https://housing.maharashtra.gov.in/",
+    "text": "Maharashtra Ownership Flats Act, 1963 (MOFA), Section 13. Offences by promoters and penalties.— (1) Any promoter who without reasonable excuse fails to comply with or contravenes any provisions of Section 3, 4, 5 (misuse of advance deposits), 10 (refusal to form cooperative housing society), or 11 (refusal to convey title to society) shall, on conviction, be punished with imprisonment for a term which may extend to three years, or with fine, or with both. (2) Offences under MOFA involving fraudulent collection of monies or diversion of flat buyers' deposits are cognizable and triable by a Metropolitan Magistrate or Judicial Magistrate First Class."
+  },
+
+  // =========================================================================
+  // 5. TRANSFER OF PROPERTY ACT, 1882 (TPA)
+  // =========================================================================
+  {
+    "document": "Transfer of Property Act, 1882",
+    "actOrRule": "Act",
+    "section": "5, 8",
+    "subsection": null,
+    "rule": null,
+    "title": "Definition of 'Transfer of Property' and legal operation of transfer (Passing of easements and fixtures)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2338",
+    "text": "Transfer of Property Act, 1882, Sections 5 & 8: Section 5. 'Transfer of property' defined.— In the following sections 'transfer of property' means an act by which a living person conveys property, in present or in future, to one or more other living persons, or to himself and one or more other living persons; and 'to transfer property' is to perform such act. Section 8. Operation of transfer.— Unless a different intention is expressed or necessarily implied, a transfer of property passes forthwith to the transferee all the interest which the transferor is then capable of passing in the property and in the legal incidents thereof. Such incidents include, where the property is land, the easements annexed thereto, the rents and profits thereof accruing after the transfer, and all things attached to the earth (fixtures, buildings, and structures)."
+  },
+  {
+    "document": "Transfer of Property Act, 1882",
+    "actOrRule": "Act",
+    "section": "52",
+    "subsection": null,
+    "rule": null,
+    "title": "Transfer of property pending suit relating thereto (Doctrine of Lis Pendens)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2338",
+    "text": "Transfer of Property Act, 1882, Section 52. Transfer of property pending suit relating thereto (Doctrine of Lis Pendens).— During the pendency in any Court having authority within the limits of India of any suit or proceeding which is not collusive and in which any right to immovable property is directly and specifically in question, the property cannot be transferred or otherwise dealt with by any party to the suit or proceeding so as to affect the rights of any other party thereto under any decree or order which may be made therein, except under the authority of the Court and on such terms as it may impose. Any purchaser buying property subject to pending litigation acquires it subject to the final decree of the court."
+  },
+  {
+    "document": "Transfer of Property Act, 1882",
+    "actOrRule": "Act",
+    "section": "53A",
+    "subsection": null,
+    "rule": null,
+    "title": "Part performance of contract of sale of immovable property",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2338",
+    "text": "Transfer of Property Act, 1882, Section 53A. Part performance.— Where any person contracts to transfer for consideration any immovable property by writing signed by him or on his behalf from which the terms necessary to constitute the transfer can be ascertained with reasonable certainty, and the transferee has, in part performance of the contract, taken possession of the property or any part thereof, or the transferee, being already in possession, continues in possession in part performance of the contract and has done some act in furtherance of the contract, and the transferee has performed or is willing to perform his part of the contract, then, notwithstanding that there is an instrument of transfer, that the transfer has not been completed in the manner prescribed therefor by the law for the time being in force, the transferor or any person claiming under him shall be debarred from enforcing against the transferee and persons claiming under him any right in respect of the property of which the transferee has taken or continued in possession, other than a right expressly provided by the terms of the contract. (Note: Following the 2001 Registration Amendment, Section 53A protection requires a registered contract/agreement)."
+  },
+  {
+    "document": "Transfer of Property Act, 1882",
+    "actOrRule": "Act",
+    "section": "54",
+    "subsection": null,
+    "rule": null,
+    "title": "Definition of Sale of Immovable Property and Compulsory Registration of Sale Deeds",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2338",
+    "text": "Transfer of Property Act, 1882, Section 54. 'Sale' defined.— 'Sale' is a transfer of ownership in exchange for a price paid or promised or part-paid and part-promised. Sale how made.— Such transfer, in the case of tangible immovable property of the value of one hundred rupees and upwards, or in the case of a reversion or other intangible thing, can be made only by a registered instrument. In the case of tangible immovable property of a value less than one hundred rupees, such transfer may be made either by a registered instrument or by delivery of the property. Contract for sale.— A contract for the sale of immovable property is a contract that a sale of such property shall take place on terms settled between the parties. It does not, of itself, create any interest in or charge on such property. A registered sale deed is required to transfer legal title; a mere agreement to sell does not transfer ownership."
+  },
+  {
+    "document": "Transfer of Property Act, 1882",
+    "actOrRule": "Act",
+    "section": "55",
+    "subsection": "1(a)-(g), 2",
+    "rule": null,
+    "title": "Rights and liabilities of buyer and seller (Duty to disclose material defects & Implied covenant for title)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2338",
+    "text": "Transfer of Property Act, 1882, Section 55. Rights and liabilities of buyer and seller.— (1) The seller is bound: (a) to disclose to the buyer any material defect in the property or in the seller's title thereto of which the seller is, and the buyer is not, aware, and which the buyer could not with ordinary care discover; (b) to produce to the buyer on his request for examination all documents of title relating to the property which are in the seller's possession or power; (c) to answer to the best of his information all relevant questions put to him by the buyer in respect to the property or the title thereto; (d) on payment of consideration to execute a proper conveyance; (e) between date of contract and delivery of possession, to take as much care of property as an owner of ordinary prudence. (2) The seller shall be deemed to contract with the buyer that the interest which the seller professes to transfer to the buyer subsists and that he has power to transfer the same (implied statutory warranty and covenant for title). If the seller's title is defective, the buyer can claim damages."
+  },
+  {
+    "document": "Transfer of Property Act, 1882",
+    "actOrRule": "Act",
+    "section": "55",
+    "subsection": "4(b), 5, 6(b)",
+    "rule": null,
+    "title": "Seller's charge for unpaid price and Buyer's statutory charge for purchase-money paid in advance",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2338",
+    "text": "Transfer of Property Act, 1882, Section 55(4)(b) & 55(6)(b). Statutory Charges of Seller and Buyer: Section 55(4)(b): The seller is entitled to a charge upon the property in the hands of the buyer, any transferee without consideration or any transferee with notice of non-payment, for the amount of the purchase-money, or any part thereof remaining unpaid, and for interest on such amount. Section 55(6)(b): The buyer is entitled to a charge on the property, as against the seller and all persons claiming under him, to the extent of the seller's interest in the property, for the amount of any purchase-money properly paid by the buyer in anticipation of the delivery and for interest on such amount; and, when he properly declines to accept the delivery, also for the earnest (if any) and for the costs awarded to him of a suit to compel specific performance of the contract or to obtain a decree for its rescission."
+  },
+  {
+    "document": "Transfer of Property Act, 1882",
+    "actOrRule": "Act",
+    "section": "58",
+    "subsection": "a, b, c, d, e, f",
+    "rule": null,
+    "title": "Definitions of Mortgage, Mortgagor, Mortgage-money, and forms of Mortgage of Immovable Property",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2338",
+    "text": "Transfer of Property Act, 1882, Section 58. 'Mortgage', 'mortgagor', 'mortgagee', 'mortgage-money' defined.— (a) A mortgage is the transfer of an interest in specific immovable property for the purpose of securing the payment of money advanced or to be advanced by way of loan, an existing or future debt, or the performance of an engagement which may give rise to a pecuniary liability. (b) Simple mortgage: where the mortgagor binds himself personally to pay the mortgage-money without delivering possession, agreeing that in event of default the property may be sold. (f) Mortgage by deposit of title-deeds (Equitable Mortgage): where a person in notified towns delivers to a creditor or his agent documents of title to immovable property with intent to create a security thereon. Any housing loan mortgage creates a statutory encumbrance that must be cleared/NOC obtained before executing a clear conveyance deed to a property purchaser."
+  },
+  {
+    "document": "Transfer of Property Act, 1882",
+    "actOrRule": "Act",
+    "section": "105, 107",
+    "subsection": null,
+    "rule": null,
+    "title": "Definition of Lease of Immovable Property and mandatory registration of leases exceeding one year",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2338",
+    "text": "Transfer of Property Act, 1882, Sections 105 & 107: Section 105. 'Lease' defined.— A lease of immovable property is a transfer of a right to enjoy such property, made for a certain time, express or implied, or in perpetuity, in consideration of a price paid or promised, or of money, a share of crops, service or any other thing of value, to be rendered periodically or on specified occasions to the transferor by the transferee, who accepts the transfer on such terms. Section 107. Leases how made.— A lease of immovable property from year to year, or for any term exceeding one year, or reserving a yearly rent, can be made only by a registered instrument. All other leases of immovable property may be made either by a registered instrument or by oral agreement accompanied by delivery of possession."
+  },
+  {
+    "document": "Transfer of Property Act, 1882",
+    "actOrRule": "Act",
+    "section": "122, 123",
+    "subsection": null,
+    "rule": null,
+    "title": "Definition of Gift of Immovable Property and mandatory registration with two attesting witnesses",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2338",
+    "text": "Transfer of Property Act, 1882, Sections 122 & 123: Section 122. 'Gift' defined.— 'Gift' is the transfer of certain existing movable or immovable property made voluntarily and without consideration, by one person, called the donor, to another, called the donee, and accepted by or on behalf of the donee during the lifetime of the donor and while he is still capable of giving. Section 123. Transfer how effected.— For the purpose of making a gift of immovable property, the transfer must be effected by a registered instrument signed by or on behalf of the donor, and attested by at least two witnesses. An unregistered gift deed of immovable property is void and confers no title."
+  },
+
+  // =========================================================================
+  // 6. REGISTRATION ACT, 1908
+  // =========================================================================
+  {
+    "document": "Registration Act, 1908",
+    "actOrRule": "Act",
+    "section": "17",
+    "subsection": "1(a)-(e), 2",
+    "rule": null,
+    "title": "Documents of which registration is compulsory (Conveyances, gifts, leases exceeding one year)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2186",
+    "text": "Registration Act, 1908, Section 17. Documents of which registration is compulsory.— (1) The following documents shall be registered: (a) instruments of gift of immovable property; (b) other non-testamentary instruments which purport or operate to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent, of the value of one hundred rupees and upwards, to or in immovable property; (c) non-testamentary instruments which acknowledge the receipt or payment of any consideration on account of the creation, declaration, assignment, limitation or extinction of any such right, title or interest; (d) leases of immovable property from year to year, or for any term exceeding one year, or reserving a yearly rent; (e) non-testamentary instruments transferring or assigning any decree or order of a Court or any award when such decree or award purports to affect immovable property of value of one hundred rupees and upwards; (1A) Documents containing contracts to transfer for consideration, any immovable property for the purpose of section 53A of the Transfer of Property Act, 1882 shall be registered."
+  },
+  {
+    "document": "Registration Act, 1908",
+    "actOrRule": "Act",
+    "section": "18",
+    "subsection": null,
+    "rule": null,
+    "title": "Documents of which registration is optional",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2186",
+    "text": "Registration Act, 1908, Section 18. Documents of which registration is optional.— Any of the following documents may be registered under this Act, namely: (a) instruments (other than instruments of gift and wills) which purport or operate to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent, of a value less than one hundred rupees, to or in immovable property; (b) instruments acknowledging the receipt or payment of any consideration on account of the creation, declaration, assignment, limitation or extinction of any such right, title or interest; (c) leases of immovable property for any term not exceeding one year; (cc) instruments transferring or assigning any decree or order of a Court when such decree or order purports to affect immovable property of a value less than one hundred rupees; (e) wills; and (f) all other documents not required by section 17 to be registered."
+  },
+  {
+    "document": "Registration Act, 1908",
+    "actOrRule": "Act",
+    "section": "23, 25",
+    "subsection": null,
+    "rule": null,
+    "title": "Time limit of four months for presenting documents for registration and condonation of delay",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2186",
+    "text": "Registration Act, 1908, Sections 23 & 25: Section 23. Time for presenting documents.— Subject to the provisions contained in sections 24, 25 and 26, no document other than a will shall be accepted for registration unless presented for that purpose to the proper officer within four months from the date of its execution. Section 25. Provision where delay in presentation is unavoidable.— (1) If, owing to urgent necessity or unavoidable accident, any document executed, or copy of a decree or order made, in India is not presented for registration till after the expiration of the time hereinbefore prescribed in that behalf, the Registrar, in cases where the delay in presentation does not exceed four months, may direct that, on payment of a fine not exceeding ten times the amount of the proper registration-fee, such document shall be accepted for registration."
+  },
+  {
+    "document": "Registration Act, 1908",
+    "actOrRule": "Act",
+    "section": "28",
+    "subsection": null,
+    "rule": null,
+    "title": "Place for registering documents relating to land (Sub-Registrar jurisdiction)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2186",
+    "text": "Registration Act, 1908, Section 28. Place for registering documents relating to land.— Save as in this Part otherwise provided, every document mentioned in section 17, sub-section (1), clauses (a), (b), (c), (d) and (e), section 17, sub-section (2), and section 18, in so far as such document affects immovable property, shall be presented for registration in the office of a Sub-Registrar within whose sub-district the whole or some portion of the property to which such document relates is situate. Registration before a Sub-Registrar having no territorial jurisdiction over any part of the property is invalid and without jurisdiction."
+  },
+  {
+    "document": "Registration Act, 1908",
+    "actOrRule": "Act",
+    "section": "32, 33",
+    "subsection": null,
+    "rule": null,
+    "title": "Persons to present documents for registration and Special Power of Attorney requirements",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2186",
+    "text": "Registration Act, 1908, Sections 32 & 33. Presentation of Documents and Power of Attorney: Section 32: Every document to be registered under this Act shall be presented at the proper registration office: (a) by some person executing or claiming under the same, or (b) by the representative or assign of such person, or (c) by the agent of such person, representative or assign, duly authorised by power-of-attorney executed and authenticated in manner hereinafter mentioned. Section 33: For the purposes of section 32, the following powers-of-attorney alone shall be recognized: if the principal at the time of executing the power-of-attorney resides in any part of India in which this Act is for the time being in force, a power-of-attorney executed before and authenticated by the Registrar or Sub-Registrar within whose district or sub-district the principal resides."
+  },
+  {
+    "document": "Registration Act, 1908",
+    "actOrRule": "Act",
+    "section": "47, 49",
+    "subsection": "49(a)-(c)",
+    "rule": null,
+    "title": "Time from which registered document operates and effect of non-registration",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2186",
+    "text": "Registration Act, 1908, Sections 47 & 49: Section 47. Time from which registered document operates.— A registered document shall operate from the time from which it would have commenced to operate if no registration thereof had been required or made, and not from the time of its registration (it relates back to the date of execution upon registration). Section 49. Effect of non-registration of documents required to be registered.— No document required by section 17 or by any provision of the Transfer of Property Act, 1882, to be registered shall (a) affect any immovable property comprised therein, or (b) confer any power to adopt, or (c) be received as evidence of any transaction affecting such property or conferring such power, unless it has been registered. Provided that an unregistered document affecting immovable property may be received as evidence of a contract in a suit for specific performance under Chapter II of the Specific Relief Act, 1877, or as evidence of any collateral transaction not required to be effected by registered instrument."
+  },
+
+  // =========================================================================
+  // 7. INDIAN CONTRACT ACT, 1872
+  // =========================================================================
+  {
+    "document": "Indian Contract Act, 1872",
+    "actOrRule": "Act",
+    "section": "10, 13, 14",
+    "subsection": null,
+    "rule": null,
+    "title": "What agreements are contracts, Definition of Consent and Free Consent",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2187",
+    "text": "Indian Contract Act, 1872, Sections 10, 13 & 14: Section 10. What agreements are contracts.— All agreements are contracts if they are made by the free consent of parties competent to contract, for a lawful consideration and with a lawful object, and are not hereby expressly declared to be void. Section 13. 'Consent' defined.— Two or more persons are said to consent when they agree upon the same thing in the same sense (consensus ad idem). Section 14. 'Free consent' defined.— Consent is said to be free when it is not caused by: (1) coercion (section 15), (2) undue influence (section 16), (3) fraud (section 17), (4) misrepresentation (section 18), or (5) mistake (sections 20, 21 and 22). In property transactions, consent vitiated by misrepresentation of project approvals or deceptive brochures renders the agreement voidable."
+  },
+  {
+    "document": "Indian Contract Act, 1872",
+    "actOrRule": "Act",
+    "section": "19, 19A",
+    "subsection": null,
+    "rule": null,
+    "title": "Voidability of agreements without free consent (Coercion, Fraud, Misrepresentation)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2187",
+    "text": "Indian Contract Act, 1872, Sections 19 & 19A: Section 19. Voidability of agreements without free consent.— When consent to an agreement is caused by coercion, fraud or misrepresentation, the agreement is a contract voidable at the option of the party whose consent was so caused. A party to a contract whose consent was caused by fraud or misrepresentation may, if he thinks fit, insist that the contract shall be performed, and that he shall be put in the position in which he would have been if the representations made had been true. Section 19A: When consent to an agreement is caused by undue influence, the agreement is a contract voidable at the option of the party whose consent was so caused. Any such contract may be set aside either absolutely or upon such terms as to the Court may seem just."
+  },
+  {
+    "document": "Indian Contract Act, 1872",
+    "actOrRule": "Act",
+    "section": "23",
+    "subsection": null,
+    "rule": null,
+    "title": "Lawful considerations and objects, and void agreements contrary to public policy or statutory enactments",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2187",
+    "text": "Indian Contract Act, 1872, Section 23. What considerations and objects are lawful, and what not.— The consideration or object of an agreement is lawful, unless: it is forbidden by law; or is of such a nature that, if permitted, it would defeat the provisions of any law; or is fraudulent; or involves or implies injury to the person or property of another; or the Court regards it as immoral, or opposed to public policy. In each of these cases, the consideration or object of an agreement is said to be unlawful. Every agreement of which the object or consideration is unlawful is void. Any clause in a builder-buyer contract that bypasses statutory RERA or MOFA protections is void ab initio under Section 23."
+  },
+  {
+    "document": "Indian Contract Act, 1872",
+    "actOrRule": "Act",
+    "section": "39",
+    "subsection": null,
+    "rule": null,
+    "title": "Effect of refusal of party to perform promise wholly (Anticipatory breach and repudiation)",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2187",
+    "text": "Indian Contract Act, 1872, Section 39. Effect of refusal of party to perform promise wholly.— When a party to a contract has refused to perform, or disabled himself from performing, his promise in its entirety, the promisee may put an end to the contract, unless he has signified, by words or conduct, his acquiescence in its continuance. In real estate contracts, when a developer abandons construction or repudiates the agreed delivery date indefinitely, the allottee has the right to accept the repudiation, terminate the contract, and sue for full restitution and damages."
+  },
+  {
+    "document": "Indian Contract Act, 1872",
+    "actOrRule": "Act",
+    "section": "55",
+    "subsection": null,
+    "rule": null,
+    "title": "Effect of failure to perform at fixed time in contract in which time is of essence",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2187",
+    "text": "Indian Contract Act, 1872, Section 55. Effect of failure to perform at fixed time, in contract in which time is of essence.— When a party to a contract promises to do a certain thing at or before a specified time, or certain things at or before specified times, and fails to do any such thing at or before the specified time, the contract, or so much of it as has not been performed, becomes voidable at the option of the promisee, if the intention of the parties was that time should be of the essence of the contract. Effect of such failure when time is not essential.— If it was not the intention of the parties that time should be of the essence of the contract, the contract does not become voidable by the failure to do such thing at or before the specified time; but the promisee is entitled to compensation from the promisor for any loss occasioned to him by such failure."
+  },
+  {
+    "document": "Indian Contract Act, 1872",
+    "actOrRule": "Act",
+    "section": "56, 73, 74",
+    "subsection": null,
+    "rule": null,
+    "title": "Frustration of contract (Force Majeure), compensation for breach of contract, and reasonable liquidated damages",
+    "jurisdiction": "India",
+    "authority": "India Code",
+    "sourceUrl": "https://www.indiacode.nic.in/handle/123456789/2187",
+    "text": "Indian Contract Act, 1872, Sections 56, 73, 74: Section 56. Agreement to do impossible act.— A contract to do an act which, after the contract is made, becomes impossible, or, by reason of some event which the promisor could not prevent, unlawful, becomes void when the act becomes impossible or unlawful (Doctrine of Frustration/Force Majeure). Commercial hardship or ordinary market delays do not constitute impossibility. Section 73. Compensation for loss or damage caused by breach of contract.— When a contract has been broken, the party who suffers by such breach is entitled to receive, from the party who has broken the contract, compensation for any loss or damage caused to him thereby, which naturally arose in the usual course of things from such breach. Section 74. Compensation for breach of contract where penalty stipulated for.— When a contract has been broken, if a sum is named in the contract as the amount to be paid in case of such breach, or if the contract contains any other stipulation by way of penalty, the party complaining of the breach is entitled to receive reasonable compensation not exceeding the amount so named. In Fateh Chand v. Balkishan Das, the Supreme Court held that courts will only award reasonable damages and will strike down unreasonable forfeiture penalties."
+  },
+
+  // =========================================================================
+  // 8. MAHARASHTRA STAMP ACT, 1958
+  // =========================================================================
+  {
+    "document": "Maharashtra Stamp Act, 1958",
+    "actOrRule": "Act",
+    "section": "3, 10",
+    "subsection": null,
+    "rule": null,
+    "title": "Instruments chargeable with stamp duty and modes of payment (e-Challan / e-SBTR)",
+    "jurisdiction": "Maharashtra",
+    "authority": "Department of Registration & Stamps, Government of Maharashtra",
+    "sourceUrl": "https://igrmaharashtra.gov.in/",
+    "text": "Maharashtra Stamp Act, 1958, Sections 3 & 10: Section 3. Instruments chargeable with duty.— Subject to the provisions of this Act and the exemptions contained in Schedule I, the following instruments shall be chargeable with duty of the amount indicated in Schedule I as the proper duty therefor, namely: (a) every instrument mentioned in Schedule I which is executed in the State of Maharashtra; (b) every instrument executed out of the State relates to any property situate, or to any matter or thing done or to be done in Maharashtra. Section 10. Duties how to be paid.— All duties with which any instruments are chargeable shall be paid and such payment shall be indicated on such instruments by means of adhesive or impressed stamps or by electronic payment through the Government Receipt Accounting System (GRAS / e-SBTR / Virtual Treasury) resulting in a generated e-Challan with a unique Government Reference Number (GRN) and Certificate Stamp."
+  },
+  {
+    "document": "Maharashtra Stamp Act, 1958",
+    "actOrRule": "Act",
+    "section": "30",
+    "subsection": null,
+    "rule": null,
+    "title": "Duties by whom payable (Stamp duty liability on conveyance / purchase)",
+    "jurisdiction": "Maharashtra",
+    "authority": "Department of Registration & Stamps, Government of Maharashtra",
+    "sourceUrl": "https://igrmaharashtra.gov.in/",
+    "text": "Maharashtra Stamp Act, 1958, Section 30. Duties by whom payable.— In the absence of an agreement to the contrary, the expense of providing the proper stamp shall be borne: (a) in the case of a conveyance (including an Agreement for Sale of a flat / apartment) by the grantee (the purchaser / allottee); (b) in the case of a lease or agreement to lease by the lessee; (c) in the case of a mortgage-deed by the mortgagor; (d) in the case of an instrument of partition by the parties thereto in proportion to their respective shares; (e) in the case of an instrument of exchange by the parties in equal shares. Parties are legally entitled to agree contractually that the developer/promoter shall bear or share the stamp duty expense."
+  },
+  {
+    "document": "Maharashtra Stamp Act, 1958",
+    "actOrRule": "Act",
+    "section": "31, 32",
+    "subsection": null,
+    "rule": null,
+    "title": "Adjudication as to proper stamp duty by Collector of Stamps",
+    "jurisdiction": "Maharashtra",
+    "authority": "Department of Registration & Stamps, Government of Maharashtra",
+    "sourceUrl": "https://igrmaharashtra.gov.in/",
+    "text": "Maharashtra Stamp Act, 1958, Sections 31 & 32. Adjudication of Stamp Duty: Section 31: When any instrument, whether executed or not and whether previously stamped or not, is brought to the Collector, and the person bringing it applies to have the opinion of that officer as to the duty (if any) with which it is chargeable, and pays a fee of one hundred rupees, the Collector shall determine the duty (if any) with which in his judgment the instrument is chargeable. Section 32: When an instrument brought to the Collector under section 31 is in his opinion one of a description chargeable with duty, and the Collector has determined the full duty with which it is chargeable, and the instrument has been duly stamped, the Collector shall certify by endorsement on such instrument that the full duty has been paid."
+  },
+  {
+    "document": "Maharashtra Stamp Act, 1958",
+    "actOrRule": "Act",
+    "section": "32A",
+    "subsection": "1, 2, 3, 4",
+    "rule": null,
+    "title": "Determination of true market value of property by Sub-Registrar / Collector (Ready Reckoner / ASR)",
+    "jurisdiction": "Maharashtra",
+    "authority": "Department of Registration & Stamps, Government of Maharashtra",
+    "sourceUrl": "https://igrmaharashtra.gov.in/",
+    "text": "Maharashtra Stamp Act, 1958, Section 32A. Determination of market value of property which is the subject matter of conveyance, etc.— (1) If any registering officer, while registering any instrument of conveyance, exchange, gift, certificate of sale, deed of partition or agreement for sale, has reason to believe that the market value of the property has not been truly set forth in the instrument, he may, after registering such instrument, refer the same to the Collector for determination of the true market value of such property and the proper duty payable thereon. (2) True market value is computed based on the Annual Statement of Rates (ASR / Ready Reckoner rates) published by the Chief Controlling Revenue Authority, Maharashtra. Stamp duty is charged on the agreed sale consideration or the Ready Reckoner market value, whichever is higher."
+  },
+  {
+    "document": "Maharashtra Stamp Act, 1958",
+    "actOrRule": "Act",
+    "section": "34",
+    "subsection": null,
+    "rule": null,
+    "title": "Instruments not duly stamped inadmissible in evidence and penalty on deficit stamp duty",
+    "jurisdiction": "Maharashtra",
+    "authority": "Department of Registration & Stamps, Government of Maharashtra",
+    "sourceUrl": "https://igrmaharashtra.gov.in/",
+    "text": "Maharashtra Stamp Act, 1958, Section 34. Instruments not duly stamped inadmissible in evidence, etc.— No instrument chargeable with duty shall be admitted in evidence for any purpose by any person having by law or consent of parties authority to receive evidence, or shall be acted upon, registered or authenticated by any such person or by any public officer, unless such instrument is duly stamped: Provided that such instrument may be admitted in evidence on payment of the duty with which the same is chargeable, or, in the case of an instrument insufficiently stamped, of the amount required to make up such duty, together with a penalty at the rate of 2 per cent per month on the deficient amount for each month or part thereof from the date of execution, subject to a maximum penalty of 400 per cent of the deficient stamp duty."
+  },
+  {
+    "document": "Maharashtra Stamp Act, 1958",
+    "actOrRule": "Act",
+    "section": "Schedule I, Article 25",
+    "subsection": null,
+    "rule": "Article 25(b)",
+    "title": "Stamp duty rates on Conveyance and Agreement for Sale of immovable property in Maharashtra",
+    "jurisdiction": "Maharashtra",
+    "authority": "Department of Registration & Stamps, Government of Maharashtra",
+    "sourceUrl": "https://igrmaharashtra.gov.in/",
+    "text": "Maharashtra Stamp Act, 1958, Schedule I, Article 25. Conveyance on sale of immovable property.— Under Article 25(b), stamp duty on an instrument of conveyance or agreement for sale relating to immovable property (residential flats, commercial units, or plots) situated within the limits of any Municipal Corporation (e.g. BMC Mumbai, PMC Pune, TMC Thane) is 5 per cent of the market value of the property or agreed consideration, whichever is higher. In addition, local surcharges (1% Metro Cess / Local Body Tax and 1% Transport Surcharge where applicable) are levied. In Municipal Council areas, base duty is 4 per cent, and in Gram Panchayat / rural areas, base duty is 3 per cent. Under Explanation I, an agreement for sale with possession or agreeing to give possession is deemed to be a conveyance and is charged with full stamp duty."
+  },
+  {
+    "document": "Maharashtra Stamp Act, 1958",
+    "actOrRule": "Act",
+    "section": "Schedule I, Article 5(g-a)",
+    "subsection": null,
+    "rule": "Article 5(g-a)",
+    "title": "Stamp duty on Development Agreements and Redevelopment Joint Ventures",
+    "jurisdiction": "Maharashtra",
+    "authority": "Department of Registration & Stamps, Government of Maharashtra",
+    "sourceUrl": "https://igrmaharashtra.gov.in/",
+    "text": "Maharashtra Stamp Act, 1958, Schedule I, Article 5(g-a). Development Agreement.— Where an agreement or memorandum of agreement is relating to giving authority or power to a developer / promoter for development of immovable property (including society redevelopment and slum rehabilitation agreements): (i) if the property is being developed by the developer for sale of flats/units, stamp duty is payable at the rate of 5 per cent of the market value of the property or the agreed development consideration (including hardship compensation, rent, and corpus paid to existing society members), whichever is higher; (ii) in pure society self-redevelopment or supplementary allotment to existing bona fide members without new sale components, concessional fixed nominal duty applies."
+  },
+  {
+    "document": "Maharashtra Stamp Act, 1958",
+    "actOrRule": "Act",
+    "section": "Schedule I, Article 48",
+    "subsection": null,
+    "rule": "Article 48(g)",
+    "title": "Stamp duty on Power of Attorney authorizing sale or development of immovable property",
+    "jurisdiction": "Maharashtra",
+    "authority": "Department of Registration & Stamps, Government of Maharashtra",
+    "sourceUrl": "https://igrmaharashtra.gov.in/",
+    "text": "Maharashtra Stamp Act, 1958, Schedule I, Article 48. Power of Attorney.— Article 48(g): When a Power of Attorney is given to a promoter, developer, or any person other than close family members (father, mother, brother, sister, wife, husband, son, daughter, grandson, granddaughter) authorizing the attorney to sell, transfer, or develop immovable property, stamp duty is payable at the same rate as a Conveyance under Article 25 (5 per cent of market value). If given without consideration to close family relations, a nominal fixed stamp duty of Rs. 500 applies."
+  }
+];
+
+const targetPath = path.join(__dirname, '../data/authoritative_laws.json');
+fs.writeFileSync(targetPath, JSON.stringify(authoritativeLaws, null, 2), 'utf8');
+
+console.log(`Successfully generated and wrote ${authoritativeLaws.length} authoritative statutory records to: ${targetPath}`);
