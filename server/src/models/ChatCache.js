@@ -14,6 +14,10 @@ const chatCacheSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+    sources: {
+        type: [mongoose.Schema.Types.Mixed],
+        default: []
+    },
     createdAt: {
         type: Date,
         default: Date.now,

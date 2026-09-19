@@ -4,7 +4,8 @@ const chatMessageSchema = new mongoose.Schema({
     role: { type: String, required: true }, // 'user', 'ai', 'error'
     text: { type: String, required: true },
     time: { type: String },
-    suggestions: [{ type: String }]
+    suggestions: [{ type: String }],
+    sources: [{ type: mongoose.Schema.Types.Mixed }]
 }, { _id: false });
 
 const chatSessionSchema = new mongoose.Schema({
