@@ -42,7 +42,7 @@ async function ingest() {
             // Save to DB
             const snippet = new LawSnippet({
                 text: chunk,
-                source: 'Indian Property Laws & RERA (Dummy Data)',
+                source: 'Indian Property Laws & RERA (Curated Reference)',
                 embedding: embedding
             });
             await snippet.save();
