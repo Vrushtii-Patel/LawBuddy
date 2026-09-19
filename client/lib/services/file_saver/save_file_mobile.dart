@@ -50,6 +50,12 @@ Future<void> saveAndLaunchPdf(List<int> bytes, String fileName) async {
       final fallbackFile = File('${Directory.systemTemp.path}/$fileName');
       await fallbackFile.writeAsBytes(bytes, flush: true);
       await OpenFile.open(fallbackFile.path);
-    } catch (_) {}
+    } catch (fallbackError) {
+      debugPrint('Fallback PDF save also failed: $fallbackError');
+      // Both the primary and fallback save attempts failed — throw so the
+      // caller's error handling (snackbar, etc.) actually fires instead of
+      // silently reporting success.
+      throw Exception('Could not save PDF: $e');
+    }
   }
 }

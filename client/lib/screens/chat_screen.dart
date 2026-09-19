@@ -31,6 +31,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
   String? _currentSessionId;
   List<dynamic> _sessions = [];
   bool _isLoadingSessions = false;
+  String? _sessionsError;
   String _searchQuery = '';
 
   @override
@@ -45,7 +46,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
   }
 
   Future<void> _loadSessions() async {
-    setState(() => _isLoadingSessions = true);
+    setState(() {
+      _isLoadingSessions = true;
+      _sessionsError = null;
+    });
     try {
       final sessions = await ApiService.fetchChatSessions();
       if (mounted) {
@@ -55,7 +59,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
         });
       }
     } catch (e) {
-      if (mounted) setState(() => _isLoadingSessions = false);
+      if (mounted) {
+        setState(() {
+          _isLoadingSessions = false;
+          _sessionsError = e.toString();
+        });
+      }
     }
   }
 
@@ -903,7 +912,44 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
                         color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                       ),
                     )
-                  : filteredSessions.isEmpty
+                  : _sessionsError != null
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.wifi_off_rounded,
+                                  size: 28,
+                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Couldn\'t load conversations',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 13,
+                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                TextButton(
+                                  onPressed: _loadSessions,
+                                  child: Text(
+                                    'Retry',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : filteredSessions.isEmpty
                       ? Center(
                           child: Padding(
                             padding: const EdgeInsets.all(24.0),

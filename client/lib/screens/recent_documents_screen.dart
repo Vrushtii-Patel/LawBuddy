@@ -20,6 +20,7 @@ class RecentDocumentsScreen extends ConsumerStatefulWidget {
 class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
   List<dynamic> _allDocs = [];
   bool _isLoading = true;
+  String? _docsError;
   String _searchQuery = '';
   String _selectedCategory = 'All'; // All, High Risk, Caution, Compliant
   final TextEditingController _searchController = TextEditingController();
@@ -52,12 +53,21 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         setState(() {
           _allDocs = docs;
           _isLoading = false;
+          _docsError = null;
         });
       }
     } catch (e) {
       debugPrint('Error fetching recent documents: $e');
       if (mounted) {
-        setState(() => _isLoading = false);
+        setState(() {
+          _isLoading = false;
+          // Only surface an error state when we have nothing cached to show;
+          // if we already have docs on screen, a background refresh failure
+          // shouldn't replace them with an error card.
+          if (_allDocs.isEmpty) {
+            _docsError = e.toString();
+          }
+        });
       }
     }
   }
@@ -1126,12 +1136,17 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
   ) {
     final isSearching = _searchQuery.trim().isNotEmpty;
     final isCategoryFiltered = _selectedCategory != 'All';
+    final hasError = _docsError != null;
 
     String title = tr('recentDocs.emptyPrompt');
     String subtitle = tr('recentDocs.emptyDesc');
     IconData icon = Icons.folder_open_rounded;
 
-    if (isSearching) {
+    if (hasError) {
+      title = 'Couldn\'t load your documents';
+      subtitle = 'Check your connection and try again.';
+      icon = Icons.wifi_off_rounded;
+    } else if (isSearching) {
       title = tr('recentDocs.noDocsMatching', {'query': _searchQuery});
       subtitle = 'Try checking for spelling or searching with a different term.';
       icon = Icons.search_off_rounded;
@@ -1192,7 +1207,19 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
               ),
             ),
           ),
-          if (isSearching || isCategoryFiltered) ...[
+          if (hasError) ...[
+            const SizedBox(height: 18),
+            OutlinedButton.icon(
+              onPressed: _fetchDocuments,
+              icon: const Icon(Icons.refresh_rounded, size: 16),
+              label: const Text('Retry'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                side: BorderSide(color: isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
+          ] else if (isSearching || isCategoryFiltered) ...[
             const SizedBox(height: 18),
             OutlinedButton.icon(
               onPressed: () {
