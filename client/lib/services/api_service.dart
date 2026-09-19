@@ -86,6 +86,121 @@ class ApiService {
     }
   }
 
+  // =========================================================================
+  // RESUMABLE SCAN JOB API METHODS
+  // =========================================================================
+
+  static Future<Map<String, dynamic>> startScanJob({
+    String? text,
+    String? base64Data,
+    String? mimeType,
+    String? title,
+    String? sourceType,
+  }) async {
+    final token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/scans/start'),
+      headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        if (text != null && text.isNotEmpty) 'text': text,
+        if (base64Data != null && base64Data.isNotEmpty) 'base64Data': base64Data,
+        if (mimeType != null && mimeType.isNotEmpty) 'mimeType': mimeType,
+        if (title != null && title.isNotEmpty) 'title': title,
+        if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return jsonDecode(response.body);
+    } else {
+      String errorMessage = 'Failed to start scan job';
+      try {
+        final body = jsonDecode(response.body);
+        if (body is Map && (body['error'] != null || body['details'] != null)) {
+          errorMessage = body['error'] ?? body['details'];
+        }
+      } catch (_) {}
+      throw Exception(errorMessage);
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getActiveScanJob() async {
+    try {
+      final token = await _getToken();
+      if (token == null) return null;
+      final response = await http.get(
+        Uri.parse('$baseUrl/scans/active'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data is Map && data['activeJob'] != null) {
+          return Map<String, dynamic>.from(data['activeJob']);
+        }
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error getting active scan job: $e');
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>> getScanJob(String jobId) async {
+    final token = await _getToken();
+    final response = await http.get(
+      Uri.parse('$baseUrl/scans/$jobId'),
+      headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      String errorMessage = 'Failed to get scan job status';
+      try {
+        final body = jsonDecode(response.body);
+        if (body is Map && (body['error'] != null || body['details'] != null)) {
+          errorMessage = body['error'] ?? body['details'];
+        }
+      } catch (_) {}
+      throw Exception(errorMessage);
+    }
+  }
+
+  static Future<Map<String, dynamic>> retryScanJob(String jobId) async {
+    final token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/scans/$jobId/retry'),
+      headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else if (response.statusCode == 429) {
+      throw RateLimitException('Rate limit reached. Please wait before retrying.');
+    } else {
+      String errorMessage = 'Failed to retry scan job';
+      try {
+        final body = jsonDecode(response.body);
+        if (body is Map && (body['error'] != null || body['details'] != null)) {
+          errorMessage = body['error'] ?? body['details'];
+        }
+      } catch (_) {}
+      throw Exception(errorMessage);
+    }
+  }
+
   static Future<List<dynamic>> fetchRecentDocuments() async {
     try {
       final token = await _getToken();
@@ -538,6 +653,135 @@ class ApiService {
         }
       } catch (_) {}
       throw Exception(errorMessage);
+    }
+  }
+
+  // Document Comparison methods
+  static Future<Map<String, dynamic>> startComparison({
+    String? docAId,
+    String? docBId,
+    Map<String, dynamic>? fileA,
+    Map<String, dynamic>? fileB,
+    String? titleA,
+    String? titleB,
+  }) async {
+    final token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/comparisons/start'),
+      headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        if (docAId != null) 'docAId': docAId,
+        if (docBId != null) 'docBId': docBId,
+        if (fileA != null) 'fileA': fileA,
+        if (fileB != null) 'fileB': fileB,
+        if (titleA != null) 'titleA': titleA,
+        if (titleB != null) 'titleB': titleB,
+      }),
+    );
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      String errorMessage = 'Failed to start comparison';
+      try {
+        final body = jsonDecode(response.body);
+        if (body is Map && (body['error'] != null || body['details'] != null)) {
+          errorMessage = body['error'] ?? body['details'];
+        }
+      } catch (_) {}
+      throw Exception(errorMessage);
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getActiveComparison() async {
+    try {
+      final token = await _getToken();
+      final response = await http.get(
+        Uri.parse('$baseUrl/comparisons/active'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['activeComparison'];
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error checking active comparison: $e');
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>> getComparison(String comparisonId) async {
+    final token = await _getToken();
+    final response = await http.get(
+      Uri.parse('$baseUrl/comparisons/$comparisonId'),
+      headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load comparison details');
+    }
+  }
+
+  static Future<Map<String, dynamic>> retryComparison(String comparisonId) async {
+    final token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/comparisons/$comparisonId/retry'),
+      headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to retry comparison');
+    }
+  }
+
+  static Future<List<dynamic>> fetchComparisons() async {
+    try {
+      final token = await _getToken();
+      final response = await http.get(
+        Uri.parse('$baseUrl/comparisons'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+      return [];
+    } catch (e) {
+      debugPrint('Error fetching comparisons: $e');
+      return [];
+    }
+  }
+
+  static Future<bool> deleteComparison(String comparisonId) async {
+    try {
+      final token = await _getToken();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/comparisons/$comparisonId'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint('Error deleting comparison: $e');
+      return false;
     }
   }
 }

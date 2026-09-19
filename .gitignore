@@ -19,3 +19,7 @@ build/
 **/build/
 .pub/
 .pub-cache/
+
+# Local uploads
+uploads/
+**/uploads/

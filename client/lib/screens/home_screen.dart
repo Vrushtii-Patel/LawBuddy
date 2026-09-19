@@ -14,6 +14,7 @@ import 'analysis_screen.dart';
 import 'stamp_duty_calculator_screen.dart';
 import 'recent_documents_screen.dart';
 import 'admin_analytics_screen.dart';
+import 'document_comparison_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -439,6 +440,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
               // SECTION: LEGAL TOOLS
               _buildSidebarSectionLabel(loc.translate('sidebar.legalTools'), isDark),
+              _SidebarNavItem(
+                icon: Icons.compare_arrows_rounded,
+                label: 'Document Comparison',
+                isActive: false,
+                isDark: isDark,
+                onTap: () {
+                  if (isDrawer) Navigator.pop(context);
+                  _navigateTo(const DocumentComparisonScreen());
+                },
+              ),
               _SidebarNavItem(
                 icon: Icons.auto_awesome_rounded,
                 label: loc.translate('sidebar.legalAi'),

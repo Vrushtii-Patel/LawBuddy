@@ -1425,3 +1425,34 @@ exports.generateChecklist = async (prompt) => {
         { id: "5", title: "Execute Registered Sale Agreement" }
     ]);
 };
+
+exports.generateEmbedding = async (text) => {
+    if (!text || typeof text !== 'string') return new Array(3072).fill(0);
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-2" });
+    const embeddingResult = await embeddingModel.embedContent(text);
+    return embeddingResult.embedding.values;
+};
+
+exports.generateTextWithFallback = async (prompt, customConfig = {}) => {
+    const result = await withRetry(
+        (activeModel = MODEL_NAME) => {
+            const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+            const configuredModel = genAI.getGenerativeModel({
+                model: activeModel,
+                generationConfig: {
+                    temperature: customConfig.temperature !== undefined ? customConfig.temperature : TEMPERATURE,
+                    topP: 1.0,
+                    topK: 1
+                }
+            });
+            return configuredModel.generateContent(prompt);
+        },
+        () => fallbackToOpenRouter(prompt, null)
+    );
+    return result.response.text();
+};
+
+exports.safeParseJson = safeParseJson;
+
+

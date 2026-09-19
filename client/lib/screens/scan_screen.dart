@@ -28,6 +28,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
   
   bool _isProcessing = false;
   String _statusMessage = '';
+  Map<String, dynamic>? _activeScanJob;
 
   // Animations
   AnimationController? _radarController;
@@ -55,21 +56,134 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     _radarController ??= AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
-    )..repeat(reverse: true);
+    );
   }
 
   @override
   void initState() {
     super.initState();
     _initControllers();
+    _checkActiveScanJob();
   }
 
-  @override
-  void dispose() {
-    _entryController?.dispose();
-    _radarController?.dispose();
-    _textController.dispose();
-    super.dispose();
+  Future<void> _checkActiveScanJob() async {
+    try {
+      final active = await ApiService.getActiveScanJob();
+      if (mounted && active != null) {
+        setState(() {
+          _activeScanJob = active;
+        });
+      }
+    } catch (_) {}
+  }
+
+  Future<void> _resumeOrRetryActiveJob(String jobId) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    setState(() {
+      _isProcessing = true;
+      _statusMessage = 'Resuming scan...';
+    });
+
+    try {
+      final retryRes = await ApiService.retryScanJob(jobId);
+      await _pollJobUntilComplete(jobId, retryRes);
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isProcessing = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Error resuming scan: ${e.toString()}'),
+        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+      ));
+    }
+  }
+
+  Future<void> _pollJobUntilComplete(String jobId, Map<String, dynamic> initialStatus) async {
+    Map<String, dynamic> job = initialStatus;
+    int polls = 0;
+    const maxPolls = 60; // 2 minutes max
+
+    while (mounted && job['status'] != 'COMPLETED' && job['status'] != 'FAILED' && polls < maxPolls) {
+      polls++;
+      await Future.delayed(const Duration(milliseconds: 1500));
+      if (!mounted) return;
+
+      try {
+        job = await ApiService.getScanJob(jobId);
+        if (mounted) {
+          setState(() {
+            _statusMessage = _formatStepMessage(job['status'], job['currentStep']);
+          });
+        }
+      } catch (pollErr) {
+        debugPrint('Polling transient error: $pollErr');
+      }
+    }
+
+    if (!mounted) return;
+
+    if (job['status'] == 'COMPLETED') {
+      final doc = job['document'] ?? {};
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => AnalysisScreen(
+            originalText: job['extractedText'] ?? doc['originalText'] ?? 'Property Agreement',
+            analysis: job['analysis'] ?? doc['analysis'] ?? [],
+            documentTitle: job['title'] ?? doc['title'] ?? 'Scanned Property Agreement',
+            sourceType: job['sourceType'] ?? doc['sourceType'] ?? 'PDF Document',
+            fileData: null,
+            mimeType: job['mimeType'] ?? doc['mimeType'] ?? 'application/pdf',
+          ),
+        ),
+      );
+    } else if (job['status'] == 'FAILED') {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      setState(() {
+        _isProcessing = false;
+        _activeScanJob = job;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Scan paused: ${job['errorInfo']?['message'] ?? 'Please retry.'}'),
+        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+        action: SnackBarAction(
+          label: 'Retry',
+          textColor: Colors.white,
+          onPressed: () => _resumeOrRetryActiveJob(jobId),
+        ),
+      ));
+    } else {
+      setState(() {
+        _isProcessing = false;
+        _activeScanJob = job;
+      });
+    }
+  }
+
+  String _formatStepMessage(String? status, String? currentStep) {
+    switch (status) {
+      case 'QUEUED':
+        return 'Scan queued...';
+      case 'UPLOADING':
+        return 'Uploading document...';
+      case 'OCR_PROCESSING':
+        return 'Extracting document...';
+      case 'TEXT_EXTRACTED':
+        return 'Document text extracted';
+      case 'AI_ANALYSIS':
+        return 'Analyzing legal clauses...';
+      case 'REPORT_GENERATION':
+        return 'Generating report...';
+      case 'RETRYING':
+        return 'Temporarily unavailable — retrying automatically...';
+      case 'COMPLETED':
+        return 'Analysis completed';
+      case 'FAILED':
+        return 'Scan paused';
+      default:
+        return currentStep ?? 'Processing document...';
+    }
   }
 
   Future<void> _scanImage(ImageSource source) async {
@@ -364,7 +478,13 @@ The Developer represents that necessary zoning approvals are under application w
                                     children: [
                                       // HERO HEADER
                                       _buildHeroHeader(isDark, loc, isDesktop),
-                                      const SizedBox(height: 28),
+                                      const SizedBox(height: 20),
+
+                                      // RESUMABLE SCAN JOB BANNER (IF ACTIVE/INCOMPLETE SCAN EXISTS)
+                                      if (_activeScanJob != null) ...[
+                                        _buildActiveJobBanner(isDark, loc),
+                                        const SizedBox(height: 24),
+                                      ],
 
                                       // 3 ACTION CARDS (CAMERA, GALLERY, PDF)
                                       _buildUploadOptionsGrid(isDark, loc, isDesktop),
@@ -393,6 +513,133 @@ The Developer represents that necessary zoning approvals are under application w
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  // ==========================================
+  // RESUMABLE SCAN JOB BANNER
+  // ==========================================
+  Widget _buildActiveJobBanner(bool isDark, LocaleNotifier loc) {
+    final job = _activeScanJob!;
+    final jobId = job['jobId'] ?? '';
+    final title = job['title'] ?? 'Unfinished Document Scan';
+    final status = job['status'] ?? 'QUEUED';
+    final currentStep = _formatStepMessage(status, job['currentStep']);
+    final isFailed = status == 'FAILED';
+
+    final Color cardBorderColor = isFailed
+        ? (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.4)
+        : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.4);
+
+    final Color cardBgColor = isFailed
+        ? (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.08)
+        : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.08);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cardBgColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: cardBorderColor),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: (isFailed ? Colors.orange : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)).withValues(alpha: 0.15),
+            ),
+            child: Icon(
+              isFailed ? Icons.warning_amber_rounded : Icons.sync_rounded,
+              color: isFailed ? Colors.orange : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Unfinished Scan in Progress',
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: (isFailed ? Colors.orange : Colors.blue).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        status,
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: isFailed ? Colors.orange : Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '$title • $currentStep',
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          ElevatedButton(
+            onPressed: () => _resumeOrRetryActiveJob(jobId),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              elevation: 0,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(isFailed ? Icons.refresh_rounded : Icons.play_arrow_rounded, size: 16),
+                const SizedBox(width: 6),
+                Text(
+                  isFailed ? 'Retry' : 'Resume',
+                  style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 6),
+          IconButton(
+            icon: Icon(
+              Icons.close_rounded,
+              size: 18,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            ),
+            tooltip: 'Dismiss',
+            onPressed: () {
+              setState(() {
+                _activeScanJob = null;
+              });
+            },
+          ),
+        ],
       ),
     );
   }

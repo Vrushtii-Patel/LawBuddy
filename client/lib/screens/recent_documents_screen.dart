@@ -6,6 +6,7 @@ import '../services/pdf_export_service.dart';
 import '../theme/app_theme.dart';
 import 'analysis_screen.dart';
 import 'scan_screen.dart';
+import 'document_comparison_screen.dart';
 import '../widgets/user_profile_button.dart';
 
 class RecentDocumentsScreen extends ConsumerStatefulWidget {
@@ -595,9 +596,22 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         ),
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         elevation: 0,
-        actions: const [
-          UserProfileButton(),
-          SizedBox(width: 12),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.compare_arrows_rounded,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+            tooltip: 'Compare Agreements',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const DocumentComparisonScreen()),
+              );
+            },
+          ),
+          const UserProfileButton(),
+          const SizedBox(width: 12),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
