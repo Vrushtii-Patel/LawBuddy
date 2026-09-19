@@ -141,9 +141,13 @@ class ApiService {
   }
 
   static Future<String> explainSnippet(String context, String snippet) async {
+    final token = await _getToken();
     final response = await http.post(
       Uri.parse('$baseUrl/explain'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      },
       body: jsonEncode({'context': context, 'snippet': snippet}),
     );
     if (response.statusCode == 200) {

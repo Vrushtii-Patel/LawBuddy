@@ -166,7 +166,7 @@ router.delete('/documents/:id', requireAuth, async (req, res) => {
 });
 
 // POST /api/explain
-router.post('/explain', async (req, res) => {
+router.post('/explain', requireAuth, async (req, res) => {
     try {
         const { context, snippet } = req.body;
         if (!context || !snippet) {
