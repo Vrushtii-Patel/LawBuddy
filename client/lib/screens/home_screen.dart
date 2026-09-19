@@ -13,6 +13,7 @@ import 'checklists_list_screen.dart';
 import 'analysis_screen.dart';
 import 'stamp_duty_calculator_screen.dart';
 import 'recent_documents_screen.dart';
+import 'admin_analytics_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -472,6 +473,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                   _openReraDetailsModal();
                 },
               ),
+
+              // SECTION: ADMINISTRATION (Visible to admin users)
+              if (user?.isAdmin == true || user?.role == 'admin') ...[
+                const SizedBox(height: 14),
+                _buildSidebarSectionLabel('ADMINISTRATION', isDark),
+                _SidebarNavItem(
+                  icon: Icons.admin_panel_settings_rounded,
+                  label: 'Admin Analytics',
+                  isActive: false,
+                  isDark: isDark,
+                  onTap: () {
+                    if (isDrawer) Navigator.pop(context);
+                    _navigateTo(const AdminAnalyticsScreen());
+                  },
+                ),
+              ],
             ],
           ),
         ),

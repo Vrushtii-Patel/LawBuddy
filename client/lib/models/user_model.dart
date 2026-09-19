@@ -6,6 +6,7 @@ class UserModel {
   final DateTime createdAt;
   final DateTime lastLogin;
   final String profilePhoto;
+  final String role;
 
   UserModel({
     required this.userId,
@@ -15,7 +16,10 @@ class UserModel {
     required this.createdAt,
     required this.lastLogin,
     required this.profilePhoto,
+    this.role = 'user',
   });
+
+  bool get isAdmin => role == 'admin';
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -26,6 +30,7 @@ class UserModel {
       createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : DateTime.now(),
       lastLogin: json['last_login'] != null ? DateTime.parse(json['last_login']) : DateTime.now(),
       profilePhoto: json['profile_photo'] ?? 'https://api.dicebear.com/7.x/bottts/svg?seed=LegalScanner',
+      role: json['role'] ?? 'user',
     );
   }
 
@@ -38,6 +43,7 @@ class UserModel {
       'created_at': createdAt.toIso8601String(),
       'last_login': lastLogin.toIso8601String(),
       'profile_photo': profilePhoto,
+      'role': role,
     };
   }
 
@@ -55,6 +61,7 @@ class UserModel {
     DateTime? createdAt,
     DateTime? lastLogin,
     String? profilePhoto,
+    String? role,
   }) {
     return UserModel(
       userId: userId ?? this.userId,
@@ -64,6 +71,7 @@ class UserModel {
       createdAt: createdAt ?? this.createdAt,
       lastLogin: lastLogin ?? this.lastLogin,
       profilePhoto: profilePhoto ?? this.profilePhoto,
+      role: role ?? this.role,
     );
   }
 }

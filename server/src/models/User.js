@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://api.dicebear.com/7.x/bottts/svg?seed=LegalScanner'
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
+  },
   updated_at: {
     type: Date,
     default: Date.now

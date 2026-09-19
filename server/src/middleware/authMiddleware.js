@@ -48,10 +48,45 @@ function optionalAuth(req, res, next) {
   next();
 }
 
+async function requireAdmin(req, res, next) {
+  // First ensure user is authenticated
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_super_secret_jwt_key_here');
+  } catch (err) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  try {
+    const User = require('../models/User');
+    const user = await User.findOne({ userId: decoded.userId });
+    if (!user) {
+      return res.status(401).json({ error: 'User account not found' });
+    }
+
+    if (user.role !== 'admin') {
+      return res.status(403).json({ error: 'Forbidden: Admin access required' });
+    }
+
+    req.user = user;
+    next();
+  } catch (err) {
+    console.error('requireAdmin authorization error:', err);
+    return res.status(500).json({ error: 'Internal server error during authorization' });
+  }
+}
+
 module.exports = {
   isValidEmail,
   isValidPhone,
   sanitizeInput,
   requireAuth,
-  optionalAuth
+  optionalAuth,
+  requireAdmin
 };

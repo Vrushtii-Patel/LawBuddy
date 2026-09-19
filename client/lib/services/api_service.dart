@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/analytics_model.dart';
 
 
 class ApiService {
@@ -503,6 +504,40 @@ class ApiService {
     } catch (e) {
       debugPrint('Error fetching stamp duty history: $e');
       return [];
+    }
+  }
+
+  // Admin Analytics Method
+  static Future<AdminAnalyticsData> fetchAdminAnalytics() async {
+    final token = await _getToken();
+    if (token == null || token.isEmpty) {
+      throw Exception('Authentication required. Please log in.');
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/admin/analytics'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return AdminAnalyticsData.fromJson(data);
+    } else if (response.statusCode == 401) {
+      throw Exception('Authentication expired. Please log in again.');
+    } else if (response.statusCode == 403) {
+      throw Exception('Access Denied: Admin authorization is required to view system analytics.');
+    } else {
+      String errorMessage = 'Failed to load system analytics (${response.statusCode})';
+      try {
+        final body = jsonDecode(response.body);
+        if (body is Map && body['error'] != null) {
+          errorMessage = body['error'];
+        }
+      } catch (_) {}
+      throw Exception(errorMessage);
     }
   }
 }

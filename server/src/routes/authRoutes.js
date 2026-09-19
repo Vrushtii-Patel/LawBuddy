@@ -186,7 +186,7 @@ router.post('/verify-otp', async (req, res) => {
 
     // Generate JWT
     const token = jwt.sign(
-      { userId: user.userId, email: user.email },
+      { userId: user.userId, email: user.email, role: user.role || 'user' },
       process.env.JWT_SECRET || 'legal_scanner_secret_key_change_in_production',
       { expiresIn: '7d' }
     );
@@ -198,6 +198,7 @@ router.post('/verify-otp', async (req, res) => {
         userId: user.userId,
         full_name: user.full_name,
         email: user.email,
+        role: user.role || 'user',
         emailVerified: user.emailVerified,
         created_at: user.created_at,
         last_login: user.last_login,
@@ -228,6 +229,7 @@ router.get('/me', requireAuth, async (req, res) => {
         userId: user.userId,
         full_name: user.full_name,
         email: user.email,
+        role: user.role || 'user',
         emailVerified: user.emailVerified,
         created_at: user.created_at,
         last_login: user.last_login,
