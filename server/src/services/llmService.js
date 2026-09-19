@@ -1235,7 +1235,10 @@ exports.chat = async (historyArray) => {
         let contextLaws = "Indian Property Laws and RERA guidelines.";
         try {
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-            const embeddingModel = genAI.getGenerativeModel({ model: "text-embedding-004" });
+            // Must match the embedding model used in scripts/ingestLaws.js (gemini-embedding-2),
+            // since query vectors and stored vectors have to come from the same model to be
+            // comparable. text-embedding-004 was shut down by Google on Jan 14, 2026.
+            const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-2" });
             const embeddingResult = await embeddingModel.embedContent(latestMessage);
             const queryVector = embeddingResult.embedding.values;
 
@@ -1262,7 +1265,9 @@ exports.chat = async (historyArray) => {
                 contextLaws = searchResults.map(doc => doc.text).join('\n\n');
             }
         } catch (ragError) {
-            // vector search fallback
+            // Vector search fallback — log so a broken embedding model or
+            // Atlas vector index doesn't fail silently like this did before.
+            console.warn('RAG law lookup failed, using generic fallback context:', ragError.message);
         }
 
         const systemInstruction = `
