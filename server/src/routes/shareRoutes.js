@@ -64,24 +64,32 @@ router.post('/shares', optionalAuth, async (req, res) => {
         let finalTotal = Number.isInteger(totalClauseCount) && totalClauseCount >= 0 ? totalClauseCount : 0;
         let verifiedDocId = null;
 
-        // If a valid documentId is provided, attempt to load verified analysis data from DB
+        // If a documentId is provided, it must belong to the authenticated caller.
+        // Without this check, anyone who knows or guesses another user's document
+        // ID could generate a public share link exposing that user's private
+        // analysis — regardless of whether the requester is even logged in.
         if (documentId && typeof documentId === 'string' && documentId.match(/^[0-9a-fA-F]{24}$/)) {
+            if (!userId) {
+                return res.status(401).json({ error: 'Authentication required to share a saved document.' });
+            }
             try {
-                const doc = await Document.findById(documentId);
-                if (doc) {
-                    verifiedDocId = doc._id;
-                    if (!title) finalTitle = doc.title || finalTitle;
-                    if (!riskLevel) finalRiskLevel = doc.riskLevel || finalRiskLevel;
-                    if (doc.analysis && Array.isArray(doc.analysis) && (!analysis || !analysis.length)) {
-                        finalAnalysis = doc.analysis;
-                    }
-                    if (doc.highRiskCount !== undefined) finalHighRisk = doc.highRiskCount;
-                    if (doc.cautionCount !== undefined) finalCaution = doc.cautionCount;
-                    if (doc.compliantCount !== undefined) finalCompliant = doc.compliantCount;
-                    if (doc.totalClauseCount !== undefined) finalTotal = doc.totalClauseCount;
+                const doc = await Document.findOne({ _id: documentId, userId });
+                if (!doc) {
+                    return res.status(403).json({ error: 'You do not have access to this document.' });
                 }
+                verifiedDocId = doc._id;
+                if (!title) finalTitle = doc.title || finalTitle;
+                if (!riskLevel) finalRiskLevel = doc.riskLevel || finalRiskLevel;
+                if (doc.analysis && Array.isArray(doc.analysis) && (!analysis || !analysis.length)) {
+                    finalAnalysis = doc.analysis;
+                }
+                if (doc.highRiskCount !== undefined) finalHighRisk = doc.highRiskCount;
+                if (doc.cautionCount !== undefined) finalCaution = doc.cautionCount;
+                if (doc.compliantCount !== undefined) finalCompliant = doc.compliantCount;
+                if (doc.totalClauseCount !== undefined) finalTotal = doc.totalClauseCount;
             } catch (err) {
                 console.warn('[Share] Document lookup non-fatal error:', err.message);
+                return res.status(500).json({ error: 'Failed to verify document ownership.' });
             }
         }
 
@@ -154,7 +162,7 @@ router.post('/shares', optionalAuth, async (req, res) => {
 router.get('/shares/:token', async (req, res) => {
     try {
         const token = cleanString(req.params.token, 64);
-        
+
         // Ensure token format matches 32-character hex pattern
         if (!/^[a-f0-9]{32}$/i.test(token)) {
             return res.status(404).json({ error: 'Share link not found or has expired' });
