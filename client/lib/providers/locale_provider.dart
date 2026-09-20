@@ -265,6 +265,31 @@ final Map<String, Map<String, String>> _translations = {
   'scan.analyzingRisks': {'en': 'Analyzing for risks...', 'hi': 'जोखिमों का विश्लेषण किया जा रहा है...'},
   'scan.processingRisk': {'en': 'Analyzing for risks...', 'hi': 'जोखिमों का विश्लेषण किया जा रहा है...'},
   'scan.pleaseWait': {'en': 'Please wait while we process your request.', 'hi': 'कृपया प्रतीक्षा करें जब तक हम आपके अनुरोध को संसाधित करते हैं।'},
+  'scan.analyzingTitle': {'en': 'Analyzing your document', 'hi': 'आपके दस्तावेज़ का विश्लेषण किया जा रहा है'},
+  'scan.stepReading': {'en': 'Reading & extracting document', 'hi': 'दस्तावेज़ पढ़ना और निकालना'},
+  'scan.stepReadingDesc': {
+    'en': 'Processing document pages and extracting content',
+    'hi': 'दस्तावेज़ पृष्ठों को संसाधित करना और सामग्री निकालना',
+  },
+  'scan.stepStructuring': {'en': 'Structuring clauses', 'hi': 'खंडों को व्यवस्थित करना'},
+  'scan.stepStructuringDesc': {
+    'en': 'Identifying and organizing legal clauses',
+    'hi': 'कानूनी खंडों की पहचान और आयोजन करना',
+  },
+  'scan.stepAuditing': {'en': 'Auditing legal risk', 'hi': 'कानूनी जोखिम का ऑडिट'},
+  'scan.stepAuditingDesc': {
+    'en': 'Checking clauses against applicable legal provisions',
+    'hi': 'लागू कानूनी प्रावधानों के अनुसार खंडों की जांच',
+  },
+  'scan.stepPreparing': {'en': 'Preparing results', 'hi': 'परिणाम तैयार किए जा रहे हैं'},
+  'scan.stepPreparingDesc': {
+    'en': 'Finalizing your analysis report & summary',
+    'hi': 'आपकी विश्लेषण रिपोर्ट और सारांश को अंतिम रूप देना',
+  },
+  'scan.retryingStatus': {
+    'en': 'Temporarily unavailable — retrying automatically...',
+    'hi': 'अस्थायी रूप से अनुपलब्ध — स्वचालित रूप से पुनः प्रयास किया जा रहा है...',
+  },
 
   // Chat Screen
   'chat.title': {'en': 'Legal AI Assistant', 'hi': 'कानूनी एआई सहायक'},
@@ -598,7 +623,8 @@ final Map<String, Map<String, String>> _translations = {
   'analysis.pageOneOfOne': {'en': 'PAGE 1 OF 1', 'hi': 'पृष्ठ 1 / 1'},
   'analysis.highRiskDetected': {'en': 'High Legal Risk Detected', 'hi': 'उच्च कानूनी जोखिम का पता चला'},
   'analysis.moderateCaution': {'en': 'Moderate Caution Advised', 'hi': 'मध्यम सावधानी की सलाह दी गई है'},
-  'analysis.standardLowRisk': {'en': 'Standard / Low Risk', 'hi': 'मानक / कम जोखिम'},
+  'analysis.noRiskDetected': {'en': 'No Risk Detected', 'hi': 'कोई जोखिम नहीं मिला'},
+  'analysis.standardLowRisk': {'en': 'No Risk Detected', 'hi': 'कोई जोखिम नहीं मिला'},
   'analysis.exportPdf': {'en': 'Export PDF', 'hi': 'पीडीएफ निर्यात करें'},
   'analysis.highRiskCount': {'en': '🔴 {count} High Risk', 'hi': '🔴 {count} उच्च जोखिम'},
   'analysis.pillHighRisk': {'en': '🔴 {count} High Risk', 'hi': '🔴 {count} उच्च जोखिम'},

@@ -29,6 +29,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
   bool _isProcessing = false;
   String _statusMessage = '';
   Map<String, dynamic>? _activeScanJob;
+  Map<String, dynamic>? _currentJob;
 
   // Animations
   AnimationController? _radarController;
@@ -66,6 +67,14 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     _checkActiveScanJob();
   }
 
+  @override
+  void dispose() {
+    _radarController?.dispose();
+    _entryController?.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
+
   Future<void> _checkActiveScanJob() async {
     try {
       final active = await ApiService.getActiveScanJob();
@@ -81,6 +90,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     final isDark = Theme.of(context).brightness == Brightness.dark;
     setState(() {
       _isProcessing = true;
+      _currentJob = null;
       _statusMessage = 'Resuming scan...';
     });
 
@@ -99,10 +109,46 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     }
   }
 
-  Future<void> _pollJobUntilComplete(String jobId, Map<String, dynamic> initialStatus) async {
+  Future<void> _pollJobUntilComplete(
+    String jobId, 
+    Map<String, dynamic> initialStatus, {
+    String? originalInputText,
+    String? fileData,
+    String? mimeType,
+    String? customTitle,
+    String? sourceType,
+  }) async {
     Map<String, dynamic> job = initialStatus;
+    if (mounted) {
+      setState(() {
+        _currentJob = job;
+        _statusMessage = _formatStepMessage(job['status'], job['currentStep']);
+      });
+    }
+
+    // Immediate cache-hit completion without polling
+    if (job['status'] == 'COMPLETED') {
+      final doc = job['document'] ?? {};
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => AnalysisScreen(
+              originalText: job['extractedText'] ?? doc['originalText'] ?? originalInputText ?? 'Property Agreement',
+              analysis: job['analysis'] ?? doc['analysis'] ?? [],
+              documentTitle: job['title'] ?? doc['title'] ?? customTitle ?? 'Scanned Property Agreement',
+              sourceType: job['sourceType'] ?? doc['sourceType'] ?? sourceType ?? 'PDF Document',
+              fileData: fileData ?? job['fileData'] ?? doc['fileData'],
+              mimeType: job['mimeType'] ?? doc['mimeType'] ?? mimeType ?? 'application/pdf',
+            ),
+          ),
+        );
+      }
+      return;
+    }
+
     int polls = 0;
-    const maxPolls = 60; // 2 minutes max
+    const maxPolls = 120; // 3 minutes max
 
     while (mounted && job['status'] != 'COMPLETED' && job['status'] != 'FAILED' && polls < maxPolls) {
       polls++;
@@ -113,6 +159,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         job = await ApiService.getScanJob(jobId);
         if (mounted) {
           setState(() {
+            _currentJob = job;
             _statusMessage = _formatStepMessage(job['status'], job['currentStep']);
           });
         }
@@ -129,12 +176,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         context,
         MaterialPageRoute(
           builder: (_) => AnalysisScreen(
-            originalText: job['extractedText'] ?? doc['originalText'] ?? 'Property Agreement',
+            originalText: job['extractedText'] ?? doc['originalText'] ?? originalInputText ?? 'Property Agreement',
             analysis: job['analysis'] ?? doc['analysis'] ?? [],
-            documentTitle: job['title'] ?? doc['title'] ?? 'Scanned Property Agreement',
-            sourceType: job['sourceType'] ?? doc['sourceType'] ?? 'PDF Document',
-            fileData: null,
-            mimeType: job['mimeType'] ?? doc['mimeType'] ?? 'application/pdf',
+            documentTitle: job['title'] ?? doc['title'] ?? customTitle ?? 'Scanned Property Agreement',
+            sourceType: job['sourceType'] ?? doc['sourceType'] ?? sourceType ?? 'PDF Document',
+            fileData: fileData ?? job['fileData'] ?? doc['fileData'],
+            mimeType: job['mimeType'] ?? doc['mimeType'] ?? mimeType ?? 'application/pdf',
           ),
         ),
       );
@@ -200,6 +247,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
       setState(() {
         _isProcessing = true;
+        _currentJob = null;
         _statusMessage = loc.translate('scan.processingPhoto');
       });
 
@@ -234,22 +282,26 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       }
 
       // Multimodal AI Vision Fallback (Web, Desktop, or scanned images)
-      final analysisResult = await ApiService.scanDocumentFile(bytes, mimeType, title: image.name, sourceType: 'Photo Scan');
-      
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => AnalysisScreen(
-            originalText: analysisResult['extractedText'] ?? 'Scanned Property Image',
-            analysis: analysisResult['analysis'] ?? [],
-            documentTitle: image.name.isNotEmpty ? image.name : 'Scanned Property Agreement',
-            sourceType: 'Photo Scan',
-            fileData: base64Str,
-            mimeType: mimeType,
-          ),
-        ),
+      final startRes = await ApiService.startScanJob(
+        base64Data: base64Str,
+        mimeType: mimeType,
+        title: image.name.isNotEmpty ? image.name : 'Photo Scan Document',
+        sourceType: 'Photo Scan',
       );
+
+      final String jobId = startRes['jobId'] ?? '';
+      if (jobId.isNotEmpty) {
+        await _pollJobUntilComplete(
+          jobId,
+          startRes,
+          fileData: base64Str,
+          mimeType: mimeType,
+          customTitle: image.name.isNotEmpty ? image.name : 'Scanned Property Agreement',
+          sourceType: 'Photo Scan',
+        );
+      } else {
+        throw Exception('Failed to initialize scan job.');
+      }
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -257,7 +309,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
       ));
     } finally {
-      if (mounted) {
+      if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
           _isProcessing = false;
         });
@@ -278,6 +330,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       if (result != null) {
         setState(() {
           _isProcessing = true;
+          _currentJob = null;
           _statusMessage = loc.translate('scan.processingPdf');
         });
 
@@ -319,39 +372,49 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
           }
 
           // Multimodal fallback for PDF
-          final analysisResult = await ApiService.scanDocumentFile(uint8bytes, 'application/pdf', title: fileName, sourceType: 'PDF Document');
-          if (!mounted) return;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => AnalysisScreen(
-                originalText: analysisResult['extractedText'] ?? 'Scanned PDF Document',
-                analysis: analysisResult['analysis'] ?? [],
-                documentTitle: fileName,
-                sourceType: 'PDF Document',
-                fileData: base64Str,
-                mimeType: 'application/pdf',
-              ),
-            ),
+          final startRes = await ApiService.startScanJob(
+            base64Data: base64Str,
+            mimeType: 'application/pdf',
+            title: fileName,
+            sourceType: 'PDF Document',
           );
+
+          final String jobId = startRes['jobId'] ?? '';
+          if (jobId.isNotEmpty) {
+            await _pollJobUntilComplete(
+              jobId,
+              startRes,
+              fileData: base64Str,
+              mimeType: 'application/pdf',
+              customTitle: fileName,
+              sourceType: 'PDF Document',
+            );
+          } else {
+            throw Exception('Failed to initialize scan job.');
+          }
         } else {
           // It's an image picked through document picker
           final String mimeType = ext == 'png' ? 'image/png' : 'image/jpeg';
-          final analysisResult = await ApiService.scanDocumentFile(uint8bytes, mimeType, title: fileName, sourceType: 'Scanned Image');
-          if (!mounted) return;
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (_) => AnalysisScreen(
-                originalText: analysisResult['extractedText'] ?? 'Scanned Document Image',
-                analysis: analysisResult['analysis'] ?? [],
-                documentTitle: fileName,
-                sourceType: 'Scanned Image',
-                fileData: base64Str,
-                mimeType: mimeType,
-              ),
-            ),
+          final startRes = await ApiService.startScanJob(
+            base64Data: base64Str,
+            mimeType: mimeType,
+            title: fileName,
+            sourceType: 'Scanned Image',
           );
+
+          final String jobId = startRes['jobId'] ?? '';
+          if (jobId.isNotEmpty) {
+            await _pollJobUntilComplete(
+              jobId,
+              startRes,
+              fileData: base64Str,
+              mimeType: mimeType,
+              customTitle: fileName,
+              sourceType: 'Scanned Image',
+            );
+          } else {
+            throw Exception('Failed to initialize scan job.');
+          }
         }
       }
     } catch (e) {
@@ -361,7 +424,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
       ));
     } finally {
-      if (mounted) {
+      if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
           _isProcessing = false;
         });
@@ -374,40 +437,44 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     final isDark = Theme.of(context).brightness == Brightness.dark;
     setState(() {
       _isProcessing = true;
+      _currentJob = null;
       _statusMessage = loc.translate('scan.processingRisk');
     });
 
     try {
-      final analysisResult = await ApiService.scanDocument(
-        text, 
-        title: title, 
+      final startRes = await ApiService.startScanJob(
+        text: text,
+        title: title,
         sourceType: sourceType ?? 'Text Description',
         base64Data: base64Data,
         mimeType: mimeType,
       );
 
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => AnalysisScreen(
-            originalText: text,
-            analysis: analysisResult['analysis'] ?? [],
-            documentTitle: title ?? 'Scanned Property Agreement',
-            sourceType: sourceType ?? 'Text Description',
-            fileData: base64Data ?? analysisResult['fileData'],
-            mimeType: mimeType ?? analysisResult['mimeType'],
-          ),
-        ),
-      );
+      final String jobId = startRes['jobId'] ?? '';
+      if (jobId.isNotEmpty) {
+        await _pollJobUntilComplete(
+          jobId,
+          startRes,
+          originalInputText: text,
+          fileData: base64Data,
+          mimeType: mimeType,
+          customTitle: title,
+          sourceType: sourceType ?? 'Text Description',
+        );
+      } else {
+        throw Exception('Failed to initialize scan job.');
+      }
     } catch (e) {
       if (!mounted) return;
+      setState(() {
+        _isProcessing = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Error: ${e.toString()}'),
         backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
       ));
     } finally {
-      if (mounted) {
+      if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
           _isProcessing = false;
         });
@@ -1142,15 +1209,43 @@ The Developer represents that necessary zoning approvals are under application w
   }
 
   // ==========================================
-  // PROCESSING / ANALYZING STATE (AI RADAR)
+  // PROCESSING / ANALYZING STATE (PROGRESSIVE PIPELINE)
   // ==========================================
   Widget _buildProcessingState(bool isDark, LocaleNotifier loc) {
     final accentColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
+    final compliantColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
+    final cautionColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
+
+    final String status = (_currentJob?['status'] as String?) ?? 'OCR_PROCESSING';
+    final List<dynamic> rawCompleted = (_currentJob?['completedSteps'] as List?) ?? ['UPLOAD'];
+    final Set<String> completedSteps = rawCompleted.map((e) => e.toString()).toSet();
+    final bool isRetrying = status == 'RETRYING';
+
+    // Truthful step completion and active mapping derived from real ScanJob pipeline states
+    final bool step1Completed = completedSteps.contains('TEXT_EXTRACTION') ||
+        status == 'TEXT_EXTRACTED' ||
+        status == 'AI_ANALYSIS' ||
+        status == 'REPORT_GENERATION' ||
+        status == 'COMPLETED';
+    final bool step1Active = !step1Completed && (status == 'OCR_PROCESSING' || status == 'UPLOADING' || status == 'QUEUED');
+
+    final bool step2Completed = status == 'AI_ANALYSIS' ||
+        status == 'REPORT_GENERATION' ||
+        status == 'COMPLETED' ||
+        completedSteps.contains('AI_ANALYSIS');
+    final bool step2Active = !step2Completed && (status == 'TEXT_EXTRACTED' || completedSteps.contains('TEXT_EXTRACTION'));
+
+    final bool step3Completed = completedSteps.contains('AI_ANALYSIS') || status == 'REPORT_GENERATION' || status == 'COMPLETED';
+    final bool step3Active = !step3Completed && (status == 'AI_ANALYSIS' || isRetrying);
+
+    final bool step4Completed = status == 'COMPLETED' || completedSteps.contains('REPORT');
+    final bool step4Active = !step4Completed && status == 'REPORT_GENERATION';
 
     return Center(
       key: const ValueKey('processing_state'),
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 28.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -1164,8 +1259,8 @@ The Developer represents that necessary zoning approvals are under application w
                   children: [
                     // Outer expanding ripple
                     Container(
-                      width: 130 + (25 * radarVal),
-                      height: 130 + (25 * radarVal),
+                      width: 96 + (22 * radarVal),
+                      height: 96 + (22 * radarVal),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
@@ -1177,8 +1272,8 @@ The Developer represents that necessary zoning approvals are under application w
 
                     // Middle pulse ring
                     Container(
-                      width: 110,
-                      height: 110,
+                      width: 82,
+                      height: 82,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: accentColor.withValues(alpha: 0.1),
@@ -1192,54 +1287,260 @@ The Developer represents that necessary zoning approvals are under application w
                     // Central Icon
                     Icon(
                       Icons.document_scanner_rounded,
-                      size: 42,
+                      size: 32,
                       color: accentColor,
                     ),
                   ],
                 );
               },
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 20),
 
-            // Status message
+            // Main Title
             Text(
-              _statusMessage.isNotEmpty ? _statusMessage : loc.translate('scan.processingRisk'),
+              loc.translate('scan.analyzingTitle'),
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.w800,
                 color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 letterSpacing: -0.3,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
 
             // Subtitle
             Text(
-              loc.translate('scan.pleaseWait'),
+              _statusMessage.isNotEmpty ? _statusMessage : loc.translate('scan.pleaseWait'),
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
                 color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
 
-            // AI Progress Indeterminate Bar
+            // Automatic Retry Alert Banner (if transient AI rate limit encountered)
+            if (isRetrying) ...[
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 440),
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: cautionColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: cautionColor.withValues(alpha: 0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.sync_problem_rounded, size: 18, color: cautionColor),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          _currentJob?['currentStep'] ?? loc.translate('scan.retryingStatus'),
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: cautionColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+
+            // Progressive Pipeline Loading Card
             ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 280),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
-                  valueColor: AlwaysStoppedAnimation<Color>(accentColor),
-                  minHeight: 4,
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: (isDark ? AppColors.darkBorder : AppColors.lightBorder).withValues(alpha: 0.7),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    _buildPipelineStepItem(
+                      isDark: isDark,
+                      title: loc.translate('scan.stepReading'),
+                      subtitle: loc.translate('scan.stepReadingDesc'),
+                      isCompleted: step1Completed,
+                      isActive: step1Active,
+                      accentColor: accentColor,
+                      compliantColor: compliantColor,
+                      showConnector: true,
+                      connectorActive: step1Completed,
+                    ),
+                    _buildPipelineStepItem(
+                      isDark: isDark,
+                      title: loc.translate('scan.stepStructuring'),
+                      subtitle: loc.translate('scan.stepStructuringDesc'),
+                      isCompleted: step2Completed,
+                      isActive: step2Active,
+                      accentColor: accentColor,
+                      compliantColor: compliantColor,
+                      showConnector: true,
+                      connectorActive: step2Completed,
+                    ),
+                    _buildPipelineStepItem(
+                      isDark: isDark,
+                      title: loc.translate('scan.stepAuditing'),
+                      subtitle: loc.translate('scan.stepAuditingDesc'),
+                      isCompleted: step3Completed,
+                      isActive: step3Active,
+                      accentColor: accentColor,
+                      compliantColor: compliantColor,
+                      showConnector: true,
+                      connectorActive: step3Completed,
+                    ),
+                    _buildPipelineStepItem(
+                      isDark: isDark,
+                      title: loc.translate('scan.stepPreparing'),
+                      subtitle: loc.translate('scan.stepPreparingDesc'),
+                      isCompleted: step4Completed,
+                      isActive: step4Active,
+                      accentColor: accentColor,
+                      compliantColor: compliantColor,
+                      showConnector: false,
+                    ),
+                  ],
                 ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPipelineStepItem({
+    required bool isDark,
+    required String title,
+    required String subtitle,
+    required bool isCompleted,
+    required bool isActive,
+    required Color accentColor,
+    required Color compliantColor,
+    required bool showConnector,
+    bool connectorActive = false,
+  }) {
+    final textColor = isCompleted
+        ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+        : isActive
+            ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+            : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.5);
+
+    final subtextColor = isCompleted || isActive
+        ? (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)
+        : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.4);
+
+    return Column(
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Status Icon / Indicator
+            Container(
+              width: 26,
+              height: 26,
+              margin: const EdgeInsets.only(top: 1),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isCompleted
+                    ? compliantColor.withValues(alpha: 0.15)
+                    : isActive
+                        ? accentColor.withValues(alpha: 0.15)
+                        : Colors.transparent,
+                border: isCompleted || isActive
+                    ? null
+                    : Border.all(
+                        color: (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.3),
+                        width: 1.5,
+                      ),
+              ),
+              child: Center(
+                child: isCompleted
+                    ? Icon(
+                        Icons.check_rounded,
+                        size: 16,
+                        color: compliantColor,
+                      )
+                    : isActive
+                        ? SizedBox(
+                            width: 12,
+                            height: 12,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(accentColor),
+                            ),
+                          )
+                        : Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.3),
+                            ),
+                          ),
+              ),
+            ),
+            const SizedBox(width: 14),
+
+            // Step Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: isActive ? FontWeight.w700 : (isCompleted ? FontWeight.w600 : FontWeight.w500),
+                      color: textColor,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      color: subtextColor,
+                      height: 1.3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        // Vertical Connector line to next step
+        if (showConnector)
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: const EdgeInsets.only(left: 12, top: 3, bottom: 3),
+            child: Container(
+              width: 2,
+              height: 14,
+              color: connectorActive
+                  ? compliantColor.withValues(alpha: 0.5)
+                  : (isDark ? AppColors.darkBorder : AppColors.lightBorder).withValues(alpha: 0.4),
+            ),
+          ),
+      ],
     );
   }
 }

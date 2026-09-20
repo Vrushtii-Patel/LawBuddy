@@ -329,7 +329,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                             Text(
                               redCount > 0
                                   ? tr('analysis.highRiskDetected')
-                                  : (yellowCount > 0 ? tr('analysis.moderateCaution') : tr('analysis.standardLowRisk')),
+                                  : (yellowCount > 0 ? tr('analysis.moderateCaution') : tr('analysis.noRiskDetected')),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

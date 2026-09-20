@@ -55,7 +55,7 @@ class PdfExportService {
       }
     }
 
-    String overallRisk = 'Low Risk';
+    String overallRisk = 'No Risk';
     PdfColor overallColor = PdfColor(22, 163, 74); // Green
     if (redCount > 0) {
       overallRisk = 'High Risk';

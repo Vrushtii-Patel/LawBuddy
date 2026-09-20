@@ -880,6 +880,25 @@ void main() {
     expect(find.text('Terms of Use'), findsWidgets);
     expect(find.byIcon(Icons.arrow_back_rounded), findsWidgets);
   });
+
+  testWidgets('ScanScreen builds without overflow and provides all scanning options', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: ScanScreen(),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ScanScreen), findsOneWidget);
+    expect(find.byIcon(Icons.camera_enhance_rounded), findsWidgets);
+    expect(find.byIcon(Icons.photo_library_outlined), findsWidgets);
+    expect(find.byIcon(Icons.picture_as_pdf_outlined), findsWidgets);
+    expect(find.text('Take a Photo'), findsWidgets);
+    expect(find.text('Upload PDF'), findsWidgets);
+  });
 }
 
 
