@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Otp = require('../models/Otp');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = require('../config/jwt');
 const { sendOTP } = require('../services/emailService');
 const { isValidEmail, sanitizeInput, requireAuth } = require('../middleware/authMiddleware');
 
@@ -18,17 +19,17 @@ function generateOtp() {
 async function handleSendOtp(email, isSignup, res) {
   try {
     email = sanitizeInput(email).toLowerCase();
-    
+
     if (!isValidEmail(email)) {
       return res.status(400).json({ error: 'Please enter a valid email address' });
     }
 
     const existingUser = await User.findOne({ email });
-    
+
     if (isSignup && existingUser) {
       return res.status(400).json({ error: 'Account already exists. Please log in.' });
     }
-    
+
     if (!isSignup && !existingUser) {
       return res.status(404).json({ error: 'Account not found. Please sign up for a new account.' });
     }
@@ -37,10 +38,10 @@ async function handleSendOtp(email, isSignup, res) {
     const otp = generateOtp();
     const salt = await bcrypt.genSalt(10);
     const otpHash = await bcrypt.hash(otp, salt);
-    
+
     // Delete any existing OTP for this email
     await Otp.deleteMany({ email });
-    
+
     // Store new OTP
     const newOtp = new Otp({
       email,
@@ -48,13 +49,13 @@ async function handleSendOtp(email, isSignup, res) {
       expiresAt: new Date(Date.now() + 5 * 60 * 1000) // 5 minutes
     });
     await newOtp.save();
-    
+
     // Send Email
     const emailResult = await sendOTP(email, otp);
     if (!emailResult.success) {
       return res.status(500).json({ error: 'Failed to send OTP email. Please check your email configuration.' });
     }
-    
+
     res.status(200).json({ message: 'OTP sent successfully' });
   } catch (err) {
     console.error('Send OTP error:', err);
@@ -87,9 +88,9 @@ router.post('/resend-otp', async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });
-    
+
     const cleanEmail = sanitizeInput(email).toLowerCase();
-    
+
     const otpRec = await Otp.findOne({ email: cleanEmail });
     if (otpRec) {
       const now = new Date();
@@ -102,21 +103,21 @@ router.post('/resend-otp', async (req, res) => {
     const otp = generateOtp();
     const salt = await bcrypt.genSalt(10);
     const otpHash = await bcrypt.hash(otp, salt);
-    
+
     await Otp.deleteMany({ email: cleanEmail });
-    
+
     const newOtp = new Otp({
       email: cleanEmail,
       otpHash,
       expiresAt: new Date(Date.now() + 5 * 60 * 1000)
     });
     await newOtp.save();
-    
+
     const emailResult = await sendOTP(cleanEmail, otp);
     if (!emailResult.success) {
       return res.status(500).json({ error: 'Failed to send OTP email' });
     }
-    
+
     res.status(200).json({ message: 'OTP resent successfully' });
   } catch (err) {
     console.error('Resend OTP error:', err);
@@ -129,7 +130,7 @@ router.post('/verify-otp', async (req, res) => {
   try {
     let { email, otp, full_name, type } = req.body;
     email = sanitizeInput(email).toLowerCase();
-    
+
     if (!email || !otp) {
       return res.status(400).json({ error: 'Email and OTP are required' });
     }
@@ -177,7 +178,7 @@ router.post('/verify-otp', async (req, res) => {
       await user.save();
     } else {
       if (!user) {
-         return res.status(404).json({ error: 'User not found. Please sign up.' });
+        return res.status(404).json({ error: 'User not found. Please sign up.' });
       }
       user.last_login = new Date();
       user.emailVerified = true;
@@ -187,7 +188,7 @@ router.post('/verify-otp', async (req, res) => {
     // Generate JWT
     const token = jwt.sign(
       { userId: user.userId, email: user.email, role: user.role || 'user' },
-      process.env.JWT_SECRET || 'legal_scanner_secret_key_change_in_production',
+      JWT_SECRET,
       { expiresIn: '7d' }
     );
 

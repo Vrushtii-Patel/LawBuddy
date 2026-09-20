@@ -17,7 +17,30 @@ const comparisonService = require('./services/comparisonService');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// CORS: restrict to known origins when ALLOWED_ORIGINS is set (comma-separated,
+// e.g. "https://yourapp.com,https://admin.yourapp.com"). Native mobile clients
+// don't send an Origin header, so this only affects browser/web-build requests.
+// Falls back to allowing all origins if unset, so local dev keeps working.
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean);
+
+if (allowedOrigins.length === 0) {
+  console.warn('ALLOWED_ORIGINS not set — CORS is open to all origins. Set it before deploying publicly.');
+}
+
+app.use(cors({
+  origin: allowedOrigins.length === 0
+    ? true
+    : (origin, callback) => {
+      // Allow requests with no origin (mobile apps, curl, server-to-server)
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    }
+}));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -49,4 +72,3 @@ mongoose.connect(process.env.MONGODB_URI, { family: 4 })
   .catch((err) => {
     console.warn('MongoDB connection failed (running without DB connection):', err.message);
   });
-
