@@ -11,6 +11,7 @@ const newsRoutes = require('./routes/newsRoutes');
 const stampDutyRoutes = require('./routes/stampDutyRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const comparisonRoutes = require('./routes/comparisonRoutes');
+const shareRoutes = require('./routes/shareRoutes');
 const scanJobService = require('./services/scanJobService');
 const comparisonService = require('./services/comparisonService');
 
@@ -52,6 +53,7 @@ app.use('/api/news', newsRoutes);
 app.use('/api', stampDutyRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', comparisonRoutes);
+app.use('/api', shareRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
@@ -60,6 +62,11 @@ app.listen(PORT, () => {
 mongoose.connect(process.env.MONGODB_URI, { family: 4 })
   .then(() => {
     console.log('Connected to MongoDB');
+    // Ensure clean collection indexes
+    const Checklist = require('./models/Checklist');
+    Checklist.syncIndexes().catch(idxErr => {
+      console.warn('Checklist syncIndexes note:', idxErr.message);
+    });
     // Startup Recovery: Resume any unfinished ScanJobs
     scanJobService.recoverUnfinishedScanJobs().catch(recErr => {
       console.warn('Startup scan recovery warning:', recErr.message);

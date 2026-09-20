@@ -5,6 +5,7 @@ const pdfParse = require('pdf-parse');
 const ScanJob = require('../models/ScanJob');
 const Document = require('../models/Document');
 const llmService = require('./llmService');
+const crossReferenceService = require('./crossReferenceService');
 
 const UPLOADS_DIR = path.join(__dirname, '../../uploads/scan_files');
 
@@ -384,6 +385,14 @@ async function executeJobPipeline(jobId) {
             job.completedAt = new Date();
             job.errorInfo = { message: null, stage: null, code: null, isTransient: false, timestamp: null };
             await job.save();
+
+            // Synchronize detected document issues with user's due diligence checklists
+            try {
+                await crossReferenceService.syncDocumentIssuesWithChecklists(job.userId, savedDoc);
+                console.log(`[ScanJob ${job.jobId}] Cross-referencing checklist sync completed for user ${job.userId}`);
+            } catch (syncErr) {
+                console.warn(`[ScanJob ${job.jobId}] Warning: Checklist sync error:`, syncErr.message);
+            }
 
             console.log(`[ScanJob ${job.jobId}] STAGE 4 COMPLETE: Linked to Document ${savedDoc._id}. Status: COMPLETED.`);
         } else {

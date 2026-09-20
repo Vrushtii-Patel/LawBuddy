@@ -1,14 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const Checklist = require('../models/Checklist');
+const Document = require('../models/Document');
 const { requireAuth } = require('../middleware/authMiddleware');
 const llmService = require('../services/llmService');
+const crossReferenceService = require('../services/crossReferenceService');
 
 // 1. Fetch all checklists for logged-in user
 router.get('/checklists', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const checklists = await Checklist.find({ userId }).sort({ _id: -1 });
+        let checklists = await Checklist.find({ userId }).sort({ _id: -1 });
+
+        // If user has no checklists, check if they have analyzed documents and auto-sync
+        if (!checklists || checklists.length === 0) {
+            const hasDocs = await Document.exists({ userId, analysisStatus: 'completed' });
+            if (hasDocs) {
+                await crossReferenceService.syncAllUserDocuments(userId);
+                checklists = await Checklist.find({ userId }).sort({ _id: -1 });
+            }
+        }
+
         res.json(checklists);
     } catch (error) {
         console.error('Error fetching checklists:', error);
@@ -51,6 +63,13 @@ router.put('/checklists/:type/items/:itemId', requireAuth, async (req, res) => {
         }
 
         item.isCompleted = Boolean(isCompleted);
+        if (item.isCompleted) {
+            item.status = 'VERIFIED';
+        } else {
+            item.status = (item.linkedIssues && item.linkedIssues.length > 0) ? 'FLAGGED' : 'NOT_STARTED';
+        }
+
+        checklist.updatedAt = new Date();
         await checklist.save();
 
         res.json({ message: 'Checklist updated successfully', checklist });
@@ -79,10 +98,13 @@ router.post('/checklists/:type/items', requireAuth, async (req, res) => {
         const newItem = {
             id: Date.now().toString(),
             title: title.trim(),
-            isCompleted: false
+            isCompleted: false,
+            status: 'NOT_STARTED',
+            linkedIssues: []
         };
 
         checklist.items.push(newItem);
+        checklist.updatedAt = new Date();
         await checklist.save();
 
         res.json({ message: 'Item added successfully', checklist, item: newItem });
@@ -112,6 +134,7 @@ router.delete('/checklists/:type/items/:itemId', requireAuth, async (req, res) =
             return res.status(404).json({ error: 'Item not found in checklist' });
         }
 
+        checklist.updatedAt = new Date();
         await checklist.save();
         res.json({ message: 'Item deleted successfully', checklist });
     } catch (error) {
@@ -155,6 +178,7 @@ router.put('/checklists/:type/rename', requireAuth, async (req, res) => {
         }
 
         checklist.title = title.trim();
+        checklist.updatedAt = new Date();
         await checklist.save();
 
         res.json({ message: 'Checklist renamed successfully', checklist });
@@ -164,7 +188,7 @@ router.put('/checklists/:type/rename', requireAuth, async (req, res) => {
     }
 });
 
-// 8. Generate AI Checklist
+// 8. Generate AI Checklist & Cross-reference existing issues
 router.post('/checklists/generate', requireAuth, async (req, res) => {
     try {
         const { prompt } = req.body;
@@ -192,7 +216,9 @@ router.post('/checklists/generate', requireAuth, async (req, res) => {
         const cleanItems = (items || []).map((item, idx) => ({
             id: (item.id || (idx + 1)).toString(),
             title: item.title || 'Legal Due Diligence Task',
-            isCompleted: false
+            isCompleted: false,
+            status: 'NOT_STARTED',
+            linkedIssues: []
         }));
 
         const newType = 'custom_' + Date.now();
@@ -204,10 +230,49 @@ router.post('/checklists/generate', requireAuth, async (req, res) => {
         });
 
         await checklist.save();
+
+        // Cross-reference any existing user documents to immediately flag relevant tasks
+        try {
+            await crossReferenceService.syncAllUserDocuments(userId);
+            const reloaded = await Checklist.findById(checklist._id);
+            if (reloaded) return res.json(reloaded);
+        } catch (syncErr) {
+            console.warn('Post-generation checklist sync warning:', syncErr.message);
+        }
+
         res.json(checklist);
     } catch (error) {
         console.error('Error generating checklist:', error);
         res.status(500).json({ error: 'Failed to generate checklist', details: error.message });
+    }
+});
+
+// 9. Synchronize specific document findings with checklists
+router.post('/checklists/sync/:documentId', requireAuth, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const document = await Document.findOne({ _id: req.params.documentId, userId });
+        if (!document) {
+            return res.status(404).json({ error: 'Document not found' });
+        }
+
+        const modified = await crossReferenceService.syncDocumentIssuesWithChecklists(userId, document);
+        res.json({ message: 'Checklist cross-referencing completed', modifiedCount: modified.length });
+    } catch (error) {
+        console.error('Error syncing checklist with document:', error);
+        res.status(500).json({ error: 'Failed to sync checklist with document', details: error.message });
+    }
+});
+
+// 10. Synchronize all user documents with checklists
+router.post('/checklists/sync', requireAuth, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const modified = await crossReferenceService.syncAllUserDocuments(userId);
+        res.json({ message: 'All documents cross-referenced with checklists', modifiedCount: modified.length });
+    } catch (error) {
+        console.error('Error syncing all checklists:', error);
+        res.status(500).json({ error: 'Failed to sync checklists', details: error.message });
     }
 });
 

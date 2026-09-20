@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/home_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/analysis_screen.dart';
+import 'screens/shared_summary_screen.dart';
 import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
@@ -63,9 +64,22 @@ class LawBuddyApp extends ConsumerWidget {
       effectiveThemeMode = ThemeMode.light;
     }
 
+    String? shareParam = Uri.base.queryParameters['share'] ?? Uri.base.queryParameters['shareToken'];
+    if (shareParam == null && Uri.base.hasFragment && Uri.base.fragment.contains('share=')) {
+      try {
+        final frag = Uri.base.fragment;
+        final queryPart = frag.contains('?') ? frag.split('?').last : frag;
+        final dummyUri = Uri.tryParse('http://dummy/?$queryPart');
+        shareParam = dummyUri?.queryParameters['share'] ?? dummyUri?.queryParameters['shareToken'];
+      } catch (_) {}
+    }
+
     final screenParam = Uri.base.queryParameters['screen']?.toLowerCase();
     Widget homeWidget;
-    if (screenParam == 'analysis') {
+
+    if (shareParam != null && shareParam.trim().isNotEmpty) {
+      homeWidget = SharedSummaryScreen(shareToken: shareParam.trim());
+    } else if (screenParam == 'analysis') {
       homeWidget = const AnalysisScreen(
         documentTitle: 'Agreement for Sale (Extract) - Flat 402',
         originalText: 'Clause 7.2: In the event of milestone payment delay exceeding 15 days, Developer forfeits 100% earnest money.\nClause 14.1: Buyer delay attracts 18% p.a. interest while Developer delay offers Rs 5/sqft compensation.\nClause 3.1: Carpet area specification adhering to RERA standard definitions.',

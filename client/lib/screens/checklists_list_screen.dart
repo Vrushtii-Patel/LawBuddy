@@ -1172,6 +1172,8 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
         ? (widget.isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
         : (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary);
 
+    final flaggedCount = items.where((i) => i['isCompleted'] != true && (i['status'] == 'FLAGGED' || ((i['linkedIssues'] as List<dynamic>?)?.isNotEmpty == true))).length;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _isHovered = true),
@@ -1190,7 +1192,9 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                   ? accentColor.withValues(alpha: 0.8)
                   : (isAllDone
                       ? (widget.isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.5)
-                      : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder)),
+                      : (flaggedCount > 0
+                          ? (widget.isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.4)
+                          : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder))),
               width: 1.0,
             ),
           ),
@@ -1223,14 +1227,47 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            widget.tr('checklists.verificationBadge'),
-                            style: GoogleFonts.inter(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 0.8,
-                              color: accentColor,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                widget.tr('checklists.verificationBadge'),
+                                style: GoogleFonts.inter(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 0.8,
+                                  color: accentColor,
+                                ),
+                              ),
+                              if (flaggedCount > 0) ...[
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: (widget.isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.warning_amber_rounded,
+                                        size: 11,
+                                        color: widget.isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        widget.tr('checklists.flaggedCountBadge', {'count': flaggedCount.toString()}),
+                                        style: GoogleFonts.inter(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.w800,
+                                          color: widget.isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                           const SizedBox(height: 3),
                           Text(

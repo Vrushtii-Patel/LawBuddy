@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/locale_provider.dart';
 import '../services/api_service.dart';
 import '../services/pdf_export_service.dart';
@@ -34,6 +35,8 @@ class AnalysisScreen extends ConsumerStatefulWidget {
 class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
   bool _isExplaining = false;
   bool _isExportingPdf = false;
+  bool _isGeneratingShare = false;
+  String? _cachedShareToken;
 
   Uint8List? _getCleanBytes(String? rawBase64) {
     if (rawBase64 == null || rawBase64.trim().isEmpty) return null;
@@ -88,6 +91,451 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       default:
         return isDark ? AppColors.darkBorder : AppColors.lightBorder;
     }
+  }
+
+  String _getDocumentTitle() {
+    final t = widget.documentTitle ??
+        (widget.originalText.trim().split('\n').first.replaceAll(RegExp(r'[#*_-]'), '').trim());
+    return t.isNotEmpty ? t : 'Property Legal Analysis';
+  }
+
+  String _getOverallRiskLevel() {
+    int red = 0;
+    int yellow = 0;
+    for (var item in widget.analysis) {
+      final cat = (item['riskLevel'] ?? item['category'] ?? '').toString().toLowerCase();
+      if (cat.contains('red') || cat.contains('high')) {
+        red++;
+      } else if (cat.contains('yellow') || cat.contains('caution') || cat.contains('medium')) {
+        yellow++;
+      }
+    }
+    if (red > 0) return 'High Risk';
+    if (yellow > 0) return 'Medium Risk';
+    return 'Low Risk';
+  }
+
+  List<String> _extractKeyFindings() {
+    final findings = <String>[];
+    for (var item in widget.analysis) {
+      final r = (item['reason'] ?? item['legalFinding'] ?? item['title'] ?? '').toString().trim();
+      if (r.isNotEmpty && !findings.contains(r)) {
+        findings.add(r);
+        if (findings.length >= 3) break;
+      }
+    }
+    if (findings.isEmpty) {
+      findings.add('No material legal violations identified.');
+    }
+    return findings;
+  }
+
+  Future<String?> _getOrGenerateShareToken() async {
+    if (_cachedShareToken != null && _cachedShareToken!.isNotEmpty) {
+      return _cachedShareToken;
+    }
+    setState(() => _isGeneratingShare = true);
+    try {
+      int red = 0, yellow = 0, green = 0;
+      for (var item in widget.analysis) {
+        final cat = (item['riskLevel'] ?? item['category'] ?? '').toString().toLowerCase();
+        if (cat.contains('red') || cat.contains('high')) {
+          red++;
+        } else if (cat.contains('yellow') || cat.contains('caution') || cat.contains('medium')) {
+          yellow++;
+        } else {
+          green++;
+        }
+      }
+
+      final token = await ApiService.createShareLink(
+        title: _getDocumentTitle(),
+        riskLevel: _getOverallRiskLevel(),
+        analysis: widget.analysis,
+        highRiskCount: red,
+        cautionCount: yellow,
+        compliantCount: green,
+        totalClauseCount: widget.analysis.length,
+      );
+
+      if (token != null) {
+        _cachedShareToken = token;
+      }
+      return token;
+    } catch (e) {
+      debugPrint('Error generating share token: $e');
+      return null;
+    } finally {
+      if (mounted) setState(() => _isGeneratingShare = false);
+    }
+  }
+
+  Future<void> _shareOnWhatsApp() async {
+    final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final token = await _getOrGenerateShareToken();
+    if (token == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(tr('analysis.shareFailed')),
+          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    final shareUrl = ApiService.buildShareUrl(token);
+    final docTitle = _getDocumentTitle();
+    final riskLevel = _getOverallRiskLevel();
+    final findings = _extractKeyFindings();
+
+    final buffer = StringBuffer();
+    buffer.writeln('*LawBuddy Property Risk Summary*');
+    buffer.writeln();
+    buffer.writeln('Property: $docTitle');
+    buffer.writeln('Overall Risk: $riskLevel');
+    buffer.writeln();
+    buffer.writeln('Key Findings:');
+    for (final f in findings) {
+      buffer.writeln('• $f');
+    }
+    buffer.writeln();
+    buffer.writeln('View the complete risk summary:');
+    buffer.writeln(shareUrl);
+
+    final msg = buffer.toString();
+    final whatsappUri = Uri.parse('https://wa.me/?text=${Uri.encodeComponent(msg)}');
+
+    try {
+      final launched = await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+      if (!launched) {
+        throw Exception('Could not launch WhatsApp');
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Unable to open WhatsApp directly. You can use "Copy Link" instead.'),
+          backgroundColor: isDark ? AppColors.darkCaution : AppColors.lightCaution,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  Future<void> _shareViaEmail() async {
+    final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final token = await _getOrGenerateShareToken();
+    if (token == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(tr('analysis.shareFailed')),
+          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    final shareUrl = ApiService.buildShareUrl(token);
+    final docTitle = _getDocumentTitle();
+    final riskLevel = _getOverallRiskLevel();
+    final findings = _extractKeyFindings();
+
+    final buffer = StringBuffer();
+    buffer.writeln('LawBuddy Property Risk Summary');
+    buffer.writeln();
+    buffer.writeln('Property: $docTitle');
+    buffer.writeln('Overall Risk: $riskLevel');
+    buffer.writeln();
+    buffer.writeln('Key Findings:');
+    for (final f in findings) {
+      buffer.writeln('• $f');
+    }
+    buffer.writeln();
+    buffer.writeln('View the complete risk summary:');
+    buffer.writeln(shareUrl);
+
+    final emailUri = Uri(
+      scheme: 'mailto',
+      queryParameters: {
+        'subject': 'LawBuddy Property Risk Summary: $docTitle',
+        'body': buffer.toString(),
+      },
+    );
+
+    try {
+      final launched = await launchUrl(emailUri, mode: LaunchMode.externalApplication);
+      if (!launched) {
+        throw Exception('Could not launch email client');
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Unable to open email client. You can use "Copy Link" instead.'),
+          backgroundColor: isDark ? AppColors.darkCaution : AppColors.lightCaution,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  Future<void> _copyShareLink() async {
+    final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final token = await _getOrGenerateShareToken();
+    if (token == null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(tr('analysis.shareFailed')),
+          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    final shareUrl = ApiService.buildShareUrl(token);
+    await Clipboard.setData(ClipboardData(text: shareUrl));
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.check_circle, color: Colors.white),
+            const SizedBox(width: 10),
+            Expanded(child: Text(tr('analysis.linkCopiedSuccess'))),
+          ],
+        ),
+        backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
+  void _showShareOptionsModal() {
+    final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(ctx).size.height * 0.85,
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.darkBorder : AppColors.lightBorder).withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.share_rounded,
+                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          size: 22,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tr('analysis.shareModalTitle'),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              tr('analysis.shareModalSubtitle'),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const Divider(height: 1),
+                  const SizedBox(height: 14),
+
+                  // 1. WhatsApp
+                  _buildShareOptionTile(
+                    context: ctx,
+                    isDark: isDark,
+                    icon: Icons.chat_bubble_outline_rounded,
+                    iconColor: const Color(0xFF25D366),
+                    iconBgColor: const Color(0xFF25D366).withValues(alpha: 0.12),
+                    title: tr('analysis.shareWhatsApp'),
+                    subtitle: tr('analysis.shareWhatsAppDesc'),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _shareOnWhatsApp();
+                    },
+                  ),
+                  const SizedBox(height: 10),
+
+                  // 2. Email
+                  _buildShareOptionTile(
+                    context: ctx,
+                    isDark: isDark,
+                    icon: Icons.mail_outline_rounded,
+                    iconColor: isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                    iconBgColor: (isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.12),
+                    title: tr('analysis.shareEmail'),
+                    subtitle: tr('analysis.shareEmailDesc'),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _shareViaEmail();
+                    },
+                  ),
+                  const SizedBox(height: 10),
+
+                  // 3. Copy Link
+                  _buildShareOptionTile(
+                    context: ctx,
+                    isDark: isDark,
+                    icon: Icons.link_rounded,
+                    iconColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    iconBgColor: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.15),
+                    title: tr('analysis.copyShareLink'),
+                    subtitle: tr('analysis.copyShareLinkDesc'),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _copyShareLink();
+                    },
+                  ),
+                  const SizedBox(height: 10),
+
+                  // 4. Download PDF
+                  _buildShareOptionTile(
+                    context: ctx,
+                    isDark: isDark,
+                    icon: Icons.picture_as_pdf_outlined,
+                    iconColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                    iconBgColor: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.12),
+                    title: tr('analysis.exportPdf'),
+                    subtitle: tr('analysis.downloadPdfDesc'),
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _exportPdf();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildShareOptionTile({
+    required BuildContext context,
+    required bool isDark,
+    required IconData icon,
+    required Color iconColor,
+    required Color iconBgColor,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: iconBgColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: iconColor, size: 20),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _exportPdf() async {
@@ -338,17 +786,37 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                             ),
                           ],
                         ),
-                        ElevatedButton.icon(
-                          onPressed: _isExportingPdf ? null : _exportPdf,
-                          icon: const Icon(Icons.download, size: 16),
-                          label: Text(tr('analysis.exportPdf')),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                            foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                            textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                          ),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: [
+                            OutlinedButton.icon(
+                              onPressed: _isGeneratingShare ? null : _showShareOptionsModal,
+                              icon: _isGeneratingShare
+                                  ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2))
+                                  : const Icon(Icons.share_outlined, size: 16),
+                              label: Text(tr('analysis.shareRiskSummary')),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            ElevatedButton.icon(
+                              onPressed: _isExportingPdf ? null : _exportPdf,
+                              icon: const Icon(Icons.download, size: 16),
+                              label: Text(tr('analysis.exportPdf')),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                                foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

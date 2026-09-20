@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../providers/locale_provider.dart';
 import '../services/api_service.dart';
 import '../widgets/user_profile_button.dart';
@@ -23,7 +24,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
   Map<String, dynamic>? _checklistData;
   bool _isLoading = true;
   String? _error;
-  String _selectedFilter = 'All'; // All, Pending, Completed
+  String _selectedFilter = 'All'; // All, Pending, Flagged, Completed
 
   @override
   void initState() {
@@ -63,6 +64,12 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
     // Optimistic UI update
     setState(() {
       item['isCompleted'] = isCompleted;
+      if (isCompleted) {
+        item['status'] = 'VERIFIED';
+      } else {
+        final linked = item['linkedIssues'] as List<dynamic>? ?? [];
+        item['status'] = linked.isNotEmpty ? 'FLAGGED' : 'NOT_STARTED';
+      }
     });
 
     try {
@@ -72,6 +79,12 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
       if (mounted) {
         setState(() {
           item['isCompleted'] = !isCompleted;
+          if (!isCompleted) {
+            item['status'] = 'VERIFIED';
+          } else {
+            final linked = item['linkedIssues'] as List<dynamic>? ?? [];
+            item['status'] = linked.isNotEmpty ? 'FLAGGED' : 'NOT_STARTED';
+          }
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -434,6 +447,444 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
     }
   }
 
+  // ==========================================
+  // CROSS-REFERENCED ISSUE DETAILS BOTTOM SHEET
+  // ==========================================
+  void _showRelatedIssuesSheet(BuildContext context, Map<String, dynamic> item, int origIndex) {
+    final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final linkedIssues = item['linkedIssues'] as List<dynamic>? ?? [];
+    final itemTitle = (item['title'] ?? 'Due Diligence Task').toString();
+    final isComp = item['isCompleted'] == true;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetCtx) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(sheetCtx).size.height * 0.88,
+          ),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header Drag Handle
+              const SizedBox(height: 12),
+              Container(
+                width: 44,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 14),
+
+              // Title Bar
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.warning_amber_rounded,
+                        color: isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            tr('checklists.relatedIssueModalTitle'),
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                          Text(
+                            itemTitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close_rounded, size: 20),
+                      onPressed: () => Navigator.pop(sheetCtx),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Divider(
+                height: 1,
+                thickness: 0.8,
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              ),
+
+              // Issues List
+              Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.all(20),
+                  itemCount: linkedIssues.length,
+                  itemBuilder: (ctx, idx) {
+                    final issue = linkedIssues[idx] as Map<String, dynamic>;
+                    final docTitle = (issue['documentTitle'] ?? 'Uploaded Agreement').toString();
+                    final clauseTitle = (issue['clauseTitle'] ?? issue['clauseId'] ?? 'Detected Clause').toString();
+                    final riskLevel = (issue['riskLevel'] ?? 'HIGH_RISK').toString();
+                    final isHighRisk = riskLevel == 'HIGH_RISK';
+                    final findingCategory = (issue['findingCategory'] ?? '').toString();
+                    final reason = (issue['reason'] ?? '').toString();
+                    final buyerImpact = (issue['buyerImpact'] ?? '').toString();
+                    final recommendation = (issue['recommendation'] ?? '').toString();
+                    final citations = (issue['statutoryCitations'] as List<dynamic>? ?? []).map((e) => e.toString()).toList();
+                    final reraRefs = (issue['reraReferences'] as List<dynamic>? ?? []).map((e) => e.toString()).toList();
+
+                    final riskColor = isHighRisk
+                        ? (isDark ? AppColors.darkError : AppColors.lightError)
+                        : (isDark ? AppColors.darkCaution : AppColors.lightCaution);
+
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: riskColor.withValues(alpha: 0.4),
+                          width: 1.2,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Top Document & Risk Row
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: riskColor.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      isHighRisk ? Icons.error_outline_rounded : Icons.warning_amber_rounded,
+                                      size: 13,
+                                      color: riskColor,
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      isHighRisk ? 'HIGH RISK' : 'CAUTION',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w800,
+                                        letterSpacing: 0.5,
+                                        color: riskColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  docTitle,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Why Flagged Section
+                          Text(
+                            tr('checklists.whyFlaggedTitle'),
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w800,
+                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            tr('checklists.whyFlaggedDesc', {'doc': docTitle}),
+                            style: GoogleFonts.inter(
+                              fontSize: 12,
+                              height: 1.4,
+                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Clause Finding
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: (isDark ? AppColors.darkBackground : AppColors.lightBackground),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.article_outlined,
+                                      size: 15,
+                                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Expanded(
+                                      child: Text(
+                                        clauseTitle,
+                                        style: GoogleFonts.plusJakartaSans(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (findingCategory.isNotEmpty) ...[
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    findingCategory,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                                    ),
+                                  ),
+                                ],
+                                if (reason.isNotEmpty) ...[
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    reason,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      height: 1.45,
+                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+
+                          // Statutory Citations & RERA References
+                          if (citations.isNotEmpty || reraRefs.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              tr('checklists.statutoryCitationsTitle'),
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: [
+                                ...citations.map((cit) => _buildCitationChip(cit, Icons.gavel_rounded, isDark)),
+                                ...reraRefs.map((ref) => _buildCitationChip(ref, Icons.verified_user_rounded, isDark)),
+                              ],
+                            ),
+                          ],
+
+                          // Buyer Impact
+                          if (buyerImpact.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              tr('checklists.buyerImpactTitle'),
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: isDark ? AppColors.darkError : AppColors.lightError,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              buyerImpact,
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                height: 1.4,
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                          ],
+
+                          // Recommendation
+                          if (recommendation.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.3),
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Icon(
+                                    Icons.lightbulb_outline_rounded,
+                                    size: 16,
+                                    color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          tr('checklists.recommendationTitle'),
+                                          style: GoogleFonts.plusJakartaSans(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w800,
+                                            color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          recommendation,
+                                          style: GoogleFonts.inter(
+                                            fontSize: 12,
+                                            height: 1.4,
+                                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+
+              // Bottom Action Bar
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isComp
+                          ? (isDark ? AppColors.darkSurface : AppColors.lightSurface)
+                          : (isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
+                      foregroundColor: isComp
+                          ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                          : Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    icon: Icon(
+                      isComp ? Icons.replay_rounded : Icons.check_circle_outline_rounded,
+                      size: 18,
+                    ),
+                    label: Text(
+                      isComp ? tr('checklists.markAsPending') : tr('checklists.markAsVerified'),
+                      style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(sheetCtx);
+                      _toggleItem(origIndex, !isComp);
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildCitationChip(String text, IconData icon, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 12,
+            color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+          ),
+          const SizedBox(width: 5),
+          Text(
+            text,
+            style: GoogleFonts.inter(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
@@ -452,7 +903,11 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
     final filteredItems = items.asMap().entries.where((entry) {
       final item = entry.value;
       final isComp = item['isCompleted'] == true;
+      final linked = item['linkedIssues'] as List<dynamic>? ?? [];
+      final isFlagged = !isComp && (item['status'] == 'FLAGGED' || linked.isNotEmpty);
+
       if (_selectedFilter == 'Pending') return !isComp;
+      if (_selectedFilter == 'Flagged') return isFlagged;
       if (_selectedFilter == 'Completed') return isComp;
       return true;
     }).map((entry) {
@@ -464,6 +919,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
     final totalCount = items.length;
     final completedCount = items.where((i) => i['isCompleted'] == true).length;
     final pendingCount = totalCount - completedCount;
+    final flaggedCount = items.where((i) => i['isCompleted'] != true && (i['status'] == 'FLAGGED' || ((i['linkedIssues'] as List<dynamic>?)?.isNotEmpty == true))).length;
     final progressRatio = totalCount > 0 ? (completedCount / totalCount) : 0.0;
 
     return Scaffold(
@@ -553,11 +1009,11 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Progress Card
-                        _buildProgressCard(tr, isDark, colorScheme, completedCount, totalCount, progressRatio),
+                        _buildProgressCard(tr, isDark, colorScheme, completedCount, totalCount, progressRatio, flaggedCount),
                         const SizedBox(height: 20),
 
                         // Filters row
-                        _buildFilterRow(tr, isDark, totalCount, pendingCount, completedCount),
+                        _buildFilterRow(tr, isDark, totalCount, pendingCount, flaggedCount, completedCount),
                         const SizedBox(height: 16),
 
                         // Tasks list
@@ -576,7 +1032,9 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  _selectedFilter == 'Completed' ? Icons.check_circle_outline_rounded : Icons.task_alt_rounded,
+                                  _selectedFilter == 'Completed'
+                                      ? Icons.check_circle_outline_rounded
+                                      : (_selectedFilter == 'Flagged' ? Icons.verified_rounded : Icons.task_alt_rounded),
                                   size: 40,
                                   color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
                                 ),
@@ -584,9 +1042,11 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                                 Text(
                                   _selectedFilter == 'Completed'
                                       ? 'No completed tasks yet.'
-                                      : (_selectedFilter == 'Pending'
-                                          ? tr('checklists.allDone')
-                                          : 'No tasks found in this checklist.'),
+                                      : (_selectedFilter == 'Flagged'
+                                          ? 'No flagged document issues in this checklist.'
+                                          : (_selectedFilter == 'Pending'
+                                              ? tr('checklists.allDone')
+                                              : 'No tasks found in this checklist.')),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -601,48 +1061,153 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                             final origIndex = item['_originalIndex'] as int;
                             final isComp = item['isCompleted'] == true;
                             final itemTitle = (item['title'] ?? '').toString();
+                            final linkedIssues = item['linkedIssues'] as List<dynamic>? ?? [];
+                            final isFlagged = !isComp && (item['status'] == 'FLAGGED' || linkedIssues.isNotEmpty);
+
+                            // Document names for attribution
+                            final docNames = linkedIssues
+                                .map((li) => (li['documentTitle'] ?? 'Document').toString())
+                                .toSet()
+                                .toList();
 
                             return Container(
-                              margin: const EdgeInsets.only(bottom: 10),
+                              margin: const EdgeInsets.only(bottom: 12),
                               decoration: BoxDecoration(
-                                color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                                color: isFlagged
+                                    ? (isDark ? AppColors.darkCaution.withValues(alpha: 0.07) : AppColors.lightCaution.withValues(alpha: 0.05))
+                                    : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
                                 borderRadius: BorderRadius.circular(14),
                                 border: Border.all(
                                   color: isComp
                                       ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: isDark ? 0.4 : 0.3)
-                                      : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                                  width: 1.0,
+                                      : (isFlagged
+                                          ? (isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.5)
+                                          : (isDark ? AppColors.darkBorder : AppColors.lightBorder)),
+                                  width: isFlagged ? 1.2 : 1.0,
                                 ),
                               ),
                               child: Material(
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(14),
                                 clipBehavior: Clip.antiAlias,
-                                child: ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
-                                  leading: Checkbox(
-                                    value: isComp,
-                                    activeColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                                    onChanged: (val) => _toggleItem(origIndex, val),
-                                  ),
-                                  title: Text(
-                                    itemTitle,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: isComp ? FontWeight.w500 : FontWeight.w600,
-                                      decoration: isComp ? TextDecoration.lineThrough : null,
-                                      color: isComp
-                                          ? (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)
-                                          : colorScheme.onSurface,
-                                    ),
-                                  ),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.delete_outline_rounded, size: 18),
-                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                                    hoverColor: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.1),
-                                    tooltip: tr('checklists.deleteItem'),
-                                    onPressed: () => _deleteItem(origIndex),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Top Task Row: Checkbox, Title, Delete Action
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Checkbox(
+                                            value: isComp,
+                                            activeColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                            onChanged: (val) => _toggleItem(origIndex, val),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(top: 10),
+                                              child: Text(
+                                                itemTitle,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: isComp ? FontWeight.w500 : FontWeight.w600,
+                                                  decoration: isComp ? TextDecoration.lineThrough : null,
+                                                  color: isComp
+                                                      ? (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)
+                                                      : colorScheme.onSurface,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                            hoverColor: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.1),
+                                            tooltip: tr('checklists.deleteItem'),
+                                            onPressed: () => _deleteItem(origIndex),
+                                          ),
+                                        ],
+                                      ),
+
+                                      // Flagged Issue Attribution & View Related Issue Action
+                                      if (linkedIssues.isNotEmpty) ...[
+                                        const SizedBox(height: 8),
+                                        Container(
+                                          margin: const EdgeInsets.only(left: 44, right: 6),
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                          decoration: BoxDecoration(
+                                            color: (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: (isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.3),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.warning_amber_rounded,
+                                                    size: 14,
+                                                    color: isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                                                  ),
+                                                  const SizedBox(width: 6),
+                                                  Text(
+                                                    tr('checklists.flaggedBadge'),
+                                                    style: GoogleFonts.inter(
+                                                      fontSize: 10,
+                                                      fontWeight: FontWeight.w800,
+                                                      letterSpacing: 0.5,
+                                                      color: isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                docNames.length == 1
+                                                    ? tr('checklists.triggeredBy', {'doc': docNames.first})
+                                                    : tr('checklists.triggeredByMulti', {'count': docNames.length.toString()}),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.inter(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              InkWell(
+                                                onTap: () => _showRelatedIssuesSheet(context, item, origIndex),
+                                                borderRadius: BorderRadius.circular(6),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 2),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        linkedIssues.length == 1
+                                                            ? '${tr('checklists.viewRelatedIssue')} →'
+                                                            : '${tr('checklists.viewRelatedIssues', {'count': linkedIssues.length.toString()})} →',
+                                                        style: GoogleFonts.inter(
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.w700,
+                                                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
                               ),
@@ -662,6 +1227,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
     int completed,
     int total,
     double ratio,
+    int flaggedCount,
   ) {
     final percent = (ratio * 100).toInt();
 
@@ -697,25 +1263,58 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                   ),
                 ],
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: (percent == 100
-                          ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
-                          : AppColors.lightPrimary)
-                      .withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  '$percent%',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: percent == 100
-                        ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
-                        : (isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (flaggedCount > 0) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        color: (isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: (isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.warning_amber_rounded, size: 12, color: isDark ? AppColors.darkCaution : AppColors.lightCaution),
+                          const SizedBox(width: 4),
+                          Text(
+                            tr('checklists.flaggedCountBadge', {'count': flaggedCount.toString()}),
+                            style: GoogleFonts.inter(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: (percent == 100
+                              ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
+                              : AppColors.lightPrimary)
+                          .withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '$percent%',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        color: percent == 100
+                            ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
+                            : (isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
@@ -752,6 +1351,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
     bool isDark,
     int total,
     int pending,
+    int flagged,
     int completed,
   ) {
     return SingleChildScrollView(
@@ -762,6 +1362,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
           _buildChip('All', '${tr('checklists.filterAll')} ($total)', isDark),
           const SizedBox(width: 8),
           _buildChip('Pending', '${tr('checklists.filterPending')} ($pending)', isDark, color: isDark ? AppColors.darkCaution : AppColors.lightCaution),
+          if (flagged > 0) ...[
+            const SizedBox(width: 8),
+            _buildChip('Flagged', '${tr('checklists.filterFlagged')} ($flagged)', isDark, color: isDark ? AppColors.darkError : AppColors.lightError),
+          ],
           const SizedBox(width: 8),
           _buildChip('Completed', '${tr('checklists.filterCompleted')} ($completed)', isDark, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
         ],

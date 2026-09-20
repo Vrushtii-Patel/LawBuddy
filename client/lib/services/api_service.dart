@@ -256,6 +256,82 @@ class ApiService {
     }
   }
 
+  // =========================================================================
+  // SHARE RISK SUMMARY API METHODS
+  // =========================================================================
+
+  static Future<String?> createShareLink({
+    String? documentId,
+    required String title,
+    required String riskLevel,
+    required List<dynamic> analysis,
+    int? highRiskCount,
+    int? cautionCount,
+    int? compliantCount,
+    int? totalClauseCount,
+  }) async {
+    try {
+      final token = await _getToken();
+      final response = await http.post(
+        Uri.parse('$baseUrl/shares'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          if (documentId != null && documentId.isNotEmpty) 'documentId': documentId,
+          'title': title,
+          'riskLevel': riskLevel,
+          'analysis': analysis,
+          if (highRiskCount != null) 'highRiskCount': highRiskCount,
+          if (cautionCount != null) 'cautionCount': cautionCount,
+          if (compliantCount != null) 'compliantCount': compliantCount,
+          if (totalClauseCount != null) 'totalClauseCount': totalClauseCount,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        return data['shareToken'] as String?;
+      } else {
+        debugPrint('Failed to create share link: ${response.statusCode} - ${response.body}');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Error creating share link: $e');
+      return null;
+    }
+  }
+
+  static Future<Map<String, dynamic>?> getSharedSummary(String shareToken) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/shares/$shareToken'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        debugPrint('Shared summary not found or error: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Error fetching shared summary: $e');
+      return null;
+    }
+  }
+
+  static String buildShareUrl(String shareToken) {
+    if (kIsWeb) {
+      final uri = Uri.base;
+      return '${uri.scheme}://${uri.host}${uri.hasPort ? ':${uri.port}' : ''}${uri.path}?share=$shareToken';
+    }
+    return 'https://vrushti1303.github.io/Final-year-project/?share=$shareToken';
+  }
+
   static Future<String> explainSnippet(String context, String snippet) async {
     final token = await _getToken();
     final response = await http.post(
@@ -418,6 +494,36 @@ class ApiService {
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to rename checklist');
+    }
+  }
+
+  static Future<void> syncChecklistsWithDocument(String documentId) async {
+    try {
+      final token = await _getToken();
+      await http.post(
+        Uri.parse('$baseUrl/checklists/sync/$documentId'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+    } catch (e) {
+      debugPrint('Checklist sync error: $e');
+    }
+  }
+
+  static Future<void> syncAllChecklists() async {
+    try {
+      final token = await _getToken();
+      await http.post(
+        Uri.parse('$baseUrl/checklists/sync'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+    } catch (e) {
+      debugPrint('Checklist sync all error: $e');
     }
   }
 
