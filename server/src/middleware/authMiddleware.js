@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const JWT_SECRET = require('../config/jwt');
 
 function isValidEmail(email) {
   if (!email || typeof email !== 'string') return false;
@@ -26,7 +27,7 @@ function requireAuth(req, res, next) {
 
   const token = authHeader.split(' ')[1];
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_super_secret_jwt_key_here');
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
   } catch (err) {
@@ -39,7 +40,7 @@ function optionalAuth(req, res, next) {
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.split(' ')[1];
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_super_secret_jwt_key_here');
+      const decoded = jwt.verify(token, JWT_SECRET);
       req.user = decoded;
     } catch (err) {
       // invalid token, proceed without req.user
@@ -58,7 +59,7 @@ async function requireAdmin(req, res, next) {
   const token = authHeader.split(' ')[1];
   let decoded;
   try {
-    decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_super_secret_jwt_key_here');
+    decoded = jwt.verify(token, JWT_SECRET);
   } catch (err) {
     return res.status(401).json({ error: 'Invalid or expired token' });
   }

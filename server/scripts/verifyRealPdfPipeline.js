@@ -4,7 +4,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 
 const PDF_PATH = '/Users/vrushti/Downloads/Testing date 2020.pdf';
-const JWT_SECRET = process.env.JWT_SECRET || 'your_super_secret_jwt_key_here';
+const JWT_SECRET = require('../src/config/jwt');
 const BASE_URL = 'http://localhost:3000/api';
 
 async function runRealPdfVerification() {
@@ -109,9 +109,9 @@ async function runRealPdfVerification() {
     // Verification Checks
     const hashIdentical = (run1.fileHash === run2.fileHash && run2.fileHash === run3.fileHash);
     const countIdentical = (run1.totalClauseCount === run2.totalClauseCount && run2.totalClauseCount === run3.totalClauseCount &&
-                            run1.highRiskCount === run2.highRiskCount && run2.highRiskCount === run3.highRiskCount &&
-                            run1.cautionCount === run2.cautionCount && run2.cautionCount === run3.cautionCount &&
-                            run1.compliantCount === run2.compliantCount && run2.compliantCount === run3.compliantCount);
+        run1.highRiskCount === run2.highRiskCount && run2.highRiskCount === run3.highRiskCount &&
+        run1.cautionCount === run2.cautionCount && run2.cautionCount === run3.cautionCount &&
+        run1.compliantCount === run2.compliantCount && run2.compliantCount === run3.compliantCount);
 
     let clausesIdentical = true;
     let riskIdentical = true;
@@ -204,7 +204,7 @@ Gemini called on run 3: ${geminiCalledRun3 ? 'YES' : 'NO'}
     console.log('CANONICAL CLAUSE LIST FOR "Testing date 2020.pdf":');
     console.log('==================================================');
     run1.analysis.forEach((clause, idx) => {
-        console.log(`\n[${clause.clauseId || `CLAUSE-${String(idx+1).padStart(3, '0')}`}] ${clause.title || 'Untitled Clause'}`);
+        console.log(`\n[${clause.clauseId || `CLAUSE-${String(idx + 1).padStart(3, '0')}`}] ${clause.title || 'Untitled Clause'}`);
         console.log(`  Source Pages: ${clause.sourcePages && clause.sourcePages.length ? clause.sourcePages.join(', ') : 'N/A'}`);
         console.log(`  Risk Level: ${clause.riskLevel}`);
         console.log(`  Text: "${(clause.text || '').substring(0, 160)}${clause.text && clause.text.length > 160 ? '...' : ''}"`);
