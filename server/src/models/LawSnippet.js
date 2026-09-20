@@ -46,6 +46,15 @@ const lawSnippetSchema = new mongoose.Schema({
         type: String,
         default: 'Indian Property Laws & Statutory References',
     },
+    // Stable identity for this entry, derived from document+section+subsection+rule+title.
+    // Lets the ingestion script tell "this is the same provision, possibly re-embedded"
+    // apart from "this is a new provision", instead of wiping and reloading everything
+    // on every run.
+    sourceKey: {
+        type: String,
+        default: null,
+        index: true,
+    },
     embedding: {
         type: [Number],
         required: true,

@@ -676,17 +676,15 @@ Your task is Stage B: Audit and classify the exact provided list of canonical co
 
 === MANDATORY LEGAL AUDIT & FACTUAL PRECISION RULES ===
 1. FACTUAL ACCURACY & NO HALLUCINATIONS:
-   - Extract and state ONLY the exact figures, dates, names, and facts present in the clause text.
-   - For consideration and payment: Use ONLY the exact figures from the document text (e.g. Total Consideration: Rs. 29,54,000/-, Advance/Paid: Rs. 2,04,000/-, Balance: Rs. 27,50,000/- within 90 days). NEVER substitute or guess synthetic numbers.
-   - For parties: Vendor Smt. Shantaben Devjibhai Limbani @ Patel, Purchasers Smt. Jyoti Naresh Jain & Shri Naresh Mithalal Jain.
-   - For devolution: Deceased husband Shri Devjibhai Narayan Patel alias Limbani (died 14/11/2007).
-   - For permissions: Dahanu Municipal Council permission under Section 189(4) of Maharashtra Municipal Councils Act, 1965 (Maharashtra Nagarpalika Adhiniyam 1965).
+   - Extract and state ONLY the exact figures, dates, names, and facts present in the clause text you are given below.
+   - For consideration and payment figures, quote the exact amounts as written in the document text (e.g. "Total Consideration: Rs. X", "Advance/Paid: Rs. Y", "Balance: Rs. Z within N days"). NEVER substitute, invent, or guess synthetic numbers — if a figure is not present in the clause text, say so explicitly rather than filling it in.
+   - For parties, dates, permissions, and any other named facts (vendor/purchaser names, dates of death or execution, municipal orders, survey numbers, etc.), use ONLY the names, dates, and references that actually appear in the clause text provided to you for THIS document. Do not carry over facts, names, or figures from any other document, prior conversation, or example — every document you analyze is independent and its facts must come solely from its own clause text.
 
 2. 5 MANDATORY FINDING CATEGORIES:
    Every clause reason MUST identify one of these 5 categories:
    a) "Confirmed statutory violation" — Rare. Only when facts + non-derogable statute definitively establish illegality.
    b) "Potential legal concern" — Terms facing legal unenforceability risks under judicial scrutiny (e.g. 100% forfeiture of purchase consideration under Contract Act Section 74 penalty principles).
-   c) "Contractual risk" — Terms creating commercial or legal vulnerability without per se statutory illegality (e.g. >93% deferred consideration post-registration creating an unpaid vendor statutory charge under Transfer of Property Act Section 55(4)(b)).
+   c) "Contractual risk" — Terms creating commercial or legal vulnerability without per se statutory illegality (e.g. a large deferred-consideration balance post-registration potentially creating an unpaid vendor statutory charge under Transfer of Property Act Section 55(4)(b)).
    d) "Documentation/title concern" — Missing title evidence, intestate heirship gaps, or unregistered consent affidavits under Hindu Succession Act Section 8 / Registration Act Section 17.
    e) "No material issue identified" / "Applicability uncertain" — Standard balanced covenants where no material defect is apparent from available text. Note: "COMPLIANT" means no material issue identified from available text, NOT a guaranteed legal certificate.
 
@@ -700,25 +698,22 @@ Your task is Stage B: Audit and classify the exact provided list of canonical co
    - RECOMMENDATION: (Actionable verification or drafting modification)
 
 4. TRANSACTION CONTEXT & RERA APPLICABILITY GATE:
-   - This transaction is an individual resale/conveyance deed between private citizens, NOT a primary developer-allottee booking agreement.
-   - RERA promoter obligations (e.g. Section 18 delay interest/possession compensation) do NOT apply to private resales. Explicitly state that general property and contract laws govern.
+   - Determine from the clause text itself whether this transaction is an individual resale/conveyance deed between private citizens, or a primary developer-allottee booking agreement — do not assume either.
+   - RERA promoter obligations (e.g. Section 18 delay interest/possession compensation) apply only to developer-allottee primary sales under a registered project, NOT to private resales between individuals. State explicitly which category the document falls into and why, based on its own text (e.g. presence of a promoter/developer party and project registration references vs. an individual vendor/purchaser resale).
 
-5. CLAUSE-SPECIFIC REASONING RULES (Honed Statutory Accuracy):
-   - CLAUSE-001 (Property Description): CAUTION / Documentation/title concern. Note commercial building name ('Vasundhara Shopping Centre') for residential flat; recommend municipal plan and sanctioned layout verification.
-   - CLAUSE-002 (Parties): COMPLIANT / No material issue identified. Parties of majority age with contractual capacity under Contract Act Section 11 and Transfer of Property Act Section 5.
-   - CLAUSE-003 (Payment): CAUTION / Contractual risk. Verified figures: Total ₹29,54,000/-, Paid ₹2,04,000/-, Balance ₹27,50,000/- within 90 days after registration. Deferred consideration is contractually agreed; Section 55(4)(b) of the Transfer of Property Act provides a statutory charge for unpaid purchase money where its conditions apply. Do NOT call deferred payment illegal or claim unconditional encumbrance.
-   - CLAUSE-004 (Succession): CAUTION / Documentation/title concern. The document records the predecessor's death (14/11/2007) and consent information. If the Hindu Succession Act applies, intestate succession is governed by Section 8. The vendor's exclusive title should be verified against complete succession facts and title chain. The document alone may not establish the complete set of surviving Class I heirs or their exact shares. Do NOT conclude that vendor definitely lacks title or that named children are the only possible heirs. Recommend verifying death certificate, heirship records, and prior title chain.
-   - CLAUSE-005 (Forfeiture & Cancellation): HIGH_RISK / Potential legal concern + Contractual risk. 
-     * Section 74: The clause creates a significant contractual and potential legal concern because it permits forfeiture of amounts paid upon default. The treatment and enforceability of such forfeiture depend on the nature of the amount paid, whether it constitutes earnest money or another part of the consideration, the contractual terms, the circumstances of default, and applicable Section 74 penalty/compensation principles. Do NOT claim Section 74 automatically prohibits 100% forfeiture or that a court will definitely invalidate it.
-     * Section 31: If the relevant registered instrument is one that is void or voidable and requires cancellation under Section 31 of the Specific Relief Act, judicial adjudication may be required. The document alone does not establish the precise procedural route applicable to the proposed cancellation. Do NOT state as a universal rule that every cancellation requires a court decree.
-   - CLAUSE-006 (Society NOC): COMPLIANT / No material issue identified. The document records a society NOC and provides for transfer of society-related rights/documents. Section 29 of the Maharashtra Co-operative Societies Act concerns restrictions on transfer or charge of a member's share or interest. The NOC supports the documented society-transfer process, but the document alone does not establish completion of every statutory, bye-law or membership requirement. Do NOT attribute an NOC mandate to Section 29 itself.
-   - CLAUSE-007 (Outgoings): COMPLIANT / No material issue identified. The agreement allocates specified outgoings between the parties aligning with Section 55(1)(g) principles. No material issue is apparent from the allocation text itself, subject to verification of actual dues.
-   - CLAUSE-008 (Title Warranties): COMPLIANT / No material issue identified. The agreement contains contractual representations, warranties and indemnity provisions concerning title and possession under Section 55(2) principles. These provisions provide contractual recourse but do not replace independent title search.
-   - CLAUSE-009 (Municipal Sanction): COMPLIANT / No material issue identified. The document contains historical municipal sanction documentation under Section 189(4) of the Maharashtra Municipal Councils Act, 1965. This establishes the existence of the identified permission (Order No. dnpa/1375/87-88 dated 13/01/1988) but does not by itself establish current occupancy, zoning, or planning compliance.
-   - CLAUSE-010 (Consent Affidavit): CAUTION / Documentation/title concern. The affidavit records the stated consent/family position. If the intention is for that document itself to create, release, assign, limit or extinguish an interest in immovable property, the applicable registration requirements under Section 17 of the Registration Act, 1908 must be examined. The affidavit should not be treated as conclusively transferring or extinguishing proprietary rights merely because it records consent. Recommend verifying the complete title chain and determining whether any heir's proprietary interest requires a registered release/relinquishment/conveyance or participation in the sale instrument.
+5. GENERAL REASONING PRINCIPLES ACROSS COMMON CLAUSE TYPES (apply whichever are relevant to the clauses actually present — do not assume all of these clause types exist in every document):
+   - Property description clauses: if a property's stated use, building name, or description creates any ambiguity relative to its registered/sanctioned classification, flag as a documentation/title concern and recommend verifying the sanctioned layout plan.
+   - Party clauses: assess contractual capacity under Contract Act Section 11 and Transfer of Property Act Section 5 based on what the document actually states about the parties.
+   - Payment/consideration clauses: a deferred-balance structure is not inherently illegal; assess it against Transfer of Property Act Section 55(4)(b)/55(6)(b) statutory charge principles rather than declaring it an "encumbrance" outright.
+   - Succession/heirship clauses: where a title traces through intestate succession, treat Hindu Succession Act Section 8 (and Section 6 for coparcenary/daughters' rights where relevant) as the operative principle, and flag any gap in establishing the complete set of heirs as a documentation/title concern requiring verification — never assert or rule out a specific person's heirship status beyond what the document states.
+   - Forfeiture/cancellation clauses: assess under Contract Act Section 74 penalty-compensation principles (courts award reasonable compensation, not necessarily the full stated forfeiture amount) — do not claim Section 74 automatically prohibits any specific forfeiture percentage, since enforceability is fact-dependent.
+   - Society/NOC and transfer clauses: assess against the Maharashtra Co-operative Societies Act's transfer restrictions where applicable, without asserting the NOC itself is mandated by a specific section unless the document or corpus context establishes that.
+   - Title warranty/indemnity clauses: note that contractual warranties support, but do not replace, an independent title search.
+   - Municipal/statutory permission clauses: note that a historical sanction or permission establishes the existence of that specific approval only, not current occupancy, zoning, or ongoing compliance.
+   - Consent affidavit / heir-consent clauses: assess whether the affidavit itself needs to be a registered instrument under Registration Act Section 17 depending on what interest it purports to create, assign, or extinguish — do not assume consent alone transfers or extinguishes a proprietary interest.
 
 6. STRICT SCHEMA & INTEGRITY:
-   - Retain exact canonical clauseId (CLAUSE-001 to CLAUSE-010).
+   - Retain exact canonical clauseId as provided in the input (do not assume a fixed count or fixed IDs like CLAUSE-001 through CLAUSE-010 — use whatever clauseIds are actually given to you).
    - Never add, delete, split, or merge clauses.
    - Return valid JSON matching schema:
 {
@@ -1454,5 +1449,3 @@ exports.generateTextWithFallback = async (prompt, customConfig = {}) => {
 };
 
 exports.safeParseJson = safeParseJson;
-
-
