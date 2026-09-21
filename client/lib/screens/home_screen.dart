@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
-import '../widgets/user_profile_button.dart';
 import '../services/api_service.dart';
 import 'scan_screen.dart';
 import 'checklists_list_screen.dart';
@@ -13,6 +12,7 @@ import 'analysis_screen.dart';
 import 'recent_documents_screen.dart';
 import 'home/home_widgets.dart';
 import 'home/home_sidebar.dart';
+import 'home/home_header.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -133,18 +133,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
     });
   }
 
-  String _getGreeting() {
-    final hour = DateTime.now().hour;
-    final loc = ref.read(localeProvider.notifier);
-    if (hour < 12) {
-      return loc.translate('home.goodMorning');
-    } else if (hour < 17) {
-      return loc.translate('home.goodAfternoon');
-    } else {
-      return loc.translate('home.goodEvening');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
@@ -180,7 +168,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                 child: Column(
                     children: [
                           // Top Navigation Bar (Mobile / Drawer only)
-                          if (!isDesktop) _buildTopNav(context, isDark, isDesktop),
+                          if (!isDesktop) TopNavBar(isDark: isDark, scaffoldKey: _scaffoldKey),
 
                           // Scrollable Workspace Content
                           Expanded(
@@ -201,7 +189,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                                         crossAxisAlignment: CrossAxisAlignment.stretch,
                                         children: [
                                           // A. Workspace Greeting & Hero
-                                          _buildHeaderGreeting(context, isDark, isDesktop, greetingName),
+                                          HeaderGreeting(isDark: isDark, isDesktop: isDesktop, userName: greetingName),
                                           const SizedBox(height: 24),
 
                                           // B. High-Level Real-Data Summary Metrics Row
@@ -280,209 +268,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
               ],
             ),
           );
-  }
-
-  // ==========================================
-  // TOP NAVIGATION BAR
-  // ==========================================
-  Widget _buildTopNav(BuildContext context, bool isDark, bool isDesktop) {
-    final authState = ref.watch(authProvider);
-    final user = authState.user;
-    final String userName = (user?.fullName != null && user!.fullName.trim().isNotEmpty)
-        ? user.fullName.trim()
-        : 'User';
-    final String initial = userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.menu_rounded,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                ),
-                onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-                tooltip: 'Menu',
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'LawBuddy',
-                style: GoogleFonts.inter(
-                  fontSize: 16.5,
-                  fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                  letterSpacing: -0.3,
-                ),
-              ),
-            ],
-          ),
-          InkWell(
-            onTap: () => showProfileDialog(context, ref),
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                  width: 1.5,
-                ),
-              ),
-              child: CircleAvatar(
-                radius: 14,
-                backgroundColor: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.15),
-                child: Text(
-                  initial,
-                  style: TextStyle(
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 11,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ==========================================
-  // A. WORKSPACE GREETING & HERO
-  // ==========================================
-  Widget _buildHeaderGreeting(BuildContext context, bool isDark, bool isDesktop, String userName) {
-    ref.watch(localeProvider);
-    final loc = ref.read(localeProvider.notifier);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: isDesktop ? 28.0 : 18.0,
-        vertical: isDesktop ? 22.0 : 18.0,
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final showIllustration = constraints.maxWidth >= 720;
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Eyebrow Tag
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3.5),
-                      decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.2 : 0.08),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.35 : 0.2),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 5.5,
-                            height: 5.5,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Flexible(
-                            child: Text(
-                              loc.translate('home.heroTag'),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.inter(
-                                fontSize: 9.5,
-                                fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
-                                letterSpacing: 0.8,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Greeting Headline
-                    Text(
-                      loc.translate('home.greeting', {'greeting': _getGreeting(), 'name': userName}),
-                      style: GoogleFonts.inter(
-                        fontSize: isDesktop ? 24 : 19,
-                        fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        letterSpacing: -0.4,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-
-                    // Workspace Subtitle
-                    Text(
-                      loc.translate('home.heroSub'),
-                      style: GoogleFonts.inter(
-                        fontSize: isDesktop ? 13 : 12,
-                        height: 1.4,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              if (showIllustration) ...[
-                const SizedBox(width: 24),
-                SizedBox(
-                  width: 190,
-                  height: 80,
-                  child: CustomPaint(
-                    painter: LegalPropertyIllustrationPainter(
-                      accentBlue: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                      accentGold: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                      isDark: isDark,
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          );
-        },
-      ),
-    );
   }
 
   // ==========================================
