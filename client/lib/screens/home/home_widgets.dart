@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 
 // ==========================================
@@ -436,5 +439,79 @@ class LegalPropertyIllustrationPainter extends CustomPainter {
     return oldDelegate.accentBlue != accentBlue ||
         oldDelegate.accentGold != accentGold ||
         oldDelegate.isDark != isDark;
+  }
+}
+
+// ==========================================
+// RERA DETAILS DIALOG
+// Shared between the sidebar's "RERA Compliance" item and the dashboard's
+// RERA awareness card, both of which need to show a legal advisory dialog
+// or open a related news link.
+// ==========================================
+Future<void> handleReraDetails(
+  BuildContext context,
+  WidgetRef ref,
+  String alertLink,
+  String alertTitle,
+  String alertDesc,
+) async {
+  if (alertLink.isNotEmpty) {
+    final Uri url = Uri.parse(alertLink);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+      return;
+    }
+  }
+  if (context.mounted) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        final loc = ref.read(localeProvider.notifier);
+        return AlertDialog(
+          backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+            side: BorderSide(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            ),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.shield_outlined, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  loc.translate('home.reraAdvisoryDetails'),
+                  style: GoogleFonts.inter(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            '$alertTitle\n\n$alertDesc\n\n${loc.translate('home.reraStatutoryNote')}',
+            style: GoogleFonts.inter(
+              fontSize: 13.5,
+              height: 1.5,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                foregroundColor: Colors.white,
+              ),
+              child: Text(loc.translate('common.understood')),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
