@@ -50,10 +50,11 @@ class _SharedSummaryScreenState extends ConsumerState<SharedSummaryScreen> {
         });
       }
     } catch (e) {
+      debugPrint('Error fetching shared summary: $e');
       if (!mounted) return;
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Failed to load risk summary: $e';
+        _errorMessage = 'Unable to load risk summary. Please check your internet connection and try again.';
       });
     }
   }

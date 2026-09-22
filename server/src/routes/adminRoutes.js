@@ -192,7 +192,7 @@ router.get('/analytics', requireAdmin, async (req, res) => {
         });
     } catch (error) {
         console.error('Error computing admin analytics:', error);
-        res.status(500).json({ error: 'Failed to compute admin analytics', details: error.message });
+        res.status(500).json({ error: 'Failed to compute admin analytics.' });
     }
 });
 

@@ -1,32 +1,42 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+const fs = require('fs');
 const llmService = require('../services/llmService');
 const scanJobService = require('../services/scanJobService');
 const Document = require('../models/Document');
 const ScanJob = require('../models/ScanJob');
 const crossReferenceService = require('../services/crossReferenceService');
 const { requireAuth } = require('../middleware/authMiddleware');
+const { uploadDocument } = require('../middleware/uploadMiddleware');
 
 // =========================================================================
 // RESUMABLE SCAN JOB ENDPOINTS
 // =========================================================================
 
 // POST /api/scans/start - Initializes a persistent scan job
-router.post('/scans/start', requireAuth, async (req, res) => {
+router.post('/scans/start', requireAuth, uploadDocument, async (req, res) => {
     try {
-        const { text, title: customTitle, sourceType, base64Data, mimeType } = req.body;
-        if (!text && !base64Data) {
-            return res.status(400).json({ error: 'Document text or base64Data is required' });
+        const file = req.file;
+        const { text, title: customTitle, sourceType, base64Data, mimeType } = req.body || {};
+        
+        if (!text && !file && !base64Data) {
+            return res.status(400).json({ error: 'Document file or text description is required.' });
         }
         const userId = req.user.userId;
+
+        const computedMimeType = file ? file.mimetype : (mimeType || 'application/pdf');
+        const defaultSourceType = file ? ((computedMimeType.includes('pdf')) ? 'PDF Document' : 'Photo Scan') : (base64Data ? 'PDF Document' : 'Text Description');
 
         const job = await scanJobService.createScanJob({
             userId,
             text,
+            fileBuffer: file ? file.buffer : null,
+            fileName: file ? file.originalname : (customTitle || ''),
             base64Data,
-            mimeType: mimeType || 'application/pdf',
-            title: customTitle,
-            sourceType: sourceType || (base64Data ? 'PDF Document' : 'Text Description')
+            mimeType: computedMimeType,
+            title: customTitle || (file ? file.originalname : ''),
+            sourceType: sourceType || defaultSourceType
         });
 
         // Trigger background processing if not already completed from cache
@@ -45,7 +55,7 @@ router.post('/scans/start', requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error('Error starting scan job:', error);
-        res.status(500).json({ error: 'Failed to start scan job', details: error.message });
+        res.status(500).json({ error: 'Failed to start scan job. Please try again.' });
     }
 });
 
@@ -77,7 +87,7 @@ router.get('/scans/active', requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching active scan job:', error);
-        res.status(500).json({ error: 'Failed to fetch active scan job', details: error.message });
+        res.status(500).json({ error: 'Failed to fetch active scan job.' });
     }
 });
 
@@ -113,7 +123,7 @@ router.get('/scans/:jobId', requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching scan job status:', error);
-        res.status(500).json({ error: 'Failed to fetch scan job status', details: error.message });
+        res.status(500).json({ error: 'Failed to fetch scan job status.' });
     }
 });
 
@@ -136,24 +146,31 @@ router.post('/scans/:jobId/retry', requireAuth, async (req, res) => {
             });
         }
 
-        const completedJob = await scanJobService.retryJob(job.jobId, true);
-        const document = completedJob.documentId ? await Document.findById(completedJob.documentId) : null;
+        job.manualRetriesCount = (job.manualRetriesCount || 0) + 1;
+        job.lastRetryAt = new Date();
+        job.status = 'RETRYING';
+        job.currentStep = 'Resuming scan...';
+        await job.save();
+
+        // Launch pipeline in background so HTTP response returns immediately and client polling can track progress
+        scanJobService.executeJobPipeline(job.jobId).catch(err => {
+            console.warn(`[Background Retry Job ${job.jobId}] Pipeline error:`, err.message);
+        });
 
         res.json({
-            jobId: completedJob.jobId,
-            status: completedJob.status,
-            currentStep: completedJob.currentStep,
-            completedSteps: completedJob.completedSteps,
-            documentId: completedJob.documentId,
-            document: document,
-            errorInfo: completedJob.errorInfo
+            jobId: job.jobId,
+            status: job.status,
+            currentStep: job.currentStep,
+            completedSteps: job.completedSteps,
+            documentId: job.documentId,
+            errorInfo: job.errorInfo
         });
     } catch (error) {
         console.error('Error retrying scan job:', error);
         if (error.status === 429) {
             return res.status(429).json({ error: 'Rate limit reached. Please wait a moment before retrying.' });
         }
-        res.status(500).json({ error: 'Failed to retry scan job', details: error.message });
+        res.status(500).json({ error: 'Failed to retry scan job. Please try again.' });
     }
 });
 
@@ -162,22 +179,29 @@ router.post('/scans/:jobId/retry', requireAuth, async (req, res) => {
 // =========================================================================
 
 // POST /api/scan
-router.post('/scan', requireAuth, async (req, res) => {
+router.post('/scan', requireAuth, uploadDocument, async (req, res) => {
     try {
-        const { text, title: customTitle, sourceType = 'Text Description', base64Data = null, mimeType = 'text/plain' } = req.body;
-        if (!text && !base64Data) {
-            return res.status(400).json({ error: 'Document text or base64Data is required' });
+        const file = req.file;
+        const { text, title: customTitle, sourceType, base64Data = null, mimeType } = req.body || {};
+        
+        if (!text && !file && !base64Data) {
+            return res.status(400).json({ error: 'Document file or text description is required.' });
         }
         const userId = req.user.userId;
+
+        const computedMimeType = file ? file.mimetype : (mimeType || (base64Data ? 'application/pdf' : 'text/plain'));
+        const defaultSourceType = file ? (computedMimeType.includes('pdf') ? 'PDF Document' : 'Photo Scan') : (base64Data ? 'PDF Document' : 'Text Description');
 
         // Create persistent job
         const job = await scanJobService.createScanJob({
             userId,
             text,
+            fileBuffer: file ? file.buffer : null,
+            fileName: file ? file.originalname : (customTitle || ''),
             base64Data,
-            mimeType,
-            title: customTitle,
-            sourceType
+            mimeType: computedMimeType,
+            title: customTitle || (file ? file.originalname : ''),
+            sourceType: sourceType || defaultSourceType
         });
 
         // Execute pipeline synchronously
@@ -207,22 +231,25 @@ router.post('/scan', requireAuth, async (req, res) => {
         if (error.status === 429) {
             return res.status(429).json({ error: 'Rate limit reached. Please wait a moment before trying again.' });
         }
-        res.status(500).json({ error: 'Failed to analyze document', details: error.message });
+        res.status(500).json({ error: 'Failed to analyze document. Please try again.' });
     }
 });
 
 // POST /api/scan-file
-router.post('/scan-file', requireAuth, async (req, res) => {
+router.post('/scan-file', requireAuth, uploadDocument, async (req, res) => {
     try {
-        const { base64Data, mimeType, title: customTitle, sourceType: reqSourceType } = req.body;
-        if (!base64Data) {
-            return res.status(400).json({ error: 'base64Data is required' });
+        const file = req.file;
+        const { base64Data, mimeType, title: customTitle, sourceType: reqSourceType } = req.body || {};
+        
+        if (!file && !base64Data) {
+            return res.status(400).json({ error: 'Document file is required.' });
         }
         const userId = req.user.userId;
 
+        const computedMimeType = file ? file.mimetype : (mimeType || 'application/pdf');
         let computedSourceType = reqSourceType;
         if (!computedSourceType) {
-            if ((mimeType || '').toLowerCase().includes('pdf')) {
+            if ((computedMimeType || '').toLowerCase().includes('pdf')) {
                 computedSourceType = 'PDF Document';
             } else {
                 computedSourceType = 'Photo Scan';
@@ -231,9 +258,11 @@ router.post('/scan-file', requireAuth, async (req, res) => {
 
         const job = await scanJobService.createScanJob({
             userId,
+            fileBuffer: file ? file.buffer : null,
+            fileName: file ? file.originalname : (customTitle || ''),
             base64Data,
-            mimeType: mimeType || (computedSourceType === 'PDF Document' ? 'application/pdf' : 'image/jpeg'),
-            title: customTitle,
+            mimeType: computedMimeType,
+            title: customTitle || (file ? file.originalname : ''),
             sourceType: computedSourceType
         });
 
@@ -263,7 +292,7 @@ router.post('/scan-file', requireAuth, async (req, res) => {
         if (error.status === 429) {
             return res.status(429).json({ error: 'Rate limit reached. Please wait a moment before trying again.' });
         }
-        res.status(500).json({ error: 'Failed to analyze file', details: error.message });
+        res.status(500).json({ error: 'Failed to analyze file. Please try again.' });
     }
 });
 
@@ -275,7 +304,7 @@ router.get('/documents', requireAuth, async (req, res) => {
         res.json(docs);
     } catch (error) {
         console.error('Error fetching documents:', error);
-        res.status(500).json({ error: 'Failed to fetch documents', details: error.message });
+        res.status(500).json({ error: 'Failed to fetch documents. Please try again.' });
     }
 });
 
@@ -290,7 +319,45 @@ router.get('/documents/:id', requireAuth, async (req, res) => {
         res.json(doc);
     } catch (error) {
         console.error('Error fetching document:', error);
-        res.status(500).json({ error: 'Failed to fetch document', details: error.message });
+        res.status(500).json({ error: 'Failed to fetch document. Please try again.' });
+    }
+});
+
+// GET /api/documents/:id/file (Stream document file binary from disk storage or base64)
+router.get('/documents/:id/file', requireAuth, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const doc = await Document.findOne({ _id: req.params.id, userId });
+        if (!doc) {
+            return res.status(404).json({ error: 'Document not found' });
+        }
+
+        // Check disk storage first
+        if (doc.fileHash) {
+            const diskBuffer = scanJobService.readFileFromStorage(path.join('uploads/scan_files', `${doc.fileHash}.dat`));
+            if (diskBuffer && diskBuffer.length > 0) {
+                res.setHeader('Content-Type', doc.mimeType || 'application/pdf');
+                res.setHeader('Content-Length', diskBuffer.length);
+                res.setHeader('Content-Disposition', `inline; filename="${encodeURIComponent(doc.fileName || doc.title || 'document.pdf')}"`);
+                return res.send(diskBuffer);
+            }
+        }
+
+        // Fallback to in-memory/in-database base64 if present
+        if (doc.fileData) {
+            let clean = doc.fileData.trim();
+            if (clean.includes(',')) clean = clean.split(',').pop().trim();
+            clean = clean.replace(/\s+/g, '');
+            const buf = Buffer.from(clean, 'base64');
+            res.setHeader('Content-Type', doc.mimeType || 'application/pdf');
+            res.setHeader('Content-Length', buf.length);
+            return res.send(buf);
+        }
+
+        return res.status(404).json({ error: 'Document file binary not found' });
+    } catch (error) {
+        console.error('Error fetching document file:', error);
+        res.status(500).json({ error: 'Failed to fetch document file' });
     }
 });
 
@@ -313,7 +380,7 @@ router.patch('/documents/:id', requireAuth, async (req, res) => {
         res.json({ message: 'Document renamed successfully', document: doc });
     } catch (error) {
         console.error('Error renaming document:', error);
-        res.status(500).json({ error: 'Failed to rename document', details: error.message });
+        res.status(500).json({ error: 'Failed to rename document. Please try again.' });
     }
 });
 
@@ -336,7 +403,7 @@ router.delete('/documents/:id', requireAuth, async (req, res) => {
         res.json({ message: 'Document deleted successfully', id: req.params.id });
     } catch (error) {
         console.error('Error deleting document:', error);
-        res.status(500).json({ error: 'Failed to delete document', details: error.message });
+        res.status(500).json({ error: 'Failed to delete document. Please try again.' });
     }
 });
 
@@ -354,7 +421,7 @@ router.post('/explain', requireAuth, async (req, res) => {
         if (error.status === 429) {
             return res.status(429).json({ error: 'Rate limit reached. Please wait a moment before trying again.' });
         }
-        res.status(500).json({ error: 'Failed to explain snippet', details: error.message });
+        res.status(500).json({ error: 'Failed to explain snippet. Please try again.' });
     }
 });
 

@@ -69,9 +69,10 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         });
       }
     } catch (e) {
+      debugPrint('Error fetching checklists: $e');
       if (mounted) {
         setState(() {
-          _error = e.toString();
+          _error = 'Unable to load checklists. Please check your connection and try again.';
           _isLoading = false;
         });
       }
@@ -167,10 +168,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         );
       }
     } catch (e) {
+      debugPrint('Error deleting checklist: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to delete checklist: $e'),
+            content: const Text('Unable to delete checklist. Please try again.'),
             backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
             behavior: SnackBarBehavior.floating,
           ),
@@ -282,11 +284,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                               );
                             }
                           } catch (e) {
+                            debugPrint('Error renaming checklist: $e');
                             setDialogState(() => isSaving = false);
                             if (dialogCtx.mounted) {
                               ScaffoldMessenger.of(dialogCtx).showSnackBar(
                                 SnackBar(
-                                  content: Text('Failed: $e'),
+                                  content: const Text('Unable to rename checklist. Please try again.'),
                                   backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
                                   behavior: SnackBarBehavior.floating,
                                 ),
@@ -467,11 +470,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                               ));
                             }
                           } catch (e) {
+                            debugPrint('Error generating checklist: $e');
                             setDialogState(() => isSubmitting = false);
                             if (dialogCtx.mounted) {
                               ScaffoldMessenger.of(dialogCtx).showSnackBar(
                                 SnackBar(
-                                  content: Text('Failed: $e'),
+                                  content: const Text('Unable to generate checklist. Please try again.'),
                                   backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
                                   behavior: SnackBarBehavior.floating,
                                 ),

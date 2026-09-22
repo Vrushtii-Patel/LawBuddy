@@ -95,7 +95,7 @@ const scanJobSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now, index: true },
     updatedAt: { type: Date, default: Date.now, index: true },
     completedAt: { type: Date, default: null }
-});
+}, { versionKey: false });
 
 // Auto-update updatedAt on save
 scanJobSchema.pre('save', function() {

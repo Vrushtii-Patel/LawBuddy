@@ -43,7 +43,7 @@ router.post('/stamp-duty', requireAuth, async (req, res) => {
         res.status(201).json({ message: 'Calculation saved to database', calculation: savedRecord });
     } catch (error) {
         console.error('Error saving stamp duty calculation:', error);
-        res.status(500).json({ error: 'Failed to save calculation', details: error.message });
+        res.status(500).json({ error: 'Failed to save calculation. Please try again.' });
     }
 });
 
@@ -55,7 +55,7 @@ router.get('/stamp-duty', requireAuth, async (req, res) => {
         res.json(history);
     } catch (error) {
         console.error('Error fetching stamp duty history:', error);
-        res.status(500).json({ error: 'Failed to fetch stamp duty history', details: error.message });
+        res.status(500).json({ error: 'Failed to fetch stamp duty history.' });
     }
 });
 

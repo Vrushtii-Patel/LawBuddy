@@ -55,7 +55,7 @@ Future<void> saveAndLaunchPdf(List<int> bytes, String fileName) async {
       // Both the primary and fallback save attempts failed — throw so the
       // caller's error handling (snackbar, etc.) actually fires instead of
       // silently reporting success.
-      throw Exception('Could not save PDF: $e');
+      throw Exception('Could not save PDF report to device storage.');
     }
   }
 }

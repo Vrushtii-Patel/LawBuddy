@@ -75,7 +75,7 @@ router.post('/chat', requireAuth, async (req, res) => {
         if (error.status === 429) {
             return res.status(429).json({ error: 'Rate limit reached. Please wait a moment before sending another message.' });
         }
-        res.status(500).json({ error: 'Failed to process chat', details: error.message });
+        res.status(500).json({ error: 'Failed to process chat. Please try again.' });
     }
 });
 

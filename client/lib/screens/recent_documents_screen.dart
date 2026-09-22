@@ -66,7 +66,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
           // if we already have docs on screen, a background refresh failure
           // shouldn't replace them with an error card.
           if (_allDocs.isEmpty) {
-            _docsError = e.toString();
+            _docsError = 'Unable to load recent documents. Please check your connection and try again.';
           }
         });
       }
@@ -148,6 +148,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
           sourceType: sourceType,
           fileData: fileData,
           mimeType: mimeType,
+          documentId: docId?.toString(),
           heroTag: docId != null ? 'doc-icon-$docId' : null,
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -223,7 +224,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to download PDF report: $e'),
+            content: const Text('Failed to download PDF report. Please try again.'),
             backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
             behavior: SnackBarBehavior.floating,
           ),
@@ -477,7 +478,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${tr('recentDocs.reanalyzeFailed')}: $e'),
+            content: Text('${tr('recentDocs.reanalyzeFailed')}. Please try again.'),
             backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
             behavior: SnackBarBehavior.floating,
           ),

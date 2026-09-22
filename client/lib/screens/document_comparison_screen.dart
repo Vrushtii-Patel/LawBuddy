@@ -188,10 +188,11 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
         _startPolling(comparisonId);
       }
     } catch (e) {
+      debugPrint('Error starting document comparison: $e');
       if (mounted) {
         setState(() {
           _isComparing = false;
-          _errorMessage = e.toString();
+          _errorMessage = 'Unable to start document comparison. Please check your connection and try again.';
         });
       }
     }

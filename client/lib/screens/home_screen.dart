@@ -668,6 +668,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
                             sourceType: latestDoc.sourceType,
                             fileData: latestDoc.fileData,
                             mimeType: latestDoc.mimeType,
+                            documentId: latestDoc.id,
                           ),
                         );
                       } else {

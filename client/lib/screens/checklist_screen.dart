@@ -43,9 +43,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
         });
       }
     } catch (e) {
+      debugPrint('Error fetching checklist details: $e');
       if (mounted) {
         setState(() {
-          _error = e.toString();
+          _error = 'Unable to load checklist details. Please check your connection and try again.';
           _isLoading = false;
         });
       }
@@ -75,6 +76,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
     try {
       await ApiService.updateChecklistItem(widget.type, itemId, isCompleted);
     } catch (e) {
+      debugPrint('Error updating checklist item: $e');
       // Revert on failure
       if (mounted) {
         setState(() {
@@ -88,7 +90,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to update: $e'),
+            content: const Text('Unable to update task. Please try again.'),
             backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
             behavior: SnackBarBehavior.floating,
           ),
@@ -150,10 +152,11 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
           ),
         );
       } catch (e) {
+        debugPrint('Error deleting checklist item: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(tr('checklists.failedToDelete', {'error': e.toString()})),
+              content: const Text('Unable to delete task. Please try again.'),
               backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
               behavior: SnackBarBehavior.floating,
             ),
@@ -281,13 +284,14 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                               );
                             }
                           } catch (e) {
+                            debugPrint('Error adding checklist item: $e');
                             if (dialogCtx.mounted) {
                               setDialogState(() => isSubmitting = false);
                             }
                             if (mounted) {
                               messenger.showSnackBar(
                                 SnackBar(
-                                  content: Text(tr('checklists.failedToAdd', {'error': e.toString()})),
+                                  content: const Text('Unable to add task. Please try again.'),
                                   backgroundColor: isDarkOuter ? AppColors.darkError : AppColors.lightError,
                                   behavior: SnackBarBehavior.floating,
                                 ),
@@ -367,10 +371,11 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                       );
                     }
                   } catch (e) {
+                    debugPrint('Error renaming checklist: $e');
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(tr('checklists.renameFailed', {'error': e.toString()})),
+                          content: const Text('Unable to rename checklist. Please try again.'),
                           backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
                           behavior: SnackBarBehavior.floating,
                         ),
@@ -434,10 +439,11 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
           Navigator.pop(context, true); // Pop back to list screen
         }
       } catch (e) {
+        debugPrint('Error deleting checklist: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(tr('checklists.failedToDelete', {'error': e.toString()})),
+              content: const Text('Unable to delete checklist. Please try again.'),
               backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
               behavior: SnackBarBehavior.floating,
             ),

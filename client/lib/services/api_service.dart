@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/analytics_model.dart';
 
@@ -21,57 +22,125 @@ class ApiService {
     return 'http://localhost:3000/api';
   }
 
+  static MediaType _getMediaType(String mimeType) {
+    try {
+      final parts = mimeType.split('/');
+      if (parts.length == 2) {
+        return MediaType(parts[0], parts[1]);
+      }
+    } catch (_) {}
+    return MediaType('application', 'pdf');
+  }
 
-  static Future<Map<String, dynamic>> scanDocument(String text, {String? title, String? sourceType, String? base64Data, String? mimeType}) async {
+  static Future<Map<String, dynamic>> scanDocument(
+    String text, {
+    String? title,
+    String? sourceType,
+    Uint8List? fileBytes,
+    String? fileName,
+    String? mimeType,
+    String? base64Data,
+  }) async {
     final token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/scan'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'text': text,
-        if (title != null && title.isNotEmpty) 'title': title,
-        if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
-        if (base64Data != null && base64Data.isNotEmpty) 'base64Data': base64Data,
-        if (mimeType != null && mimeType.isNotEmpty) 'mimeType': mimeType,
-      }),
-    );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else if (response.statusCode == 429) {
-      throw RateLimitException('Rate limit reached. Please try again later.');
+
+    if (fileBytes != null && fileBytes.isNotEmpty) {
+      final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/scan'));
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+      final cleanMime = mimeType ?? 'application/pdf';
+      final effectiveFileName = (fileName != null && fileName.isNotEmpty) ? fileName : (title ?? 'document.pdf');
+      request.files.add(http.MultipartFile.fromBytes(
+        'document',
+        fileBytes,
+        filename: effectiveFileName,
+        contentType: _getMediaType(cleanMime),
+      ));
+      if (title != null && title.isNotEmpty) request.fields['title'] = title;
+      if (sourceType != null && sourceType.isNotEmpty) request.fields['sourceType'] = sourceType;
+      if (text.isNotEmpty) request.fields['text'] = text;
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else if (response.statusCode == 413) {
+        throw Exception('This document is too large. Please upload a smaller file.');
+      } else if (response.statusCode == 429) {
+        throw RateLimitException('Rate limit reached. Please try again later.');
+      } else {
+        String errorMessage = 'Failed to analyze document';
+        try {
+          final body = jsonDecode(response.body);
+          if (body is Map && (body['error'] != null || body['details'] != null)) {
+            errorMessage = body['error'] ?? body['details'];
+          }
+        } catch (_) {}
+        throw Exception(errorMessage);
+      }
     } else {
-      String errorMessage = 'Failed to analyze document';
-      try {
-        final body = jsonDecode(response.body);
-        if (body is Map && (body['error'] != null || body['details'] != null)) {
-          errorMessage = body['error'] ?? body['details'];
-        }
-      } catch (_) {}
-      throw Exception(errorMessage);
+      final response = await http.post(
+        Uri.parse('$baseUrl/scan'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'text': text,
+          if (title != null && title.isNotEmpty) 'title': title,
+          if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
+          if (base64Data != null && base64Data.isNotEmpty) 'base64Data': base64Data,
+          if (mimeType != null && mimeType.isNotEmpty) 'mimeType': mimeType,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else if (response.statusCode == 429) {
+        throw RateLimitException('Rate limit reached. Please try again later.');
+      } else {
+        String errorMessage = 'Failed to analyze document';
+        try {
+          final body = jsonDecode(response.body);
+          if (body is Map && (body['error'] != null || body['details'] != null)) {
+            errorMessage = body['error'] ?? body['details'];
+          }
+        } catch (_) {}
+        throw Exception(errorMessage);
+      }
     }
   }
 
-  static Future<Map<String, dynamic>> scanDocumentFile(Uint8List bytes, String mimeType, {String? title, String? sourceType}) async {
+  static Future<Map<String, dynamic>> scanDocumentFile(
+    Uint8List bytes,
+    String mimeType, {
+    String? title,
+    String? sourceType,
+    String? fileName,
+  }) async {
     final token = await _getToken();
-    final String base64Data = base64Encode(bytes);
-    final response = await http.post(
-      Uri.parse('$baseUrl/scan-file'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'base64Data': base64Data,
-        'mimeType': mimeType,
-        if (title != null && title.isNotEmpty) 'title': title,
-        if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
-      }),
-    );
+    final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/scan-file'));
+    if (token != null) {
+      request.headers['Authorization'] = 'Bearer $token';
+    }
+    final effectiveFileName = (fileName != null && fileName.isNotEmpty) ? fileName : (title ?? 'document.pdf');
+    request.files.add(http.MultipartFile.fromBytes(
+      'document',
+      bytes,
+      filename: effectiveFileName,
+      contentType: _getMediaType(mimeType),
+    ));
+    if (title != null && title.isNotEmpty) request.fields['title'] = title;
+    if (sourceType != null && sourceType.isNotEmpty) request.fields['sourceType'] = sourceType;
+    request.fields['mimeType'] = mimeType;
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
+    } else if (response.statusCode == 413) {
+      throw Exception('This document is too large. Please upload a smaller file.');
     } else if (response.statusCode == 429) {
       throw RateLimitException('Rate limit reached. Please try again later.');
     } else {
@@ -92,38 +161,85 @@ class ApiService {
 
   static Future<Map<String, dynamic>> startScanJob({
     String? text,
-    String? base64Data,
+    Uint8List? fileBytes,
+    String? fileName,
     String? mimeType,
     String? title,
     String? sourceType,
+    String? base64Data,
   }) async {
     final token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/scans/start'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        if (text != null && text.isNotEmpty) 'text': text,
-        if (base64Data != null && base64Data.isNotEmpty) 'base64Data': base64Data,
-        if (mimeType != null && mimeType.isNotEmpty) 'mimeType': mimeType,
-        if (title != null && title.isNotEmpty) 'title': title,
-        if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
-      }),
-    );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return jsonDecode(response.body);
+    if (fileBytes != null && fileBytes.isNotEmpty) {
+      final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/scans/start'));
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+      final cleanMime = mimeType ?? 'application/pdf';
+      final effectiveFileName = (fileName != null && fileName.isNotEmpty) ? fileName : (title ?? 'document.pdf');
+      request.files.add(http.MultipartFile.fromBytes(
+        'document',
+        fileBytes,
+        filename: effectiveFileName,
+        contentType: _getMediaType(cleanMime),
+      ));
+      if (title != null && title.isNotEmpty) request.fields['title'] = title;
+      if (sourceType != null && sourceType.isNotEmpty) request.fields['sourceType'] = sourceType;
+      if (text != null && text.isNotEmpty) request.fields['text'] = text;
+      if (mimeType != null && mimeType.isNotEmpty) request.fields['mimeType'] = mimeType;
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else if (response.statusCode == 413) {
+        throw Exception('This document is too large. Please upload a smaller file.');
+      } else if (response.statusCode == 400) {
+        String errorMessage = 'This file type is not supported. Please upload a PDF or supported image.';
+        try {
+          final body = jsonDecode(response.body);
+          if (body is Map && body['error'] != null) errorMessage = body['error'];
+        } catch (_) {}
+        throw Exception(errorMessage);
+      } else {
+        String errorMessage = 'Failed to start scan job';
+        try {
+          final body = jsonDecode(response.body);
+          if (body is Map && (body['error'] != null || body['details'] != null)) {
+            errorMessage = body['error'] ?? body['details'];
+          }
+        } catch (_) {}
+        throw Exception(errorMessage);
+      }
     } else {
-      String errorMessage = 'Failed to start scan job';
-      try {
-        final body = jsonDecode(response.body);
-        if (body is Map && (body['error'] != null || body['details'] != null)) {
-          errorMessage = body['error'] ?? body['details'];
-        }
-      } catch (_) {}
-      throw Exception(errorMessage);
+      final response = await http.post(
+        Uri.parse('$baseUrl/scans/start'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          if (text != null && text.isNotEmpty) 'text': text,
+          if (base64Data != null && base64Data.isNotEmpty) 'base64Data': base64Data,
+          if (mimeType != null && mimeType.isNotEmpty) 'mimeType': mimeType,
+          if (title != null && title.isNotEmpty) 'title': title,
+          if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        String errorMessage = 'Failed to start scan job';
+        try {
+          final body = jsonDecode(response.body);
+          if (body is Map && (body['error'] != null || body['details'] != null)) {
+            errorMessage = body['error'] ?? body['details'];
+          }
+        } catch (_) {}
+        throw Exception(errorMessage);
+      }
     }
   }
 
@@ -218,6 +334,25 @@ class ApiService {
     } catch (e) {
       debugPrint('Error fetching documents: $e');
       return [];
+    }
+  }
+
+  static Future<Uint8List?> fetchDocumentFile(String documentId) async {
+    try {
+      final token = await _getToken();
+      final response = await http.get(
+        Uri.parse('$baseUrl/documents/$documentId/file'),
+        headers: {
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
+        return response.bodyBytes;
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error fetching document file: $e');
+      return null;
     }
   }
 

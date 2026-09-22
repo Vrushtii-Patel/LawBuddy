@@ -30,7 +30,7 @@ router.get('/checklists', requireAuth, async (req, res) => {
         res.json(checklists);
     } catch (error) {
         console.error('Error fetching checklists:', error);
-        res.status(500).json({ error: 'Failed to fetch checklists', details: error.message });
+        res.status(500).json({ error: 'Failed to fetch checklists. Please try again.' });
     }
 });
 
@@ -47,7 +47,7 @@ router.get('/checklists/:type', requireAuth, async (req, res) => {
         res.json(checklist);
     } catch (error) {
         console.error('Error fetching checklist:', error);
-        res.status(500).json({ error: 'Failed to fetch checklist', details: error.message });
+        res.status(500).json({ error: 'Failed to fetch checklist.' });
     }
 });
 
@@ -81,7 +81,7 @@ router.put('/checklists/:type/items/:itemId', requireAuth, async (req, res) => {
         res.json({ message: 'Checklist updated successfully', checklist });
     } catch (error) {
         console.error('Error updating checklist item:', error);
-        res.status(500).json({ error: 'Failed to update checklist item', details: error.message });
+        res.status(500).json({ error: 'Failed to update checklist item. Please try again.' });
     }
 });
 
@@ -116,7 +116,7 @@ router.post('/checklists/:type/items', requireAuth, async (req, res) => {
         res.json({ message: 'Item added successfully', checklist, item: newItem });
     } catch (error) {
         console.error('Error adding checklist item:', error);
-        res.status(500).json({ error: 'Failed to add checklist item', details: error.message });
+        res.status(500).json({ error: 'Failed to add checklist item. Please try again.' });
     }
 });
 
@@ -145,7 +145,7 @@ router.delete('/checklists/:type/items/:itemId', requireAuth, async (req, res) =
         res.json({ message: 'Item deleted successfully', checklist });
     } catch (error) {
         console.error('Error deleting checklist item:', error);
-        res.status(500).json({ error: 'Failed to delete checklist item', details: error.message });
+        res.status(500).json({ error: 'Failed to delete checklist item. Please try again.' });
     }
 });
 
@@ -163,7 +163,7 @@ router.delete('/checklists/:type', requireAuth, async (req, res) => {
         res.json({ message: 'Checklist deleted successfully', type });
     } catch (error) {
         console.error('Error deleting checklist:', error);
-        res.status(500).json({ error: 'Failed to delete checklist', details: error.message });
+        res.status(500).json({ error: 'Failed to delete checklist. Please try again.' });
     }
 });
 
@@ -190,7 +190,7 @@ router.put('/checklists/:type/rename', requireAuth, async (req, res) => {
         res.json({ message: 'Checklist renamed successfully', checklist });
     } catch (error) {
         console.error('Error renaming checklist:', error);
-        res.status(500).json({ error: 'Failed to rename checklist', details: error.message });
+        res.status(500).json({ error: 'Failed to rename checklist. Please try again.' });
     }
 });
 
@@ -249,7 +249,7 @@ router.post('/checklists/generate', requireAuth, async (req, res) => {
         res.json(checklist);
     } catch (error) {
         console.error('Error generating checklist:', error);
-        res.status(500).json({ error: 'Failed to generate checklist', details: error.message });
+        res.status(500).json({ error: 'Failed to generate checklist. Please try again.' });
     }
 });
 
@@ -266,7 +266,7 @@ router.post('/checklists/sync/:documentId', requireAuth, async (req, res) => {
         res.json({ message: 'Checklist cross-referencing completed', modifiedCount: modified.length });
     } catch (error) {
         console.error('Error syncing checklist with document:', error);
-        res.status(500).json({ error: 'Failed to sync checklist with document', details: error.message });
+        res.status(500).json({ error: 'Failed to sync checklist with document.' });
     }
 });
 
@@ -278,7 +278,7 @@ router.post('/checklists/sync', requireAuth, async (req, res) => {
         res.json({ message: 'All documents cross-referenced with checklists', modifiedCount: modified.length });
     } catch (error) {
         console.error('Error syncing all checklists:', error);
-        res.status(500).json({ error: 'Failed to sync checklists', details: error.message });
+        res.status(500).json({ error: 'Failed to sync checklists.' });
     }
 });
 

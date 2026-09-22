@@ -9,7 +9,7 @@ const ChatCache = require('../models/ChatCache');
 // Pipeline Versioning & Configuration Constants
 const PROMPT_VERSION = "v1.1.0";
 const ANALYSIS_VERSION = "v1.1.0";
-const MODEL_NAME = "gemini-3.5-flash";
+const MODEL_NAME = "gemini-3.5-flash-lite";
 const MODEL_VERSION = "latest";
 const TEMPERATURE = 0.0;
 
@@ -170,8 +170,12 @@ async function fallbackToOpenRouter(prompt, systemInstruction = null, base64Data
 
             if (!response.ok) {
                 const errText = await response.text();
-                console.warn(`Model ${modelName} failed (${response.status}), trying next candidate...`);
+                console.warn(`Model ${modelName} failed (${response.status}): ${errText.slice(0, 100)}`);
                 lastError = new Error(`Status ${response.status}: ${errText}`);
+                if (response.status === 402) {
+                    console.warn('OpenRouter credits unavailable, skipping further OpenRouter candidate attempts.');
+                    break;
+                }
                 continue;
             }
 
@@ -194,40 +198,46 @@ async function fallbackToOpenRouter(prompt, systemInstruction = null, base64Data
 }
 
 const GEMINI_CANDIDATE_MODELS = [
-    "gemini-3.5-flash",
     "gemini-3.5-flash-lite",
-    "gemini-3-flash-preview",
-    "gemini-flash-lite-latest"
+    "gemini-3.1-flash-lite",
+    "gemini-flash-lite-latest",
+    "gemini-3.6-flash",
+    "gemini-3.7-flash",
+    "gemini-3.8-flash",
+    "gemini-flash-latest"
 ];
 
-async function withRetry(fn, fallbackFn = null, retries = 3, baseDelay = 2000) {
+async function withRetry(fn, fallbackFn = null, retries = 2, baseDelay = 1000) {
     let lastError = null;
 
     for (const modelCandidate of GEMINI_CANDIDATE_MODELS) {
-        for (let i = 0; i < retries; i++) {
-            try {
-                return await fn(modelCandidate);
-            } catch (error) {
-                lastError = error;
-                console.warn(`Attempt with ${modelCandidate} failed (${i + 1}/${retries}):`, error.message);
+        try {
+            return await fn(modelCandidate);
+        } catch (error) {
+            lastError = error;
+            console.warn(`Attempt with ${modelCandidate} failed:`, error.message);
 
-                if (error.message.includes('QuotaFailure') || error.message.includes('ResourceExhausted')) {
-                    console.log(`Quota limit for ${modelCandidate}, failing over to next candidate model...`);
-                    break; // Move immediately to next candidate model
-                }
+            // If 404, 429, or model unavailable: fail over immediately to next candidate model without sleeping
+            if (
+                error.message.includes('QuotaFailure') ||
+                error.message.includes('ResourceExhausted') ||
+                error.message.includes('429') ||
+                error.message.includes('404') ||
+                error.message.includes('no longer available')
+            ) {
+                console.log(`Rate limit or unavailable model ${modelCandidate}, failing over immediately to next candidate...`);
+                continue;
+            }
 
-                let waitTimeMs = baseDelay * (i + 1);
-                const retryMatch = error.message.match(/retry in\s+([\d.]+)s/i);
-                if (retryMatch && retryMatch[1]) {
-                    const parsedSec = parseFloat(retryMatch[1]);
-                    waitTimeMs = Math.ceil(parsedSec * 1000) + 1000;
-                    console.log(`Rate limit detected. Waiting ${waitTimeMs / 1000}s before retry...`);
-                } else if (error.message.includes('503') || error.message.includes('429')) {
-                    waitTimeMs = Math.max(waitTimeMs, 5000);
-                }
-
-                if (i < retries - 1) {
-                    await sleep(waitTimeMs);
+            // For transient 503 (high demand spike), retry once quickly after 1s
+            if (error.message.includes('503')) {
+                await sleep(1000);
+                try {
+                    return await fn(modelCandidate);
+                } catch (retryErr) {
+                    lastError = retryErr;
+                    console.warn(`Retry with ${modelCandidate} failed:`, retryErr.message);
+                    continue;
                 }
             }
         }
@@ -399,8 +409,8 @@ Return JSON:
 
             try {
                 const result = await withRetry(
-                    () => {
-                        const model = getGenerativeModel(MODEL_NAME, { responseMimeType: "application/json" });
+                    (activeModel = MODEL_NAME) => {
+                        const model = getGenerativeModel(activeModel, { responseMimeType: "application/json" });
                         const parts = [{ text: prompt }];
                         batchImages.forEach(buf => {
                             parts.push({
@@ -998,8 +1008,8 @@ analysisStatus: ${cachedDoc.analysisStatus}
         };
         const prompt = `Extract all distinct legal clauses from this document image. Return JSON: { "clauses": [ { "sourcePages": [1], "title": "...", "text": "..." } ], "extractedText": "..." }`;
         const result = await withRetry(
-            () => {
-                const model = getGenerativeModel(MODEL_NAME, { responseMimeType: "application/json" });
+            (activeModel = MODEL_NAME) => {
+                const model = getGenerativeModel(activeModel, { responseMimeType: "application/json" });
                 return model.generateContent([prompt, filePart]);
             },
             () => fallbackToOpenRouter(prompt, "Return ONLY valid JSON.", cleanBase64, mimeType || 'image/jpeg')
@@ -1163,6 +1173,7 @@ analysisStatus: ${savedDoc.analysisStatus}
 
 exports.extractJpegImagesFromPdfBuffer = extractJpegImagesFromPdfBuffer;
 exports.normalizeDocumentText = normalizeDocumentText;
+exports.extractCanonicalClausesFromText = extractCanonicalClausesFromText;
 exports.analyzeCanonicalClauses = analyzeCanonicalClauses;
 exports.PROMPT_VERSION = PROMPT_VERSION;
 exports.ANALYSIS_VERSION = ANALYSIS_VERSION;
@@ -1203,8 +1214,8 @@ exports.explainSnippet = async (context, snippet) => {
     `;
 
     const result = await withRetry(
-        () => {
-            const model = getGenerativeModel(MODEL_NAME);
+        (activeModel = MODEL_NAME) => {
+            const model = getGenerativeModel(activeModel);
             return model.generateContent(prompt);
         },
         () => fallbackToOpenRouter(prompt)
@@ -1401,10 +1412,10 @@ exports.generateChecklist = async (prompt) => {
     `;
 
     const result = await withRetry(
-        () => {
+        (activeModel = MODEL_NAME) => {
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
             const configuredModel = genAI.getGenerativeModel({
-                model: MODEL_NAME,
+                model: activeModel,
                 systemInstruction: systemInstruction
             });
             return configuredModel.generateContent(prompt);

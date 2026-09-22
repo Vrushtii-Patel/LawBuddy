@@ -114,7 +114,7 @@ const documentComparisonSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     completedAt: { type: Date, default: null }
-});
+}, { versionKey: false });
 
 documentComparisonSchema.index({ userId: 1, comparisonHash: 1 }, { unique: true });
 

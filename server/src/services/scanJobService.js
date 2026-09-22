@@ -75,7 +75,9 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 async function createScanJob({
     userId,
     text,
+    fileBuffer: inputBuffer,
     base64Data,
+    fileName = '',
     mimeType = 'application/pdf',
     title = '',
     sourceType = 'PDF Document'
@@ -89,7 +91,12 @@ async function createScanJob({
     let storagePath = null;
     let fileSize = 0;
 
-    if (base64Data && typeof base64Data === 'string' && base64Data.trim().length > 0) {
+    if (Buffer.isBuffer(inputBuffer) && inputBuffer.length > 0) {
+        fileBuffer = inputBuffer;
+        fileSize = fileBuffer.length;
+        fileHash = crypto.createHash('sha256').update(fileBuffer).digest('hex');
+        storagePath = saveFileToStorage(fileBuffer, fileHash);
+    } else if (base64Data && typeof base64Data === 'string' && base64Data.trim().length > 0) {
         let clean = base64Data.trim();
         if (clean.includes(',')) clean = clean.split(',').pop().trim();
         clean = clean.replace(/\s+/g, '');
@@ -102,7 +109,7 @@ async function createScanJob({
         fileSize = Buffer.byteLength(norm, 'utf8');
         fileHash = crypto.createHash('sha256').update(norm).digest('hex');
     } else {
-        throw new Error('Either valid text or base64Data is required.');
+        throw new Error('Either valid text or document file is required.');
     }
 
     // Check if an existing completed Document already exists for this (userId, fileHash)
@@ -201,6 +208,7 @@ async function executeJobPipeline(jobId) {
                 const normalizedPdfText = llmService.normalizeDocumentText(pdfText);
                 if (normalizedPdfText.length >= 50) {
                     extractedText = normalizedPdfText;
+                    canonicalClauses = llmService.extractCanonicalClausesFromText(extractedText);
                 } else {
                     try {
                         // Scanned PDF vision extraction fallback
@@ -211,11 +219,27 @@ async function executeJobPipeline(jobId) {
                             sourceType: job.sourceType,
                             userId: job.userId
                         });
-                        extractedText = scannedResult.extractedText;
-                        canonicalClauses = scannedResult.canonicalClauses;
+                        
+                        if (scannedResult && scannedResult.analysis && scannedResult.analysis.length > 0) {
+                            job.extractedText = scannedResult.extractedText;
+                            job.canonicalClauses = scannedResult.canonicalClauses;
+                            job.analysis = scannedResult.analysis;
+                            job.documentId = scannedResult.documentId;
+                            job.completedSteps = ['UPLOAD', 'TEXT_EXTRACTION', 'AI_ANALYSIS', 'REPORT'];
+                            job.status = 'COMPLETED';
+                            job.currentStep = 'Analysis completed';
+                            job.completedAt = new Date();
+                            await job.save();
+                            console.log(`[ScanJob ${job.jobId}] Scanned PDF pipeline completed holistically in Stage 2.`);
+                            return job;
+                        }
+                        
+                        extractedText = scannedResult ? scannedResult.extractedText : '';
+                        canonicalClauses = scannedResult ? scannedResult.canonicalClauses : [];
                     } catch (scannedErr) {
                         console.warn(`[ScanJob ${job.jobId}] Scanned PDF vision fallback failed (${scannedErr.message}), using buffer text fallback.`);
                         extractedText = llmService.normalizeDocumentText(fileBuffer.toString('utf8'));
+                        canonicalClauses = llmService.extractCanonicalClausesFromText(extractedText);
                     }
                 }
             } else if (fileBuffer && isImage) {
@@ -226,23 +250,33 @@ async function executeJobPipeline(jobId) {
                     sourceType: 'Photo Scan',
                     userId: job.userId
                 });
-                extractedText = imgResult.extractedText;
-                canonicalClauses = imgResult.canonicalClauses;
+                
+                if (imgResult && imgResult.analysis && imgResult.analysis.length > 0) {
+                    job.extractedText = imgResult.extractedText;
+                    job.canonicalClauses = imgResult.canonicalClauses;
+                    job.analysis = imgResult.analysis;
+                    job.documentId = imgResult.documentId;
+                    job.completedSteps = ['UPLOAD', 'TEXT_EXTRACTION', 'AI_ANALYSIS', 'REPORT'];
+                    job.status = 'COMPLETED';
+                    job.currentStep = 'Analysis completed';
+                    job.completedAt = new Date();
+                    await job.save();
+                    console.log(`[ScanJob ${job.jobId}] Image scan pipeline completed holistically in Stage 2.`);
+                    return job;
+                }
+                
+                extractedText = imgResult ? imgResult.extractedText : '';
+                canonicalClauses = imgResult ? imgResult.canonicalClauses : [];
             } else if (job.extractedText && job.extractedText.length > 0) {
                 extractedText = job.extractedText;
+                canonicalClauses = llmService.extractCanonicalClausesFromText(extractedText);
             } else {
                 extractedText = 'Property Agreement';
+                canonicalClauses = llmService.extractCanonicalClausesFromText(extractedText);
             }
 
             if (!canonicalClauses || canonicalClauses.length === 0) {
-                canonicalClauses = [
-                    {
-                        clauseId: 'CLAUSE-001',
-                        title: 'Property Agreement',
-                        text: extractedText,
-                        sourcePages: [1]
-                    }
-                ];
+                canonicalClauses = llmService.extractCanonicalClausesFromText(extractedText);
             }
 
             job.extractedText = extractedText;

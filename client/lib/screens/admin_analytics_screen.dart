@@ -40,6 +40,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
         });
       }
     } catch (e) {
+      debugPrint('Error fetching admin analytics: $e');
       if (mounted) {
         final errStr = e.toString().replaceAll('Exception: ', '');
         setState(() {

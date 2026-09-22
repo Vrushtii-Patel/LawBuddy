@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
@@ -99,13 +98,16 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       final retryRes = await ApiService.retryScanJob(jobId);
       await _pollJobUntilComplete(jobId, retryRes);
     } catch (e) {
+      debugPrint('Error resuming scan: $e');
       if (!mounted) return;
       setState(() {
         _isProcessing = false;
       });
+      final errorMsg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : 'Unable to resume scan. Please try scanning the document again.';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error resuming scan: ${e.toString()}'),
+        content: Text(errorMsg.isNotEmpty ? errorMsg : 'Unable to resume scan. Please try scanning the document again.'),
         backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+        behavior: SnackBarBehavior.floating,
       ));
     }
   }
@@ -118,6 +120,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     String? mimeType,
     String? customTitle,
     String? sourceType,
+    Uint8List? initialFileBytes,
   }) async {
     Map<String, dynamic> job = initialStatus;
     if (mounted) {
@@ -141,6 +144,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
               sourceType: job['sourceType'] ?? doc['sourceType'] ?? sourceType ?? 'PDF Document',
               fileData: fileData ?? job['fileData'] ?? doc['fileData'],
               mimeType: job['mimeType'] ?? doc['mimeType'] ?? mimeType ?? 'application/pdf',
+              documentId: (job['documentId'] ?? doc['_id'] ?? doc['id'])?.toString(),
+              initialFileBytes: initialFileBytes,
             ),
           ),
         );
@@ -183,6 +188,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
             sourceType: job['sourceType'] ?? doc['sourceType'] ?? sourceType ?? 'PDF Document',
             fileData: fileData ?? job['fileData'] ?? doc['fileData'],
             mimeType: job['mimeType'] ?? doc['mimeType'] ?? mimeType ?? 'application/pdf',
+            documentId: (job['documentId'] ?? doc['_id'] ?? doc['id'])?.toString(),
+            initialFileBytes: initialFileBytes,
           ),
         ),
       );
@@ -269,14 +276,14 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
       final Uint8List bytes = await image.readAsBytes();
       final String mimeType = image.mimeType ?? (image.name.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg');
-      final String base64Str = base64Encode(bytes);
 
       if (extractedText.trim().length > 10) {
         await _analyzeText(
           extractedText, 
           title: image.name.isNotEmpty ? image.name : 'Photo Scan Document', 
           sourceType: 'Photo Scan', 
-          base64Data: base64Str, 
+          fileBytes: bytes,
+          fileName: image.name.isNotEmpty ? image.name : 'photo_scan.jpg',
           mimeType: mimeType
         );
         return;
@@ -284,7 +291,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
       // Multimodal AI Vision Fallback (Web, Desktop, or scanned images)
       final startRes = await ApiService.startScanJob(
-        base64Data: base64Str,
+        fileBytes: bytes,
+        fileName: image.name.isNotEmpty ? image.name : 'photo_scan.jpg',
         mimeType: mimeType,
         title: image.name.isNotEmpty ? image.name : 'Photo Scan Document',
         sourceType: 'Photo Scan',
@@ -295,19 +303,20 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         await _pollJobUntilComplete(
           jobId,
           startRes,
-          fileData: base64Str,
           mimeType: mimeType,
           customTitle: image.name.isNotEmpty ? image.name : 'Scanned Property Agreement',
           sourceType: 'Photo Scan',
+          initialFileBytes: bytes,
         );
       } else {
         throw Exception('Failed to initialize scan job.');
-      }
-    } catch (e) {
+      }    } catch (e) {
+      debugPrint('Error processing photo scan: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error: ${e.toString()}'),
+        content: const Text('Unable to process the photo scan. Please ensure the image is clear and try again.'),
         backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+        behavior: SnackBarBehavior.floating,
       ));
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
@@ -324,7 +333,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     try {
       FilePickerResult? result = await FilePicker.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg'],
+        allowedExtensions: ['pdf', 'png', 'jpg', 'jpeg', 'webp'],
         withData: true,
       );
 
@@ -349,7 +358,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         final Uint8List uint8bytes = Uint8List.fromList(bytes);
         final String fileName = file.name;
         final String ext = fileName.split('.').last.toLowerCase();
-        final String base64Str = base64Encode(uint8bytes);
 
         if (ext == 'pdf') {
           String extractedText = '';
@@ -366,7 +374,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
               extractedText, 
               title: fileName, 
               sourceType: 'PDF Document', 
-              base64Data: base64Str, 
+              fileBytes: uint8bytes,
+              fileName: fileName,
               mimeType: 'application/pdf'
             );
             return;
@@ -374,7 +383,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
           // Multimodal fallback for PDF
           final startRes = await ApiService.startScanJob(
-            base64Data: base64Str,
+            fileBytes: uint8bytes,
+            fileName: fileName,
             mimeType: 'application/pdf',
             title: fileName,
             sourceType: 'PDF Document',
@@ -385,19 +395,20 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
             await _pollJobUntilComplete(
               jobId,
               startRes,
-              fileData: base64Str,
               mimeType: 'application/pdf',
               customTitle: fileName,
               sourceType: 'PDF Document',
+              initialFileBytes: uint8bytes,
             );
           } else {
             throw Exception('Failed to initialize scan job.');
           }
         } else {
           // It's an image picked through document picker
-          final String mimeType = ext == 'png' ? 'image/png' : 'image/jpeg';
+          final String mimeType = ext == 'png' ? 'image/png' : (ext == 'webp' ? 'image/webp' : 'image/jpeg');
           final startRes = await ApiService.startScanJob(
-            base64Data: base64Str,
+            fileBytes: uint8bytes,
+            fileName: fileName,
             mimeType: mimeType,
             title: fileName,
             sourceType: 'Scanned Image',
@@ -408,10 +419,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
             await _pollJobUntilComplete(
               jobId,
               startRes,
-              fileData: base64Str,
               mimeType: mimeType,
               customTitle: fileName,
               sourceType: 'Scanned Image',
+              initialFileBytes: uint8bytes,
             );
           } else {
             throw Exception('Failed to initialize scan job.');
@@ -419,10 +430,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         }
       }
     } catch (e) {
+      debugPrint('Error reading document file: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error reading document: ${e.toString()}'),
+        content: Text(e is Exception ? e.toString().replaceFirst('Exception: ', '') : 'Unable to read the selected file.'),
         backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+        behavior: SnackBarBehavior.floating,
       ));
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
@@ -433,13 +446,20 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     }
   }
 
-  Future<void> _analyzeText(String text, {String? title, String? sourceType, String? base64Data, String? mimeType}) async {
-    final loc = ref.read(localeProvider.notifier);
+  Future<void> _analyzeText(
+    String text, {
+    String? title, 
+    String? sourceType,
+    Uint8List? fileBytes,
+    String? fileName,
+    String? mimeType,
+    String? base64Data,
+  }) async {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     setState(() {
       _isProcessing = true;
       _currentJob = null;
-      _statusMessage = loc.translate('scan.processingRisk');
+      _statusMessage = 'Analyzing legal provisions...';
     });
 
     try {
@@ -447,8 +467,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         text: text,
         title: title,
         sourceType: sourceType ?? 'Text Description',
-        base64Data: base64Data,
+        fileBytes: fileBytes,
+        fileName: fileName,
         mimeType: mimeType,
+        base64Data: base64Data,
       );
 
       final String jobId = startRes['jobId'] ?? '';
@@ -457,22 +479,24 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
           jobId,
           startRes,
           originalInputText: text,
-          fileData: base64Data,
           mimeType: mimeType,
           customTitle: title,
           sourceType: sourceType ?? 'Text Description',
+          initialFileBytes: fileBytes,
         );
       } else {
         throw Exception('Failed to initialize scan job.');
       }
     } catch (e) {
+      debugPrint('Error analyzing document text: $e');
       if (!mounted) return;
       setState(() {
         _isProcessing = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error: ${e.toString()}'),
+        content: const Text('Unable to complete document analysis. Please check your connection and try again.'),
         backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+        behavior: SnackBarBehavior.floating,
       ));
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {

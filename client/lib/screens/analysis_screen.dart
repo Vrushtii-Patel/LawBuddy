@@ -18,6 +18,8 @@ class AnalysisScreen extends ConsumerStatefulWidget {
   final String? sourceType;
   final String? fileData;
   final String? mimeType;
+  final String? documentId;
+  final Uint8List? initialFileBytes;
   // Optional: when navigating here from a document card (e.g. Recent
   // Documents), pass the same tag used on that card's icon so the two
   // animate as one continuous element instead of a hard cut. Screens that
@@ -34,6 +36,8 @@ class AnalysisScreen extends ConsumerStatefulWidget {
     this.sourceType,
     this.fileData,
     this.mimeType,
+    this.documentId,
+    this.initialFileBytes,
     this.heroTag,
   });
 
@@ -47,6 +51,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
   bool _isGeneratingShare = false;
   String? _cachedShareToken;
   late final String _resolvedHeroTag;
+  Uint8List? _resolvedFileBytes;
+  bool _isLoadingFile = false;
 
   @override
   void initState() {
@@ -54,6 +60,41 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     // Computed once per screen instance so it stays stable across rebuilds
     // (Hero requires a stable tag for the duration of the transition).
     _resolvedHeroTag = widget.heroTag ?? UniqueKey().toString();
+
+    if (widget.initialFileBytes != null && widget.initialFileBytes!.isNotEmpty) {
+      _resolvedFileBytes = widget.initialFileBytes;
+    } else if (widget.fileData != null && widget.fileData!.isNotEmpty) {
+      _resolvedFileBytes = _getCleanBytes(widget.fileData);
+    } else if (widget.documentId != null && widget.documentId!.isNotEmpty) {
+      _fetchDocumentFileBytes(widget.documentId!);
+    }
+  }
+
+  Future<void> _fetchDocumentFileBytes(String docId) async {
+    if (!mounted) return;
+    setState(() {
+      _isLoadingFile = true;
+    });
+    try {
+      final bytes = await ApiService.fetchDocumentFile(docId);
+      if (mounted && bytes != null && bytes.isNotEmpty) {
+        setState(() {
+          _resolvedFileBytes = bytes;
+          _isLoadingFile = false;
+        });
+      } else if (mounted) {
+        setState(() {
+          _isLoadingFile = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching document file in AnalysisScreen: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingFile = false;
+        });
+      }
+    }
   }
 
   Uint8List? _getCleanBytes(String? rawBase64) {
@@ -588,10 +629,11 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
         ),
       );
     } catch (e) {
+      debugPrint('Error exporting PDF: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(tr('analysis.pdfFailed', {'error': '$e'})),
+          content: const Text('Failed to export PDF report. Please try again.'),
           backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
           behavior: SnackBarBehavior.floating,
         ),
@@ -602,16 +644,19 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
   }
 
   Future<void> _explainSnippet(String snippet) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     setState(() => _isExplaining = true);
     try {
       final explanation = await ApiService.explainSnippet(widget.originalText, snippet);
       if (!mounted) return;
       _showExplanationModal(snippet, explanation);
     } catch (e) {
+      debugPrint('Error explaining snippet: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: $e'),
+          content: const Text('Unable to explain legal clause at this time. Please try again.'),
+          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -972,67 +1017,87 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                       Divider(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
                       const SizedBox(height: 14),
 
-                      // Inline Photo Preview (if Photo Scan & fileData present)
-                      if (widget.fileData != null && widget.fileData!.isNotEmpty && _effectiveSourceType == 'Photo Scan') ...[
-                        Builder(builder: (context) {
-                          final imgBytes = _getCleanBytes(widget.fileData);
-                          if (imgBytes == null) return const SizedBox.shrink();
-                          return Column(
+                      // Loading indicator if PDF / image is being fetched from storage
+                      if (_isLoadingFile && (_effectiveSourceType == 'PDF Document' || _effectiveSourceType == 'Photo Scan')) ...[
+                        Container(
+                          height: 140,
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  constraints: const BoxConstraints(maxHeight: 320),
-                                  width: double.infinity,
-                                  color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
-                                  child: Image.memory(
-                                    imgBytes,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                                  ),
+                              SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                                 ),
                               ),
-                              const SizedBox(height: 14),
+                              const SizedBox(width: 12),
+                              Text(
+                                'Loading document preview...',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                ),
+                              ),
                             ],
-                          );
-                        }),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
                       ],
 
-                      // Inline PDF Document Viewer Preview (if PDF Document & fileData present)
-                      if (widget.fileData != null && widget.fileData!.isNotEmpty && _effectiveSourceType == 'PDF Document') ...[
-                        Builder(builder: (context) {
-                          final pdfBytes = _getCleanBytes(widget.fileData);
-                          if (pdfBytes == null) return const SizedBox.shrink();
-                          return Column(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  height: 380,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: SfPdfViewer.memory(
-                                    pdfBytes,
-                                    canShowScrollHead: true,
-                                    canShowScrollStatus: true,
-                                    enableDoubleTapZooming: true,
-                                    onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
-                                      debugPrint('PDF viewer load error: ${details.error}');
-                                    },
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 14),
-                            ],
-                          );
-                        }),
+                      // Inline Photo Preview (if Photo Scan & bytes present)
+                      if (_resolvedFileBytes != null && _resolvedFileBytes!.isNotEmpty && _effectiveSourceType == 'Photo Scan') ...[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            constraints: const BoxConstraints(maxHeight: 320),
+                            width: double.infinity,
+                            color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+                            child: Image.memory(
+                              _resolvedFileBytes!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                      ],
+
+                      // Inline PDF Document Viewer Preview (if PDF Document & bytes present)
+                      if (_resolvedFileBytes != null && _resolvedFileBytes!.isNotEmpty && _effectiveSourceType == 'PDF Document') ...[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            height: 380,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: SfPdfViewer.memory(
+                              _resolvedFileBytes!,
+                              canShowScrollHead: true,
+                              canShowScrollStatus: true,
+                              enableDoubleTapZooming: true,
+                              onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
+                                debugPrint('PDF viewer load error: ${details.error}');
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
                       ],
 
                       // Show text box only for pure text input scans without an uploaded file/image
-                      if (widget.fileData == null || widget.fileData!.isEmpty) ...[
+                      if ((_resolvedFileBytes == null || _resolvedFileBytes!.isEmpty) && !_isLoadingFile) ...[
                         Text(
                           tr('analysis.originalContractText'),
                           style: TextStyle(
@@ -1346,7 +1411,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     final title = widget.documentTitle ?? 'Property Legal Document';
     final sourceType = _effectiveSourceType;
 
-    Uint8List? rawBytes = _getCleanBytes(widget.fileData);
+    Uint8List? rawBytes = _resolvedFileBytes ?? _getCleanBytes(widget.fileData);
 
     showDialog(
       context: context,

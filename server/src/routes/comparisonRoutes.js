@@ -42,7 +42,7 @@ router.post('/comparisons/start', requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error('Error starting comparison:', error);
-        res.status(500).json({ error: 'Failed to start comparison', details: error.message });
+        res.status(500).json({ error: 'Failed to start comparison. Please try again.' });
     }
 });
 

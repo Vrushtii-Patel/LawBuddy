@@ -60,10 +60,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
         });
       }
     } catch (e) {
+      debugPrint('Error fetching chat sessions: $e');
       if (mounted) {
         setState(() {
           _isLoadingSessions = false;
-          _sessionsError = e.toString();
+          _sessionsError = 'Unable to load previous conversations. Please check your connection and try again.';
         });
       }
     }
@@ -94,11 +95,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
         _scrollToBottom(force: true);
       }
     } catch (e) {
+      debugPrint('Error loading chat session details: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to load conversation: $e'),
+            content: const Text('Unable to load this conversation. Please try again.'),
             backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+            behavior: SnackBarBehavior.floating,
           ),
         );
       }
@@ -259,6 +262,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
         _scrollToBottom();
       }
     } catch (e) {
+      debugPrint('Error communicating with AI assistant: $e');
       if (mounted) {
         final errTime = DateTime.now();
         final errTimeStr = "${errTime.hour.toString().padLeft(2, '0')}:${errTime.minute.toString().padLeft(2, '0')}";
@@ -266,7 +270,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
           _isTyping = false;
           _messages.add({
             'role': 'error',
-            'text': 'Unable to connect with AI legal assistant: $e',
+            'text': 'The Legal AI Assistant is temporarily unavailable. Please check your internet connection and try again.',
             'time': errTimeStr,
             'isNew': false,
           });
@@ -1789,7 +1793,9 @@ class _LegalSourcesCitationCardState extends State<_LegalSourcesCitationCard> {
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Error opening citation URL: $e');
+    }
   }
 
   @override
