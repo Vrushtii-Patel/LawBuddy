@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,7 +57,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
     _radarController ??= AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000),
     );
   }
 
@@ -1209,37 +1210,18 @@ The Developer represents that necessary zoning approvals are under application w
   }
 
   // ==========================================
-  // PROCESSING / ANALYZING STATE (PROGRESSIVE PIPELINE)
+  // PROCESSING / ANALYZING STATE
   // ==========================================
   Widget _buildProcessingState(bool isDark, LocaleNotifier loc) {
     final accentColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
-    final compliantColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
     final cautionColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
 
     final String status = (_currentJob?['status'] as String?) ?? 'OCR_PROCESSING';
-    final List<dynamic> rawCompleted = (_currentJob?['completedSteps'] as List?) ?? ['UPLOAD'];
-    final Set<String> completedSteps = rawCompleted.map((e) => e.toString()).toSet();
     final bool isRetrying = status == 'RETRYING';
 
-    // Truthful step completion and active mapping derived from real ScanJob pipeline states
-    final bool step1Completed = completedSteps.contains('TEXT_EXTRACTION') ||
-        status == 'TEXT_EXTRACTED' ||
-        status == 'AI_ANALYSIS' ||
-        status == 'REPORT_GENERATION' ||
-        status == 'COMPLETED';
-    final bool step1Active = !step1Completed && (status == 'OCR_PROCESSING' || status == 'UPLOADING' || status == 'QUEUED');
-
-    final bool step2Completed = status == 'AI_ANALYSIS' ||
-        status == 'REPORT_GENERATION' ||
-        status == 'COMPLETED' ||
-        completedSteps.contains('AI_ANALYSIS');
-    final bool step2Active = !step2Completed && (status == 'TEXT_EXTRACTED' || completedSteps.contains('TEXT_EXTRACTION'));
-
-    final bool step3Completed = completedSteps.contains('AI_ANALYSIS') || status == 'REPORT_GENERATION' || status == 'COMPLETED';
-    final bool step3Active = !step3Completed && (status == 'AI_ANALYSIS' || isRetrying);
-
-    final bool step4Completed = status == 'COMPLETED' || completedSteps.contains('REPORT');
-    final bool step4Active = !step4Completed && status == 'REPORT_GENERATION';
+    if (_radarController != null && !_radarController!.isAnimating) {
+      _radarController!.repeat();
+    }
 
     return Center(
       key: const ValueKey('processing_state'),
@@ -1249,46 +1231,105 @@ The Developer represents that necessary zoning approvals are under application w
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Holographic Scanning Radar Orb
+            // Holographic Scanning Radar Orb with Animated Scan Line
             AnimatedBuilder(
               animation: _radarController!,
               builder: (context, child) {
                 final radarVal = _radarController!.value;
+                final pulse = (math.sin(radarVal * 2 * math.pi) + 1) / 2;
+                final scanY = -18.0 + (36.0 * radarVal);
+
                 return Stack(
                   alignment: Alignment.center,
                   children: [
-                    // Outer expanding ripple
+                    // Outer subtle boundary ring
                     Container(
-                      width: 96 + (22 * radarVal),
-                      height: 96 + (22 * radarVal),
+                      width: 96,
+                      height: 96,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: accentColor.withValues(alpha: (1.0 - radarVal) * 0.35),
+                          color: accentColor.withValues(alpha: 0.12 + (0.08 * pulse)),
                           width: 1.5,
                         ),
                       ),
                     ),
 
-                    // Middle pulse ring
+                    // Inner circle container with scanning laser effect
                     Container(
                       width: 82,
                       height: 82,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: accentColor.withValues(alpha: 0.1),
+                        color: accentColor.withValues(alpha: isDark ? 0.06 : 0.08),
                         border: Border.all(
-                          color: accentColor.withValues(alpha: 0.4),
+                          color: accentColor.withValues(alpha: 0.35 + (0.15 * pulse)),
                           width: 1.5,
                         ),
                       ),
-                    ),
+                      child: ClipOval(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // Document Icon in center with subtle pulsing glow
+                            Icon(
+                              Icons.document_scanner_rounded,
+                              size: 34,
+                              color: accentColor.withValues(alpha: 0.85 + (0.15 * pulse)),
+                              shadows: [
+                                Shadow(
+                                  color: accentColor.withValues(alpha: 0.25 + (0.25 * pulse)),
+                                  blurRadius: 6 + (4 * pulse),
+                                ),
+                              ],
+                            ),
 
-                    // Central Icon
-                    Icon(
-                      Icons.document_scanner_rounded,
-                      size: 32,
-                      color: accentColor,
+                            // Subtle Scan Beam Trail (Soft gradient above the scan line)
+                            Transform.translate(
+                              offset: Offset(0, scanY - 6),
+                              child: Container(
+                                width: 38,
+                                height: 12,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      accentColor.withValues(alpha: 0.0),
+                                      accentColor.withValues(alpha: 0.12),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            // Horizontal Scanning Line
+                            Transform.translate(
+                              offset: Offset(0, scanY),
+                              child: Container(
+                                width: 38,
+                                height: 1.5,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      accentColor.withValues(alpha: 0.0),
+                                      accentColor.withValues(alpha: 0.85),
+                                      accentColor.withValues(alpha: 0.0),
+                                    ],
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: accentColor.withValues(alpha: 0.45),
+                                      blurRadius: 3,
+                                      spreadRadius: 0.5,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 );
@@ -1309,23 +1350,38 @@ The Developer represents that necessary zoning approvals are under application w
             ),
             const SizedBox(height: 6),
 
-            // Subtitle
-            Text(
-              _statusMessage.isNotEmpty ? _statusMessage : loc.translate('scan.pleaseWait'),
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            // Subtitle — animates between pipeline stages (e.g. "Reading
+            // pages..." -> "Classifying clauses...") instead of snapping,
+            // so the progression through the pipeline feels continuous.
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 280),
+              transitionBuilder: (child, animation) {
+                final slideIn = Tween<Offset>(
+                  begin: const Offset(0, 0.15),
+                  end: Offset.zero,
+                ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+                return FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(position: slideIn, child: child),
+                );
+              },
+              child: Text(
+                _statusMessage.isNotEmpty ? _statusMessage : loc.translate('scan.pleaseWait'),
+                key: ValueKey<String>(_statusMessage.isNotEmpty ? _statusMessage : loc.translate('scan.pleaseWait')),
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                ),
               ),
             ),
-            const SizedBox(height: 24),
 
             // Automatic Retry Alert Banner (if transient AI rate limit encountered)
             if (isRetrying) ...[
+              const SizedBox(height: 20),
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 440),
                 child: Container(
-                  margin: const EdgeInsets.only(bottom: 16),
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
                     color: cautionColor.withValues(alpha: 0.1),
@@ -1351,196 +1407,9 @@ The Developer represents that necessary zoning approvals are under application w
                 ),
               ),
             ],
-
-            // Progressive Pipeline Loading Card
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 440),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: (isDark ? AppColors.darkBorder : AppColors.lightBorder).withValues(alpha: 0.7),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    _buildPipelineStepItem(
-                      isDark: isDark,
-                      title: loc.translate('scan.stepReading'),
-                      subtitle: loc.translate('scan.stepReadingDesc'),
-                      isCompleted: step1Completed,
-                      isActive: step1Active,
-                      accentColor: accentColor,
-                      compliantColor: compliantColor,
-                      showConnector: true,
-                      connectorActive: step1Completed,
-                    ),
-                    _buildPipelineStepItem(
-                      isDark: isDark,
-                      title: loc.translate('scan.stepStructuring'),
-                      subtitle: loc.translate('scan.stepStructuringDesc'),
-                      isCompleted: step2Completed,
-                      isActive: step2Active,
-                      accentColor: accentColor,
-                      compliantColor: compliantColor,
-                      showConnector: true,
-                      connectorActive: step2Completed,
-                    ),
-                    _buildPipelineStepItem(
-                      isDark: isDark,
-                      title: loc.translate('scan.stepAuditing'),
-                      subtitle: loc.translate('scan.stepAuditingDesc'),
-                      isCompleted: step3Completed,
-                      isActive: step3Active,
-                      accentColor: accentColor,
-                      compliantColor: compliantColor,
-                      showConnector: true,
-                      connectorActive: step3Completed,
-                    ),
-                    _buildPipelineStepItem(
-                      isDark: isDark,
-                      title: loc.translate('scan.stepPreparing'),
-                      subtitle: loc.translate('scan.stepPreparingDesc'),
-                      isCompleted: step4Completed,
-                      isActive: step4Active,
-                      accentColor: accentColor,
-                      compliantColor: compliantColor,
-                      showConnector: false,
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildPipelineStepItem({
-    required bool isDark,
-    required String title,
-    required String subtitle,
-    required bool isCompleted,
-    required bool isActive,
-    required Color accentColor,
-    required Color compliantColor,
-    required bool showConnector,
-    bool connectorActive = false,
-  }) {
-    final textColor = isCompleted
-        ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
-        : isActive
-            ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
-            : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.5);
-
-    final subtextColor = isCompleted || isActive
-        ? (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary)
-        : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.4);
-
-    return Column(
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Status Icon / Indicator
-            Container(
-              width: 26,
-              height: 26,
-              margin: const EdgeInsets.only(top: 1),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isCompleted
-                    ? compliantColor.withValues(alpha: 0.15)
-                    : isActive
-                        ? accentColor.withValues(alpha: 0.15)
-                        : Colors.transparent,
-                border: isCompleted || isActive
-                    ? null
-                    : Border.all(
-                        color: (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.3),
-                        width: 1.5,
-                      ),
-              ),
-              child: Center(
-                child: isCompleted
-                    ? Icon(
-                        Icons.check_rounded,
-                        size: 16,
-                        color: compliantColor,
-                      )
-                    : isActive
-                        ? SizedBox(
-                            width: 12,
-                            height: 12,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(accentColor),
-                            ),
-                          )
-                        : Container(
-                            width: 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.3),
-                            ),
-                          ),
-              ),
-            ),
-            const SizedBox(width: 14),
-
-            // Step Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: isActive ? FontWeight.w700 : (isCompleted ? FontWeight.w600 : FontWeight.w500),
-                      color: textColor,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: subtextColor,
-                      height: 1.3,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-
-        // Vertical Connector line to next step
-        if (showConnector)
-          Container(
-            alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.only(left: 12, top: 3, bottom: 3),
-            child: Container(
-              width: 2,
-              height: 14,
-              color: connectorActive
-                  ? compliantColor.withValues(alpha: 0.5)
-                  : (isDark ? AppColors.darkBorder : AppColors.lightBorder).withValues(alpha: 0.4),
-            ),
-          ),
-      ],
     );
   }
 }
