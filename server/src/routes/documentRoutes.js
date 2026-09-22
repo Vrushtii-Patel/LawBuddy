@@ -4,6 +4,7 @@ const llmService = require('../services/llmService');
 const scanJobService = require('../services/scanJobService');
 const Document = require('../models/Document');
 const ScanJob = require('../models/ScanJob');
+const crossReferenceService = require('../services/crossReferenceService');
 const { requireAuth } = require('../middleware/authMiddleware');
 
 // =========================================================================
@@ -324,6 +325,14 @@ router.delete('/documents/:id', requireAuth, async (req, res) => {
         if (!result) {
             return res.status(404).json({ error: 'Document not found or unauthorized' });
         }
+
+        // Clean up linked checklist issues and auto-created checklists
+        try {
+            await crossReferenceService.removeDocumentIssuesFromChecklists(userId, req.params.id);
+        } catch (syncErr) {
+            console.warn(`[DeleteDocument] Warning: Checklist cleanup error:`, syncErr.message);
+        }
+
         res.json({ message: 'Document deleted successfully', id: req.params.id });
     } catch (error) {
         console.error('Error deleting document:', error);

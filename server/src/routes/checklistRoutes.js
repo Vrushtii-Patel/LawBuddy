@@ -10,6 +10,12 @@ const crossReferenceService = require('../services/crossReferenceService');
 router.get('/checklists', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
+
+        // Auto-clean any stale/orphaned issues for deleted documents
+        try {
+            await crossReferenceService.cleanOrphanChecklistIssues(userId);
+        } catch (_) {}
+
         let checklists = await Checklist.find({ userId }).sort({ _id: -1 });
 
         // If user has no checklists, check if they have analyzed documents and auto-sync

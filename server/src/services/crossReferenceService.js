@@ -267,10 +267,95 @@ async function syncAllUserDocuments(userId) {
     return results;
 }
 
+/**
+ * Cleans up orphaned linked issues and removes auto-generated checklists if all documents are gone.
+ */
+async function cleanOrphanChecklistIssues(userId) {
+    if (!userId) return;
+    const docs = await Document.find({ userId });
+    const validDocIds = new Set(docs.map(d => d._id.toString()));
+    const checklists = await Checklist.find({ userId });
+    if (!checklists || checklists.length === 0) return;
+
+    if (docs.length === 0) {
+        // If user deleted all their documents, clean up auto-generated diligence checklists
+        for (const checklist of checklists) {
+            const isAutoChecklist = (checklist.type || '').includes('due_diligence') || 
+                                    (checklist.title || '').toLowerCase().startsWith('due diligence');
+            if (isAutoChecklist) {
+                await Checklist.deleteOne({ _id: checklist._id });
+            } else {
+                // If it's a custom-generated checklist, strip any linked document issues
+                let modified = false;
+                for (const item of checklist.items) {
+                    if (item.linkedIssues && item.linkedIssues.length > 0) {
+                        item.linkedIssues = [];
+                        if (!item.isCompleted && item.status === 'FLAGGED') {
+                            item.status = 'NOT_STARTED';
+                        }
+                        modified = true;
+                    }
+                }
+                if (modified) {
+                    checklist.updatedAt = new Date();
+                    await checklist.save();
+                }
+            }
+        }
+        return;
+    }
+
+    // If there are still documents remaining, prune issues referring to deleted documents
+    for (const checklist of checklists) {
+        let isModified = false;
+        const updatedItems = [];
+
+        for (const item of checklist.items) {
+            const prevCount = (item.linkedIssues || []).length;
+            item.linkedIssues = (item.linkedIssues || []).filter(li => li.documentId && validDocIds.has(li.documentId.toString()));
+
+            if ((item.linkedIssues || []).length !== prevCount) {
+                isModified = true;
+            }
+
+            if ((item.linkedIssues || []).length === 0 && !item.isCompleted && item.status === 'FLAGGED') {
+                item.status = 'NOT_STARTED';
+                isModified = true;
+            }
+
+            // Check if this was a dynamically generated item for an issue that no longer exists
+            const isDefaultTask = DEFAULT_DILIGENCE_TASKS.some(t => t.title === item.title);
+            const isNumericId = /^[0-9]+$/.test(item.id);
+            if (!isDefaultTask && !isNumericId && !item.isCompleted && (item.linkedIssues || []).length === 0) {
+                isModified = true;
+                continue; // exclude orphan dynamically added item
+            }
+
+            updatedItems.push(item);
+        }
+
+        if (isModified) {
+            checklist.items = updatedItems;
+            checklist.updatedAt = new Date();
+            await checklist.save();
+        }
+    }
+}
+
+/**
+ * Specifically handles document deletion: removes issues for this document from all checklists
+ */
+async function removeDocumentIssuesFromChecklists(userId, documentId) {
+    if (!userId) return;
+    return await cleanOrphanChecklistIssues(userId);
+}
+
 module.exports = {
     DEFAULT_DILIGENCE_TASKS,
     classifyFinding,
     itemMatchesCategory,
     syncDocumentIssuesWithChecklists,
-    syncAllUserDocuments
+    syncAllUserDocuments,
+    cleanOrphanChecklistIssues,
+    removeDocumentIssuesFromChecklists
 };
