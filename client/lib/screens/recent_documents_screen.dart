@@ -136,6 +136,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
     final sourceType = (doc['sourceType'] as String?) ?? 'PDF Document';
     final fileData = doc['fileData'] as String?;
     final mimeType = doc['mimeType'] as String?;
+    final docId = doc['_id'] ?? doc['id'];
 
     Navigator.push(
       context,
@@ -147,6 +148,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
           sourceType: sourceType,
           fileData: fileData,
           mimeType: mimeType,
+          heroTag: docId != null ? 'doc-icon-$docId' : null,
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
@@ -1405,7 +1407,10 @@ class _DocumentCardItemState extends State<_DocumentCardItem> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // 1. TACTILE STACKED DOCUMENT SHEET BADGE
-              _buildTactilePaperBadge(formatIcon, formatColor, widget.isDark),
+              Hero(
+                tag: 'doc-icon-${widget.doc['_id'] ?? widget.doc['id']}',
+                child: _buildTactilePaperBadge(formatIcon, formatColor, widget.isDark),
+              ),
               const SizedBox(width: 16),
 
               // 2. DOCUMENT TITLE & METADATA

@@ -18,6 +18,13 @@ class AnalysisScreen extends ConsumerStatefulWidget {
   final String? sourceType;
   final String? fileData;
   final String? mimeType;
+  // Optional: when navigating here from a document card (e.g. Recent
+  // Documents), pass the same tag used on that card's icon so the two
+  // animate as one continuous element instead of a hard cut. Screens that
+  // construct AnalysisScreen without an originating card (e.g. right after
+  // a fresh scan) can simply omit this — a unique fallback tag is generated
+  // per-screen-instance so Hero still works safely with no visible effect.
+  final String? heroTag;
 
   const AnalysisScreen({
     super.key,
@@ -27,6 +34,7 @@ class AnalysisScreen extends ConsumerStatefulWidget {
     this.sourceType,
     this.fileData,
     this.mimeType,
+    this.heroTag,
   });
 
   @override
@@ -38,6 +46,15 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
   bool _isExportingPdf = false;
   bool _isGeneratingShare = false;
   String? _cachedShareToken;
+  late final String _resolvedHeroTag;
+
+  @override
+  void initState() {
+    super.initState();
+    // Computed once per screen instance so it stays stable across rebuilds
+    // (Hero requires a stable tag for the duration of the transition).
+    _resolvedHeroTag = widget.heroTag ?? UniqueKey().toString();
+  }
 
   Uint8List? _getCleanBytes(String? rawBase64) {
     if (rawBase64 == null || rawBase64.trim().isEmpty) return null;
@@ -871,18 +888,21 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                       // Header Row
                       Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              _effectiveSourceType == 'Photo Scan'
-                                  ? Icons.image_rounded
-                                  : (_effectiveSourceType == 'Text Description' ? Icons.notes_rounded : Icons.picture_as_pdf_rounded),
-                              color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                              size: 22,
+                          Hero(
+                            tag: _resolvedHeroTag,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Icon(
+                                _effectiveSourceType == 'Photo Scan'
+                                    ? Icons.image_rounded
+                                    : (_effectiveSourceType == 'Text Description' ? Icons.notes_rounded : Icons.picture_as_pdf_rounded),
+                                color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                                size: 22,
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),

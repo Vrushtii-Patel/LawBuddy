@@ -6,11 +6,31 @@ import '../theme/app_theme.dart';
 import '../screens/privacy_policy_screen.dart';
 
 /// Floating or bottom-docked privacy & storage consent banner.
-class CookieConsentBanner extends ConsumerWidget {
+class CookieConsentBanner extends ConsumerStatefulWidget {
   const CookieConsentBanner({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CookieConsentBanner> createState() => _CookieConsentBannerState();
+}
+
+class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
+  bool _ready = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() => _ready = true);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_ready) {
+      return const SizedBox.shrink();
+    }
     final consentState = ref.watch(consentProvider);
     if (consentState.hasDecided) {
       return const SizedBox.shrink();

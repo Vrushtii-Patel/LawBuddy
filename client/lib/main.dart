@@ -116,11 +116,15 @@ class LawBuddyApp extends ConsumerWidget {
       darkTheme: AppTheme.darkTheme,
       home: homeWidget,
       builder: (context, child) {
-        return Stack(
-          children: [
-            if (child != null) child,
-            const CookieConsentBanner(),
-          ],
+        if (child == null) return const SizedBox.shrink();
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
+              child,
+              const CookieConsentBanner(),
+            ],
+          ),
         );
       },
     );
