@@ -7,6 +7,12 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = require('../config/jwt');
 const { sendOTP } = require('../services/emailService');
 const { isValidEmail, sanitizeInput, requireAuth } = require('../middleware/authMiddleware');
+const {
+  otpRequestIpLimiter,
+  otpRequestEmailLimiter,
+  otpVerifyIpLimiter,
+  otpVerifyEmailLimiter
+} = require('../middleware/rateLimitMiddleware');
 
 function generateUserId() {
   return 'usr_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
@@ -64,27 +70,27 @@ async function handleSendOtp(email, isSignup, res) {
 }
 
 // POST /api/auth/send-otp
-router.post('/send-otp', async (req, res) => {
+router.post('/send-otp', otpRequestIpLimiter, otpRequestEmailLimiter, async (req, res) => {
   const { email, type } = req.body;
   if (!email || !type) return res.status(400).json({ error: 'Email and type (login/signup) are required' });
   return await handleSendOtp(email, type === 'signup', res);
 });
 
 // Alias routes for frontend convenience
-router.post('/signup', async (req, res) => {
+router.post('/signup', otpRequestIpLimiter, otpRequestEmailLimiter, async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'Email is required' });
   return await handleSendOtp(email, true, res);
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', otpRequestIpLimiter, otpRequestEmailLimiter, async (req, res) => {
   const { identifier } = req.body;
   if (!identifier) return res.status(400).json({ error: 'Email is required' });
   return await handleSendOtp(identifier, false, res);
 });
 
 // POST /api/auth/resend-otp
-router.post('/resend-otp', async (req, res) => {
+router.post('/resend-otp', otpRequestIpLimiter, otpRequestEmailLimiter, async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: 'Email is required' });
@@ -126,7 +132,7 @@ router.post('/resend-otp', async (req, res) => {
 });
 
 // POST /api/auth/verify-otp
-router.post('/verify-otp', async (req, res) => {
+router.post('/verify-otp', otpVerifyIpLimiter, otpVerifyEmailLimiter, async (req, res) => {
   try {
     let { email, otp, full_name, type } = req.body;
     email = sanitizeInput(email).toLowerCase();
@@ -153,6 +159,10 @@ router.post('/verify-otp', async (req, res) => {
     const isMatch = await bcrypt.compare(otp, otpRecord.otpHash);
     if (!isMatch) {
       otpRecord.attempts += 1;
+      if (otpRecord.attempts >= 5) {
+        await Otp.deleteMany({ email });
+        return res.status(429).json({ error: 'Maximum attempts reached. Please request a new OTP.' });
+      }
       await otpRecord.save();
       return res.status(400).json({ error: 'Invalid OTP' });
     }
