@@ -270,12 +270,18 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
       _hasCalculated = true;
     });
 
-    // Save calculation event to backend
+    // Save calculation event to backend (fire-and-forget: the calculator
+    // itself is fully client-side and already shown to the user above, so a
+    // failure here shouldn't interrupt or alarm the user — but it shouldn't
+    // vanish silently either, in case this needs debugging later).
     ApiService.saveStampDutyCalculation({
       'state': _selectedState,
       'propertyType': _selectedPropertyType,
       'applicableValue': applicableVal,
       'totalPayable': total,
+    }).catchError((e) {
+      debugPrint('Failed to save stamp duty calculation to history: $e');
+      return <String, dynamic>{};
     });
   }
 
