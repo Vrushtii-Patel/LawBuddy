@@ -9,6 +9,7 @@ import '../services/api_service.dart';
 import '../services/pdf_export_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
+import '../widgets/staggered_entrance.dart';
 
 class AnalysisScreen extends ConsumerStatefulWidget {
   final String originalText;
@@ -1083,7 +1084,9 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                 final reraRefs = (item['reraReferences'] is List) ? (item['reraReferences'] as List).join(', ') : '';
                 final borderColor = _getBorderColor(context, category);
 
-                return Card(
+                return StaggeredEntrance(
+                  index: index,
+                  child: Card(
                   margin: const EdgeInsets.only(bottom: 14),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
@@ -1248,7 +1251,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                       ),
                     ),
                   ),
-                );
+                ));
               }),
             ],
           ),
