@@ -16,6 +16,7 @@ class DocumentComparisonScreen extends ConsumerStatefulWidget {
 class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScreen> {
   List<dynamic> _recentDocs = [];
   bool _isLoadingDocs = true;
+  bool _docsLoadFailed = false;
   String? _selectedDocAId;
   String? _selectedDocBId;
   String? _selectedTitleA;
@@ -27,6 +28,10 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
 
   Map<String, dynamic>? _activeComp;
   Timer? _pollTimer;
+  int _pollAttempts = 0;
+  static const int _maxPollAttempts = 60; // 60 x 2s = 2 minutes, matching the scan screen's polling cap
+  static const int _maxConsecutivePollErrors = 5;
+  int _consecutivePollErrors = 0;
 
   @override
   void initState() {
@@ -41,6 +46,10 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
   }
 
   Future<void> _loadInitialData() async {
+    setState(() {
+      _isLoadingDocs = true;
+      _docsLoadFailed = false;
+    });
     try {
       final results = await Future.wait([
         ApiService.fetchRecentDocuments(),
@@ -59,9 +68,15 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
         });
       }
     } catch (e) {
+      debugPrint('Failed to load documents/active comparison: $e');
       if (mounted) {
         setState(() {
           _isLoadingDocs = false;
+          // Only flag a load failure if we don't already have docs on screen,
+          // so a background refresh hiccup doesn't wipe out a working list.
+          if (_recentDocs.isEmpty) {
+            _docsLoadFailed = true;
+          }
         });
       }
     }
@@ -69,10 +84,25 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
 
   void _startPolling(String comparisonId) {
     _pollTimer?.cancel();
+    _pollAttempts = 0;
+    _consecutivePollErrors = 0;
     _pollTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+      _pollAttempts++;
+      if (_pollAttempts > _maxPollAttempts) {
+        timer.cancel();
+        if (mounted) {
+          setState(() {
+            _isComparing = false;
+            _errorMessage = 'This comparison is taking longer than expected. It may still finish in the background — check back shortly, or try again.';
+          });
+        }
+        return;
+      }
+
       try {
         final comp = await ApiService.getComparison(comparisonId);
         if (!mounted) return;
+        _consecutivePollErrors = 0; // reset on any successful check-in
         final status = comp['status'];
         final step = comp['currentStep'] ?? 'Processing...';
         setState(() {
@@ -100,6 +130,17 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
         }
       } catch (e) {
         debugPrint('Polling error: $e');
+        _consecutivePollErrors++;
+        // A single dropped request shouldn't interrupt polling, but repeated
+        // failures in a row mean something's genuinely wrong (lost
+        // connection, expired session) — don't spin forever with no signal.
+        if (_consecutivePollErrors >= _maxConsecutivePollErrors && mounted) {
+          timer.cancel();
+          setState(() {
+            _isComparing = false;
+            _errorMessage = 'Lost connection while checking comparison status. Please check your connection and try again.';
+          });
+        }
       }
     });
   }
@@ -367,6 +408,24 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
           const SizedBox(height: 12),
           if (_isLoadingDocs)
             const Center(child: Padding(padding: EdgeInsets.all(8.0), child: CircularProgressIndicator()))
+          else if (_docsLoadFailed)
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Couldn\'t load your documents. Check your connection and try again.',
+                    style: TextStyle(
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: _loadInitialData,
+                  child: const Text('Retry'),
+                ),
+              ],
+            )
           else if (_recentDocs.isEmpty)
             Text(
               'No scanned documents found. Scan agreements first.',
