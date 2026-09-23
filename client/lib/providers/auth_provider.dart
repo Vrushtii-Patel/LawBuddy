@@ -22,15 +22,21 @@ class AuthState {
     this.errorMessage,
   });
 
+  // `clearError` is a separate flag (rather than relying on passing
+  // `errorMessage: null`) because `errorMessage ?? this.errorMessage` can
+  // never actually null out the field — `null` just falls back to the old
+  // value. Pass `clearError: true` whenever the previous error should be
+  // dropped (e.g. after a successful call), instead of `errorMessage: null`.
   AuthState copyWith({
     AuthStatus? status,
     UserModel? user,
     String? errorMessage,
+    bool clearError = false,
   }) {
     return AuthState(
       status: status ?? this.status,
       user: user ?? this.user,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
 }
@@ -52,7 +58,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(
           status: AuthStatus.authenticated,
           user: user,
-          errorMessage: null,
+          clearError: true,
         );
       } else {
         state = state.copyWith(status: AuthStatus.unauthenticated);
@@ -60,7 +66,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
-        errorMessage: null,
+        clearError: true,
       );
     }
   }
@@ -75,7 +81,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         email: email,
         type: type,
       );
-      state = state.copyWith(status: AuthStatus.unauthenticated, errorMessage: null);
+      state = state.copyWith(status: AuthStatus.unauthenticated, clearError: true);
       return true;
     } catch (e) {
       state = state.copyWith(
@@ -111,7 +117,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(
         status: AuthStatus.authenticated,
         user: user,
-        errorMessage: null,
+        clearError: true,
       );
       return true;
     } catch (e) {
@@ -152,7 +158,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
         user: null,
-        errorMessage: null,
+        clearError: true,
       );
     } catch (e) {
       state = state.copyWith(

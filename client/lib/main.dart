@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/home_screen.dart';
 import 'screens/welcome_screen.dart';
@@ -79,7 +80,10 @@ class LawBuddyApp extends ConsumerWidget {
 
     if (shareParam != null && shareParam.trim().isNotEmpty) {
       homeWidget = SharedSummaryScreen(shareToken: shareParam.trim());
-    } else if (screenParam == 'analysis') {
+    } else if (screenParam == 'analysis' && kDebugMode) {
+      // Demo screen with hardcoded fake clause data, for local design/dev
+      // preview only — gated to debug builds so it isn't reachable via URL
+      // on a production web deploy.
       homeWidget = const AnalysisScreen(
         documentTitle: 'Agreement for Sale (Extract) - Flat 402',
         originalText: 'Clause 7.2: In the event of milestone payment delay exceeding 15 days, Developer forfeits 100% earnest money.\nClause 14.1: Buyer delay attracts 18% p.a. interest while Developer delay offers Rs 5/sqft compensation.\nClause 3.1: Carpet area specification adhering to RERA standard definitions.',

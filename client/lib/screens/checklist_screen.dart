@@ -312,7 +312,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
           },
         );
       },
-    );
+    ).then((_) => titleController.dispose());
   }
 
   void _showRenameDialog() {
@@ -391,7 +391,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
           ],
         );
       },
-    );
+    ).then((_) => controller.dispose());
   }
 
   void _confirmDeleteChecklist() async {
