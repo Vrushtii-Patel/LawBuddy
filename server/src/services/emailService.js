@@ -25,7 +25,7 @@ async function sendOTP(email, otp) {
 
   try {
     const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"LawBuddy" <finalyearproject2513@gmail.com>',
+      from: process.env.SMTP_FROM,
       to: email,
       subject: 'Your LawBuddy Verification Code',
       html: `

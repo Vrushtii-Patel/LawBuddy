@@ -459,12 +459,26 @@ class ApiService {
     }
   }
 
-  static String buildShareUrl(String shareToken) {
+  /// Base URL for share links.
+  /// Configurable via `--dart-define=SHARE_BASE_URL=https://your-domain.com/`.
+  /// Defaults to browser origin on web, or development/testing repository URL as fallback.
+  static String get shareBaseUrl {
+    const String envShareUrl = String.fromEnvironment('SHARE_BASE_URL');
+    if (envShareUrl.isNotEmpty) {
+      return envShareUrl;
+    }
     if (kIsWeb) {
       final uri = Uri.base;
-      return '${uri.scheme}://${uri.host}${uri.hasPort ? ':${uri.port}' : ''}${uri.path}?share=$shareToken';
+      return '${uri.scheme}://${uri.host}${uri.hasPort ? ':${uri.port}' : ''}${uri.path}';
     }
-    return 'https://vrushti1303.github.io/Final-year-project/?share=$shareToken';
+    // Development/testing fallback URL until production deployment domain is configured
+    return 'https://vrushti1303.github.io/Final-year-project/';
+  }
+
+  static String buildShareUrl(String shareToken) {
+    final base = shareBaseUrl;
+    final separator = base.contains('?') ? '&' : (base.endsWith('/') ? '?' : '/?');
+    return '$base${separator}share=$shareToken';
   }
 
   static Future<String> explainSnippet(String context, String snippet) async {
