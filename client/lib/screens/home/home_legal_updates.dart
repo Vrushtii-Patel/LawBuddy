@@ -18,6 +18,51 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
     required this.isDark,
   });
 
+  Future<void> _launchNewsUrl(BuildContext context, String? link) async {
+    if (link == null || link.trim().isEmpty) {
+      _showErrorSnackBar(context);
+      return;
+    }
+    try {
+      final uri = Uri.parse(link.trim());
+      if (await canLaunchUrl(uri)) {
+        final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+        if (launched) return;
+      }
+      if (context.mounted) {
+        _showErrorSnackBar(context);
+      }
+    } catch (e) {
+      debugPrint('Error opening legal news URL: $e');
+      if (context.mounted) {
+        _showErrorSnackBar(context);
+      }
+    }
+  }
+
+  void _showErrorSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Unable to open this link. Please try again.',
+                style: GoogleFonts.inter(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(localeProvider);
@@ -142,15 +187,7 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () async {
-                      final link = (news[i]['link'] ?? '').toString();
-                      if (link.isNotEmpty) {
-                        final uri = Uri.parse(link);
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri, mode: LaunchMode.externalApplication);
-                        }
-                      }
-                    },
+                    onTap: () => _launchNewsUrl(context, news[i]['link']?.toString()),
                     borderRadius: BorderRadius.circular(12),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

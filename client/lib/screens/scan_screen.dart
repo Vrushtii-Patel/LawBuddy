@@ -310,7 +310,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         );
       } else {
         throw Exception('Failed to initialize scan job.');
-      }    } catch (e) {
+      }
+    } catch (e) {
       debugPrint('Error processing photo scan: $e');
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
