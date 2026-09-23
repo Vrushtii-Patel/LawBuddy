@@ -25,11 +25,39 @@ class _LegalSourcesCitationCardState extends State<LegalSourcesCitationCard> {
     try {
       final uri = Uri.parse(urlStr);
       if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+        if (launched) return;
       }
+      _showErrorSnackBar();
     } catch (e) {
       debugPrint('Error opening citation URL: $e');
+      _showErrorSnackBar();
     }
+  }
+
+  void _showErrorSnackBar() {
+    if (!mounted) return;
+    final isDark = widget.isDark;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Unable to open citation link. Please try again.',
+                style: GoogleFonts.inter(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 
   @override
