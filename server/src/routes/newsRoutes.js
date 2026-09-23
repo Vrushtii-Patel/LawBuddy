@@ -1,6 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
+const WARNING_PATTERNS = [
+    /\b(?:warning|warns?|alert|alerts|caution|cautionary|beware)\b/i,
+    /\b(?:penalt(?:y|ies)|penaliz(?:e|ed|ing)|fines?|fined|violat(?:ion|ions|ing|ed?)|breach(?:ed|ing)?)\b/i,
+    /\b(?:arrest(?:ed|ing)?|bans?|banned|banning|cancel(?:led|ling|lation)?|revok(?:ed|ing|ation)|stay(?:ed)?)\b/i,
+    /\b(?:probe|investigat(?:ion|ing|ed)|notices?|summons?|blacklist(?:ed)?|evict(?:ion|ed)?|demolit(?:ion|ed))\b/i,
+    /\b(?:fraud|scams?|illegal(?:ly)?|defaulters?|defaults?|non-complian(?:ce|t)|unauthori[sz]ed|unregistered|forg(?:ery|ed))\b/i,
+    /\b(?:stuck|delayed?|delays?|aggrieved|disputes?|crisis|losses?|strict|mandat(?:ory|es?))\b/i
+];
+
+function isWarningArticle(title = '', source = '') {
+    const text = `${title} ${source}`;
+    return WARNING_PATTERNS.some(regex => regex.test(text));
+}
+
 function parseRssItems(xmlText) {
     const items = [];
     const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
@@ -28,7 +42,13 @@ function parseRssItems(xmlText) {
         }
         
         if (title && link) {
-            items.push({ title, link, pubDate, source });
+            items.push({
+                title,
+                link,
+                pubDate,
+                source,
+                isWarning: isWarningArticle(title, source)
+            });
         }
     }
     return items;
@@ -78,10 +98,7 @@ router.get('/legal-updates', async (req, res) => {
             return res.json(fallbackNews);
         }
         
-        articles = articles.slice(0, 4).map((art, idx) => ({
-            ...art,
-            isWarning: idx % 2 === 1
-        }));
+        articles = articles.slice(0, 4);
         
         res.json(articles);
     } catch (error) {
