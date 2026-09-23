@@ -59,7 +59,7 @@ async function sendOTP(email, otp) {
     console.log(`📧 Target Email: ${email}`);
     console.log(`🔑 6-Digit OTP Code: ${otp}`);
     console.log('========================================\n');
-    return { success: true, messageId: 'fallback-otp' };
+    return { success: false, messageId: 'fallback-otp' };
   }
 }
 
