@@ -55,27 +55,42 @@ app.use('/api/admin', adminRoutes);
 app.use('/api', comparisonRoutes);
 app.use('/api', shareRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
-mongoose.connect(process.env.MONGODB_URI, { family: 4 })
-  .then(() => {
-    console.log('Connected to MongoDB');
-    // Ensure clean collection indexes
-    const Checklist = require('./models/Checklist');
-    Checklist.syncIndexes().catch(idxErr => {
-      console.warn('Checklist syncIndexes note:', idxErr.message);
-    });
-    // Startup Recovery: Resume any unfinished ScanJobs
-    scanJobService.recoverUnfinishedScanJobs().catch(recErr => {
-      console.warn('Startup scan recovery warning:', recErr.message);
-    });
-    // Startup Recovery: Resume any unfinished DocumentComparisons
-    comparisonService.recoverUnfinishedComparisons().catch(compErr => {
-      console.warn('Startup comparison recovery warning:', compErr.message);
-    });
-  })
-  .catch((err) => {
-    console.warn('MongoDB connection failed (running without DB connection):', err.message);
+async function startServer() {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
+
+  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/lawbuddy';
+  try {
+    await mongoose.connect(uri, { family: 4, serverSelectionTimeoutMS: 2500 });
+    console.log('Connected to MongoDB at', uri);
+  } catch (err) {
+    console.warn('Local MongoDB connection failed. Starting in-memory MongoDB for development...');
+    try {
+      const { MongoMemoryServer } = require('mongodb-memory-server');
+      const mongod = await MongoMemoryServer.create();
+      const memUri = mongod.getUri();
+      await mongoose.connect(memUri);
+      console.log('Connected to In-Memory MongoDB at', memUri);
+    } catch (memErr) {
+      console.error('Failed to start in-memory MongoDB:', memErr.message);
+    }
+  }
+
+  // Ensure clean collection indexes & background recovery
+  try {
+    const Checklist = require('./models/Checklist');
+    await Checklist.syncIndexes();
+  } catch (idxErr) {
+    console.warn('Checklist syncIndexes note:', idxErr.message);
+  }
+
+  scanJobService.recoverUnfinishedScanJobs().catch(recErr => {
+    console.warn('Startup scan recovery warning:', recErr.message);
+  });
+  comparisonService.recoverUnfinishedComparisons().catch(compErr => {
+    console.warn('Startup comparison recovery warning:', compErr.message);
+  });
+}
+
+startServer();

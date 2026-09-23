@@ -30,15 +30,8 @@ async function handleSendOtp(email, isSignup, res) {
       return res.status(400).json({ error: 'Please enter a valid email address' });
     }
 
+    // Check if user exists (for logging/metadata)
     const existingUser = await User.findOne({ email });
-
-    if (isSignup && existingUser) {
-      return res.status(400).json({ error: 'Account already exists. Please log in.' });
-    }
-
-    if (!isSignup && !existingUser) {
-      return res.status(404).json({ error: 'Account not found. Please sign up for a new account.' });
-    }
 
     // Generate OTP
     const otp = generateOtp();
@@ -188,11 +181,21 @@ router.post('/verify-otp', otpVerifyIpLimiter, otpVerifyEmailLimiter, async (req
       await user.save();
     } else {
       if (!user) {
-        return res.status(404).json({ error: 'User not found. Please sign up.' });
+        user = new User({
+          userId: generateUserId(),
+          full_name: sanitizeInput(full_name || email.split('@')[0]),
+          email,
+          emailVerified: true,
+          created_at: new Date(),
+          last_login: new Date(),
+          profile_photo: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`
+        });
+        await user.save();
+      } else {
+        user.last_login = new Date();
+        user.emailVerified = true;
+        await user.save();
       }
-      user.last_login = new Date();
-      user.emailVerified = true;
-      await user.save();
     }
 
     // Generate JWT
