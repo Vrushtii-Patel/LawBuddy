@@ -319,8 +319,10 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
       body: SafeArea(
         child: Column(
           children: [
+            const SizedBox(height: 6),
             // TOP BAR
             _buildTopBar(context, isDark, loc),
+            const SizedBox(height: 4),
 
             // BODY CONTENT
             Expanded(
@@ -400,9 +402,10 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
   // TOP BAR
   // ==========================================
   Widget _buildTopBar(BuildContext context, bool isDark, LocaleNotifier loc) {
+    final isDesktopOrTablet = MediaQuery.of(context).size.width >= 700;
     return Container(
-      height: 54,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -434,42 +437,43 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
             ),
           ),
 
-          // Center: Exact dead-center badge
-          Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.2 : 0.08),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.35 : 0.2),
+          // Center: Exact dead-center badge (desktop/tablet only to avoid mobile overlap)
+          if (isDesktopOrTablet)
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.2 : 0.08),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.35 : 0.2),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.lightPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'STATUTORY TAX & REGISTRY CALCULATOR',
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
+                        letterSpacing: 0.9,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.lightPrimary,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'STATUTORY TAX & REGISTRY CALCULATOR',
-                    style: GoogleFonts.inter(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
-                      letterSpacing: 0.9,
-                    ),
-                  ),
-                ],
-              ),
             ),
-          ),
 
           // Right: Profile Button
           const Align(

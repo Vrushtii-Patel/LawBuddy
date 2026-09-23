@@ -46,63 +46,68 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final primaryBtnColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: isDesktop ? 20 : 0,
-          left: isDesktop ? 24 : 0,
-          right: isDesktop ? 24 : 0,
-        ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: isDesktop ? 1080 : double.infinity,
-            ),
-          child: Material(
-            elevation: 8,
-            shadowColor: Colors.black.withValues(alpha: isDark ? 0.45 : 0.15),
-            borderRadius: BorderRadius.circular(isDesktop ? 16 : 0),
-            color: bgColor,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: isDesktop ? 24 : 18,
-                vertical: isDesktop ? 18 : 16,
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: isDesktop ? 16 : 0,
+            left: isDesktop ? 24 : 0,
+            right: isDesktop ? 24 : 0,
+          ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: isDesktop ? 960 : double.infinity,
               ),
-              decoration: BoxDecoration(
+              child: Material(
+                elevation: isDesktop ? 4 : 8,
+                shadowColor: Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
+                borderRadius: BorderRadius.circular(isDesktop ? 12 : 0),
                 color: bgColor,
-                borderRadius: BorderRadius.circular(isDesktop ? 16 : 0),
-                border: Border.all(
-                  color: borderColor,
-                  width: 1,
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isDesktop ? 20 : 16,
+                    vertical: isDesktop ? 10 : 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: bgColor,
+                    borderRadius: BorderRadius.circular(isDesktop ? 12 : 0),
+                    border: isDesktop
+                        ? Border.all(color: borderColor, width: 1)
+                        : Border(top: BorderSide(color: borderColor, width: 1)),
+                  ),
+                  child: isDesktop
+                      ? _buildDesktopLayout(
+                          context,
+                          ref,
+                          isDark,
+                          primaryTextColor,
+                          secondaryTextColor,
+                          borderColor,
+                          primaryBtnColor,
+                        )
+                      : _buildMobileLayout(
+                          context,
+                          ref,
+                          isDark,
+                          primaryTextColor,
+                          secondaryTextColor,
+                          borderColor,
+                          primaryBtnColor,
+                        ),
                 ),
               ),
-              child: isDesktop
-                  ? _buildDesktopLayout(
-                      context,
-                      ref,
-                      isDark,
-                      primaryTextColor,
-                      secondaryTextColor,
-                      borderColor,
-                      primaryBtnColor,
-                    )
-                  : _buildMobileLayout(
-                      context,
-                      ref,
-                      isDark,
-                      primaryTextColor,
-                      secondaryTextColor,
-                      borderColor,
-                      primaryBtnColor,
-                    ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildDesktopLayout(
     BuildContext context,
@@ -117,41 +122,43 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             color: primaryBtnColor.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(6),
           ),
-          child: Icon(Icons.shield_outlined, color: primaryBtnColor, size: 24),
+          child: Icon(Icons.shield_outlined, color: primaryBtnColor, size: 16),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Your Privacy Matters',
+                'Privacy preferences',
                 style: GoogleFonts.inter(
-                  fontSize: 14.5,
+                  fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: primaryTextColor,
                   letterSpacing: -0.2,
                 ),
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 2),
               Text(
-                'LawBuddy uses browser storage to keep you signed in and remember preferences such as your theme and language. We don\'t currently use advertising or analytics cookies.',
+                'We use essential browser storage to keep LawBuddy working and remember your preferences.',
                 style: GoogleFonts.inter(
-                  fontSize: 12.5,
-                  height: 1.45,
+                  fontSize: 11.5,
+                  height: 1.3,
                   color: secondaryTextColor,
                 ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
         ),
-        const SizedBox(width: 20),
+        const SizedBox(width: 16),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -159,11 +166,13 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               onPressed: () => showPrivacyPreferencesDialog(context),
               style: TextButton.styleFrom(
                 foregroundColor: secondaryTextColor,
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                minimumSize: const Size(0, 32),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
                 'Customize',
-                style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w600),
+                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(width: 8),
@@ -172,12 +181,14 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               style: OutlinedButton.styleFrom(
                 foregroundColor: primaryTextColor,
                 side: BorderSide(color: borderColor),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                minimumSize: const Size(0, 32),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
               ),
               child: Text(
                 'Necessary Only',
-                style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w600),
+                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(width: 8),
@@ -186,12 +197,14 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               style: FilledButton.styleFrom(
                 backgroundColor: primaryBtnColor,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9)),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                minimumSize: const Size(0, 32),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
               ),
               child: Text(
                 'Accept Preferences',
-                style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w700),
+                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -216,34 +229,52 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(7),
+              padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: primaryBtnColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6),
               ),
-              child: Icon(Icons.shield_outlined, color: primaryBtnColor, size: 18),
+              child: Icon(Icons.shield_outlined, color: primaryBtnColor, size: 14),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 8),
             Text(
-              'Your Privacy Matters',
+              'Privacy preferences',
               style: GoogleFonts.inter(
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: FontWeight.w700,
                 color: primaryTextColor,
               ),
             ),
+            const Spacer(),
+            TextButton(
+              onPressed: () => showPrivacyPreferencesDialog(context),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                foregroundColor: secondaryTextColor,
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                'Customize',
+                style: GoogleFonts.inter(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w600,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
         Text(
-          'LawBuddy uses browser storage to keep you signed in and remember preferences such as your theme and language. We don\'t currently use advertising or analytics cookies.',
+          'We use essential browser storage to keep LawBuddy working and remember your preferences.',
           style: GoogleFonts.inter(
-            fontSize: 12,
-            height: 1.45,
+            fontSize: 11.5,
+            height: 1.35,
             color: secondaryTextColor,
           ),
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 10),
         Row(
           children: [
             Expanded(
@@ -252,12 +283,14 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: primaryTextColor,
                   side: BorderSide(color: borderColor),
-                  padding: const EdgeInsets.symmetric(vertical: 9),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  minimumSize: const Size(0, 34),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
                 child: Text(
                   'Necessary Only',
-                  style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.inter(fontSize: 11.5, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -268,34 +301,18 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 style: FilledButton.styleFrom(
                   backgroundColor: primaryBtnColor,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 9),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  minimumSize: const Size(0, 34),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
                 child: Text(
                   'Accept Preferences',
-                  style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700),
+                  style: GoogleFonts.inter(fontSize: 11.5, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
           ],
-        ),
-        const SizedBox(height: 6),
-        Center(
-          child: TextButton(
-            onPressed: () => showPrivacyPreferencesDialog(context),
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              foregroundColor: secondaryTextColor,
-            ),
-            child: Text(
-              'Customize Preferences',
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
         ),
       ],
     );

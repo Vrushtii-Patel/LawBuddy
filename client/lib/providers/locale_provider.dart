@@ -711,7 +711,7 @@ final Map<String, Map<String, String>> _translations = {
   'auth.alreadyHaveAccount': {'en': 'Already have an account? ', 'hi': 'पहले से ही एक खाता है? '},
   'auth.signUp': {'en': 'Sign Up', 'hi': 'साइन अप करें'},
   'auth.logIn': {'en': 'Log In', 'hi': 'लॉग इन करें'},
-  'auth.backToHome': {'en': 'Back to Home', 'hi': 'होम पर वापस जाएं'},
+  'auth.backToHome': {'en': 'Back', 'hi': 'पीछे'},
   'auth.intelligentProtection': {
     'en': 'Intelligent Protection for Property Agreements.',
     'hi': 'संपत्ति समझौतों के लिए बुद्धिमान सुरक्षा।',

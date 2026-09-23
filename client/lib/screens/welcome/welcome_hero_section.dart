@@ -210,7 +210,7 @@ class WelcomeHeroSection extends StatelessWidget {
                         animation: sideWordsAnim,
                         builder: (context, child) {
                           return Opacity(
-                            opacity: (sideWordsAnim.value * (0.65 + (scrollProgress * 0.25))).clamp(0.0, 1.0),
+                            opacity: sideWordsAnim.value.clamp(0.0, 1.0),
                             child: Transform.translate(
                               offset: Offset(-sideWordInward + (1.0 - sideWordsAnim.value) * -20.0, 0),
                               child: child,
@@ -232,7 +232,7 @@ class WelcomeHeroSection extends StatelessWidget {
                         animation: sideWordsAnim,
                         builder: (context, child) {
                           return Opacity(
-                            opacity: (sideWordsAnim.value * (0.65 + (scrollProgress * 0.25))).clamp(0.0, 1.0),
+                            opacity: sideWordsAnim.value.clamp(0.0, 1.0),
                             child: Transform.translate(
                               offset: Offset(sideWordInward + (1.0 - sideWordsAnim.value) * 20.0, 0),
                               child: child,
@@ -302,14 +302,14 @@ class WelcomeHeroSection extends StatelessWidget {
                 ),
               ),
 
-              // Layer 2: Second Muted Olive Gray Tone
+              // Layer 2: Mid Lavender Shadow
               Transform.translate(
                 offset: Offset(0, secOffsetY),
                 child: Text(
                   lineText,
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(
-                    color: (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.3),
+                    color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.4),
                   ),
                 ),
               ),
@@ -387,7 +387,9 @@ class WelcomeHeroSection extends StatelessWidget {
               fontSize: isDesktop ? 26.0 : (isTablet ? 18.0 : 12.0),
               fontWeight: FontWeight.w900,
               letterSpacing: isDesktop ? 5.5 : 3.5,
-              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              color: isDark
+                  ? AppColors.darkTextSecondary.withValues(alpha: 0.85)
+                  : AppColors.lightTextPrimary.withValues(alpha: 0.65),
             ),
           ),
         );

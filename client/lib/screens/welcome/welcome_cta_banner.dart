@@ -29,15 +29,17 @@ class WelcomeCtaBanner extends StatelessWidget {
               vertical: isDesktop ? 42 : 30,
             ),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.darkSurface : AppColors.lightPrimary,
+              color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: isDark ? AppColors.darkBorder : AppColors.lightPrimary,
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.25),
+                  color: isDark
+                      ? Colors.black.withValues(alpha: 0.25)
+                      : AppColors.lightTextPrimary.withValues(alpha: 0.06),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -55,7 +57,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                               style: GoogleFonts.inter(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.darkTextPrimary,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                                 height: 1.2,
                                 letterSpacing: -0.5,
                               ),
@@ -66,7 +68,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                               style: GoogleFonts.inter(
                                 fontSize: 14.5,
                                 height: 1.45,
-                                color: AppColors.darkTextSecondary,
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                               ),
                             ),
                           ],
@@ -78,8 +80,11 @@ class WelcomeCtaBanner extends StatelessWidget {
                           OutlinedButton(
                             onPressed: onExploreFeatures,
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: AppColors.darkBorder, width: 1.2),
-                              foregroundColor: AppColors.darkTextPrimary,
+                              side: BorderSide(
+                                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                                width: 1.2,
+                              ),
+                              foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
@@ -92,8 +97,8 @@ class WelcomeCtaBanner extends StatelessWidget {
                           ElevatedButton(
                             onPressed: onAnalyzeDoc,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                              foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightTextPrimary,
+                              foregroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 0,
@@ -115,7 +120,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                         style: GoogleFonts.inter(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.darkTextPrimary,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                           height: 1.2,
                           letterSpacing: -0.4,
                         ),
@@ -126,15 +131,15 @@ class WelcomeCtaBanner extends StatelessWidget {
                         style: GoogleFonts.inter(
                           fontSize: 13.5,
                           height: 1.45,
-                          color: AppColors.darkTextSecondary,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         ),
                       ),
                       const SizedBox(height: 22),
                       ElevatedButton(
                         onPressed: onAnalyzeDoc,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                          foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                          backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightTextPrimary,
+                          foregroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           elevation: 0,
@@ -148,8 +153,11 @@ class WelcomeCtaBanner extends StatelessWidget {
                       OutlinedButton(
                         onPressed: onExploreFeatures,
                         style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: AppColors.darkBorder, width: 1.2),
-                          foregroundColor: AppColors.darkTextPrimary,
+                          side: BorderSide(
+                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            width: 1.2,
+                          ),
+                          foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),

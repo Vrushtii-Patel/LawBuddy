@@ -543,8 +543,10 @@ The Developer represents that necessary zoning approvals are under application w
         child: SafeArea(
           child: Column(
             children: [
+              const SizedBox(height: 6),
               // TOP BAR
               _buildTopBar(context, isDark, loc),
+              const SizedBox(height: 4),
 
               // BODY CONTENT
               Expanded(
@@ -740,9 +742,10 @@ The Developer represents that necessary zoning approvals are under application w
   // TOP BAR
   // ==========================================
   Widget _buildTopBar(BuildContext context, bool isDark, LocaleNotifier loc) {
+    final isDesktopOrTablet = MediaQuery.of(context).size.width >= 700;
     return Container(
-      height: 54,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -774,42 +777,43 @@ The Developer represents that necessary zoning approvals are under application w
             ),
           ),
 
-          // Center: True exact center alignment
-          Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-              decoration: BoxDecoration(
-                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          // Center: True exact center alignment (desktop/tablet only to avoid mobile overlap)
+          if (isDesktopOrTablet)
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'AI CONTRACT VERIFICATION STUDIO',
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        letterSpacing: 0.9,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'AI CONTRACT VERIFICATION STUDIO',
-                    style: GoogleFonts.inter(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                      letterSpacing: 0.9,
-                    ),
-                  ),
-                ],
-              ),
             ),
-          ),
 
           // Right: Profile Button
           const Align(

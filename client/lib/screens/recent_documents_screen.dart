@@ -797,7 +797,10 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 8,
+                        runSpacing: 4,
                         children: [
                           Text(
                             tr('recentDocs.repository'),
@@ -808,7 +811,6 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                               color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                             ),
                           ),
-                          const SizedBox(width: 8),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                             decoration: BoxDecoration(

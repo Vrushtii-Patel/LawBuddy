@@ -104,19 +104,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      body: MouseRegion(
-        onHover: (event) {
-          if (isDesktop) {
-            _mousePosNotifier.value = event.position;
-          }
-        },
-        child: Container(
-          color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            physics: const ClampingScrollPhysics(),
-            child: Column(
-              children: [
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: MouseRegion(
+          onHover: (event) {
+            if (isDesktop) {
+              _mousePosNotifier.value = event.position;
+            }
+          },
+          child: Container(
+            color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                children: [
                 // Top Navigation Header
                 WelcomeHeader(
                   isDark: isDark,
@@ -199,6 +202,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with TickerProviderStateM
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

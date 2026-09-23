@@ -328,8 +328,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
         child: SafeArea(
           child: Column(
             children: [
+              const SizedBox(height: 6),
               // TOP BAR
               _buildTopBar(context, isDark, loc),
+              const SizedBox(height: 4),
 
               // BODY STREAM / EMPTY STATE
               Expanded(
@@ -407,9 +409,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
   // TOP APP BAR (CENTERED BADGE + ACTIONS)
   // ==========================================
   Widget _buildTopBar(BuildContext context, bool isDark, LocaleNotifier loc) {
+    final isDesktopOrTablet = MediaQuery.of(context).size.width >= 700;
     return Container(
-      height: 54,
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -441,42 +444,43 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
             ),
           ),
 
-          // Center: True dead-center alignment
-          Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-              decoration: BoxDecoration(
-                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          // Center: True dead-center alignment (desktop/tablet only to avoid mobile overlap)
+          if (isDesktopOrTablet)
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '24/7 LEGAL AI ASSISTANT • RERA SPECIALIST',
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        letterSpacing: 0.9,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '24/7 LEGAL AI ASSISTANT • RERA SPECIALIST',
-                    style: GoogleFonts.inter(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
-                      letterSpacing: 0.9,
-                    ),
-                  ),
-                ],
-              ),
             ),
-          ),
 
           // Right: Action buttons
           Align(

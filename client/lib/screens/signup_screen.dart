@@ -149,8 +149,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
       body: SafeArea(
         child: Column(
           children: [
+            const SizedBox(height: 6),
             // Top Navigation Bar
             _buildTopBar(context, primaryText, cardBorder, isDark, tr),
+            const SizedBox(height: 4),
 
             // Main Content Body
             Expanded(
@@ -275,7 +277,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                       Icon(Icons.arrow_back_rounded, size: 18, color: primaryText),
                       const SizedBox(width: 6),
                       Text(
-                        tr('auth.backToHome'),
+                        tr('common.back'),
                         style: GoogleFonts.inter(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,

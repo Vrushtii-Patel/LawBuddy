@@ -253,57 +253,55 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Wrap(
-                                alignment: WrapAlignment.spaceBetween,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                spacing: 6,
-                                runSpacing: 4,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  if (isDark)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  Flexible(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
                                       decoration: BoxDecoration(
-                                        color: AppColors.darkError,
+                                        color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: isDark ? 1.0 : 0.12),
                                         borderRadius: BorderRadius.circular(6),
+                                        border: isDark ? null : Border.all(color: AppColors.lightError.withValues(alpha: 0.25)),
                                       ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          const Icon(Icons.warning_amber_rounded, size: 13, color: AppColors.darkErrorText),
+                                          Icon(
+                                            isDark ? Icons.warning_amber_rounded : Icons.shield_outlined,
+                                            size: 13,
+                                            color: isDark ? AppColors.darkErrorText : AppColors.lightError,
+                                          ),
                                           const SizedBox(width: 4),
-                                          Text(
-                                            'High Legal Risk Detected',
-                                            style: GoogleFonts.inter(
-                                              fontSize: 10.5,
-                                              fontWeight: FontWeight.w700,
-                                              color: AppColors.darkErrorText,
+                                          Flexible(
+                                            child: Text(
+                                              'High Legal Risk Detected',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.inter(
+                                                fontSize: 10.5,
+                                                fontWeight: FontWeight.w700,
+                                                color: isDark ? AppColors.darkErrorText : AppColors.lightError,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    )
-                                  else
-                                    Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.shield_outlined, size: 14, color: AppColors.lightError),
-                                        const SizedBox(width: 6),
-                                        Text(
-                                          'High Legal Risk Detected',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w700,
-                                            color: AppColors.lightError,
-                                          ),
-                                        ),
-                                      ],
                                     ),
-                                  Text(
-                                    'Score: 84/100',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w700,
-                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightError,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3.5),
+                                    decoration: BoxDecoration(
+                                      color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: isDark ? 0.2 : 0.1),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      'Score: 84/100',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w700,
+                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightError,
+                                      ),
                                     ),
                                   ),
                                 ],
