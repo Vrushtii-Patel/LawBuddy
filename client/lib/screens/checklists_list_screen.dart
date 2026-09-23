@@ -541,7 +541,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showCreateChecklistDialog(context),
         backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+        foregroundColor: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
         elevation: 2,
         hoverElevation: 4,
         icon: const Icon(Icons.add_rounded, size: 20),

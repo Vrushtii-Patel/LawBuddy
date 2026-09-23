@@ -5,6 +5,7 @@ import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
 import 'comparison_result_screen.dart';
+import 'scan_screen.dart';
 
 class DocumentComparisonScreen extends ConsumerStatefulWidget {
   const DocumentComparisonScreen({super.key});
@@ -428,12 +429,34 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
               ],
             )
           else if (_recentDocs.isEmpty)
-            Text(
-              'No scanned documents found. Scan agreements first.',
-              style: TextStyle(
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                fontSize: 13,
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'No scanned documents found in your workspace.',
+                  style: TextStyle(
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ScanScreen()),
+                    ).then((_) => _loadInitialData());
+                  },
+                  icon: const Icon(Icons.document_scanner_rounded, size: 16),
+                  label: const Text('Scan New Agreement'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    textStyle: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
             )
           else
             DropdownButtonFormField<String>(
@@ -456,6 +479,8 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
                 final id = (doc['_id'] ?? doc['id']).toString();
                 final title = (doc['title'] ?? 'Untitled Agreement').toString();
                 final risk = (doc['riskLevel'] ?? '').toString();
+                final isHigh = risk.toLowerCase().contains('high');
+                final badgeColor = isHigh ? AppColors.highRisk(isDark) : AppColors.compliant(isDark);
                 return DropdownMenuItem<String>(
                   value: id,
                   child: Row(
@@ -466,18 +491,16 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
                       ),
                       if (risk.isNotEmpty)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
                           decoration: BoxDecoration(
-                            color: risk.toLowerCase().contains('high')
-                                ? Colors.red.withValues(alpha: 0.15)
-                                : Colors.green.withValues(alpha: 0.15),
+                            color: badgeColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
                             risk,
                             style: TextStyle(
                               fontSize: 11,
-                              color: risk.toLowerCase().contains('high') ? Colors.redAccent : Colors.greenAccent,
+                              color: badgeColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -512,9 +535,15 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           elevation: 2,
         ),
-        child: const Text(
+        child: Text(
           'Run Differential Analysis',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: canCompare
+                ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+          ),
         ),
       ),
     );

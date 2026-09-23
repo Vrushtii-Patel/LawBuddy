@@ -53,7 +53,7 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
             children: [
               _buildHeaderCard(titleA, titleB, comp, isDark),
               const SizedBox(height: 16),
-              _buildSummaryMetrics(comp),
+              _buildSummaryMetrics(comp, isDark),
               const SizedBox(height: 20),
               _buildFilterChips(isDark),
               const SizedBox(height: 16),
@@ -127,14 +127,21 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.tealAccent.withValues(alpha: 0.08),
+                    color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.tealAccent.withValues(alpha: 0.3)),
+                    border: Border.all(color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.35)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('VERSION B', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.tealAccent)),
+                      Text(
+                        'VERSION B',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                        ),
+                      ),
                       const SizedBox(height: 4),
                       Text(titleB, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
                     ],
@@ -159,20 +166,20 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
     );
   }
 
-  Widget _buildSummaryMetrics(Map<String, dynamic> comp) {
+  Widget _buildSummaryMetrics(Map<String, dynamic> comp, bool isDark) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          _buildMetricBadge('Modified', comp['modifiedCount'] ?? 0, Colors.amberAccent),
+          _buildMetricBadge('Modified', comp['modifiedCount'] ?? 0, AppColors.caution(isDark)),
           const SizedBox(width: 8),
-          _buildMetricBadge('Added', comp['addedCount'] ?? 0, Colors.greenAccent),
+          _buildMetricBadge('Added', comp['addedCount'] ?? 0, AppColors.compliant(isDark)),
           const SizedBox(width: 8),
-          _buildMetricBadge('Removed', comp['removedCount'] ?? 0, Colors.redAccent),
+          _buildMetricBadge('Removed', comp['removedCount'] ?? 0, AppColors.highRisk(isDark)),
           const SizedBox(width: 8),
-          _buildMetricBadge('Unchanged', comp['unchangedCount'] ?? 0, Colors.grey),
+          _buildMetricBadge('Unchanged', comp['unchangedCount'] ?? 0, isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
           const SizedBox(width: 8),
-          _buildMetricBadge('Risk Escalations', comp['escalatedRiskCount'] ?? 0, Colors.deepOrangeAccent),
+          _buildMetricBadge('Risk Escalations', comp['escalatedRiskCount'] ?? 0, AppColors.highRisk(isDark)),
         ],
       ),
     );
@@ -210,7 +217,9 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
               selectedColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
               backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
               labelStyle: TextStyle(
-                color: isSelected ? Colors.white : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                color: isSelected
+                    ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                    : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
@@ -237,15 +246,15 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
     final considerations = (pair['buyerConsiderations'] ?? '').toString();
     final citations = (pair['statutoryCitations'] as List<dynamic>?) ?? [];
 
-    Color statusColor = Colors.grey;
+    Color statusColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     if (status == 'MODIFIED') {
-      statusColor = Colors.amberAccent;
+      statusColor = AppColors.caution(isDark);
     } else if (status == 'ADDED') {
-      statusColor = Colors.greenAccent;
+      statusColor = AppColors.compliant(isDark);
     } else if (status == 'REMOVED') {
-      statusColor = Colors.redAccent;
+      statusColor = AppColors.highRisk(isDark);
     } else if (status == 'UNCHANGED') {
-      statusColor = Colors.grey;
+      statusColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     }
 
     return Container(
@@ -254,7 +263,7 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: migration == 'ESCALATED_RISK' || migration == 'NEW_RISK_ADDED'
-              ? Colors.redAccent.withValues(alpha: 0.5)
+              ? AppColors.highRisk(isDark).withValues(alpha: 0.5)
               : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
           width: migration == 'ESCALATED_RISK' || migration == 'NEW_RISK_ADDED' ? 1.5 : 1.0,
         ),

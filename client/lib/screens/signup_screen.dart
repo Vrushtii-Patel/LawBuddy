@@ -144,10 +144,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
     final Color accentColor = isDark ? AppColors.darkAccent : AppColors.lightAccent;
     final Color elevatedSurface = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
 
-    return Scaffold(
-      backgroundColor: bgSurface,
-      body: SafeArea(
-        child: Column(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: bgSurface,
+        body: SafeArea(
+          child: Column(
           children: [
             const SizedBox(height: 6),
             // Top Navigation Bar
@@ -237,7 +240,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   // ==========================================

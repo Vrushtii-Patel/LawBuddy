@@ -113,7 +113,7 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark) {
           onPressed: () => Navigator.of(ctx).pop(),
           style: FilledButton.styleFrom(
             backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-            foregroundColor: Colors.white,
+            foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           child: Text('Understood', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),

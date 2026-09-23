@@ -117,20 +117,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     final Color accentColor = isDark ? AppColors.darkAccent : AppColors.lightAccent;
     final Color elevatedSurface = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
 
-    return Scaffold(
-      backgroundColor: bgSurface,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 6),
-            // Top Navigation Bar
-            _buildTopBar(context, primaryText, cardBorder, isDark, tr),
-            const SizedBox(height: 4),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: bgSurface,
+        body: SafeArea(
+          child: Column(
+            children: [
+              const SizedBox(height: 6),
+              // Top Navigation Bar
+              _buildTopBar(context, primaryText, cardBorder, isDark, tr),
+              const SizedBox(height: 4),
 
-            // Main Content Body
-            Expanded(
-              child: Center(
-                child: SingleChildScrollView(
+              // Main Content Body
+              Expanded(
+                child: Center(
+                  child: SingleChildScrollView(
                   padding: EdgeInsets.symmetric(
                     horizontal: isDesktop ? 48.0 : 20.0,
                     vertical: isDesktop ? 32.0 : 20.0,
@@ -210,7 +213,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   // ==========================================

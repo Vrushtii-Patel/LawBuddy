@@ -145,13 +145,13 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                                     Icon(
                                       Icons.light_mode_rounded,
                                       size: 15,
-                                      color: currentThemeMode == ThemeMode.light ? Colors.white : colorScheme.onSurface,
+                                      color: currentThemeMode == ThemeMode.light ? colorScheme.onPrimary : colorScheme.onSurface,
                                     ),
                                     const SizedBox(width: 5),
                                     Text(
                                       currentLanguage == AppLanguage.hindi ? 'लाइट' : 'Light',
                                       style: TextStyle(
-                                        color: currentThemeMode == ThemeMode.light ? Colors.white : colorScheme.onSurface,
+                                        color: currentThemeMode == ThemeMode.light ? colorScheme.onPrimary : colorScheme.onSurface,
                                         fontWeight: currentThemeMode == ThemeMode.light ? FontWeight.bold : FontWeight.w500,
                                         fontSize: 12,
                                       ),
@@ -177,13 +177,13 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                                     Icon(
                                       Icons.dark_mode_rounded,
                                       size: 15,
-                                      color: currentThemeMode == ThemeMode.dark ? Colors.white : colorScheme.onSurface,
+                                      color: currentThemeMode == ThemeMode.dark ? colorScheme.onPrimary : colorScheme.onSurface,
                                     ),
                                     const SizedBox(width: 5),
                                     Text(
                                       currentLanguage == AppLanguage.hindi ? 'डार्क' : 'Dark',
                                       style: TextStyle(
-                                        color: currentThemeMode == ThemeMode.dark ? Colors.white : colorScheme.onSurface,
+                                        color: currentThemeMode == ThemeMode.dark ? colorScheme.onPrimary : colorScheme.onSurface,
                                         fontWeight: currentThemeMode == ThemeMode.dark ? FontWeight.bold : FontWeight.w500,
                                         fontSize: 12,
                                       ),
@@ -211,13 +211,13 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                                     Icon(
                                       Icons.brightness_auto_rounded,
                                       size: 15,
-                                      color: currentThemeMode == ThemeMode.system ? Colors.white : colorScheme.onSurface,
+                                      color: currentThemeMode == ThemeMode.system ? colorScheme.onPrimary : colorScheme.onSurface,
                                     ),
                                     const SizedBox(width: 5),
                                     Text(
                                       currentLanguage == AppLanguage.hindi ? 'सिस्टम' : 'System',
                                       style: TextStyle(
-                                        color: currentThemeMode == ThemeMode.system ? Colors.white : colorScheme.onSurface,
+                                        color: currentThemeMode == ThemeMode.system ? colorScheme.onPrimary : colorScheme.onSurface,
                                         fontWeight: currentThemeMode == ThemeMode.system ? FontWeight.bold : FontWeight.w500,
                                         fontSize: 12,
                                       ),
@@ -265,7 +265,7 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                                 child: Text(
                                   'English',
                                   style: TextStyle(
-                                    color: currentLanguage == AppLanguage.english ? Colors.white : colorScheme.onSurface,
+                                    color: currentLanguage == AppLanguage.english ? colorScheme.onPrimary : colorScheme.onSurface,
                                     fontWeight: currentLanguage == AppLanguage.english ? FontWeight.bold : FontWeight.w500,
                                     fontSize: 13,
                                   ),
@@ -287,7 +287,7 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                                 child: Text(
                                   'हिंदी',
                                   style: TextStyle(
-                                    color: currentLanguage == AppLanguage.hindi ? Colors.white : colorScheme.onSurface,
+                                    color: currentLanguage == AppLanguage.hindi ? colorScheme.onPrimary : colorScheme.onSurface,
                                     fontWeight: currentLanguage == AppLanguage.hindi ? FontWeight.bold : FontWeight.w500,
                                     fontSize: 13,
                                   ),
@@ -637,7 +637,7 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: colorScheme.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: colorScheme.onPrimary,
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),

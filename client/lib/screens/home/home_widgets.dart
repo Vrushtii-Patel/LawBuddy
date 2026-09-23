@@ -505,7 +505,7 @@ Future<void> handleReraDetails(
               onPressed: () => Navigator.pop(dialogContext),
               style: ElevatedButton.styleFrom(
                 backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                foregroundColor: Colors.white,
+                foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
               child: Text(loc.translate('common.understood')),
             ),

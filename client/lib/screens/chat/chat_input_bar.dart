@@ -112,24 +112,27 @@ class _ChatInputState extends ConsumerState<ChatInput> {
           GestureDetector(
             onTap: widget.isLoading ? null : widget.onSend,
             child: Container(
-              width: 38,
-              height: 38,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
                 color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: widget.isLoading
                   ? Center(
                       child: SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: isDark ? AppColors.darkBackground : Colors.white),
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+                        ),
                       ),
                     )
                   : Icon(
                       Icons.arrow_upward_rounded,
-                      color: isDark ? AppColors.darkBackground : Colors.white,
-                      size: 20,
+                      color: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+                      size: 22,
                     ),
             ),
           ),

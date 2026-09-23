@@ -314,10 +314,13 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 960;
 
-    return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      body: SafeArea(
-        child: Column(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      behavior: HitTestBehavior.opaque,
+      child: Scaffold(
+        backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        body: SafeArea(
+          child: Column(
           children: [
             const SizedBox(height: 6),
             // TOP BAR
@@ -395,7 +398,8 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 
   // ==========================================

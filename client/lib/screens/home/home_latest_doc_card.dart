@@ -192,7 +192,7 @@ class HomeLatestDocCard extends ConsumerWidget {
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),
@@ -308,7 +308,7 @@ class HomeLatestDocCard extends ConsumerWidget {
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                      foregroundColor: Colors.white,
+                      foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),

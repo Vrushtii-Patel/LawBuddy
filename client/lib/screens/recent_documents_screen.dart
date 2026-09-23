@@ -635,7 +635,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
           style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.2),
         ),
         backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+        foregroundColor: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
         elevation: 2,
         hoverElevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

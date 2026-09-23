@@ -983,10 +983,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddItemDialog,
-        backgroundColor: AppColors.lightPrimary,
-        foregroundColor: Colors.white,
+        backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+        foregroundColor: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
         tooltip: tr('checklists.addNewTask'),
-        elevation: 0,
+        elevation: 2,
         child: const Icon(Icons.add_rounded, size: 24),
       ),
       body: _isLoading
