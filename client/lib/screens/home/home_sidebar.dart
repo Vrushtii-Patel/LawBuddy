@@ -120,7 +120,7 @@ Widget _buildSidebarContent(
 
   final String userName = (user?.fullName != null && user!.fullName.trim().isNotEmpty)
       ? user.fullName.trim()
-      : 'User';
+      : loc.translate('home.defaultUserName');
   final String initial = userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
 
   return Column(
@@ -236,7 +236,7 @@ Widget _buildSidebarContent(
             _buildSidebarSectionLabel(loc.translate('sidebar.legalTools'), isDark),
             SidebarNavItem(
               icon: Icons.compare_arrows_rounded,
-              label: 'Document Comparison',
+              label: loc.translate('sidebar.documentComparison'),
               isActive: false,
               isDark: isDark,
               onTap: () {
@@ -282,10 +282,10 @@ Widget _buildSidebarContent(
             // SECTION: ADMINISTRATION (Visible to admin users)
             if (user?.isAdmin == true || user?.role == 'admin') ...[
               const SizedBox(height: 14),
-              _buildSidebarSectionLabel('ADMINISTRATION', isDark),
+              _buildSidebarSectionLabel(loc.translate('sidebar.administration'), isDark),
               SidebarNavItem(
                 icon: Icons.admin_panel_settings_rounded,
-                label: 'Admin Analytics',
+                label: loc.translate('sidebar.adminAnalytics'),
                 isActive: false,
                 isDark: isDark,
                 onTap: () {

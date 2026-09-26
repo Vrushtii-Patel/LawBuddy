@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 
-class WelcomeCtaBanner extends StatelessWidget {
+class WelcomeCtaBanner extends ConsumerWidget {
   final bool isDark;
   final bool isDesktop;
   final VoidCallback onExploreFeatures;
@@ -17,7 +19,15 @@ class WelcomeCtaBanner extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
+
+    final title = loc.translate('welcome.ctaBannerTitle');
+    final subtitle = loc.translate('welcome.ctaBannerSubtitle');
+    final exploreText = loc.translate('welcome.exploreFeatures');
+    final analyzeText = loc.translate('welcome.analyzeDocBtn');
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: isDesktop ? 64 : 16),
       child: Center(
@@ -53,7 +63,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Before You Sign,\nKnow What You\'re Signing.',
+                              title,
                               style: GoogleFonts.inter(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w800,
@@ -64,7 +74,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              'Upload your property document and let LawBuddy help you understand the clauses, risks, and important legal considerations.',
+                              subtitle,
                               style: GoogleFonts.inter(
                                 fontSize: 14.5,
                                 height: 1.45,
@@ -89,7 +99,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
-                              'Explore Features',
+                              exploreText,
                               style: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w600),
                             ),
                           ),
@@ -104,7 +114,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                               elevation: 0,
                             ),
                             child: Text(
-                              'Analyze Your Document →',
+                              analyzeText,
                               style: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w700),
                             ),
                           ),
@@ -116,7 +126,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'Before You Sign,\nKnow What You\'re Signing.',
+                        title,
                         style: GoogleFonts.inter(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
@@ -127,7 +137,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Upload your property document and let LawBuddy help you understand the clauses, risks, and important legal considerations.',
+                        subtitle,
                         style: GoogleFonts.inter(
                           fontSize: 13.5,
                           height: 1.45,
@@ -145,7 +155,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                           elevation: 0,
                         ),
                         child: Text(
-                          'Analyze Your Document →',
+                          analyzeText,
                           style: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w700),
                         ),
                       ),
@@ -162,7 +172,7 @@ class WelcomeCtaBanner extends StatelessWidget {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         child: Text(
-                          'Explore Features',
+                          exploreText,
                           style: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w600),
                         ),
                       ),

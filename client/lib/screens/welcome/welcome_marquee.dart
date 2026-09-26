@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 
-class DualDirectionMarquee extends StatefulWidget {
+class DualDirectionMarquee extends ConsumerStatefulWidget {
   final bool isDark;
   const DualDirectionMarquee({super.key, required this.isDark});
 
   @override
-  State<DualDirectionMarquee> createState() => _DualDirectionMarqueeState();
+  ConsumerState<DualDirectionMarquee> createState() => _DualDirectionMarqueeState();
 }
 
-class _DualDirectionMarqueeState extends State<DualDirectionMarquee>
+class _DualDirectionMarqueeState extends ConsumerState<DualDirectionMarquee>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-
-  static const _track1Text =
-      'SCAN CONTRACTS  ✦  RERA COMPLIANCE AUDIT  ✦  PLAIN-ENGLISH INSIGHTS  ✦  DETECT UNFAIR CLAUSES  ✦  INDIAN PROPERTY LAW  ✦  ';
-  static const _track2Text =
-      'STAMP DUTY CALCULATOR  ✦  DUE DILIGENCE CHECKLISTS  ✦  24/7 LEGAL AI CHAT  ✦  EXPORTABLE PDF REPORTS  ✦  TITLE CLEARANCE & OC  ✦  ';
 
   @override
   void initState() {
@@ -36,7 +33,11 @@ class _DualDirectionMarqueeState extends State<DualDirectionMarquee>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
     final isDark = widget.isDark;
+    final track1Text = loc.translate('welcome.marqueeTrack1');
+    final track2Text = loc.translate('welcome.marqueeTrack2');
 
     return Container(
       width: double.infinity,
@@ -55,7 +56,7 @@ class _DualDirectionMarqueeState extends State<DualDirectionMarquee>
         children: [
           // Line 1: Moving Left
           _buildMarqueeTrack(
-            text: _track1Text,
+            text: track1Text,
             moveLeft: true,
             isDark: isDark,
             color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -63,7 +64,7 @@ class _DualDirectionMarqueeState extends State<DualDirectionMarquee>
           const SizedBox(height: 10),
           // Line 2: Moving Right (Opposite Direction)
           _buildMarqueeTrack(
-            text: _track2Text,
+            text: track2Text,
             moveLeft: false,
             isDark: isDark,
             color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,

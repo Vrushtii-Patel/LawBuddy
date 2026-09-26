@@ -19,9 +19,9 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
     required this.isDark,
   });
 
-  Future<void> _launchNewsUrl(BuildContext context, String? link) async {
+  Future<void> _launchNewsUrl(BuildContext context, WidgetRef ref, String? link) async {
     if (link == null || link.trim().isEmpty) {
-      _showErrorSnackBar(context);
+      _showErrorSnackBar(context, ref);
       return;
     }
     try {
@@ -31,18 +31,19 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
         if (launched) return;
       }
       if (context.mounted) {
-        _showErrorSnackBar(context);
+        _showErrorSnackBar(context, ref);
       }
     } catch (e) {
       debugPrint('Error opening legal news URL: $e');
       if (context.mounted) {
-        _showErrorSnackBar(context);
+        _showErrorSnackBar(context, ref);
       }
     }
   }
 
-  void _showErrorSnackBar(BuildContext context) {
-    AppToast.showError(context, 'Unable to open this link. Please try again.', duration: const Duration(seconds: 3));
+  void _showErrorSnackBar(BuildContext context, WidgetRef ref) {
+    final loc = ref.read(localeProvider.notifier);
+    AppToast.showError(context, loc.translate('home.openLinkError'), duration: const Duration(seconds: 3));
   }
 
   @override
@@ -169,7 +170,7 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () => _launchNewsUrl(context, news[i]['link']?.toString()),
+                    onTap: () => _launchNewsUrl(context, ref, news[i]['link']?.toString()),
                     borderRadius: BorderRadius.circular(12),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

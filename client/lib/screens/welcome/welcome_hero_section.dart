@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 import 'welcome_hero_visual.dart';
 
-class WelcomeHeroSection extends StatelessWidget {
+class WelcomeHeroSection extends ConsumerWidget {
   final bool isDark;
   final bool isDesktop;
   final bool isTablet;
@@ -30,7 +32,10 @@ class WelcomeHeroSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
+
     return AnimatedBuilder(
       animation: scrollController,
       builder: (context, _) {
@@ -86,8 +91,8 @@ class WelcomeHeroSection extends StatelessWidget {
                             Flexible(
                               child: Text(
                                 isDesktop
-                                    ? 'AI-POWERED LEGALTECH FOR INDIAN REAL ESTATE'
-                                    : 'AI-POWERED REAL ESTATE LEGALTECH',
+                                    ? loc.translate('welcome.heroEyebrowDesktop')
+                                    : loc.translate('welcome.heroEyebrowMobile'),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: GoogleFonts.inter(
@@ -106,6 +111,7 @@ class WelcomeHeroSection extends StatelessWidget {
 
                       // Giant Dimensional 4-Layered Headline (All 3 lines 100% visible & readable)
                       _buildLayeredHeadline(
+                        loc,
                         titleShiftBack,
                         titleShiftMid,
                         titleShiftThird,
@@ -129,7 +135,7 @@ class WelcomeHeroSection extends StatelessWidget {
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 680),
                         child: Text(
-                          'Analyze real-estate contracts, detect potential legal risks under RERA, and understand complex clauses in plain English — powered by AI built for Indian property law.',
+                          loc.translate('welcome.heroNarrative'),
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             fontSize: isDesktop ? 15.0 : 13.5,
@@ -161,7 +167,7 @@ class WelcomeHeroSection extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'Get Started',
+                                  loc.translate('welcome.getStarted'),
                                   style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700),
                                 ),
                                 const SizedBox(width: 8),
@@ -182,9 +188,9 @@ class WelcomeHeroSection extends StatelessWidget {
                                   color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                                 ),
                                 children: [
-                                  const TextSpan(text: 'Already have an account? '),
+                                  TextSpan(text: loc.translate('welcome.alreadyHaveAccount')),
                                   TextSpan(
-                                    text: 'Sign in',
+                                    text: loc.translate('welcome.signInAction'),
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
@@ -218,7 +224,12 @@ class WelcomeHeroSection extends StatelessWidget {
                           );
                         },
                         child: _buildSideWordColumn(
-                          ['SCAN', 'ANALYZE', 'PROTECT', 'UNDERSTAND'],
+                          [
+                            loc.translate('welcome.sideWordScan'),
+                            loc.translate('welcome.sideWordAnalyze'),
+                            loc.translate('welcome.sideWordProtect'),
+                            loc.translate('welcome.sideWordUnderstand'),
+                          ],
                           CrossAxisAlignment.start,
                         ),
                       ),
@@ -240,7 +251,12 @@ class WelcomeHeroSection extends StatelessWidget {
                           );
                         },
                         child: _buildSideWordColumn(
-                          ['PROPERTY', 'RERA', 'CLAUSES', 'SECURE'],
+                          [
+                            loc.translate('welcome.sideWordProperty'),
+                            loc.translate('welcome.sideWordRera'),
+                            loc.translate('welcome.sideWordClauses'),
+                            loc.translate('welcome.sideWordSecure'),
+                          ],
                           CrossAxisAlignment.end,
                         ),
                       ),
@@ -256,6 +272,7 @@ class WelcomeHeroSection extends StatelessWidget {
   }
 
   Widget _buildLayeredHeadline(
+    LocaleNotifier loc,
     double shiftBack,
     double shiftMid,
     double shiftThird,
@@ -364,9 +381,14 @@ class WelcomeHeroSection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        buildHeadlineLine('UNDERSTAND', headlineLine1),
-        buildHeadlineLine('YOUR PROPERTY', headlineLine2, prefix: 'YOUR ', accentWord: 'PROPERTY'),
-        buildHeadlineLine('BEFORE YOU SIGN.', headlineLine3),
+        buildHeadlineLine(loc.translate('welcome.headlineLine1'), headlineLine1),
+        buildHeadlineLine(
+          loc.translate('welcome.headlineLine2Full'),
+          headlineLine2,
+          prefix: loc.translate('welcome.headlineLine2Prefix'),
+          accentWord: loc.translate('welcome.headlineLine2Accent'),
+        ),
+        buildHeadlineLine(loc.translate('welcome.headlineLine3'), headlineLine3),
       ],
     );
   }

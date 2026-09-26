@@ -1149,6 +1149,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
   // STATUTORY RATES VERIFICATION BADGE
   // ==========================================
   Widget _buildVerificationStatusBadge(bool isDark) {
+    final loc = ref.read(localeProvider.notifier);
     final stateConfig = _config.getConfigForState(_selectedState);
     final verifiedDate = stateConfig.lastVerifiedOn;
     final int daysAgo = DateTime.now().difference(verifiedDate).inDays;
@@ -1190,7 +1191,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                 Row(
                   children: [
                     Text(
-                      'Rates last verified on $formattedDate',
+                      loc.translate('calc.ratesVerifiedOn', {'date': formattedDate}),
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
@@ -1208,7 +1209,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
-                          '> 90 DAYS',
+                          loc.translate('calc.moreThan90Days'),
                           style: GoogleFonts.inter(
                             fontSize: 9,
                             fontWeight: FontWeight.w800,
@@ -1223,8 +1224,8 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                 const SizedBox(height: 2),
                 Text(
                   isWarning
-                      ? 'Statutory rates may have changed since verification. Please confirm with your local Sub-Registrar or IGR portal.'
-                      : 'Source: ${stateConfig.source}',
+                      ? loc.translate('calc.ratesWarning')
+                      : loc.translate('calc.sourceLabel', {'source': stateConfig.source}),
                   style: GoogleFonts.inter(
                     fontSize: 11,
                     height: 1.35,

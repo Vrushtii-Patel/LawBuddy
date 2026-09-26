@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_provider.dart';
+import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import '../services/api_service.dart';
 import 'home/home_widgets.dart';
@@ -135,6 +136,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
     final authState = ref.watch(authProvider);
     final user = authState.user;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -143,7 +146,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
     final String greetingName = (user?.fullName != null && user!.fullName.trim().isNotEmpty)
         ? user.fullName.trim().split(' ').first
-        : 'User';
+        : loc.translate('home.defaultUserName');
 
     return Scaffold(
       key: _scaffoldKey,

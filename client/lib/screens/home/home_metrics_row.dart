@@ -77,7 +77,12 @@ class HomeMetricsRow extends ConsumerWidget {
         icon: Icons.checklist_rounded,
         title: loc.translate('home.dueDiligenceProgress'),
         value: '${(checklistProgress * 100).toInt()}%',
-        subtitle: totalTasks > 0 ? '$completedTasks of $totalTasks tasks done' : loc.translate('home.checklistZeroTasks'),
+        subtitle: totalTasks > 0
+            ? loc.translate('home.checklistTasksProgress', {
+                'completed': completedTasks.toString(),
+                'total': totalTasks.toString(),
+              })
+            : loc.translate('home.checklistZeroTasks'),
         accentColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
       ),
       WorkspaceMetricData(

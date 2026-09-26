@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 
 class FeatureCard extends StatefulWidget {
@@ -120,7 +122,7 @@ class _FeatureCardState extends State<FeatureCard> {
   }
 }
 
-class WelcomeFeaturesSection extends StatelessWidget {
+class WelcomeFeaturesSection extends ConsumerWidget {
   final bool isDark;
   final bool isDesktop;
   final bool isTablet;
@@ -133,7 +135,9 @@ class WelcomeFeaturesSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
     final pColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
     final aColor = isDark ? AppColors.darkAccent : AppColors.lightAccent;
 
@@ -141,44 +145,44 @@ class WelcomeFeaturesSection extends StatelessWidget {
       FeatureCard(
         icon: Icons.document_scanner_outlined,
         accentColor: pColor,
-        tag: 'OCR & PDF',
-        title: 'Scan & Extract',
-        description: 'Upload PDF agreements, capture physical contracts via OCR camera, or paste legal text directly.',
+        tag: loc.translate('welcome.feature1Tag'),
+        title: loc.translate('welcome.feature1Title'),
+        description: loc.translate('welcome.feature1Desc'),
       ),
       FeatureCard(
         icon: Icons.shield_outlined,
         accentColor: aColor,
-        tag: 'AI AUDIT',
-        title: 'Detect Legal Risks',
-        description: 'Identify potentially unfair, non-compliant, or one-sided builder clauses with RERA-trained AI.',
+        tag: loc.translate('welcome.feature2Tag'),
+        title: loc.translate('welcome.feature2Title'),
+        description: loc.translate('welcome.feature2Desc'),
       ),
       FeatureCard(
         icon: Icons.lightbulb_outline_rounded,
         accentColor: pColor,
-        tag: 'SIMPLIFIED',
-        title: 'Plain-English Insights',
-        description: 'Demystify dense legal jargon into 2-3 sentence layman explanations and negotiation advice.',
+        tag: loc.translate('welcome.feature3Tag'),
+        title: loc.translate('welcome.feature3Title'),
+        description: loc.translate('welcome.feature3Desc'),
       ),
       FeatureCard(
         icon: Icons.calculate_outlined,
         accentColor: aColor,
-        tag: 'STATE-WISE',
-        title: 'Stamp Duty Calculator',
-        description: 'Compute state-wise stamp duty, registration charges, local cess, and female buyer discounts across India.',
+        tag: loc.translate('welcome.feature4Tag'),
+        title: loc.translate('welcome.feature4Title'),
+        description: loc.translate('welcome.feature4Desc'),
       ),
       FeatureCard(
         icon: Icons.forum_outlined,
         accentColor: pColor,
-        tag: '24/7 CHAT',
-        title: 'AI Legal Assistant',
-        description: 'Get instant 24/7 answers on property laws, tenancy disputes, builder notices, and contract clauses.',
+        tag: loc.translate('welcome.feature5Tag'),
+        title: loc.translate('welcome.feature5Title'),
+        description: loc.translate('welcome.feature5Desc'),
       ),
       FeatureCard(
         icon: Icons.checklist_rounded,
         accentColor: aColor,
-        tag: 'CHECKLIST',
-        title: 'Due Diligence Checklists',
-        description: 'Step-by-step buyer verification covering title clearance, RERA approvals, encumbrance & OC records.',
+        tag: loc.translate('welcome.feature6Tag'),
+        title: loc.translate('welcome.feature6Title'),
+        description: loc.translate('welcome.feature6Desc'),
       ),
     ];
 
@@ -190,7 +194,7 @@ class WelcomeFeaturesSection extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'YOUR LEGAL DOCUMENTS, MADE CLEAR.',
+                loc.translate('welcome.featuresEyebrow'),
                 style: GoogleFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
@@ -200,7 +204,7 @@ class WelcomeFeaturesSection extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Complete Legal Protection Suite',
+                loc.translate('welcome.featuresTitle'),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: isDesktop ? 34.0 : 26.0,
@@ -211,7 +215,7 @@ class WelcomeFeaturesSection extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Six specialized AI tools built to simplify Indian real estate transactions.',
+                loc.translate('welcome.featuresSubtitle'),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: isDesktop ? 15.0 : 13.5,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/consent_provider.dart';
+import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import '../screens/privacy_policy_screen.dart';
 
@@ -46,6 +47,9 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final primaryBtnColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
+
     return Positioned(
       left: 0,
       right: 0,
@@ -85,6 +89,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                       ? _buildDesktopLayout(
                           context,
                           ref,
+                          loc,
                           isDark,
                           primaryTextColor,
                           secondaryTextColor,
@@ -94,6 +99,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                       : _buildMobileLayout(
                           context,
                           ref,
+                          loc,
                           isDark,
                           primaryTextColor,
                           secondaryTextColor,
@@ -112,6 +118,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
   Widget _buildDesktopLayout(
     BuildContext context,
     WidgetRef ref,
+    LocaleNotifier loc,
     bool isDark,
     Color primaryTextColor,
     Color secondaryTextColor,
@@ -136,7 +143,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Privacy preferences',
+                loc.translate('consent.privacyPreferences'),
                 style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
@@ -146,7 +153,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               ),
               const SizedBox(height: 2),
               Text(
-                'We use essential browser storage to keep LawBuddy working and remember your preferences.',
+                loc.translate('consent.bannerDescription'),
                 style: GoogleFonts.inter(
                   fontSize: 11.5,
                   height: 1.3,
@@ -171,7 +178,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                'Customize',
+                loc.translate('consent.customize'),
                 style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
@@ -187,7 +194,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
               ),
               child: Text(
-                'Necessary Only',
+                loc.translate('consent.necessaryOnly'),
                 style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
@@ -203,7 +210,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
               ),
               child: Text(
-                'Accept Preferences',
+                loc.translate('consent.acceptPreferences'),
                 style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
@@ -216,6 +223,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
   Widget _buildMobileLayout(
     BuildContext context,
     WidgetRef ref,
+    LocaleNotifier loc,
     bool isDark,
     Color primaryTextColor,
     Color secondaryTextColor,
@@ -238,7 +246,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
             ),
             const SizedBox(width: 8),
             Text(
-              'Privacy preferences',
+              loc.translate('consent.privacyPreferences'),
               style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
@@ -255,7 +263,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
-                'Customize',
+                loc.translate('consent.customize'),
                 style: GoogleFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w600,
@@ -267,7 +275,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
         ),
         const SizedBox(height: 4),
         Text(
-          'We use essential browser storage to keep LawBuddy working and remember your preferences.',
+          loc.translate('consent.bannerDescription'),
           style: GoogleFonts.inter(
             fontSize: 11.5,
             height: 1.35,
@@ -288,7 +296,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
                 child: Text(
-                  'Necessary Only',
+                  loc.translate('consent.necessaryOnly'),
                   style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
                 ),
               ),
@@ -305,7 +313,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
                 child: Text(
-                  'Accept Preferences',
+                  loc.translate('consent.acceptPreferences'),
                   style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
                 ),
               ),
@@ -353,6 +361,9 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurface;
     final primaryTextColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
@@ -379,7 +390,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Privacy & Storage Preferences',
+              loc.translate('consent.privacyStoragePrefTitle'),
               style: GoogleFonts.inter(
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
@@ -398,7 +409,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Configure how LawBuddy uses local storage to store data on your device. Strictly necessary tokens cannot be disabled as they are required for account security.',
+                loc.translate('consent.privacyStoragePrefIntro'),
                 style: GoogleFonts.inter(
                   fontSize: 12.5,
                   height: 1.5,
@@ -409,10 +420,10 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
 
               // 1. Strictly Necessary
               _buildCategoryCard(
-                title: 'STRICTLY NECESSARY',
-                statusBadge: 'Always On',
+                title: loc.translate('consent.strictlyNecessaryTitle'),
+                statusBadge: loc.translate('consent.alwaysOnBadge'),
                 isStatusActive: true,
-                description: 'Required for authentication and core LawBuddy functionality.',
+                description: loc.translate('consent.strictlyNecessaryDesc'),
                 isDark: isDark,
                 borderColor: borderColor,
                 primaryTextColor: primaryTextColor,
@@ -423,8 +434,8 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
 
               // 2. Functional / Preferences
               _buildToggleCategoryCard(
-                title: 'FUNCTIONAL / PREFERENCES',
-                description: 'Remember theme and language preferences across sessions.',
+                title: loc.translate('consent.functionalPrefTitle'),
+                description: loc.translate('consent.functionalPrefDesc'),
                 value: _functionalEnabled,
                 onChanged: (val) => setState(() => _functionalEnabled = val),
                 isDark: isDark,
@@ -437,10 +448,10 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
 
               // 3. Analytics
               _buildCategoryCard(
-                title: 'ANALYTICS',
-                statusBadge: 'Not currently used',
+                title: loc.translate('consent.analyticsTitle'),
+                statusBadge: loc.translate('consent.notCurrentlyUsedBadge'),
                 isStatusActive: false,
-                description: 'We do not collect usage telemetry or run analytics trackers.',
+                description: loc.translate('consent.analyticsDesc'),
                 isDark: isDark,
                 borderColor: borderColor,
                 primaryTextColor: primaryTextColor,
@@ -451,10 +462,10 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
 
               // 4. Marketing
               _buildCategoryCard(
-                title: 'MARKETING',
-                statusBadge: 'Not currently used',
+                title: loc.translate('consent.marketingTitle'),
+                statusBadge: loc.translate('consent.notCurrentlyUsedBadge'),
                 isStatusActive: false,
-                description: 'We do not display third-party advertisements or tracking pixels.',
+                description: loc.translate('consent.marketingDesc'),
                 isDark: isDark,
                 borderColor: borderColor,
                 primaryTextColor: primaryTextColor,
@@ -474,7 +485,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
                   },
                   icon: Icon(Icons.arrow_outward_rounded, size: 14, color: accentColor),
                   label: Text(
-                    'Read our full Privacy Policy',
+                    loc.translate('consent.readFullPrivacyPolicy'),
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -491,7 +502,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
-            'Cancel',
+            loc.translate('common.cancel'),
             style: GoogleFonts.inter(
               color: secondaryTextColor,
               fontWeight: FontWeight.w600,
@@ -509,7 +520,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           child: Text(
-            'Accept All',
+            loc.translate('consent.acceptAll'),
             style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 12.5),
           ),
         ),
@@ -524,7 +535,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           child: Text(
-            'Save Preferences',
+            loc.translate('consent.savePreferences'),
             style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 12.5),
           ),
         ),

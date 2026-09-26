@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/locale_provider.dart';
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
@@ -93,9 +94,10 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
       if (_pollAttempts > _maxPollAttempts) {
         timer.cancel();
         if (mounted) {
+          final loc = ref.read(localeProvider.notifier);
           setState(() {
             _isComparing = false;
-            _errorMessage = 'This comparison is taking longer than expected. It may still finish in the background — check back shortly, or try again.';
+            _errorMessage = loc.translate('docComparison.timeoutError');
           });
         }
         return;
@@ -138,9 +140,10 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
         // connection, expired session) — don't spin forever with no signal.
         if (_consecutivePollErrors >= _maxConsecutivePollErrors && mounted) {
           timer.cancel();
+          final loc = ref.read(localeProvider.notifier);
           setState(() {
             _isComparing = false;
-            _errorMessage = 'Lost connection while checking comparison status. Please check your connection and try again.';
+            _errorMessage = loc.translate('docComparison.connectionLost');
           });
         }
       }
@@ -148,18 +151,19 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
   }
 
   Future<void> _handleStartComparison() async {
+    final loc = ref.read(localeProvider.notifier);
     if (_selectedDocAId == null || _selectedDocBId == null) {
-      AppToast.showError(context, 'Please select both Version A and Version B documents.');
+      AppToast.showError(context, loc.translate('docComparison.selectBothPrompt'));
       return;
     }
     if (_selectedDocAId == _selectedDocBId) {
-      AppToast.showError(context, 'Please select two distinct versions to compare.');
+      AppToast.showError(context, loc.translate('docComparison.selectDistinctPrompt'));
       return;
     }
 
     setState(() {
       _isComparing = true;
-      _comparisonStep = 'Starting comparison...';
+      _comparisonStep = loc.translate('docComparison.startingComparison');
       _errorMessage = null;
     });
 
@@ -190,7 +194,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
       if (mounted) {
         setState(() {
           _isComparing = false;
-          _errorMessage = 'Unable to start document comparison. Please check your connection and try again.';
+          _errorMessage = loc.translate('docComparison.startError');
         });
       }
     }
@@ -198,12 +202,14 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
-        title: const Text('Compare Agreements', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(loc.translate('docComparison.appBarTitle'), style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         elevation: 0,
         actions: const [
@@ -217,18 +223,19 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(isDark),
+              _buildHeader(isDark, loc),
               const SizedBox(height: 20),
               if (_errorMessage != null) _buildErrorBanner(),
-              if (_isComparing) _buildProcessingCard(isDark),
+              if (_isComparing) _buildProcessingCard(isDark, loc),
               if (!_isComparing) ...[
                 _buildVersionSelectorCard(
                   isDark: isDark,
-                  versionLabel: 'Version A (Baseline / Before Negotiation)',
+                  versionLabel: loc.translate('docComparison.versionALabel'),
                   icon: Icons.history_edu,
                   color: Colors.blueAccent,
                   selectedDocId: _selectedDocAId,
                   selectedTitle: _selectedTitleA,
+                  loc: loc,
                   onSelect: (id, title) {
                     setState(() {
                       _selectedDocAId = id;
@@ -255,11 +262,12 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
                 const SizedBox(height: 16),
                 _buildVersionSelectorCard(
                   isDark: isDark,
-                  versionLabel: 'Version B (Revised / After Negotiation)',
+                  versionLabel: loc.translate('docComparison.versionBLabel'),
                   icon: Icons.edit_document,
                   color: Colors.tealAccent,
                   selectedDocId: _selectedDocBId,
                   selectedTitle: _selectedTitleB,
+                  loc: loc,
                   onSelect: (id, title) {
                     setState(() {
                       _selectedDocBId = id;
@@ -268,7 +276,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
                   },
                 ),
                 const SizedBox(height: 32),
-                _buildCompareActionButton(isDark),
+                _buildCompareActionButton(isDark, loc),
               ],
             ],
           ),
@@ -277,12 +285,12 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
     );
   }
 
-  Widget _buildHeader(bool isDark) {
+  Widget _buildHeader(bool isDark, LocaleNotifier loc) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Contract Differential Analysis',
+          loc.translate('docComparison.headerTitle'),
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
@@ -291,7 +299,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
         ),
         const SizedBox(height: 6),
         Text(
-          'Select two agreement drafts to identify modified clauses, added obligations, deleted buyer protections, and risk escalations.',
+          loc.translate('docComparison.headerSubtitle'),
           style: TextStyle(
             fontSize: 14,
             color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -326,7 +334,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
     );
   }
 
-  Widget _buildProcessingCard(bool isDark) {
+  Widget _buildProcessingCard(bool isDark, LocaleNotifier loc) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -352,7 +360,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
           ),
           const SizedBox(height: 8),
           Text(
-            'Analyzing clause alignments, numbers, dates, and legal statutory impact...',
+            loc.translate('docComparison.processingSubtitle'),
             style: TextStyle(
               fontSize: 13,
               color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -371,6 +379,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
     required Color color,
     required String? selectedDocId,
     required String? selectedTitle,
+    required LocaleNotifier loc,
     required Function(String id, String title) onSelect,
   }) {
     return Container(
@@ -412,7 +421,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
               children: [
                 Expanded(
                   child: Text(
-                    'Couldn\'t load your documents. Check your connection and try again.',
+                    loc.translate('docComparison.loadFailed'),
                     style: TextStyle(
                       color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                       fontSize: 13,
@@ -421,7 +430,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
                 ),
                 TextButton(
                   onPressed: _loadInitialData,
-                  child: const Text('Retry'),
+                  child: Text(loc.translate('common.retry')),
                 ),
               ],
             )
@@ -430,7 +439,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'No scanned documents found in your workspace.',
+                  loc.translate('docComparison.noScannedDocs'),
                   style: TextStyle(
                     color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                     fontSize: 13,
@@ -445,7 +454,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
                     ).then((_) => _loadInitialData());
                   },
                   icon: const Icon(Icons.document_scanner_rounded, size: 16),
-                  label: const Text('Scan New Agreement'),
+                  label: Text(loc.translate('docComparison.scanNewAgreement')),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                     foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
@@ -460,7 +469,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
               initialValue: selectedDocId,
               isExpanded: true,
               hint: Text(
-                'Choose document version',
+                loc.translate('docComparison.chooseVersion'),
                 style: TextStyle(
                   color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                   fontSize: 14,
@@ -474,7 +483,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
               ),
               items: _recentDocs.map<DropdownMenuItem<String>>((doc) {
                 final id = (doc['_id'] ?? doc['id']).toString();
-                final title = (doc['title'] ?? 'Untitled Agreement').toString();
+                final title = (doc['title'] ?? loc.translate('docComparison.untitledAgreement')).toString();
                 final risk = (doc['riskLevel'] ?? '').toString();
                 final isHigh = risk.toLowerCase().contains('high');
                 final badgeColor = isHigh ? AppColors.highRisk(isDark) : AppColors.compliant(isDark);
@@ -509,7 +518,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
               onChanged: (val) {
                 if (val != null) {
                   final found = _recentDocs.firstWhere((d) => (d['_id'] ?? d['id']).toString() == val);
-                  onSelect(val, (found['title'] ?? 'Untitled Agreement').toString());
+                  onSelect(val, (found['title'] ?? loc.translate('docComparison.untitledAgreement')).toString());
                 }
               },
             ),
@@ -518,7 +527,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
     );
   }
 
-  Widget _buildCompareActionButton(bool isDark) {
+  Widget _buildCompareActionButton(bool isDark, LocaleNotifier loc) {
     final bool canCompare = _selectedDocAId != null && _selectedDocBId != null && _selectedDocAId != _selectedDocBId;
 
     return SizedBox(
@@ -533,7 +542,7 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
           elevation: 2,
         ),
         child: Text(
-          'Run Differential Analysis',
+          loc.translate('docComparison.runAnalysis'),
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,

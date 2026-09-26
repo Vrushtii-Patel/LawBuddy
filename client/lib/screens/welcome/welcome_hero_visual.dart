@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 
-class HeroDocumentScanVisual extends StatefulWidget {
+class HeroDocumentScanVisual extends ConsumerStatefulWidget {
   final bool isDark;
   final bool isDesktop;
   final bool isTablet;
@@ -15,10 +17,10 @@ class HeroDocumentScanVisual extends StatefulWidget {
   });
 
   @override
-  State<HeroDocumentScanVisual> createState() => _HeroDocumentScanVisualState();
+  ConsumerState<HeroDocumentScanVisual> createState() => _HeroDocumentScanVisualState();
 }
 
-class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
+class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
     with SingleTickerProviderStateMixin {
   late final AnimationController _scanController;
   bool _isHovered = false;
@@ -40,6 +42,8 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
     final isDark = widget.isDark;
     final isDesktop = widget.isDesktop;
     final isTablet = widget.isTablet;
@@ -105,7 +109,7 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
-                                      'PROPERTY SALE AGREEMENT',
+                                      loc.translate('welcome.heroDocTitle'),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
                                       style: GoogleFonts.inter(
@@ -147,7 +151,7 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
-                                        'AI Scan Active',
+                                        loc.translate('welcome.heroScanActive'),
                                         style: GoogleFonts.inter(
                                           fontSize: 9.5,
                                           fontWeight: FontWeight.w600,
@@ -182,7 +186,7 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
                           children: [
                             Flexible(
                               child: Text(
-                                'Clause 7.2 — Forfeiture',
+                                loc.translate('welcome.heroClauseTitle'),
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.inter(
                                   fontSize: 11.5,
@@ -202,7 +206,7 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
                                 ),
                               ),
                               child: Text(
-                                'Relevant Property Law',
+                                loc.translate('welcome.heroClauseBadge'),
                                 style: GoogleFonts.inter(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w600,
@@ -227,7 +231,7 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
                             ),
                           ),
                           child: Text(
-                            '"In case of delay beyond 30 days, 100% of earnest deposit shall be forfeited without notice."',
+                            loc.translate('welcome.heroClauseBody'),
                             style: GoogleFonts.inter(
                               fontSize: 12,
                               height: 1.45,
@@ -275,7 +279,7 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
                                           const SizedBox(width: 4),
                                           Flexible(
                                             child: Text(
-                                              'High Legal Risk Detected',
+                                              loc.translate('welcome.heroRiskDetected'),
                                               overflow: TextOverflow.ellipsis,
                                               style: GoogleFonts.inter(
                                                 fontSize: 10.5,
@@ -296,7 +300,7 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
-                                      'Score: 84/100',
+                                      loc.translate('welcome.heroRiskScore', {'score': '84/100'}),
                                       style: GoogleFonts.inter(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w700,
@@ -318,7 +322,7 @@ class _HeroDocumentScanVisualState extends State<HeroDocumentScanVisual>
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'Plain English: The builder can confiscate all your advance money even for minor payment delays.',
+                                loc.translate('welcome.heroPlainEnglish'),
                                 style: GoogleFonts.inter(
                                   fontSize: 11,
                                   height: 1.4,

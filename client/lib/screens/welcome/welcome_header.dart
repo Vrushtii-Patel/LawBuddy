@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 import '../privacy_policy_screen.dart';
 import '../terms_of_use_screen.dart';
 import '../../widgets/cookie_consent_banner.dart';
 
-void showLegalDisclaimerDialog(BuildContext context, bool isDark) {
+void showLegalDisclaimerDialog(BuildContext context, bool isDark, [WidgetRef? ref]) {
+  String tr(String key, [Map<String, String>? params]) {
+    if (ref != null) {
+      return ref.read(localeProvider.notifier).translate(key, params);
+    }
+    return key;
+  }
+
   showDialog(
     context: context,
     builder: (ctx) => AlertDialog(
@@ -32,7 +41,7 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark) {
           ),
           const SizedBox(width: 12),
           Text(
-            'Legal Disclaimer',
+            tr('welcome.disclaimerTitle'),
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -48,7 +57,7 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'This application provides AI-generated information for preliminary document review and educational purposes only. It does not constitute legal advice or create an advocate-client relationship. For important property transactions, consult a qualified legal professional.',
+              tr('welcome.disclaimerContent'),
               style: GoogleFonts.inter(
                 fontSize: 13.5,
                 height: 1.5,
@@ -68,7 +77,7 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark) {
                     );
                   },
                   icon: const Icon(Icons.shield_outlined, size: 14),
-                  label: const Text('Privacy Policy'),
+                  label: Text(tr('welcome.privacyPolicy')),
                   style: OutlinedButton.styleFrom(
                     textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
                     foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
@@ -83,7 +92,7 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark) {
                     );
                   },
                   icon: const Icon(Icons.description_outlined, size: 14),
-                  label: const Text('Terms of Use'),
+                  label: Text(tr('welcome.termsOfUse')),
                   style: OutlinedButton.styleFrom(
                     textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
                     foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
@@ -96,7 +105,7 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark) {
                     showPrivacyPreferencesDialog(context);
                   },
                   icon: const Icon(Icons.tune_rounded, size: 14),
-                  label: const Text('Storage Preferences'),
+                  label: Text(tr('welcome.storagePreferences')),
                   style: OutlinedButton.styleFrom(
                     textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
                     foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
@@ -116,14 +125,14 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark) {
             foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          child: Text('Understood', style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+          child: Text(tr('common.understood'), style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
         ),
       ],
     ),
   );
 }
 
-class WelcomeHeader extends StatelessWidget {
+class WelcomeHeader extends ConsumerWidget {
   final bool isDark;
   final bool isDesktop;
   final VoidCallback onLogoTap;
@@ -144,7 +153,10 @@ class WelcomeHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: isDesktop ? 20 : 12,
@@ -193,7 +205,7 @@ class WelcomeHeader extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'LawBuddy',
+                              loc.translate('common.appName'),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: GoogleFonts.inter(
@@ -214,7 +226,7 @@ class WelcomeHeader extends StatelessWidget {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'REAL ESTATE AI TECH',
+                              loc.translate('welcome.headerTagline'),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                               style: GoogleFonts.inter(
@@ -242,20 +254,20 @@ class WelcomeHeader extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildNavButton('Features', onFeaturesTap, isDark),
-                        _buildNavButton('How It Works', onHowItWorksTap, isDark),
-                        _buildNavButton('Risk System', onRiskSystemTap, isDark),
-                        _buildNavButton('Privacy Policy', () {
+                        _buildNavButton(loc.translate('welcome.navFeatures'), onFeaturesTap, isDark),
+                        _buildNavButton(loc.translate('welcome.navHowItWorks'), onHowItWorksTap, isDark),
+                        _buildNavButton(loc.translate('welcome.navRiskSystem'), onRiskSystemTap, isDark),
+                        _buildNavButton(loc.translate('welcome.privacyPolicy'), () {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
                           );
                         }, isDark),
-                        _buildNavButton('Terms of Use', () {
+                        _buildNavButton(loc.translate('welcome.termsOfUse'), () {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
                           );
                         }, isDark),
-                        _buildNavButton('Disclaimer', () => showLegalDisclaimerDialog(context, isDark), isDark),
+                        _buildNavButton(loc.translate('welcome.navDisclaimer'), () => showLegalDisclaimerDialog(context, isDark, ref), isDark),
                       ],
                     ),
                   ),
@@ -277,7 +289,7 @@ class WelcomeHeader extends StatelessWidget {
                       foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                     ),
                     child: Text(
-                      'Sign In',
+                      loc.translate('welcome.signIn'),
                       style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -317,7 +329,7 @@ class WelcomeHeader extends StatelessWidget {
                             );
                             break;
                           case 'disclaimer':
-                            showLegalDisclaimerDialog(context, isDark);
+                            showLegalDisclaimerDialog(context, isDark, ref);
                             break;
                           case 'storage':
                             showPrivacyPreferencesDialog(context);
@@ -325,14 +337,14 @@ class WelcomeHeader extends StatelessWidget {
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(value: 'features', child: Text('Features')),
-                        const PopupMenuItem(value: 'howItWorks', child: Text('How It Works')),
-                        const PopupMenuItem(value: 'riskSystem', child: Text('Risk System')),
+                        PopupMenuItem(value: 'features', child: Text(loc.translate('welcome.navFeatures'))),
+                        PopupMenuItem(value: 'howItWorks', child: Text(loc.translate('welcome.navHowItWorks'))),
+                        PopupMenuItem(value: 'riskSystem', child: Text(loc.translate('welcome.navRiskSystem'))),
                         const PopupMenuDivider(),
-                        const PopupMenuItem(value: 'privacy', child: Text('Privacy Policy')),
-                        const PopupMenuItem(value: 'terms', child: Text('Terms of Use')),
-                        const PopupMenuItem(value: 'disclaimer', child: Text('Legal Disclaimer')),
-                        const PopupMenuItem(value: 'storage', child: Text('Storage Preferences')),
+                        PopupMenuItem(value: 'privacy', child: Text(loc.translate('welcome.privacyPolicy'))),
+                        PopupMenuItem(value: 'terms', child: Text(loc.translate('welcome.termsOfUse'))),
+                        PopupMenuItem(value: 'disclaimer', child: Text(loc.translate('welcome.disclaimerTitle'))),
+                        PopupMenuItem(value: 'storage', child: Text(loc.translate('welcome.storagePreferences'))),
                       ],
                     ),
                   ],

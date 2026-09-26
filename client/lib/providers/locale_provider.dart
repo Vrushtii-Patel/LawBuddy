@@ -148,8 +148,8 @@ final Map<String, Map<String, String>> _translations = {
   'home.checklistZeroTasks': {'en': '0 tasks • Tap to generate property guides', 'hi': '0 कार्य • संपत्ति गाइड बनाने के लिए टैप करें'},
   'home.checklistZeroCompleted': {'en': '0 tasks completed • Tap to view guides', 'hi': '0 कार्य पूर्ण • गाइड देखने के लिए टैप करें'},
   'home.checklistTasksProgress': {
-    'en': '{completed} of {total} tasks completed across {count} {unit}',
-    'hi': '{count} {unit} में {total} में से {completed} कार्य पूर्ण',
+    'en': '{completed} of {total} tasks done',
+    'hi': '{completed} में से {total} कार्य पूरे हुए',
   },
   'home.guideUnitSingular': {'en': 'guide', 'hi': 'गाइड'},
   'home.guideUnitPlural': {'en': 'guides', 'hi': 'गाइड'},
@@ -233,8 +233,11 @@ final Map<String, Map<String, String>> _translations = {
   'sidebar.riskAnalysis': {'en': 'Risk Analysis', 'hi': 'जोखिम विश्लेषण'},
   'sidebar.checklists': {'en': 'Checklists', 'hi': 'चेकलिस्ट'},
   'sidebar.reraCompliance': {'en': 'RERA & Compliance', 'hi': 'रेरा और अनुपालन'},
+  'sidebar.documentComparison': {'en': 'Document Comparison', 'hi': 'दस्तावेज़ तुलना'},
   'sidebar.legalAi': {'en': 'Legal AI', 'hi': 'कानूनी एआई'},
   'sidebar.stampDuty': {'en': 'Stamp Duty Calculator', 'hi': 'स्टाम्प शुल्क कैलकुलेटर'},
+  'sidebar.administration': {'en': 'ADMINISTRATION', 'hi': 'प्रशासन'},
+  'sidebar.adminAnalytics': {'en': 'Admin Analytics', 'hi': 'व्यवस्थापक एनालिटिक्स'},
   'sidebar.settings': {'en': 'Settings', 'hi': 'सेटिंग्स'},
   'sidebar.profile': {'en': 'Profile', 'hi': 'प्रोफ़ाइल'},
 
@@ -245,9 +248,26 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'एआई-संचालित सत्यापन और विश्लेषण के लिए एक कानूनी दस्तावेज़ अपलोड करें।',
   },
   'scan.takePhoto': {'en': 'Take a Photo', 'hi': 'फोटो खींचें'},
+  'scan.cameraBadge': {'en': 'CAMERA SCAN', 'hi': 'कैमरा स्कैन'},
+  'scan.cameraDesc': {
+    'en': 'Instant OCR scanning of physical deed pages via camera.',
+    'hi': 'कैमरे के माध्यम से भौतिक विलेख पृष्ठों की त्वरित ओसीआर स्कैनिंग।',
+  },
   'scan.uploadGallery': {'en': 'Upload from Gallery', 'hi': 'गैलरी से अपलोड करें'},
   'scan.uploadFromGallery': {'en': 'Upload from Gallery', 'hi': 'गैलरी से अपलोड करें'},
+  'scan.galleryBadge': {'en': 'PHOTO GALLERY', 'hi': 'फोटो गैलरी'},
+  'scan.galleryDesc': {
+    'en': 'Upload high-resolution document photos or screenshots.',
+    'hi': 'उच्च-रिज़ॉल्यूशन दस्तावेज़ फ़ोटो या स्क्रीनशॉट अपलोड करें।',
+  },
   'scan.uploadPdf': {'en': 'Upload PDF', 'hi': 'पीडीएफ अपलोड करें'},
+  'scan.pdfBadge': {'en': 'PDF DOCUMENT', 'hi': 'पीडीएफ दस्तावेज़'},
+  'scan.pdfDesc': {
+    'en': 'Upload multi-page PDF agreements & registry documents.',
+    'hi': 'बहु-पृष्ठीय पीडीएफ समझौते और रजिस्ट्री दस्तावेज़ अपलोड करें।',
+  },
+  'scan.selectAndUpload': {'en': 'Select & Upload', 'hi': 'चुनें और अपलोड करें'},
+  'scan.orPasteClauses': {'en': 'OR PASTE DOCUMENT CLAUSES', 'hi': 'या दस्तावेज़ खंड पेस्ट करें'},
   'scan.docContent': {'en': 'Document Content', 'hi': 'दस्तावेज़ सामग्री'},
   'scan.documentContent': {'en': 'Document Content', 'hi': 'दस्तावेज़ सामग्री'},
   'scan.pastePrompt': {'en': 'Paste or type the legal document here.', 'hi': 'कानूनी दस्तावेज़ को यहाँ पेस्ट या टाइप करें।'},
@@ -564,6 +584,13 @@ final Map<String, Map<String, String>> _translations = {
     'en': 'Calculations are indicative estimates based on prevailing state stamp schedules. Verify final rates with the local sub-registrar office.',
     'hi': 'गणना प्रचलित राज्य स्टाम्प अनुसूचियों पर आधारित सांकेतिक अनुमान हैं। स्थानीय उप-पंजीयक कार्यालय से अंतिम दरों का सत्यापन करें।',
   },
+  'calc.ratesVerifiedOn': {'en': 'Rates last verified on {date}', 'hi': 'दरें अंतिम बार {date} को सत्यापित की गईं'},
+  'calc.sourceLabel': {'en': 'Source: {source}', 'hi': 'स्रोत: {source}'},
+  'calc.ratesWarning': {
+    'en': 'Statutory rates may have changed since verification. Please confirm with your local Sub-Registrar or IGR portal.',
+    'hi': 'सत्यापन के बाद से वैधानिक दरें बदल सकती हैं। कृपया अपने स्थानीय उप-पंजीयक या आईजीआर पोर्टल से पुष्टि करें।',
+  },
+  'calc.moreThan90Days': {'en': '> 90 DAYS', 'hi': '> 90 दिन'},
 
   // Recent Documents Screen
   'recentDocs.title': {'en': 'Recent Documents', 'hi': 'हाल के दस्तावेज़'},
@@ -843,4 +870,439 @@ final Map<String, Map<String, String>> _translations = {
   'analysis.reraReferences': {'en': 'RERA References', 'hi': 'रेरा संदर्भ'},
   'analysis.buyerImpact': {'en': 'Buyer Impact', 'hi': 'खरीदार पर प्रभाव'},
   'analysis.recommendation': {'en': 'Recommendation', 'hi': 'सिफारिश'},
+
+  // ==========================================
+  // Welcome & Landing Screen
+  // ==========================================
+  'welcome.disclaimerTitle': {'en': 'Legal Disclaimer', 'hi': 'कानूनी अस्वीकरण'},
+  'welcome.disclaimerContent': {
+    'en': 'This application provides AI-generated information for preliminary document review and educational purposes only. It does not constitute legal advice or create an advocate-client relationship. For important property transactions, consult a qualified legal professional.',
+    'hi': 'यह एप्लिकेशन केवल प्रारंभिक दस्तावेज़ समीक्षा और शैक्षिक उद्देश्यों के लिए एआई-जनित जानकारी प्रदान करता है। यह कानूनी सलाह का गठन नहीं करता है और न ही वकील-ग्राहक संबंध बनाता है। महत्वपूर्ण संपत्ति लेनदेन के लिए, किसी योग्य कानूनी पेशेवर से परामर्श लें।',
+  },
+  'welcome.privacyPolicy': {'en': 'Privacy Policy', 'hi': 'गोपनीयता नीति'},
+  'welcome.termsOfUse': {'en': 'Terms of Use', 'hi': 'उपयोग की शर्तें'},
+  'welcome.storagePreferences': {'en': 'Storage Preferences', 'hi': 'भंडारण प्राथमिकताएं'},
+  'welcome.headerTagline': {'en': 'REAL ESTATE AI TECH', 'hi': 'रियल एस्टेट एआई टेक'},
+  'welcome.navFeatures': {'en': 'Features', 'hi': 'सुविधाएं'},
+  'welcome.navHowItWorks': {'en': 'How It Works', 'hi': 'यह कैसे काम करता है'},
+  'welcome.navRiskSystem': {'en': 'Risk System', 'hi': 'जोखिम प्रणाली'},
+  'welcome.navDisclaimer': {'en': 'Disclaimer', 'hi': 'अस्वीकरण'},
+  'welcome.signIn': {'en': 'Sign In', 'hi': 'साइन इन'},
+
+  'welcome.heroEyebrowDesktop': {
+    'en': 'AI-POWERED LEGALTECH FOR INDIAN REAL ESTATE',
+    'hi': 'भारतीय रियल एस्टेट के लिए एआई-संचालित लीगलटेक',
+  },
+  'welcome.heroEyebrowMobile': {
+    'en': 'AI-POWERED REAL ESTATE LEGALTECH',
+    'hi': 'एआई-संचालित रियल एस्टेट लीगलटेक',
+  },
+  'welcome.headlineLine1': {'en': 'UNDERSTAND', 'hi': 'समझें'},
+  'welcome.headlineLine2Prefix': {'en': 'YOUR ', 'hi': 'अपनी '},
+  'welcome.headlineLine2Accent': {'en': 'PROPERTY', 'hi': 'संपत्ति'},
+  'welcome.headlineLine2Full': {'en': 'YOUR PROPERTY', 'hi': 'अपनी संपत्ति'},
+  'welcome.headlineLine3': {'en': 'BEFORE YOU SIGN.', 'hi': 'हस्ताक्षर करने से पहले।'},
+  'welcome.heroNarrative': {
+    'en': 'Analyze real-estate contracts, detect potential legal risks under RERA, and understand complex clauses in plain English — powered by AI built for Indian property law.',
+    'hi': 'रियल एस्टेट अनुबंधों का विश्लेषण करें, रेरा के तहत संभावित कानूनी जोखिमों का पता लगाएं, और जटिल खंडों को सरल भाषा में समझें — भारतीय संपत्ति कानून के लिए निर्मित एआई द्वारा संचालित।',
+  },
+  'welcome.getStarted': {'en': 'Get Started', 'hi': 'शुरू करें'},
+  'welcome.alreadyHaveAccount': {'en': 'Already have an account? ', 'hi': 'क्या आपके पास पहले से एक खाता है? '},
+  'welcome.signInAction': {'en': 'Sign in', 'hi': 'साइन इन करें'},
+
+  'welcome.sideWordScan': {'en': 'SCAN', 'hi': 'स्कैन'},
+  'welcome.sideWordAnalyze': {'en': 'ANALYZE', 'hi': 'विश्लेषण'},
+  'welcome.sideWordProtect': {'en': 'PROTECT', 'hi': 'सुरक्षा'},
+  'welcome.sideWordUnderstand': {'en': 'UNDERSTAND', 'hi': 'समझें'},
+  'welcome.sideWordProperty': {'en': 'PROPERTY', 'hi': 'संपत्ति'},
+  'welcome.sideWordRera': {'en': 'RERA', 'hi': 'रेरा'},
+  'welcome.sideWordClauses': {'en': 'CLAUSES', 'hi': 'खंड'},
+  'welcome.sideWordSecure': {'en': 'SECURE', 'hi': 'सुरक्षित'},
+
+  'welcome.mockDocTitle': {'en': 'PROPERTY SALE AGREEMENT', 'hi': 'संपत्ति बिक्री समझौता'},
+  'welcome.aiScanActive': {'en': 'AI Scan Active', 'hi': 'एआई स्कैन सक्रिय'},
+  'welcome.mockClauseTitle': {'en': 'Clause 7.2 — Forfeiture', 'hi': 'खंड 7.2 — जब्ती'},
+  'welcome.mockRelevantLaw': {'en': 'Relevant Property Law', 'hi': 'प्रासंगिक संपत्ति कानून'},
+  'welcome.mockClauseBody': {
+    'en': '"In case of delay beyond 30 days, 100% of earnest deposit shall be forfeited without notice."',
+    'hi': '"30 दिनों से अधिक की देरी के मामले में, बिना किसी सूचना के 100% बयाना राशि जब्त कर ली जाएगी।"',
+  },
+  'welcome.mockRiskDetected': {'en': 'High Legal Risk Detected', 'hi': 'उच्च कानूनी जोखिम का पता चला'},
+  'welcome.mockRiskScore': {'en': 'Score: 84/100', 'hi': 'स्कोर: 84/100'},
+  'welcome.mockPlainEnglish': {
+    'en': 'Plain English: The builder can confiscate all your advance money even for minor payment delays.',
+    'hi': 'सरल अर्थ: भुगतान में मामूली देरी के लिए भी बिल्डर आपके सारे अग्रिम पैसे जब्त कर सकता है।',
+  },
+
+  'welcome.marqueeTrack1': {
+    'en': 'SCAN CONTRACTS  ✦  RERA COMPLIANCE AUDIT  ✦  PLAIN-ENGLISH INSIGHTS  ✦  DETECT UNFAIR CLAUSES  ✦  INDIAN PROPERTY LAW  ✦  ',
+    'hi': 'अनुबंध स्कैन करें  ✦  रेरा अनुपालन ऑडिट  ✦  सरल भाषा अंतर्दृष्टि  ✦  अनुचित खंडों की पहचान  ✦  भारतीय संपत्ति कानून  ✦  ',
+  },
+  'welcome.marqueeTrack2': {
+    'en': 'STAMP DUTY CALCULATOR  ✦  DUE DILIGENCE CHECKLISTS  ✦  24/7 LEGAL AI CHAT  ✦  EXPORTABLE PDF REPORTS  ✦  TITLE CLEARANCE & OC  ✦  ',
+    'hi': 'स्टाम्प शुल्क कैलकुलेटर  ✦  उचित सावधानी चेकलिस्ट  ✦  24/7 कानूनी एआई चैट  ✦  निर्यात योग्य पीडीएफ रिपोर्ट  ✦  शीर्षक मंजूरी और ओसी  ✦  ',
+  },
+
+  'welcome.featuresEyebrow': {'en': 'YOUR LEGAL DOCUMENTS, MADE CLEAR.', 'hi': 'आपके कानूनी दस्तावेज़, पूरी तरह स्पष्ट।'},
+  'welcome.featuresTitle': {'en': 'Complete Legal Protection Suite', 'hi': 'संपूर्ण कानूनी सुरक्षा सुइट'},
+  'welcome.featuresSubtitle': {
+    'en': 'Six specialized AI tools built to simplify Indian real estate transactions.',
+    'hi': 'भारतीय रियल एस्टेट लेनदेन को सरल बनाने के लिए निर्मित छह विशेष एआई उपकरण।',
+  },
+  'welcome.featScanTag': {'en': 'OCR & PDF', 'hi': 'ओसीआर और पीडीएफ'},
+  'welcome.featScanTitle': {'en': 'Scan & Extract', 'hi': 'स्कैन और निष्कर्षण'},
+  'welcome.featScanDesc': {
+    'en': 'Upload PDF agreements, capture physical contracts via OCR camera, or paste legal text directly.',
+    'hi': 'पीडीएफ अनुबंध अपलोड करें, ओसीआर कैमरे से भौतिक अनुबंध कैप्चर करें, या सीधे कानूनी पाठ पेस्ट करें।',
+  },
+  'welcome.featRisksTag': {'en': 'AI AUDIT', 'hi': 'एआई ऑडिट'},
+  'welcome.featRisksTitle': {'en': 'Detect Legal Risks', 'hi': 'कानूनी जोखिमों का पता लगाएं'},
+  'welcome.featRisksDesc': {
+    'en': 'Identify potentially unfair, non-compliant, or one-sided builder clauses with RERA-trained AI.',
+    'hi': 'रेरा-प्रशिक्षित एआई के साथ संभावित अनुचित, गैर-अनुपालन या एकतरफा बिल्डर खंडों की पहचान करें।',
+  },
+  'welcome.featPlainEnglishTag': {'en': 'SIMPLIFIED', 'hi': 'सरलीकृत'},
+  'welcome.featPlainEnglishTitle': {'en': 'Plain-English Insights', 'hi': 'सरल भाषा अंतर्दृष्टि'},
+  'welcome.featPlainEnglishDesc': {
+    'en': 'Demystify dense legal jargon into 2-3 sentence layman explanations and negotiation advice.',
+    'hi': 'जटिल कानूनी शब्दावली को 2-3 वाक्यों के सरल स्पष्टीकरण और बातचीत की सलाह में बदलें।',
+  },
+  'welcome.featCalculatorTag': {'en': 'STATE-WISE', 'hi': 'राज्य-वार'},
+  'welcome.featCalculatorTitle': {'en': 'Stamp Duty Calculator', 'hi': 'स्टाम्प शुल्क कैलकुलेटर'},
+  'welcome.featCalculatorDesc': {
+    'en': 'Compute state-wise stamp duty, registration charges, local cess, and female buyer discounts across India.',
+    'hi': 'पूरे भारत में राज्य-वार स्टाम्प शुल्क, पंजीकरण शुल्क, स्थानीय उपकर और महिला खरीदार छूट की गणना करें।',
+  },
+  'welcome.featChatTag': {'en': '24/7 CHAT', 'hi': '24/7 चैट'},
+  'welcome.featChatTitle': {'en': 'AI Legal Assistant', 'hi': 'एआई कानूनी सहायक'},
+  'welcome.featChatDesc': {
+    'en': 'Get instant 24/7 answers on property laws, tenancy disputes, builder notices, and contract clauses.',
+    'hi': 'संपत्ति कानूनों, किरायेदारी विवादों, बिल्डर नोटिस और अनुबंध खंडों पर 24/7 त्वरित उत्तर प्राप्त करें।',
+  },
+  'welcome.featChecklistTag': {'en': 'CHECKLIST', 'hi': 'चेकलिस्ट'},
+  'welcome.featChecklistTitle': {'en': 'Due Diligence Checklists', 'hi': 'उचित सावधानी चेकलिस्ट'},
+  'welcome.featChecklistDesc': {
+    'en': 'Step-by-step buyer verification covering title clearance, RERA approvals, encumbrance & OC records.',
+    'hi': 'शीर्षक मंजूरी, रेरा अनुमोदन, भार प्रमाणपत्र और ओसी रिकॉर्ड को कवर करने वाला चरण-दर-चरण सत्यापन।',
+  },
+
+  'welcome.howEyebrow': {'en': 'SIMPLE 4-STEP PROCESS', 'hi': 'सरल 4-चरणीय प्रक्रिया'},
+  'welcome.howTitle': {'en': 'How It Works', 'hi': 'यह कैसे काम करता है'},
+  'welcome.step1Title': {'en': 'Upload Agreement', 'hi': 'अनुबंध अपलोड करें'},
+  'welcome.step1Desc': {
+    'en': 'Upload your property agreement, sale deed, or rental contract.',
+    'hi': 'अपना संपत्ति समझौता, बिक्री विलेख, या किराया अनुबंध अपलोड करें।',
+  },
+  'welcome.step2Title': {'en': 'AI Contract Scan', 'hi': 'एआई अनुबंध स्कैन'},
+  'welcome.step2Desc': {
+    'en': 'AI examines the text and evaluates statutory RERA compliance.',
+    'hi': 'एआई पाठ की जांच करता है और वैधानिक रेरा अनुपालन का मूल्यांकन करता है।',
+  },
+  'welcome.step3Title': {'en': 'Plain-English Insights', 'hi': 'सरल भाषा अंतर्दृष्टि'},
+  'welcome.step3Desc': {
+    'en': 'Get plain-English explanations and flagged risk highlights.',
+    'hi': 'सरल भाषा स्पष्टीकरण और चिह्नित जोखिम हाइलाइट प्राप्त करें।',
+  },
+  'welcome.step4Title': {'en': 'Legal Audit Report', 'hi': 'कानूनी ऑडिट रिपोर्ट'},
+  'welcome.step4Desc': {
+    'en': 'Generate and download a structured legal risk assessment PDF.',
+    'hi': 'एक संरचित कानूनी जोखिम मूल्यांकन पीडीएफ तैयार करें और डाउनलोड करें।',
+  },
+
+  'welcome.riskEyebrow': {'en': 'AI-POWERED AUDIT PREVIEW', 'hi': 'एआई-संचालित ऑडिट पूर्वावलोकन'},
+  'welcome.riskTitle': {'en': 'See What LawBuddy Finds', 'hi': 'देखें LawBuddy क्या खोजता है'},
+  'welcome.riskSubtitle': {
+    'en': 'Our RERA-trained engine inspects agreement clauses line-by-line to flag unfair conditions, non-compliant timelines, and asymmetric liabilities.',
+    'hi': 'हमारा रेरा-प्रशिक्षित इंजन अनुचित शर्तों, गैर-अनुपालन समय-सीमाओं और एकतरफा देनदारियों को चिह्नित करने के लिए अनुबंध खंडों का पंक्ति-दर-पंक्ति निरीक्षण करता है।',
+  },
+  'welcome.riskDocExtract': {'en': 'AGREEMENT FOR SALE (EXTRACT)', 'hi': 'बिक्री के लिए समझौता (अंश)'},
+  'welcome.riskPotentialRisk': {'en': 'POTENTIAL RISK DETECTED', 'hi': 'संभावित जोखिम का पता चला'},
+  'welcome.riskClauseTitle': {'en': 'Clause 7.2 — Default & Forfeiture of Earnest Deposit', 'hi': 'खंड 7.2 — डिफ़ॉल्ट और बयाना राशि की जब्ती'},
+  'welcome.riskClauseBody': {
+    'en': '"In the event of any delay in milestone payment exceeding 15 days, the Promoter shall have the unilateral right to cancel the allotment and forfeit 100% of the Earnest Money Deposit and accrued interest without further notice."',
+    'hi': '"15 दिनों से अधिक के माइलस्टोन भुगतान में किसी भी देरी की स्थिति में, प्रमोटर को बिना किसी पूर्व सूचना के आवंटन रद्द करने और बयाना राशि और अर्जित ब्याज का 100% जब्त करने का एकतरफा अधिकार होगा।"',
+  },
+  'welcome.riskStatutoryDesc': {
+    'en': 'Excessive forfeiture clause exceeds statutory 10% ceiling prescribed under Section 13(1) of RERA Model Rules.',
+    'hi': 'अत्यधिक जब्ती खंड रेरा मॉडल नियमों की धारा 13(1) के तहत निर्धारित वैधानिक 10% सीमा से अधिक है।',
+  },
+  'welcome.riskAssessmentTitle': {'en': 'AI Legal Risk Assessment', 'hi': 'एआई कानूनी जोखिम मूल्यांकन'},
+  'welcome.riskScoreElevated': {'en': '{score} / 100 • Elevated', 'hi': '{score} / 100 • बढ़ा हुआ'},
+  'welcome.riskHighBadge': {'en': '🔴 High Risk', 'hi': '🔴 उच्च जोखिम'},
+  'welcome.riskHighDesc': {'en': 'Clause 7.2: Unilateral earnest forfeiture (100%)', 'hi': 'खंड 7.2: एकतरफा बयाना जब्ती (100%)'},
+  'welcome.riskCautionBadge': {'en': '🟡 Caution', 'hi': '🟡 सावधानी'},
+  'welcome.riskCautionDesc': {'en': 'Clause 14.1: Asymmetric delay penalty compensation', 'hi': 'खंड 14.1: असममित विलंब जुर्माना मुआवजा'},
+  'welcome.riskStandardBadge': {'en': '🟢 Standard', 'hi': '🟢 मानक'},
+  'welcome.riskStandardDesc': {'en': 'Clause 3.1: Carpet area specification & RERA warranty', 'hi': 'खंड 3.1: कारपेट एरिया विनिर्देश और रेरा वारंटी'},
+  'welcome.riskRecommendation': {
+    'en': 'Recommendation: Demand amendment to restrict forfeiture to max 10% of total consideration as per standard MahaRERA guidelines.',
+    'hi': 'सिफारिश: मानक महा-रेरा दिशानिर्देशों के अनुसार जब्ती को कुल प्रतिफल के अधिकतम 10% तक सीमित करने के लिए संशोधन की मांग करें।',
+  },
+
+  'welcome.ctaTitle': {'en': 'Before You Sign,\nKnow What You\'re Signing.', 'hi': 'हस्ताक्षर करने से पहले,\nजानें कि आप क्या हस्ताक्षर कर रहे हैं।'},
+  'welcome.ctaSubtitle': {
+    'en': 'Upload your property document and let LawBuddy help you understand the clauses, risks, and important legal considerations.',
+    'hi': 'अपना संपत्ति दस्तावेज़ अपलोड करें और LawBuddy को खंडों, जोखिमों और महत्वपूर्ण कानूनी विचारों को समझने में आपकी मदद करने दें।',
+  },
+  'welcome.ctaExplore': {'en': 'Explore Features', 'hi': 'सुविधाएं देखें'},
+  'welcome.ctaAnalyze': {'en': 'Analyze Your Document →', 'hi': 'अपना दस्तावेज़ जांचें →'},
+
+  // ==========================================
+  // Admin Analytics Screen
+  // ==========================================
+  'adminAnalytics.badge': {'en': 'ADMIN', 'hi': 'एडमिन'},
+  'adminAnalytics.title': {'en': 'Admin Analytics', 'hi': 'व्यवस्थापक विश्लेषण'},
+  'adminAnalytics.subtitle': {'en': 'LawBuddy System Insights', 'hi': 'LawBuddy सिस्टम अंतर्दृष्टि'},
+  'adminAnalytics.refreshTooltip': {'en': 'Refresh Analytics', 'hi': 'विश्लेषण ताज़ा करें'},
+  'adminAnalytics.loadingText': {'en': 'Aggregating system telemetry & insights...', 'hi': 'सिस्टम टेलीमेट्री और अंतर्दृष्टि एकत्रित की जा रही है...'},
+  'adminAnalytics.kpiTotalUsers': {'en': 'Total Users', 'hi': 'कुल उपयोगकर्ता'},
+  'adminAnalytics.kpiTotalUsersSub': {'en': 'Registered accounts', 'hi': 'पंजीकृत खाते'},
+  'adminAnalytics.kpiDocsAnalyzed': {'en': 'Docs Analyzed', 'hi': 'विश्लेषित दस्तावेज़'},
+  'adminAnalytics.kpiDocsAnalyzedSub': {'en': 'Completed analyses', 'hi': 'पूर्ण विश्लेषण'},
+  'adminAnalytics.kpiClausesEvaluated': {'en': 'Clauses Evaluated', 'hi': 'मूल्यांकित खंड'},
+  'adminAnalytics.kpiClausesEvaluatedSub': {'en': 'Total legal clauses', 'hi': 'कुल कानूनी खंड'},
+  'adminAnalytics.kpiAvgPages': {'en': 'Avg. Pages', 'hi': 'औसत पृष्ठ'},
+  'adminAnalytics.kpiAvgPagesSub': {'en': 'Pages per contract', 'hi': 'प्रति अनुबंध पृष्ठ'},
+  'adminAnalytics.supportingActivity': {'en': 'Supporting Activity:', 'hi': 'सहायक गतिविधि:'},
+  'adminAnalytics.chatSessions': {'en': 'Chat Sessions', 'hi': 'चैट सत्र'},
+  'adminAnalytics.diligenceChecklists': {'en': 'Diligence Checklists', 'hi': 'सावधानी चेकलिस्ट'},
+  'adminAnalytics.riskSectionTitle': {'en': 'Risk Classification & Distribution', 'hi': 'जोखिम वर्गीकरण और वितरण'},
+  'adminAnalytics.riskSectionSub': {
+    'en': 'Dual-level evaluation: Overall Contract Risk vs. Granular Clause Severity',
+    'hi': 'दोहरे स्तर का मूल्यांकन: समग्र अनुबंध जोखिम बनाम सूक्ष्म खंड गंभीरता',
+  },
+  'adminAnalytics.docRiskTitle': {'en': 'Document-Level Risk', 'hi': 'दस्तावेज़-स्तरीय जोखिम'},
+  'adminAnalytics.docsCount': {'en': '{count} docs', 'hi': '{count} दस्तावेज़'},
+  'adminAnalytics.highRiskDocs': {'en': 'High Risk Documents', 'hi': 'उच्च जोखिम वाले दस्तावेज़'},
+  'adminAnalytics.mediumRiskDocs': {'en': 'Medium Risk Documents', 'hi': 'मध्यम जोखिम वाले दस्तावेज़'},
+  'adminAnalytics.lowRiskDocs': {'en': 'Low Risk Documents', 'hi': 'कम जोखिम वाले दस्तावेज़'},
+  'adminAnalytics.clauseSeverityTitle': {'en': 'Clause-Level Severity', 'hi': 'खंड-स्तरीय गंभीरता'},
+  'adminAnalytics.clausesCount': {'en': '{count} clauses', 'hi': '{count} खंड'},
+  'adminAnalytics.highRiskClauses': {'en': 'HIGH_RISK Clauses', 'hi': 'उच्च जोखिम वाले खंड'},
+  'adminAnalytics.cautionClauses': {'en': 'CAUTION Clauses', 'hi': 'सावधानी खंड'},
+  'adminAnalytics.compliantClauses': {'en': 'COMPLIANT Clauses', 'hi': 'अनुपालन वाले खंड'},
+  'adminAnalytics.findingCategoriesTitle': {'en': 'Legal Issue Categories Breakdown', 'hi': 'कानूनी मुद्दा श्रेणियां विभाजन'},
+  'adminAnalytics.findingCategoriesSub': {
+    'en': 'Actual categorized findings identified during contract analysis',
+    'hi': 'अनुबंध विश्लेषण के दौरान पहचाने गए वास्तविक वर्गीकृत निष्कर्ष',
+  },
+  'adminAnalytics.catClausesCount': {'en': '{count} clauses ({percent}%)', 'hi': '{count} खंड ({percent}%)'},
+  'adminAnalytics.emptyCategories': {'en': 'No categorized clause issues recorded yet.', 'hi': 'अभी तक कोई वर्गीकृत खंड मुद्दा दर्ज नहीं किया गया है।'},
+  'adminAnalytics.pipelineTitle': {'en': 'Ingestion & Extraction Pipeline Insights', 'hi': 'इनजेशन और निष्कर्षण पाइपलाइन अंतर्दृष्टि'},
+  'adminAnalytics.pipelineSub': {
+    'en': 'Distribution of uploaded document formats and extraction engines',
+    'hi': 'अपलोड किए गए दस्तावेज़ प्रारूपों और निष्कर्षण इंजनों का वितरण',
+  },
+  'adminAnalytics.sourceTypesTitle': {'en': 'Document Source Types', 'hi': 'दस्तावेज़ स्रोत प्रकार'},
+  'adminAnalytics.extractionMethodsTitle': {'en': 'Extraction Pipeline Methods', 'hi': 'निष्कर्षण पाइपलाइन विधियां'},
+  'adminAnalytics.recentActivityTitle': {'en': 'Recent Analysis Activity Feed', 'hi': 'हालिया विश्लेषण गतिविधि फ़ीड'},
+  'adminAnalytics.recentActivitySub': {
+    'en': 'Real-time telemetry of completed document risk evaluations (sanitized metadata)',
+    'hi': 'पूर्ण दस्तावेज़ जोखिम मूल्यांकनों की वास्तविक समय टेलीमेट्री (स्वच्छ मेटाडेटा)',
+  },
+  'adminAnalytics.emptyRecentScans': {'en': 'No recent document analysis telemetry recorded.', 'hi': 'कोई हालिया दस्तावेज़ विश्लेषण टेलीमेट्री दर्ज नहीं की गई है।'},
+  'adminAnalytics.pagesUnitSingular': {'en': 'page', 'hi': 'पृष्ठ'},
+  'adminAnalytics.pagesUnitPlural': {'en': 'pages', 'hi': 'पृष्ठ'},
+  'adminAnalytics.riskBreakdownCompact': {'en': '{high}H • {caution}C • {compliant}OK', 'hi': '{high}उच्च • {caution}सावधान • {compliant}सही'},
+  'adminAnalytics.justNow': {'en': 'Just now', 'hi': 'अभी'},
+  'adminAnalytics.minutesAgo': {'en': '{minutes}m ago', 'hi': '{minutes} मि. पहले'},
+  'adminAnalytics.hoursAgo': {'en': '{hours}h ago', 'hi': '{hours} घंटे पहले'},
+  'adminAnalytics.daysAgo': {'en': '{days}d ago', 'hi': '{days} दिन पहले'},
+  'adminAnalytics.accessRestricted': {'en': 'Access Restricted', 'hi': 'पहुंच प्रतिबंधित है'},
+  'adminAnalytics.accessRestrictedDesc': {
+    'en': 'You do not have administrator permissions to access the system analytics dashboard. Only verified administrators can view system-wide telemetry.',
+    'hi': 'सिस्टम एनालिटिक्स डैशबोर्ड तक पहुंचने के लिए आपके पास व्यवस्थापक अनुमतियां नहीं हैं। केवल सत्यापित व्यवस्थापक ही सिस्टम-व्यापी टेलीमेट्री देख सकते हैं।',
+  },
+  'adminAnalytics.returnToWorkspace': {'en': 'Return to Workspace', 'hi': 'कार्यस्थान पर वापस जाएं'},
+  'adminAnalytics.loadFailed': {'en': 'Failed to Load Analytics', 'hi': 'एनालिटिक्स लोड करने में विफल'},
+  'adminAnalytics.unexpectedError': {'en': 'An unexpected network error occurred.', 'hi': 'एक अप्रत्याशित नेटवर्क त्रुटि हुई।'},
+  'adminAnalytics.retryConnection': {'en': 'Retry Connection', 'hi': 'कनेक्शन का पुनः प्रयास करें'},
+  'adminAnalytics.emptyTelemetry': {'en': 'No Analytics Telemetry Available', 'hi': 'कोई एनालिटिक्स टेलीमेट्री उपलब्ध नहीं है'},
+  'adminAnalytics.emptyTelemetryDesc': {
+    'en': 'As users upload and evaluate real estate contracts, system metrics will populate here in real time.',
+    'hi': 'जैसे-जैसे उपयोगकर्ता रियल एस्टेट अनुबंध अपलोड और मूल्यांकन करेंगे, सिस्टम मेट्रिक्स यहां वास्तविक समय में दिखाई देंगे।',
+  },
+  'adminAnalytics.refreshBtn': {'en': 'Refresh', 'hi': 'ताज़ा करें'},
+
+  // ==========================================
+  // Document Comparison Screen
+  // ==========================================
+  'docComparison.initializing': {'en': 'Initializing...', 'hi': 'आरंभ किया जा रहा है...'},
+  'docComparison.startingComparison': {'en': 'Starting comparison...', 'hi': 'तुलना शुरू हो रही है...'},
+  'docComparison.processing': {'en': 'Processing...', 'hi': 'प्रक्रिया जारी है...'},
+  'docComparison.timeoutError': {
+    'en': 'This comparison is taking longer than expected. It may still finish in the background — check back shortly, or try again.',
+    'hi': 'इस तुलना में अपेक्षा से अधिक समय लग रहा है। यह पृष्ठभूमि में समाप्त हो सकता है — थोड़ी देर बाद जांचें, या पुनः प्रयास करें।',
+  },
+  'docComparison.failedError': {'en': 'Comparison failed.', 'hi': 'तुलना विफल रही।'},
+  'docComparison.lostConnectionError': {
+    'en': 'Lost connection while checking comparison status. Please check your connection and try again.',
+    'hi': 'तुलना स्थिति की जांच करते समय कनेक्शन टूट गया। कृपया अपना कनेक्शन जांचें और पुनः प्रयास करें।',
+  },
+  'docComparison.selectBothError': {
+    'en': 'Please select both Version A and Version B documents.',
+    'hi': 'कृपया संस्करण A और संस्करण B दोनों दस्तावेज़ चुनें।',
+  },
+  'docComparison.selectDistinctError': {
+    'en': 'Please select two distinct versions to compare.',
+    'hi': 'कृपया तुलना करने के लिए दो अलग-अलग संस्करण चुनें।',
+  },
+  'docComparison.startError': {
+    'en': 'Unable to start document comparison. Please check your connection and try again.',
+    'hi': 'दस्तावेज़ तुलना शुरू करने में असमर्थ। कृपया अपना कनेक्शन जांचें और पुनः प्रयास करें।',
+  },
+  'docComparison.appBarTitle': {'en': 'Compare Agreements', 'hi': 'समझौतों की तुलना करें'},
+  'docComparison.heading': {'en': 'Contract Differential Analysis', 'hi': 'अनुबंध अंतर विश्लेषण'},
+  'docComparison.subheading': {
+    'en': 'Select two agreement drafts to identify modified clauses, added obligations, deleted buyer protections, and risk escalations.',
+    'hi': 'संशोधित खंडों, जोड़े गए दायित्वों, हटाए गए खरीदार सुरक्षा उपायों और जोखिम वृद्धि की पहचान करने के लिए दो समझौते के प्रारूप चुनें।',
+  },
+  'docComparison.processingDesc': {
+    'en': 'Analyzing clause alignments, numbers, dates, and legal statutory impact...',
+    'hi': 'खंड संरेखण, संख्याओं, तिथियों और कानूनी वैधानिक प्रभाव का विश्लेषण किया जा रहा है...',
+  },
+  'docComparison.versionALabel': {
+    'en': 'Version A (Baseline / Before Negotiation)',
+    'hi': 'संस्करण A (मूल / बातचीत से पहले)',
+  },
+  'docComparison.versionBLabel': {
+    'en': 'Version B (Revised / After Negotiation)',
+    'hi': 'संस्करण B (संशोधित / बातचीत के बाद)',
+  },
+  'docComparison.loadDocsError': {
+    'en': 'Couldn\'t load your documents. Check your connection and try again.',
+    'hi': 'आपके दस्तावेज़ लोड नहीं हो सके। अपना कनेक्शन जांचें और पुनः प्रयास करें।',
+  },
+  'docComparison.noDocs': {
+    'en': 'No scanned documents found in your workspace.',
+    'hi': 'आपके कार्यस्थान में कोई स्कैन किए गए दस्तावेज़ नहीं मिले।',
+  },
+  'docComparison.scanNewBtn': {'en': 'Scan New Agreement', 'hi': 'नया समझौता स्कैन करें'},
+  'docComparison.chooseVersionHint': {'en': 'Choose document version', 'hi': 'दस्तावेज़ संस्करण चुनें'},
+  'docComparison.untitledDoc': {'en': 'Untitled Agreement', 'hi': 'शीर्षकहीन समझौता'},
+  'docComparison.runAnalysisBtn': {'en': 'Run Differential Analysis', 'hi': 'अंतर विश्लेषण चलाएं'},
+  // Doc comparison key aliases for complete runtime compatibility
+  'docComparison.headerTitle': {'en': 'Contract Differential Analysis', 'hi': 'अनुबंध अंतर विश्लेषण'},
+  'docComparison.headerSubtitle': {
+    'en': 'Select two agreement drafts to identify modified clauses, added obligations, deleted buyer protections, and risk escalations.',
+    'hi': 'संशोधित खंडों, जोड़े गए दायित्वों, हटाए गए खरीदार सुरक्षा उपायों और जोखिम वृद्धि की पहचान करने के लिए दो समझौते के प्रारूप चुनें।',
+  },
+  'docComparison.processingSubtitle': {
+    'en': 'Analyzing clause alignments, numbers, dates, and legal statutory impact...',
+    'hi': 'खंड संरेखण, संख्याओं, तिथियों और कानूनी वैधानिक प्रभाव का विश्लेषण किया जा रहा है...',
+  },
+  'docComparison.connectionLost': {
+    'en': 'Lost connection while checking comparison status. Please check your connection and try again.',
+    'hi': 'तुलना स्थिति की जांच करते समय कनेक्शन टूट गया। कृपया अपना कनेक्शन जांचें और पुनः प्रयास करें।',
+  },
+  'docComparison.selectBothPrompt': {
+    'en': 'Please select both Version A and Version B documents.',
+    'hi': 'कृपया संस्करण A और संस्करण B दोनों दस्तावेज़ चुनें।',
+  },
+  'docComparison.selectDistinctPrompt': {
+    'en': 'Please select two distinct versions to compare.',
+    'hi': 'कृपया तुलना करने के लिए दो अलग-अलग संस्करण चुनें।',
+  },
+  'docComparison.loadFailed': {
+    'en': 'Couldn\'t load your documents. Check your connection and try again.',
+    'hi': 'आपके दस्तावेज़ लोड नहीं हो सके। अपना कनेक्शन जांचें और पुनः प्रयास करें।',
+  },
+  'docComparison.noScannedDocs': {
+    'en': 'No scanned documents found in your workspace.',
+    'hi': 'आपके कार्यस्थान में कोई स्कैन किए गए दस्तावेज़ नहीं मिले।',
+  },
+  'docComparison.scanNewAgreement': {'en': 'Scan New Agreement', 'hi': 'नया समझौता स्कैन करें'},
+  'docComparison.chooseVersion': {'en': 'Choose document version', 'hi': 'दस्तावेज़ संस्करण चुनें'},
+  'docComparison.untitledAgreement': {'en': 'Untitled Agreement', 'hi': 'शीर्षकहीन समझौता'},
+  'docComparison.runAnalysis': {'en': 'Run Differential Analysis', 'hi': 'अंतर विश्लेषण चलाएं'},
+
+  // ==========================================
+  // Chat Citations & Chat Screen Additions
+  // ==========================================
+  'chatCitation.openLinkError': {
+    'en': 'Unable to open citation link. Please try again.',
+    'hi': 'उद्धरण लिंक खोलने में असमर्थ। कृपया पुनः प्रयास करें।',
+  },
+  'chatCitation.sourcesHeader': {
+    'en': 'Authoritative Legal Sources ({count})',
+    'hi': 'प्रामाणिक कानूनी स्रोत ({count})',
+  },
+  'chatCitation.ragGrounded': {'en': 'RAG Grounded', 'hi': 'RAG आधारित'},
+  'chatCitation.statutoryLaw': {'en': 'Statutory Law', 'hi': 'वैधानिक कानून'},
+  'chatCitation.secPrefix': {'en': 'Sec {section}', 'hi': 'धारा {section}'},
+  'chatCitation.officialLaw': {'en': 'Official Law', 'hi': 'आधिकारिक कानून'},
+  'chatCitation.officialSource': {'en': 'Official Source', 'hi': 'आधिकारिक स्रोत'},
+  'chatCitation.defaultJurisdiction': {'en': 'India', 'hi': 'भारत'},
+
+  'chat.loadSessionsError': {
+    'en': 'Unable to load previous conversations. Please check your connection and try again.',
+    'hi': 'पिछली बातचीत लोड करने में असमर्थ। कृपया अपना कनेक्शन जांचें और पुनः प्रयास करें।',
+  },
+  'chat.loadSessionDetailsError': {
+    'en': 'Unable to load this conversation. Please try again.',
+    'hi': 'इस बातचीत को लोड करने में असमर्थ। कृपया पुनः प्रयास करें।',
+  },
+  'chat.defaultAiReply': {
+    'en': 'I have reviewed your legal request.',
+    'hi': 'मैंने आपके कानूनी अनुरोध की समीक्षा कर ली है।',
+  },
+  'chat.assistantUnavailable': {
+    'en': 'The Legal AI Assistant is temporarily unavailable. Please check your internet connection and try again.',
+    'hi': 'कानूनी एआई सहायक अस्थायी रूप से अनुपलब्ध है। कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें।',
+  },
+  'chat.topBarBadge': {
+    'en': '24/7 LEGAL AI ASSISTANT • RERA SPECIALIST',
+    'hi': '24/7 कानूनी एआई सहायक • रेरा विशेषज्ञ',
+  },
+
+  'home.defaultUserName': {'en': 'User', 'hi': 'उपयोगकर्ता'},
+  'home.openLinkError': {
+    'en': 'Unable to open this link. Please try again.',
+    'hi': 'इस लिंक को खोलने में असमर्थ। कृपया पुनः प्रयास करें।',
+  },
+
+  // ==========================================
+  // Cookie & Privacy Storage Consent
+  // ==========================================
+  'consent.privacyPreferences': {'en': 'Privacy preferences', 'hi': 'गोपनीयता प्राथमिकताएं'},
+  'consent.bannerDescription': {
+    'en': 'We use essential browser storage to keep LawBuddy working and remember your preferences.',
+    'hi': 'हम LawBuddy को चालू रखने और आपकी प्राथमिकताओं को याद रखने के लिए आवश्यक ब्राउज़र स्टोरेज का उपयोग करते हैं।',
+  },
+  'consent.customize': {'en': 'Customize', 'hi': 'अनुकूलित करें'},
+  'consent.necessaryOnly': {'en': 'Necessary Only', 'hi': 'केवल आवश्यक'},
+  'consent.acceptPreferences': {'en': 'Accept Preferences', 'hi': 'प्राथमिकताएं स्वीकार करें'},
+  'consent.acceptAll': {'en': 'Accept All', 'hi': 'सभी स्वीकार करें'},
+  'consent.savePreferences': {'en': 'Save Preferences', 'hi': 'प्राथमिकताएं सहेजें'},
+  'consent.privacyStoragePrefTitle': {
+    'en': 'Privacy & Storage Preferences',
+    'hi': 'गोपनीयता और संग्रहण प्राथमिकताएं',
+  },
+  'consent.privacyStoragePrefIntro': {
+    'en': 'Configure how LawBuddy uses local storage to store data on your device. Strictly necessary tokens cannot be disabled as they are required for account security.',
+    'hi': 'कॉन्फ़िगर करें कि LawBuddy आपके डिवाइस पर डेटा संग्रहीत करने के लिए स्थानीय संग्रहण का उपयोग कैसे करता है। कड़ाई से आवश्यक टोकन अक्षम नहीं किए जा सकते क्योंकि वे खाता सुरक्षा के लिए आवश्यक हैं।',
+  },
+  'consent.strictlyNecessaryTitle': {'en': 'STRICTLY NECESSARY', 'hi': 'कड़ाई से आवश्यक'},
+  'consent.alwaysOnBadge': {'en': 'Always On', 'hi': 'हमेशा चालू'},
+  'consent.strictlyNecessaryDesc': {
+    'en': 'Required for authentication and core LawBuddy functionality.',
+    'hi': 'प्रमाणीकरण और मुख्य LawBuddy कार्यक्षमता के लिए आवश्यक।',
+  },
+  'consent.functionalPrefTitle': {'en': 'FUNCTIONAL / PREFERENCES', 'hi': 'कार्यात्मक / प्राथमिकताएं'},
+  'consent.functionalPrefDesc': {
+    'en': 'Remember theme and language preferences across sessions.',
+    'hi': 'सत्रों के दौरान थीम और भाषा प्राथमिकताओं को याद रखें।',
+  },
+  'consent.analyticsTitle': {'en': 'ANALYTICS', 'hi': 'एनालिटिक्स'},
+  'consent.notCurrentlyUsedBadge': {'en': 'Not currently used', 'hi': 'वर्तमान में उपयोग नहीं किया गया'},
+  'consent.analyticsDesc': {
+    'en': 'We do not collect usage telemetry or run analytics trackers.',
+    'hi': 'हम उपयोग टेलीमेट्री एकत्र नहीं करते हैं या एनालिटिक्स ट्रैकर्स नहीं चलाते हैं।',
+  },
+  'consent.marketingTitle': {'en': 'MARKETING', 'hi': 'मार्केटिंग'},
+  'consent.marketingDesc': {
+    'en': 'We do not display third-party advertisements or tracking pixels.',
+    'hi': 'हम तृतीय-पक्ष विज्ञापन या ट्रैकिंग पिक्सेल प्रदर्शित नहीं करते हैं।',
+  },
+  'consent.readFullPrivacyPolicy': {'en': 'Read our full Privacy Policy', 'hi': 'हमारी पूरी गोपनीयता नीति पढ़ें'},
 };

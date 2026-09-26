@@ -218,7 +218,6 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
   void _showAddItemDialog() {
     final titleController = TextEditingController();
     final tr = ref.read(localeProvider.notifier).translate;
-    final messenger = ScaffoldMessenger.of(context);
     final isDarkOuter = Theme.of(context).brightness == Brightness.dark;
     bool isSubmitting = false;
 

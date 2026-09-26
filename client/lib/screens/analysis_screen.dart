@@ -232,7 +232,6 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
 
   Future<void> _shareOnWhatsApp() async {
     final tr = ref.read(localeProvider.notifier).translate;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final token = await _getOrGenerateShareToken();
     if (token == null) {
@@ -555,7 +554,6 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
 
   Future<void> _exportPdf() async {
     final tr = ref.read(localeProvider.notifier).translate;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     setState(() => _isExportingPdf = true);
     try {
       final docTitle = widget.documentTitle ??

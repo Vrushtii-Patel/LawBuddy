@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/app_toast.dart';
 
-class LegalSourcesCitationCard extends StatefulWidget {
+class LegalSourcesCitationCard extends ConsumerStatefulWidget {
   final List<dynamic> sources;
   final bool isDark;
 
@@ -15,10 +17,10 @@ class LegalSourcesCitationCard extends StatefulWidget {
   });
 
   @override
-  State<LegalSourcesCitationCard> createState() => _LegalSourcesCitationCardState();
+  ConsumerState<LegalSourcesCitationCard> createState() => _LegalSourcesCitationCardState();
 }
 
-class _LegalSourcesCitationCardState extends State<LegalSourcesCitationCard> {
+class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationCard> {
   bool _isExpanded = false;
 
   Future<void> _launchSourceUrl(String? urlStr) async {
@@ -38,11 +40,14 @@ class _LegalSourcesCitationCardState extends State<LegalSourcesCitationCard> {
 
   void _showErrorSnackBar() {
     if (!mounted) return;
-    AppToast.showError(context, 'Unable to open citation link. Please try again.', duration: const Duration(seconds: 3));
+    final loc = ref.read(localeProvider.notifier);
+    AppToast.showError(context, loc.translate('chatCitation.openError'), duration: const Duration(seconds: 3));
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
     final isDark = widget.isDark;
     final primaryColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
     final secondaryColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
@@ -69,7 +74,7 @@ class _LegalSourcesCitationCardState extends State<LegalSourcesCitationCard> {
                   Icon(Icons.verified_outlined, size: 15, color: primaryColor),
                   const SizedBox(width: 7),
                   Text(
-                    'Authoritative Legal Sources (${widget.sources.length})',
+                    loc.translate('chatCitation.title', {'count': widget.sources.length.toString()}),
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -84,7 +89,7 @@ class _LegalSourcesCitationCardState extends State<LegalSourcesCitationCard> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      'RAG Grounded',
+                      loc.translate('chatCitation.ragGrounded'),
                       style: GoogleFonts.inter(
                         fontSize: 9.5,
                         fontWeight: FontWeight.w700,
@@ -111,10 +116,10 @@ class _LegalSourcesCitationCardState extends State<LegalSourcesCitationCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: widget.sources.map((src) {
                   final map = src is Map ? src : {};
-                  final doc = (map['document'] ?? 'Statutory Law').toString();
+                  final doc = (map['document'] ?? loc.translate('chatCitation.statutoryLaw')).toString();
                   final sec = map['section'] != null ? 'Sec ${map['section']}' : map['rule']?.toString();
-                  final authority = (map['authority'] ?? 'Official Law').toString();
-                  final jurisdiction = (map['jurisdiction'] ?? 'India').toString();
+                  final authority = (map['authority'] ?? loc.translate('chatCitation.officialLaw')).toString();
+                  final jurisdiction = (map['jurisdiction'] ?? loc.translate('chatCitation.india')).toString();
                   final url = map['sourceUrl'] as String?;
 
                   return Container(
@@ -186,7 +191,7 @@ class _LegalSourcesCitationCardState extends State<LegalSourcesCitationCard> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            'Official Source',
+                                            loc.translate('chatCitation.officialSource'),
                                             style: GoogleFonts.inter(
                                               fontSize: 10.5,
                                               fontWeight: FontWeight.w600,

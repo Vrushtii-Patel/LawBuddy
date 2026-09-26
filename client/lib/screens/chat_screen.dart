@@ -65,16 +65,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
     } catch (e) {
       debugPrint('Error fetching chat sessions: $e');
       if (mounted) {
+        final loc = ref.read(localeProvider.notifier);
         setState(() {
           _isLoadingSessions = false;
-          _sessionsError = 'Unable to load previous conversations. Please check your connection and try again.';
+          _sessionsError = loc.translate('chat.loadSessionsError');
         });
       }
     }
   }
 
   Future<void> _loadSessionDetails(String sessionId) async {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     try {
       final data = await ApiService.fetchChatSession(sessionId);
       if (mounted && data['messages'] != null) {
@@ -100,7 +100,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
     } catch (e) {
       debugPrint('Error loading chat session details: $e');
       if (mounted) {
-        AppToast.showError(context, 'Unable to load this conversation. Please try again.');
+        final loc = ref.read(localeProvider.notifier);
+        AppToast.showError(context, loc.translate('chat.loadSessionDetailsError'));
       }
     }
   }
@@ -228,6 +229,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
       final replyTimeStr = "${replyTime.hour.toString().padLeft(2, '0')}:${replyTime.minute.toString().padLeft(2, '0')}";
 
       if (mounted) {
+        final loc = ref.read(localeProvider.notifier);
         setState(() {
           _isTyping = false;
           if (res['sessionId'] != null) {
@@ -235,7 +237,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
           }
           _messages.add({
             'role': 'ai',
-            'text': res['reply'] ?? 'I have reviewed your legal request.',
+            'text': res['reply'] ?? loc.translate('chat.defaultAiReply'),
             'time': replyTimeStr,
             'suggestions': res['suggestions'],
             'sources': res['sources'],
@@ -247,13 +249,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
     } catch (e) {
       debugPrint('Error communicating with AI assistant: $e');
       if (mounted) {
+        final loc = ref.read(localeProvider.notifier);
         final errTime = DateTime.now();
         final errTimeStr = "${errTime.hour.toString().padLeft(2, '0')}:${errTime.minute.toString().padLeft(2, '0')}";
         setState(() {
           _isTyping = false;
           _messages.add({
             'role': 'error',
-            'text': 'The Legal AI Assistant is temporarily unavailable. Please check your internet connection and try again.',
+            'text': loc.translate('chat.assistantUnavailable'),
             'time': errTimeStr,
             'isNew': false,
           });
@@ -450,7 +453,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '24/7 LEGAL AI ASSISTANT • RERA SPECIALIST',
+                      loc.translate('chat.topBarBadge'),
                       style: GoogleFonts.inter(
                         fontSize: 10,
                         fontWeight: FontWeight.w800,

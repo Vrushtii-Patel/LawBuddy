@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 
-class RiskSystemShowcase extends StatefulWidget {
+class RiskSystemShowcase extends ConsumerStatefulWidget {
   final bool isDark;
   final bool isDesktop;
 
@@ -13,10 +15,10 @@ class RiskSystemShowcase extends StatefulWidget {
   });
 
   @override
-  State<RiskSystemShowcase> createState() => _RiskSystemShowcaseState();
+  ConsumerState<RiskSystemShowcase> createState() => _RiskSystemShowcaseState();
 }
 
-class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
+class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
     with SingleTickerProviderStateMixin {
   late final AnimationController _animController;
   late final Animation<double> _scoreAnim;
@@ -45,6 +47,8 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
     final isDark = widget.isDark;
     final isDesktop = widget.isDesktop;
 
@@ -68,22 +72,22 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(flex: 11, child: _buildMockDocumentPanel(isDark)),
+                Expanded(flex: 11, child: _buildMockDocumentPanel(isDark, loc)),
                 const SizedBox(width: 24),
-                Expanded(flex: 9, child: _buildRiskScorePanel(isDark)),
+                Expanded(flex: 9, child: _buildRiskScorePanel(isDark, loc)),
               ],
             )
           : Column(
               children: [
-                _buildMockDocumentPanel(isDark),
+                _buildMockDocumentPanel(isDark, loc),
                 const SizedBox(height: 20),
-                _buildRiskScorePanel(isDark),
+                _buildRiskScorePanel(isDark, loc),
               ],
             ),
     );
   }
 
-  Widget _buildMockDocumentPanel(bool isDark) {
+  Widget _buildMockDocumentPanel(bool isDark, LocaleNotifier loc) {
     final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
 
     return Container(
@@ -111,7 +115,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(
-                      'AGREEMENT FOR SALE (EXTRACT)',
+                      loc.translate('welcome.riskExtractTitle'),
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.inter(
                         fontSize: 11,
@@ -133,7 +137,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
                   ),
                 ),
                 child: Text(
-                  'POTENTIAL RISK DETECTED',
+                  loc.translate('welcome.riskPotentialDetected'),
                   style: GoogleFonts.inter(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
@@ -145,7 +149,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
           ),
           const SizedBox(height: 16),
           Text(
-            'Clause 7.2 — Default & Forfeiture of Earnest Deposit',
+            loc.translate('welcome.riskClauseTitle'),
             style: GoogleFonts.inter(
               fontSize: 14.5,
               fontWeight: FontWeight.w700,
@@ -164,7 +168,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
               ),
             ),
             child: Text(
-              '"In the event of any delay in milestone payment exceeding 15 days, the Promoter shall have the unilateral right to cancel the allotment and forfeit 100% of the Earnest Money Deposit and accrued interest without further notice."',
+              loc.translate('welcome.riskClauseBody'),
               style: GoogleFonts.inter(
                 fontSize: 12.5,
                 height: 1.5,
@@ -181,7 +185,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Excessive forfeiture clause exceeds statutory 10% ceiling prescribed under Section 13(1) of RERA Model Rules.',
+                  loc.translate('welcome.riskClauseNote'),
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     height: 1.45,
@@ -196,7 +200,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
     );
   }
 
-  Widget _buildRiskScorePanel(bool isDark) {
+  Widget _buildRiskScorePanel(bool isDark, LocaleNotifier loc) {
     final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
     final cautionColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
     final successColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
@@ -220,7 +224,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
             runSpacing: 6,
             children: [
               Text(
-                'AI Legal Risk Assessment',
+                loc.translate('welcome.riskAssessmentTitle'),
                 style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -238,7 +242,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      '$score / 100 • Elevated',
+                      loc.translate('welcome.riskAssessmentScore', {'score': score.toString()}),
                       style: GoogleFonts.inter(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
@@ -267,11 +271,11 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
             },
           ),
           const SizedBox(height: 16),
-          _buildRiskItemRow('🔴 High Risk', 'Clause 7.2: Unilateral earnest forfeiture (100%)', errorColor, isDark),
+          _buildRiskItemRow(loc.translate('welcome.riskTagHigh'), loc.translate('welcome.riskItem1'), errorColor, isDark),
           const SizedBox(height: 8),
-          _buildRiskItemRow('🟡 Caution', 'Clause 14.1: Asymmetric delay penalty compensation', cautionColor, isDark),
+          _buildRiskItemRow(loc.translate('welcome.riskTagCaution'), loc.translate('welcome.riskItem2'), cautionColor, isDark),
           const SizedBox(height: 8),
-          _buildRiskItemRow('🟢 Standard', 'Clause 3.1: Carpet area specification & RERA warranty', successColor, isDark),
+          _buildRiskItemRow(loc.translate('welcome.riskTagStandard'), loc.translate('welcome.riskItem3'), successColor, isDark),
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.all(10),
@@ -289,7 +293,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Recommendation: Demand amendment to restrict forfeiture to max 10% of total consideration as per standard MahaRERA guidelines.',
+                    loc.translate('welcome.riskRecommendation'),
                     style: GoogleFonts.inter(
                       fontSize: 11.5,
                       height: 1.4,
@@ -335,7 +339,7 @@ class _RiskSystemShowcaseState extends State<RiskSystemShowcase>
   }
 }
 
-class WelcomeRiskSystemSection extends StatelessWidget {
+class WelcomeRiskSystemSection extends ConsumerWidget {
   final bool isDark;
   final bool isDesktop;
   final bool isTablet;
@@ -348,7 +352,10 @@ class WelcomeRiskSystemSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: isDesktop ? 64 : 20),
       child: Center(
@@ -357,7 +364,7 @@ class WelcomeRiskSystemSection extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'AI-POWERED AUDIT PREVIEW',
+                loc.translate('welcome.riskSectionEyebrow'),
                 style: GoogleFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
@@ -367,7 +374,7 @@ class WelcomeRiskSystemSection extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'See What LawBuddy Finds',
+                loc.translate('welcome.riskSectionTitle'),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: isDesktop ? 30 : 22,
@@ -378,7 +385,7 @@ class WelcomeRiskSystemSection extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Our RERA-trained engine inspects agreement clauses line-by-line to flag unfair conditions, non-compliant timelines, and asymmetric liabilities.',
+                loc.translate('welcome.riskSectionSubtitle'),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   fontSize: 14.5,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/analytics_model.dart';
+import '../providers/locale_provider.dart';
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
@@ -56,6 +57,8 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -78,7 +81,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    'ADMIN',
+                    loc.translate('adminAnalytics.badge'),
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
@@ -89,7 +92,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Admin Analytics',
+                  loc.translate('adminAnalytics.title'),
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
@@ -99,7 +102,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               ],
             ),
             Text(
-              'LawBuddy System Insights',
+              loc.translate('adminAnalytics.subtitle'),
               style: TextStyle(
                 fontSize: 12,
                 color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -110,7 +113,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Refresh Analytics',
+            tooltip: loc.translate('adminAnalytics.refreshTooltip'),
             onPressed: _isLoading ? null : _loadAnalytics,
           ),
           const SizedBox(width: 4),
@@ -120,11 +123,11 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           ),
         ],
       ),
-      body: _buildBody(isDark),
+      body: _buildBody(isDark, loc),
     );
   }
 
-  Widget _buildBody(bool isDark) {
+  Widget _buildBody(bool isDark, LocaleNotifier loc) {
     if (_isLoading) {
       return Center(
         child: Column(
@@ -135,7 +138,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Aggregating system telemetry & insights...',
+              loc.translate('adminAnalytics.loading'),
               style: TextStyle(
                 fontSize: 13,
                 color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -147,15 +150,15 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     }
 
     if (_isForbidden) {
-      return _buildUnauthorizedState(isDark);
+      return _buildUnauthorizedState(isDark, loc);
     }
 
     if (_errorMessage != null) {
-      return _buildErrorState(isDark);
+      return _buildErrorState(isDark, loc);
     }
 
     if (_data == null) {
-      return _buildEmptyState(isDark);
+      return _buildEmptyState(isDark, loc);
     }
 
     return RefreshIndicator(
@@ -170,19 +173,20 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildKpiGrid(isDark, _data!.overview),
+                _buildKpiGrid(isDark, _data!.overview, loc),
                 const SizedBox(height: 24),
-                _buildRiskSection(isDark, _data!.riskDistribution),
+                _buildRiskSection(isDark, _data!.riskDistribution, loc),
                 const SizedBox(height: 24),
-                _buildFindingCategoriesSection(isDark, _data!.findingCategories),
+                _buildFindingCategoriesSection(isDark, _data!.findingCategories, loc),
                 const SizedBox(height: 24),
                 _buildPipelineInsightsSection(
                   isDark,
                   _data!.sourceDistribution,
                   _data!.extractionMethods,
+                  loc,
                 ),
                 const SizedBox(height: 24),
-                _buildRecentScansSection(isDark, _data!.recentScans),
+                _buildRecentScansSection(isDark, _data!.recentScans, loc),
                 const SizedBox(height: 32),
               ],
             ),
@@ -193,7 +197,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
   }
 
   // --- SECTION 1: KPI CARDS ---
-  Widget _buildKpiGrid(bool isDark, OverviewKpi kpi) {
+  Widget _buildKpiGrid(bool isDark, OverviewKpi kpi, LocaleNotifier loc) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isWide = constraints.maxWidth > 650;
@@ -210,44 +214,44 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                   width: cardWidth,
                   child: _buildKpiCard(
                     isDark: isDark,
-                    title: 'Total Users',
+                    title: loc.translate('adminAnalytics.kpiTotalUsers'),
                     value: kpi.totalUsers.toString(),
                     icon: Icons.people_alt_rounded,
                     accentColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                    subtitle: 'Registered accounts',
+                    subtitle: loc.translate('adminAnalytics.kpiTotalUsersSub'),
                   ),
                 ),
                 SizedBox(
                   width: cardWidth,
                   child: _buildKpiCard(
                     isDark: isDark,
-                    title: 'Docs Analyzed',
+                    title: loc.translate('adminAnalytics.kpiDocsAnalyzed'),
                     value: kpi.totalDocumentsAnalyzed.toString(),
                     icon: Icons.description_rounded,
                     accentColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-                    subtitle: 'Completed analyses',
+                    subtitle: loc.translate('adminAnalytics.kpiDocsAnalyzedSub'),
                   ),
                 ),
                 SizedBox(
                   width: cardWidth,
                   child: _buildKpiCard(
                     isDark: isDark,
-                    title: 'Clauses Evaluated',
+                    title: loc.translate('adminAnalytics.kpiClausesEvaluated'),
                     value: kpi.totalClausesEvaluated.toString(),
                     icon: Icons.gavel_rounded,
                     accentColor: isDark ? AppColors.darkCaution : AppColors.lightCaution,
-                    subtitle: 'Total legal clauses',
+                    subtitle: loc.translate('adminAnalytics.kpiClausesEvaluatedSub'),
                   ),
                 ),
                 SizedBox(
                   width: cardWidth,
                   child: _buildKpiCard(
                     isDark: isDark,
-                    title: 'Avg. Pages',
+                    title: loc.translate('adminAnalytics.kpiAvgPages'),
                     value: kpi.averagePagesPerDoc.toStringAsFixed(1),
                     icon: Icons.auto_stories_rounded,
                     accentColor: const Color(0xFF6A8EAE),
-                    subtitle: 'Pages per contract',
+                    subtitle: loc.translate('adminAnalytics.kpiAvgPagesSub'),
                   ),
                 ),
               ],
@@ -273,7 +277,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Supporting Activity:',
+                    loc.translate('adminAnalytics.supportingActivity'),
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -283,13 +287,13 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                   const SizedBox(width: 12),
                   _buildMiniBadge(
                     isDark: isDark,
-                    label: 'Chat Sessions',
+                    label: loc.translate('adminAnalytics.badgeChatSessions'),
                     count: kpi.totalChatSessions,
                   ),
                   const SizedBox(width: 8),
                   _buildMiniBadge(
                     isDark: isDark,
-                    label: 'Diligence Checklists',
+                    label: loc.translate('adminAnalytics.badgeDiligenceChecklists'),
                     count: kpi.totalChecklists,
                   ),
                 ],
@@ -385,14 +389,14 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
   }
 
   // --- SECTION 2: RISK SECTION (DOCUMENT VS CLAUSE LEVEL) ---
-  Widget _buildRiskSection(bool isDark, RiskDistribution risk) {
+  Widget _buildRiskSection(bool isDark, RiskDistribution risk, LocaleNotifier loc) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionHeader(
           isDark: isDark,
-          title: 'Risk Classification & Distribution',
-          subtitle: 'Dual-level evaluation: Overall Contract Risk vs. Granular Clause Severity',
+          title: loc.translate('adminAnalytics.riskSectionTitle'),
+          subtitle: loc.translate('adminAnalytics.riskSectionSubtitle'),
           icon: Icons.shield_rounded,
         ),
         const SizedBox(height: 12),
@@ -404,20 +408,20 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: _buildDocumentRiskCard(isDark, risk.documentLevel),
+                    child: _buildDocumentRiskCard(isDark, risk.documentLevel, loc),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildClauseRiskCard(isDark, risk.clauseLevel),
+                    child: _buildClauseRiskCard(isDark, risk.clauseLevel, loc),
                   ),
                 ],
               );
             } else {
               return Column(
                 children: [
-                  _buildDocumentRiskCard(isDark, risk.documentLevel),
+                  _buildDocumentRiskCard(isDark, risk.documentLevel, loc),
                   const SizedBox(height: 16),
-                  _buildClauseRiskCard(isDark, risk.clauseLevel),
+                  _buildClauseRiskCard(isDark, risk.clauseLevel, loc),
                 ],
               );
             }
@@ -427,7 +431,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     );
   }
 
-  Widget _buildDocumentRiskCard(bool isDark, DocumentRiskDistribution docRisk) {
+  Widget _buildDocumentRiskCard(bool isDark, DocumentRiskDistribution docRisk, LocaleNotifier loc) {
     final total = docRisk.total;
     return Container(
       padding: const EdgeInsets.all(18),
@@ -447,7 +451,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               Icon(Icons.folder_shared_outlined, size: 18, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
               const SizedBox(width: 8),
               Text(
-                'Document-Level Risk',
+                loc.translate('adminAnalytics.docRiskTitle'),
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
@@ -456,7 +460,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               ),
               const Spacer(),
               Text(
-                '$total docs',
+                loc.translate('adminAnalytics.docRiskTotal', {'count': total.toString()}),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -476,7 +480,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           const SizedBox(height: 16),
           _buildRiskStatRow(
             isDark: isDark,
-            label: 'High Risk Documents',
+            label: loc.translate('adminAnalytics.docRiskHigh'),
             count: docRisk.highRisk,
             total: total,
             color: AppColors.highRisk(isDark),
@@ -484,7 +488,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           const SizedBox(height: 8),
           _buildRiskStatRow(
             isDark: isDark,
-            label: 'Medium Risk Documents',
+            label: loc.translate('adminAnalytics.docRiskMed'),
             count: docRisk.mediumRisk,
             total: total,
             color: AppColors.caution(isDark),
@@ -492,7 +496,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           const SizedBox(height: 8),
           _buildRiskStatRow(
             isDark: isDark,
-            label: 'Low Risk Documents',
+            label: loc.translate('adminAnalytics.docRiskLow'),
             count: docRisk.lowRisk,
             total: total,
             color: AppColors.compliant(isDark),
@@ -502,7 +506,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     );
   }
 
-  Widget _buildClauseRiskCard(bool isDark, ClauseRiskDistribution clauseRisk) {
+  Widget _buildClauseRiskCard(bool isDark, ClauseRiskDistribution clauseRisk, LocaleNotifier loc) {
     final total = clauseRisk.total;
     return Container(
       padding: const EdgeInsets.all(18),
@@ -522,7 +526,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               Icon(Icons.rule_rounded, size: 18, color: isDark ? AppColors.darkCaution : AppColors.lightCaution),
               const SizedBox(width: 8),
               Text(
-                'Clause-Level Severity',
+                loc.translate('adminAnalytics.clauseRiskTitle'),
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
@@ -531,7 +535,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               ),
               const Spacer(),
               Text(
-                '$total clauses',
+                loc.translate('adminAnalytics.clauseRiskTotal', {'count': total.toString()}),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -551,7 +555,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           const SizedBox(height: 16),
           _buildRiskStatRow(
             isDark: isDark,
-            label: 'HIGH_RISK Clauses',
+            label: loc.translate('adminAnalytics.clauseRiskHigh'),
             count: clauseRisk.highRisk,
             total: total,
             color: AppColors.highRisk(isDark),
@@ -559,7 +563,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           const SizedBox(height: 8),
           _buildRiskStatRow(
             isDark: isDark,
-            label: 'CAUTION Clauses',
+            label: loc.translate('adminAnalytics.clauseRiskCaution'),
             count: clauseRisk.caution,
             total: total,
             color: AppColors.caution(isDark),
@@ -567,7 +571,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           const SizedBox(height: 8),
           _buildRiskStatRow(
             isDark: isDark,
-            label: 'COMPLIANT Clauses',
+            label: loc.translate('adminAnalytics.clauseRiskCompliant'),
             count: clauseRisk.compliant,
             total: total,
             color: AppColors.compliant(isDark),
@@ -678,7 +682,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
   }
 
   // --- SECTION 3: CLAUSE FINDING CATEGORIES ---
-  Widget _buildFindingCategoriesSection(bool isDark, List<FindingCategoryStat> categories) {
+  Widget _buildFindingCategoriesSection(bool isDark, List<FindingCategoryStat> categories, LocaleNotifier loc) {
     final total = categories.fold<int>(0, (sum, item) => sum + item.count);
 
     return Column(
@@ -686,8 +690,8 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
       children: [
         _buildSectionHeader(
           isDark: isDark,
-          title: 'Legal Issue Categories Breakdown',
-          subtitle: 'Actual categorized findings identified during contract analysis',
+          title: loc.translate('adminAnalytics.issueCategoriesTitle'),
+          subtitle: loc.translate('adminAnalytics.issueCategoriesSubtitle'),
           icon: Icons.category_rounded,
         ),
         const SizedBox(height: 12),
@@ -702,7 +706,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ),
           ),
           child: categories.isEmpty
-              ? _buildEmptyCategoryNotice(isDark)
+              ? _buildEmptyCategoryNotice(isDark, loc)
               : Column(
                   children: categories.map((cat) {
                     final double ratio = total > 0 ? (cat.count / total) : 0.0;
@@ -725,7 +729,10 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                                 ),
                               ),
                               Text(
-                                '${cat.count} clauses (${(ratio * 100).toStringAsFixed(1)}%)',
+                                loc.translate('adminAnalytics.issueCategoryCount', {
+                                  'count': cat.count.toString(),
+                                  'percent': (ratio * 100).toStringAsFixed(1),
+                                }),
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -768,12 +775,12 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     return isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
   }
 
-  Widget _buildEmptyCategoryNotice(bool isDark) {
+  Widget _buildEmptyCategoryNotice(bool isDark, LocaleNotifier loc) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Center(
         child: Text(
-          'No categorized clause issues recorded yet.',
+          loc.translate('adminAnalytics.noCategories'),
           style: TextStyle(
             fontSize: 13,
             color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -788,14 +795,15 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     bool isDark,
     List<SourceTypeStat> sources,
     List<ExtractionMethodStat> methods,
+    LocaleNotifier loc,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionHeader(
           isDark: isDark,
-          title: 'Ingestion & Extraction Pipeline Insights',
-          subtitle: 'Distribution of uploaded document formats and extraction engines',
+          title: loc.translate('adminAnalytics.pipelineTitle'),
+          subtitle: loc.translate('adminAnalytics.pipelineSubtitle'),
           icon: Icons.memory_rounded,
         ),
         const SizedBox(height: 12),
@@ -807,20 +815,20 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: _buildSourceTypesCard(isDark, sources),
+                    child: _buildSourceTypesCard(isDark, sources, loc),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildExtractionMethodsCard(isDark, methods),
+                    child: _buildExtractionMethodsCard(isDark, methods, loc),
                   ),
                 ],
               );
             } else {
               return Column(
                 children: [
-                  _buildSourceTypesCard(isDark, sources),
+                  _buildSourceTypesCard(isDark, sources, loc),
                   const SizedBox(height: 16),
-                  _buildExtractionMethodsCard(isDark, methods),
+                  _buildExtractionMethodsCard(isDark, methods, loc),
                 ],
               );
             }
@@ -830,7 +838,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     );
   }
 
-  Widget _buildSourceTypesCard(bool isDark, List<SourceTypeStat> sources) {
+  Widget _buildSourceTypesCard(bool isDark, List<SourceTypeStat> sources, LocaleNotifier loc) {
     final total = sources.fold<int>(0, (sum, item) => sum + item.count);
     return Container(
       padding: const EdgeInsets.all(18),
@@ -850,7 +858,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               Icon(Icons.file_present_rounded, size: 18, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
               const SizedBox(width: 8),
               Text(
-                'Document Source Types',
+                loc.translate('adminAnalytics.sourceTypesTitle'),
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
@@ -861,7 +869,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           ),
           const SizedBox(height: 14),
           if (sources.isEmpty)
-            _buildEmptyCategoryNotice(isDark)
+            _buildEmptyCategoryNotice(isDark, loc)
           else
             ...sources.map((s) {
               final double ratio = total > 0 ? (s.count / total) : 0.0;
@@ -922,7 +930,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     return Icons.text_snippet_rounded;
   }
 
-  Widget _buildExtractionMethodsCard(bool isDark, List<ExtractionMethodStat> methods) {
+  Widget _buildExtractionMethodsCard(bool isDark, List<ExtractionMethodStat> methods, LocaleNotifier loc) {
     final total = methods.fold<int>(0, (sum, item) => sum + item.count);
     return Container(
       padding: const EdgeInsets.all(18),
@@ -942,7 +950,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               Icon(Icons.psychology_rounded, size: 18, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
               const SizedBox(width: 8),
               Text(
-                'Extraction Pipeline Methods',
+                loc.translate('adminAnalytics.extractionMethodsTitle'),
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
@@ -953,7 +961,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           ),
           const SizedBox(height: 14),
           if (methods.isEmpty)
-            _buildEmptyCategoryNotice(isDark)
+            _buildEmptyCategoryNotice(isDark, loc)
           else
             ...methods.map((m) {
               final double ratio = total > 0 ? (m.count / total) : 0.0;
@@ -1006,14 +1014,14 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
   }
 
   // --- SECTION 5: RECENT ANALYSIS ACTIVITY ---
-  Widget _buildRecentScansSection(bool isDark, List<RecentScanSummary> recentScans) {
+  Widget _buildRecentScansSection(bool isDark, List<RecentScanSummary> recentScans, LocaleNotifier loc) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildSectionHeader(
           isDark: isDark,
-          title: 'Recent Analysis Activity Feed',
-          subtitle: 'Real-time telemetry of completed document risk evaluations (sanitized metadata)',
+          title: loc.translate('adminAnalytics.recentActivityTitle'),
+          subtitle: loc.translate('adminAnalytics.recentActivitySubtitle'),
           icon: Icons.history_rounded,
         ),
         const SizedBox(height: 12),
@@ -1031,7 +1039,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                   padding: const EdgeInsets.all(24),
                   child: Center(
                     child: Text(
-                      'No recent document analysis telemetry recorded.',
+                      loc.translate('adminAnalytics.noRecentActivity'),
                       style: TextStyle(
                         fontSize: 13,
                         color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
@@ -1049,7 +1057,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                   ),
                   itemBuilder: (context, index) {
                     final scan = recentScans[index];
-                    return _buildRecentScanTile(isDark, scan);
+                    return _buildRecentScanTile(isDark, scan, loc);
                   },
                 ),
         ),
@@ -1057,7 +1065,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     );
   }
 
-  Widget _buildRecentScanTile(bool isDark, RecentScanSummary scan) {
+  Widget _buildRecentScanTile(bool isDark, RecentScanSummary scan, LocaleNotifier loc) {
     final riskColor = _getDocRiskColor(scan.riskLevel, isDark);
 
     return Padding(
@@ -1099,7 +1107,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                   children: [
                     _buildTagChip(
                       isDark: isDark,
-                      label: '${scan.totalPages} ${scan.totalPages == 1 ? 'page' : 'pages'}',
+                      label: '${scan.totalPages} ${loc.translate(scan.totalPages == 1 ? 'docView.page' : 'docView.pages')}',
                       icon: Icons.auto_stories_outlined,
                     ),
                     _buildTagChip(
@@ -1114,7 +1122,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                     ),
                     _buildTagChip(
                       isDark: isDark,
-                      label: _formatDate(scan.createdAt),
+                      label: _formatDate(scan.createdAt, loc),
                       icon: Icons.access_time_rounded,
                     ),
                   ],
@@ -1190,13 +1198,13 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     return AppColors.compliant(isDark);
   }
 
-  String _formatDate(DateTime dt) {
+  String _formatDate(DateTime dt, LocaleNotifier loc) {
     final now = DateTime.now();
     final diff = now.difference(dt);
-    if (diff.inMinutes < 1) return 'Just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    if (diff.inDays < 7) return '${diff.inDays}d ago';
+    if (diff.inMinutes < 1) return loc.translate('time.justNow');
+    if (diff.inMinutes < 60) return loc.translate('time.minutesAgo', {'count': diff.inMinutes.toString()});
+    if (diff.inHours < 24) return loc.translate('time.hoursAgo', {'count': diff.inHours.toString()});
+    if (diff.inDays < 7) return loc.translate('time.daysAgo', {'count': diff.inDays.toString()});
     return '${dt.day}/${dt.month}/${dt.year}';
   }
 
@@ -1238,7 +1246,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
   }
 
   // --- EMPTY, ERROR, AND UNAUTHORIZED STATES ---
-  Widget _buildUnauthorizedState(bool isDark) {
+  Widget _buildUnauthorizedState(bool isDark, LocaleNotifier loc) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -1259,7 +1267,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Access Restricted',
+              loc.translate('adminAnalytics.unauthorizedTitle'),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
@@ -1270,7 +1278,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
               child: Text(
-                'You do not have administrator permissions to access the system analytics dashboard. Only verified administrators can view system-wide telemetry.',
+                loc.translate('adminAnalytics.unauthorizedDesc'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 13,
@@ -1283,7 +1291,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ElevatedButton.icon(
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_back_rounded, size: 16),
-              label: const Text('Return to Workspace'),
+              label: Text(loc.translate('adminAnalytics.returnToWorkspace')),
               style: ElevatedButton.styleFrom(
                 backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                 foregroundColor: isDark ? AppColors.darkErrorText : Colors.white,
@@ -1297,7 +1305,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     );
   }
 
-  Widget _buildErrorState(bool isDark) {
+  Widget _buildErrorState(bool isDark, LocaleNotifier loc) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -1311,7 +1319,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Failed to Load Analytics',
+              loc.translate('adminAnalytics.errorTitle'),
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -1320,7 +1328,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              _errorMessage ?? 'An unexpected network error occurred.',
+              _errorMessage ?? loc.translate('adminAnalytics.defaultError'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -1331,7 +1339,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ElevatedButton.icon(
               onPressed: _loadAnalytics,
               icon: const Icon(Icons.refresh_rounded, size: 16),
-              label: const Text('Retry Connection'),
+              label: Text(loc.translate('adminAnalytics.retryConnection')),
               style: ElevatedButton.styleFrom(
                 backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                 foregroundColor: isDark ? AppColors.darkErrorText : Colors.white,
@@ -1344,7 +1352,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     );
   }
 
-  Widget _buildEmptyState(bool isDark) {
+  Widget _buildEmptyState(bool isDark, LocaleNotifier loc) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -1358,7 +1366,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No Analytics Telemetry Available',
+              loc.translate('adminAnalytics.emptyTitle'),
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -1367,7 +1375,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'As users upload and evaluate real estate contracts, system metrics will populate here in real time.',
+              loc.translate('adminAnalytics.emptyDesc'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -1378,7 +1386,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ElevatedButton.icon(
               onPressed: _loadAnalytics,
               icon: const Icon(Icons.refresh_rounded, size: 16),
-              label: const Text('Refresh'),
+              label: Text(loc.translate('adminAnalytics.refresh')),
             ),
           ],
         ),

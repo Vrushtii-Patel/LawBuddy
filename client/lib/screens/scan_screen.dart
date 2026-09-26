@@ -88,7 +88,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
   }
 
   Future<void> _resumeOrRetryActiveJob(String jobId) async {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     setState(() {
       _isProcessing = true;
       _currentJob = null;
@@ -246,7 +245,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
   Future<void> _scanImage(ImageSource source) async {
     final loc = ref.read(localeProvider.notifier);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     try {
       final XFile? image = await _picker.pickImage(
         source: source,
@@ -329,7 +327,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
   Future<void> _scanPdf() async {
     final loc = ref.read(localeProvider.notifier);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     try {
       FilePickerResult? result = await FilePicker.pickFiles(
         type: FileType.custom,
@@ -451,7 +448,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     String? mimeType,
     String? base64Data,
   }) async {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     setState(() {
       _isProcessing = true;
       _currentJob = null;
@@ -939,26 +935,29 @@ The Developer represents that necessary zoning approvals are under application w
     final uploadCards = [
       _UploadActionCardData(
         title: loc.translate('scan.takePhoto'),
-        description: 'Instant OCR scanning of physical deed pages via camera.',
+        description: loc.translate('scan.cameraDesc'),
         icon: Icons.camera_enhance_rounded,
         accentColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        badgeText: 'CAMERA SCAN',
+        badgeText: loc.translate('scan.cameraBadge'),
+        actionLabel: loc.translate('scan.selectAndUpload'),
         onTap: () => _scanImage(ImageSource.camera),
       ),
       _UploadActionCardData(
         title: loc.translate('scan.uploadFromGallery'),
-        description: 'Upload high-resolution document photos or screenshots.',
+        description: loc.translate('scan.galleryDesc'),
         icon: Icons.photo_library_outlined,
         accentColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        badgeText: 'PHOTO GALLERY',
+        badgeText: loc.translate('scan.galleryBadge'),
+        actionLabel: loc.translate('scan.selectAndUpload'),
         onTap: () => _scanImage(ImageSource.gallery),
       ),
       _UploadActionCardData(
         title: loc.translate('scan.uploadPdf'),
-        description: 'Upload multi-page PDF agreements & registry documents.',
+        description: loc.translate('scan.pdfDesc'),
         icon: Icons.picture_as_pdf_outlined,
         accentColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        badgeText: 'PDF DOCUMENT',
+        badgeText: loc.translate('scan.pdfBadge'),
+        actionLabel: loc.translate('scan.selectAndUpload'),
         onTap: _scanPdf,
       ),
     ];
@@ -1017,7 +1016,7 @@ The Developer represents that necessary zoning approvals are under application w
               ),
             ),
             child: Text(
-              '${loc.translate('common.or')} PASTE DOCUMENT CLAUSES',
+              loc.translate('scan.orPasteClauses'),
               style: GoogleFonts.inter(
                 fontSize: 10.5,
                 fontWeight: FontWeight.w800,
@@ -1433,6 +1432,7 @@ class _UploadActionCardData {
   final IconData icon;
   final Color accentColor;
   final String badgeText;
+  final String actionLabel;
   final VoidCallback onTap;
 
   _UploadActionCardData({
@@ -1441,6 +1441,7 @@ class _UploadActionCardData {
     required this.icon,
     required this.accentColor,
     required this.badgeText,
+    required this.actionLabel,
     required this.onTap,
   });
 }
@@ -1562,7 +1563,7 @@ class _UploadActionCardState extends State<_UploadActionCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Select & Upload',
+                    item.actionLabel,
                     style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,

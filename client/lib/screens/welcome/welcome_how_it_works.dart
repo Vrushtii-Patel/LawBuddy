@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 
 class StepCard extends StatefulWidget {
@@ -99,7 +101,7 @@ class _StepCardState extends State<StepCard> {
   }
 }
 
-class WelcomeHowItWorksSection extends StatelessWidget {
+class WelcomeHowItWorksSection extends ConsumerWidget {
   final bool isDark;
   final bool isDesktop;
   final bool isTablet;
@@ -112,7 +114,19 @@ class WelcomeHowItWorksSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
+
+    final step1Title = loc.translate('welcome.step1Title');
+    final step1Desc = loc.translate('welcome.step1Desc');
+    final step2Title = loc.translate('welcome.step2Title');
+    final step2Desc = loc.translate('welcome.step2Desc');
+    final step3Title = loc.translate('welcome.step3Title');
+    final step3Desc = loc.translate('welcome.step3Desc');
+    final step4Title = loc.translate('welcome.step4Title');
+    final step4Desc = loc.translate('welcome.step4Desc');
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: isDesktop ? 64 : 20),
       child: Center(
@@ -121,7 +135,7 @@ class WelcomeHowItWorksSection extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'SIMPLE 4-STEP PROCESS',
+                loc.translate('welcome.howItWorksEyebrow'),
                 style: GoogleFonts.inter(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
@@ -131,7 +145,7 @@ class WelcomeHowItWorksSection extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'How It Works',
+                loc.translate('welcome.howItWorksTitle'),
                 style: GoogleFonts.inter(
                   fontSize: isDesktop ? 30 : 22,
                   fontWeight: FontWeight.w800,
@@ -144,24 +158,24 @@ class WelcomeHowItWorksSection extends StatelessWidget {
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: StepCard(number: '01', title: 'Upload Agreement', description: 'Upload your property agreement, sale deed, or rental contract.', isDark: isDark)),
+                        Expanded(child: StepCard(number: '01', title: step1Title, description: step1Desc, isDark: isDark)),
                         _buildStepArrow(isDark),
-                        Expanded(child: StepCard(number: '02', title: 'AI Contract Scan', description: 'AI examines the text and evaluates statutory RERA compliance.', isDark: isDark)),
+                        Expanded(child: StepCard(number: '02', title: step2Title, description: step2Desc, isDark: isDark)),
                         _buildStepArrow(isDark),
-                        Expanded(child: StepCard(number: '03', title: 'Plain-English Insights', description: 'Get plain-English explanations and flagged risk highlights.', isDark: isDark)),
+                        Expanded(child: StepCard(number: '03', title: step3Title, description: step3Desc, isDark: isDark)),
                         _buildStepArrow(isDark),
-                        Expanded(child: StepCard(number: '04', title: 'Legal Audit Report', description: 'Generate and download a structured legal risk assessment PDF.', isDark: isDark)),
+                        Expanded(child: StepCard(number: '04', title: step4Title, description: step4Desc, isDark: isDark)),
                       ],
                     )
                   : Column(
                       children: [
-                        StepCard(number: '01', title: 'Upload Agreement', description: 'Upload your property agreement, sale deed, or rental contract.', isDark: isDark),
+                        StepCard(number: '01', title: step1Title, description: step1Desc, isDark: isDark),
                         const SizedBox(height: 14),
-                        StepCard(number: '02', title: 'AI Contract Scan', description: 'AI examines the text and evaluates statutory RERA compliance.', isDark: isDark),
+                        StepCard(number: '02', title: step2Title, description: step2Desc, isDark: isDark),
                         const SizedBox(height: 14),
-                        StepCard(number: '03', title: 'Plain-English Insights', description: 'Get plain-English explanations and flagged risk highlights.', isDark: isDark),
+                        StepCard(number: '03', title: step3Title, description: step3Desc, isDark: isDark),
                         const SizedBox(height: 14),
-                        StepCard(number: '04', title: 'Legal Audit Report', description: 'Generate and download a structured legal risk assessment PDF.', isDark: isDark),
+                        StepCard(number: '04', title: step4Title, description: step4Desc, isDark: isDark),
                       ],
                     ),
             ],
