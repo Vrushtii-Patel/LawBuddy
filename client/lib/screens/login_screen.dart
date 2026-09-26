@@ -5,6 +5,7 @@ import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
 import 'signup_screen.dart';
 import 'otp_screen.dart';
+import '../widgets/app_toast.dart';
 import '../theme/app_theme.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -62,9 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     if (_formKey.currentState!.validate()) {
       if (!_isEmailMode) {
         final loc = ref.read(localeProvider.notifier);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.translate('auth.mobileOtpComingSoon'))),
-        );
+        AppToast.showInfo(context, loc.translate('auth.mobileOtpComingSoon'));
         return;
       }
 
@@ -87,14 +86,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
         );
       } else if (mounted) {
         final error = ref.read(authProvider).errorMessage;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error ?? 'Login failed. Please try again.'),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
+        AppToast.showError(context, error ?? 'Login failed. Please try again.');
       }
     }
   }

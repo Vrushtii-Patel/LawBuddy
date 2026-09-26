@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/stamp_duty_config_model.dart';
 import '../widgets/user_profile_button.dart';
+import '../widgets/app_toast.dart';
 import '../services/api_service.dart';
 import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
@@ -150,30 +151,17 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
 
   void _calculateStampDuty() {
     final loc = ref.read(localeProvider.notifier);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final double propVal = double.tryParse(_propertyValueController.text.replaceAll(',', '')) ?? 0.0;
     final double circleVal = double.tryParse(_circleRateController.text.replaceAll(',', '')) ?? 0.0;
 
     if (_selectedPropertyType == null || _selectedState == null || _selectedGender == null || _isFirstTimeBuyer == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(loc.translate('calc.fillAllError')),
-          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, loc.translate('calc.fillAllError'));
       return;
     }
 
     if (propVal <= 0 && circleVal <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(loc.translate('calc.validValueError')),
-          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, loc.translate('calc.validValueError'));
       return;
     }
 

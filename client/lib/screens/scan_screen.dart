@@ -14,6 +14,7 @@ import '../theme/app_theme.dart';
 import 'analysis_screen.dart';
 import '../widgets/user_profile_button.dart';
 import '../widgets/form_consent_widget.dart';
+import '../widgets/app_toast.dart';
 
 class ScanScreen extends ConsumerStatefulWidget {
   const ScanScreen({super.key});
@@ -104,11 +105,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         _isProcessing = false;
       });
       final errorMsg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : 'Unable to resume scan. Please try scanning the document again.';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(errorMsg.isNotEmpty ? errorMsg : 'Unable to resume scan. Please try scanning the document again.'),
-        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-        behavior: SnackBarBehavior.floating,
-      ));
+      AppToast.showError(context, errorMsg.isNotEmpty ? errorMsg : 'Unable to resume scan. Please try scanning the document again.');
     }
   }
 
@@ -194,20 +191,26 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         ),
       );
     } else if (job['status'] == 'FAILED') {
-      final isDark = Theme.of(context).brightness == Brightness.dark;
       setState(() {
         _isProcessing = false;
         _activeScanJob = job;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Scan paused: ${job['errorInfo']?['message'] ?? 'Please retry.'}'),
-        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-        action: SnackBarAction(
-          label: 'Retry',
-          textColor: Colors.white,
+      AppToast.showError(
+        context,
+        'Scan paused: ${job['errorInfo']?['message'] ?? 'Please retry.'}',
+        action: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: (Theme.of(context).brightness == Brightness.dark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.18),
+            foregroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          ),
           onPressed: () => _resumeOrRetryActiveJob(jobId),
+          child: const Text('Retry', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
         ),
-      ));
+      );
     } else {
       setState(() {
         _isProcessing = false;
@@ -314,11 +317,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     } catch (e) {
       debugPrint('Error processing photo scan: $e');
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Unable to process the photo scan. Please ensure the image is clear and try again.'),
-        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-        behavior: SnackBarBehavior.floating,
-      ));
+      AppToast.showError(context, 'Unable to process the photo scan. Please ensure the image is clear and try again.');
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -433,11 +432,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     } catch (e) {
       debugPrint('Error reading document file: $e');
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(e is Exception ? e.toString().replaceFirst('Exception: ', '') : 'Unable to read the selected file.'),
-        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-        behavior: SnackBarBehavior.floating,
-      ));
+      AppToast.showError(context, e is Exception ? e.toString().replaceFirst('Exception: ', '') : 'Unable to read the selected file.');
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -494,11 +489,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       setState(() {
         _isProcessing = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Unable to complete document analysis. Please check your connection and try again.'),
-        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-        behavior: SnackBarBehavior.floating,
-      ));
+      AppToast.showError(context, 'Unable to complete document analysis. Please check your connection and try again.');
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -1187,17 +1178,7 @@ The Developer represents that necessary zoning approvals are under application w
                 onPressed: () {
                   final text = _textController.text.trim();
                   if (text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          loc.translate('scan.emptyError'),
-                          style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.w600),
-                        ),
-                        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                    );
+                    AppToast.showError(context, loc.translate('scan.emptyError'));
                     return;
                   }
                   _analyzeText(text);

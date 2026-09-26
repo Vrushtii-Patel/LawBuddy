@@ -8,6 +8,12 @@ import 'checklist_screen.dart';
 import 'bin_screen.dart';
 import '../widgets/user_profile_button.dart';
 
+enum _DuplicateChecklistAction {
+  cancel,
+  viewExisting,
+  stillCreate,
+}
+
 class ChecklistsListScreen extends ConsumerStatefulWidget {
   const ChecklistsListScreen({super.key});
 
@@ -78,6 +84,52 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         });
       }
     }
+  }
+
+  void _showToast({
+    required Widget content,
+    Duration duration = const Duration(seconds: 4),
+    Widget? action,
+    Color? backgroundColor,
+    Color? borderColor,
+  }) {
+    if (!mounted) return;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final toastWidth = screenWidth > 540 ? 460.0 : (screenWidth - 32.0).clamp(280.0, 540.0);
+
+    final effectiveBg = backgroundColor ?? (isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface);
+    final effectiveBorder = borderColor ?? (isDark ? AppColors.darkBorder : AppColors.lightBorder);
+
+    messenger.showSnackBar(
+      SnackBar(
+        width: toastWidth,
+        behavior: SnackBarBehavior.floating,
+        elevation: 8,
+        backgroundColor: effectiveBg,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(
+            color: effectiveBorder,
+            width: 1.2,
+          ),
+        ),
+        duration: duration,
+        content: Row(
+          children: [
+            Expanded(child: content),
+            if (action != null) ...[
+              const SizedBox(width: 12),
+              action,
+            ],
+          ],
+        ),
+      ),
+    );
   }
 
   void _navigateTo(Widget screen) {
@@ -160,57 +212,90 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         setState(() {
           _checklists.removeWhere((c) => c['type'] == type);
         });
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: Text(tr('checklists.deletedSuccess')),
-            backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-            behavior: SnackBarBehavior.floating,
-            action: SnackBarAction(
-              label: 'View Bin',
-              textColor: Colors.white,
-              onPressed: () {
-                messenger.hideCurrentSnackBar();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const BinScreen()),
-                ).then((_) => _loadChecklists());
-              },
+
+        _showToast(
+          duration: const Duration(seconds: 5),
+          content: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.delete_sweep_rounded,
+                  color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  tr('checklists.deletedSuccess'),
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          action: TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.18),
+              foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            ),
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BinScreen()),
+              ).then((_) => _loadChecklists());
+            },
+            child: Text(
+              'View Bin',
+              style: TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
             ),
           ),
         );
-
-        // Guaranteed programmatic auto-dismiss after 5 seconds
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       }
     } catch (e) {
       debugPrint('Error deleting checklist: $e');
       if (mounted) {
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: const Text('Unable to delete checklist. Please try again.'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
+        _showToast(
+          backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+          borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+          content: Row(
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                color: isDark ? AppColors.darkError : AppColors.lightError,
+                size: 18,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Unable to delete checklist. Please try again.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       }
     }
   }
@@ -309,11 +394,33 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                                 }
                               });
                               if (dialogCtx.mounted) Navigator.pop(dialogCtx);
-                              ScaffoldMessenger.of(this.context).showSnackBar(
-                                SnackBar(
-                                  content: Text(tr('checklists.renamedSuccess')),
-                                  backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-                                  behavior: SnackBarBehavior.floating,
+                              _showToast(
+                                content: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.16),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Icon(
+                                        Icons.check_rounded,
+                                        color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                                        size: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        tr('checklists.renamedSuccess'),
+                                        style: TextStyle(
+                                          fontSize: 13.5,
+                                          fontWeight: FontWeight.w600,
+                                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             }
@@ -321,11 +428,28 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                             debugPrint('Error renaming checklist: $e');
                             setDialogState(() => isSaving = false);
                             if (dialogCtx.mounted) {
-                              ScaffoldMessenger.of(dialogCtx).showSnackBar(
-                                SnackBar(
-                                  content: const Text('Unable to rename checklist. Please try again.'),
-                                  backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-                                  behavior: SnackBarBehavior.floating,
+                              _showToast(
+                                backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+                                borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+                                content: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline_rounded,
+                                      color: isDark ? AppColors.darkError : AppColors.lightError,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        'Unable to rename checklist. Please try again.',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             }
@@ -345,6 +469,213 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               ],
             );
           },
+        );
+      },
+    );
+  }
+
+  Map<String, dynamic>? _findDuplicateChecklist(String prompt) {
+    final cleanPrompt = prompt.trim().toLowerCase().replaceAll(RegExp(r'[^\w\s]'), '').replaceAll(RegExp(r'\s+'), ' ');
+    if (cleanPrompt.isEmpty) return null;
+
+    for (final item in _checklists) {
+      if (item is! Map) continue;
+      final mapItem = Map<String, dynamic>.from(item);
+      final rawTitle = (mapItem['title'] ?? '').toString().trim().toLowerCase();
+      final cleanTitle = rawTitle.replaceAll(RegExp(r'[^\w\s]'), '').replaceAll(RegExp(r'\s+'), ' ');
+      final rawType = (mapItem['type'] ?? '').toString().trim().toLowerCase();
+      final cleanType = rawType.replaceAll(RegExp(r'[^\w\s]'), '').replaceAll(RegExp(r'\s+'), ' ');
+
+      if (cleanTitle.isEmpty && cleanType.isEmpty) continue;
+
+      if (cleanTitle == cleanPrompt || cleanType == cleanPrompt) {
+        return mapItem;
+      }
+      
+      // Match partial keywords if length >= 4
+      if (cleanPrompt.length >= 4 && cleanTitle.length >= 4) {
+        if (cleanTitle.contains(cleanPrompt) || cleanPrompt.contains(cleanTitle)) {
+          return mapItem;
+        }
+      }
+    }
+    return null;
+  }
+
+  Future<_DuplicateChecklistAction?> _showDuplicateWarningDialog(
+    BuildContext context,
+    Map<String, dynamic> existing,
+    String prompt,
+  ) {
+    final tr = ref.read(localeProvider.notifier).translate;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final title = (existing['title'] ?? tr('checklists.untitled')).toString();
+    final items = (existing['items'] as List?) ?? [];
+    final completedCount = items.where((it) => it is Map && it['completed'] == true).length;
+    final totalCount = items.length;
+
+    return showDialog<_DuplicateChecklistAction>(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            ),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
+                  ),
+                ),
+                child: const Icon(
+                  Icons.folder_shared_rounded,
+                  color: Color(0xFFF59E0B),
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  tr('checklists.alreadyExistsTitle'),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 17,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: 440,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tr('checklists.alreadyExistsDesc', {'title': title}),
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.checklist_rounded,
+                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                          size: 18,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13.5,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              totalCount > 0 ? '$completedCount of $totalCount items completed' : 'Active case',
+                              style: GoogleFonts.inter(
+                                fontSize: 11.5,
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  tr('checklists.alreadyExistsPrompt'),
+                  style: GoogleFonts.inter(
+                    fontSize: 12.5,
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx, _DuplicateChecklistAction.cancel),
+              child: Text(
+                tr('common.cancel'),
+                style: GoogleFonts.inter(
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                ),
+                foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              ),
+              onPressed: () => Navigator.pop(dialogCtx, _DuplicateChecklistAction.stillCreate),
+              child: Text(
+                tr('checklists.stillCreate'),
+                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              ),
+              onPressed: () => Navigator.pop(dialogCtx, _DuplicateChecklistAction.viewExisting),
+              child: Text(
+                tr('checklists.viewExisting'),
+                style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -492,6 +823,27 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                       : () async {
                           final prompt = controller.text.trim();
                           if (prompt.isEmpty) return;
+
+                          // Check if a checklist with similar prompt or title already exists
+                          final duplicate = _findDuplicateChecklist(prompt);
+                          if (duplicate != null) {
+                            final action = await _showDuplicateWarningDialog(dialogCtx, duplicate, prompt);
+                            if (!dialogCtx.mounted) return;
+                            if (action == null || action == _DuplicateChecklistAction.cancel) {
+                              return;
+                            } else if (action == _DuplicateChecklistAction.viewExisting) {
+                              Navigator.pop(dialogCtx);
+                              if (mounted) {
+                                _navigateTo(ChecklistScreen(
+                                  type: (duplicate['type'] ?? '').toString(),
+                                  initialTitle: (duplicate['title'] ?? '').toString(),
+                                ));
+                              }
+                              return;
+                            }
+                            // If action == _DuplicateChecklistAction.stillCreate, proceed below
+                          }
+
                           setDialogState(() => isSubmitting = true);
                           try {
                             final res = await ApiService.generateChecklist(prompt);
@@ -507,11 +859,28 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                             debugPrint('Error generating checklist: $e');
                             setDialogState(() => isSubmitting = false);
                             if (dialogCtx.mounted) {
-                              ScaffoldMessenger.of(dialogCtx).showSnackBar(
-                                SnackBar(
-                                  content: const Text('Unable to generate checklist. Please try again.'),
-                                  backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-                                  behavior: SnackBarBehavior.floating,
+                              _showToast(
+                                backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+                                borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+                                content: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.error_outline_rounded,
+                                      color: isDark ? AppColors.darkError : AppColors.lightError,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        'Unable to generate checklist. Please try again.',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                          color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               );
                             }

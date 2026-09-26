@@ -7,6 +7,7 @@ import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
 import '../widgets/form_consent_widget.dart';
+import '../widgets/app_toast.dart';
 import 'chat/chat_ui_helpers.dart';
 import 'chat/chat_empty_state.dart';
 import 'chat/chat_message_bubble.dart';
@@ -99,13 +100,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
     } catch (e) {
       debugPrint('Error loading chat session details: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Unable to load this conversation. Please try again.'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        AppToast.showError(context, 'Unable to load this conversation. Please try again.');
       }
     }
   }
@@ -169,27 +164,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
 
     final success = await ApiService.deleteChatSession(sessionId);
     if (success && mounted) {
-      final isDark = Theme.of(context).brightness == Brightness.dark;
       setState(() {
         _sessions.removeWhere((s) => s['id'] == sessionId);
         if (_currentSessionId == sessionId) {
           _clearChat();
         }
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white, size: 16),
-              const SizedBox(width: 8),
-              Text(loc.translate('chat.deletedToast'), style: GoogleFonts.inter()),
-            ],
-          ),
-          duration: const Duration(seconds: 2),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-        ),
-      );
+      AppToast.showSuccess(context, loc.translate('chat.deletedToast'), duration: const Duration(seconds: 2));
     }
   }
 

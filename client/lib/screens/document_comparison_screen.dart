@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
+import '../widgets/app_toast.dart';
 import 'comparison_result_screen.dart';
 import 'scan_screen.dart';
 
@@ -148,15 +149,11 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
 
   Future<void> _handleStartComparison() async {
     if (_selectedDocAId == null || _selectedDocBId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select both Version A and Version B documents.')),
-      );
+      AppToast.showError(context, 'Please select both Version A and Version B documents.');
       return;
     }
     if (_selectedDocAId == _selectedDocBId) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select two distinct versions to compare.')),
-      );
+      AppToast.showError(context, 'Please select two distinct versions to compare.');
       return;
     }
 

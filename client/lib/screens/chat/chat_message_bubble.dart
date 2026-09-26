@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_toast.dart';
 import 'chat_citation_card.dart';
 import 'chat_prompt_card.dart';
 
@@ -140,22 +141,7 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
     setState(() => _copied = true);
 
     final loc = ref.read(localeProvider.notifier);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white, size: 18),
-            const SizedBox(width: 8),
-            Text(loc.translate('chat.copiedToClipboard')),
-          ],
-        ),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
+    AppToast.showSuccess(context, loc.translate('chat.copiedToClipboard'), duration: const Duration(seconds: 2));
 
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) setState(() => _copied = false);

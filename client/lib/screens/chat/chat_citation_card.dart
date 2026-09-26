@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/app_toast.dart';
 
 class LegalSourcesCitationCard extends StatefulWidget {
   final List<dynamic> sources;
@@ -37,27 +38,7 @@ class _LegalSourcesCitationCardState extends State<LegalSourcesCitationCard> {
 
   void _showErrorSnackBar() {
     if (!mounted) return;
-    final isDark = widget.isDark;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.error_outline_rounded, color: Colors.white, size: 16),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                'Unable to open citation link. Please try again.',
-                style: GoogleFonts.inter(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
+    AppToast.showError(context, 'Unable to open citation link. Please try again.', duration: const Duration(seconds: 3));
   }
 
   @override

@@ -10,6 +10,7 @@ import '../services/pdf_export_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
 import '../widgets/staggered_entrance.dart';
+import '../widgets/app_toast.dart';
 
 class AnalysisScreen extends ConsumerStatefulWidget {
   final String originalText;
@@ -236,13 +237,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     final token = await _getOrGenerateShareToken();
     if (token == null) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(tr('analysis.shareFailed')),
-          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, tr('analysis.shareFailed'));
       return;
     }
 
@@ -275,30 +270,17 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Unable to open WhatsApp directly. You can use "Copy Link" instead.'),
-          backgroundColor: isDark ? AppColors.darkCaution : AppColors.lightCaution,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showInfo(context, 'Unable to open WhatsApp directly. You can use "Copy Link" instead.');
     }
   }
 
   Future<void> _shareViaEmail() async {
     final tr = ref.read(localeProvider.notifier).translate;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final token = await _getOrGenerateShareToken();
     if (token == null) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(tr('analysis.shareFailed')),
-          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, tr('analysis.shareFailed'));
       return;
     }
 
@@ -336,30 +318,17 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Unable to open email client. You can use "Copy Link" instead.'),
-          backgroundColor: isDark ? AppColors.darkCaution : AppColors.lightCaution,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showInfo(context, 'Unable to open email client. You can use "Copy Link" instead.');
     }
   }
 
   Future<void> _copyShareLink() async {
     final tr = ref.read(localeProvider.notifier).translate;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final token = await _getOrGenerateShareToken();
     if (token == null) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(tr('analysis.shareFailed')),
-          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, tr('analysis.shareFailed'));
       return;
     }
 
@@ -367,20 +336,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     await Clipboard.setData(ClipboardData(text: shareUrl));
 
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 10),
-            Expanded(child: Text(tr('analysis.linkCopiedSuccess'))),
-          ],
-        ),
-        backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
+    AppToast.showSuccess(context, tr('analysis.linkCopiedSuccess'));
   }
 
   void _showShareOptionsModal() {
@@ -614,37 +570,17 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       );
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 10),
-              Expanded(child: Text(tr('analysis.pdfSuccess'))),
-            ],
-          ),
-          backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
+      AppToast.showSuccess(context, tr('analysis.pdfSuccess'));
     } catch (e) {
       debugPrint('Error exporting PDF: $e');
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Failed to export PDF report. Please try again.'),
-          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, 'Failed to export PDF report. Please try again.');
     } finally {
       if (mounted) setState(() => _isExportingPdf = false);
     }
   }
 
   Future<void> _explainSnippet(String snippet) async {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     setState(() => _isExplaining = true);
     try {
       final explanation = await ApiService.explainSnippet(widget.originalText, snippet);
@@ -653,13 +589,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     } catch (e) {
       debugPrint('Error explaining snippet: $e');
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Unable to explain legal clause at this time. Please try again.'),
-          backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, 'Unable to explain legal clause at this time. Please try again.');
     } finally {
       if (mounted) setState(() => _isExplaining = false);
     }
@@ -1773,12 +1703,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                 ElevatedButton.icon(
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: widget.originalText));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(tr('analysis.copySuccess')),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
+                    AppToast.showSuccess(context, tr('analysis.copySuccess'), duration: const Duration(seconds: 2));
                   },
                   icon: const Icon(Icons.copy_rounded, size: 14),
                   label: Text(tr('analysis.copyText')),

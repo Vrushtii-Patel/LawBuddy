@@ -6,6 +6,7 @@ import 'package:pinput/pinput.dart';
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
 import 'home_screen.dart';
+import '../widgets/app_toast.dart';
 import '../theme/app_theme.dart';
 
 class OtpScreen extends ConsumerStatefulWidget {
@@ -99,23 +100,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
     
     final success = await ref.read(authProvider.notifier).resendOtp(widget.email);
     if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(tr('auth.otpResentSuccess')),
-          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSecondary : AppColors.lightSecondary,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showSuccess(context, tr('auth.otpResentSuccess'));
       _startTimer();
     } else if (mounted) {
       final error = ref.read(authProvider).errorMessage;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error ?? tr('auth.resendFailed')),
-          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, error ?? tr('auth.resendFailed'));
     }
   }
 
@@ -124,13 +113,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
     final tr = ref.read(localeProvider.notifier).translate;
     
     if (otp.length != 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(tr('auth.enterComplete6Digit')),
-          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, tr('auth.enterComplete6Digit'));
       return;
     }
 
@@ -143,13 +126,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
     
     if (success && mounted) {
       // Show success briefly
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(tr('auth.verificationSuccess')),
-          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSecondary : AppColors.lightSecondary,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showSuccess(context, tr('auth.verificationSuccess'));
       // Navigate to dashboard
       Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted) {
@@ -167,13 +144,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
       });
     } else if (mounted) {
       final error = ref.read(authProvider).errorMessage;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error ?? tr('auth.invalidOtp')),
-          backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkError : AppColors.lightError,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      AppToast.showError(context, error ?? tr('auth.invalidOtp'));
       _pinController.clear();
       _focusNode.requestFocus();
     }

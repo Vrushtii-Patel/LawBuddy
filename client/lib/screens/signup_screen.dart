@@ -7,6 +7,7 @@ import 'login_screen.dart';
 import 'otp_screen.dart';
 import '../theme/app_theme.dart';
 import '../widgets/form_consent_widget.dart';
+import '../widgets/app_toast.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -70,23 +71,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
     if (_formKey.currentState!.validate()) {
       if (!_termsAccepted) {
         setState(() => _showConsentError = true);
-        final isDark = Theme.of(context).brightness == Brightness.dark;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Please agree to the Terms of Use and Privacy Policy to continue.'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
+        AppToast.showError(context, 'Please agree to the Terms of Use and Privacy Policy to continue.');
         return;
       }
 
       if (!_isEmailMode) {
         final loc = ref.read(localeProvider.notifier);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.translate('auth.mobileOtpComingSoon'))),
-        );
+        AppToast.showInfo(context, loc.translate('auth.mobileOtpComingSoon'));
         return;
       }
 
@@ -114,14 +105,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
         );
       } else if (mounted) {
         final error = ref.read(authProvider).errorMessage;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error ?? 'Signup failed. Please try again.'),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          ),
-        );
+        AppToast.showError(context, error ?? 'Signup failed. Please try again.');
       }
     }
   }
