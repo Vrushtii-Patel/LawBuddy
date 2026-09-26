@@ -277,7 +277,15 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
     ApiService.saveStampDutyCalculation({
       'state': _selectedState,
       'propertyType': _selectedPropertyType,
-      'applicableValue': applicableVal,
+      'agreementValue': propVal,
+      'circleRate': circleVal,
+      'applicableMarketValue': applicableVal,
+      'gender': _selectedGender,
+      'firstTimeBuyer': _isFirstTimeBuyer,
+      'stampDutyRate': baseRate,
+      'stampDutyAmount': stampAmount,
+      'registrationRate': regRate,
+      'registrationAmount': regAmount,
       'totalPayable': total,
     }).catchError((e) {
       debugPrint('Failed to save stamp duty calculation to history: $e');
