@@ -56,6 +56,52 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     }
   }
 
+  void _showToast({
+    required Widget content,
+    Duration duration = const Duration(seconds: 4),
+    Widget? action,
+    Color? backgroundColor,
+    Color? borderColor,
+  }) {
+    if (!mounted) return;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final toastWidth = screenWidth > 540 ? 460.0 : (screenWidth - 32.0).clamp(280.0, 540.0);
+
+    final effectiveBg = backgroundColor ?? (isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface);
+    final effectiveBorder = borderColor ?? (isDark ? AppColors.darkBorder : AppColors.lightBorder);
+
+    messenger.showSnackBar(
+      SnackBar(
+        width: toastWidth,
+        behavior: SnackBarBehavior.floating,
+        elevation: 8,
+        backgroundColor: effectiveBg,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(
+            color: effectiveBorder,
+            width: 1.2,
+          ),
+        ),
+        duration: duration,
+        content: Row(
+          children: [
+            Expanded(child: content),
+            if (action != null) ...[
+              const SizedBox(width: 12),
+              action,
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _restoreDocument(String docId, String title) async {
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -66,41 +112,62 @@ class _BinScreenState extends ConsumerState<BinScreen> {
         setState(() {
           _binnedDocs.removeWhere((d) => (d['_id'] ?? d['id']).toString() == docId);
         });
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: Text('"$title" ${tr('bin.restoredSuccess').toLowerCase()}'),
-            backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-            behavior: SnackBarBehavior.floating,
+
+        _showToast(
+          duration: const Duration(seconds: 4),
+          content: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.16),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.restore_page_rounded,
+                  color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  '"$title" ${tr('bin.restoredSuccess').toLowerCase()}',
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       } else {
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: const Text('Failed to restore document. Please try again.'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
+        _showToast(
+          backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+          borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+          content: Row(
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                color: isDark ? AppColors.darkError : AppColors.lightError,
+                size: 18,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Failed to restore document. Please try again.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       }
     }
   }
@@ -118,41 +185,72 @@ class _BinScreenState extends ConsumerState<BinScreen> {
         setState(() {
           _binnedDocs.removeWhere((d) => (d['_id'] ?? d['id']).toString() == docId);
         });
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: Text('"$title" ${tr('bin.permanentlyDeletedSuccess').toLowerCase()}'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
+
+        final toastBg = isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2);
+        final toastBorder = isDark ? const Color(0xFFEF4444).withValues(alpha: 0.6) : const Color(0xFFFCA5A5);
+        final toastAccent = isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626);
+
+        _showToast(
+          duration: const Duration(seconds: 4),
+          backgroundColor: toastBg,
+          borderColor: toastBorder,
+          content: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: toastAccent.withValues(alpha: isDark ? 0.22 : 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: toastAccent.withValues(alpha: 0.35),
+                    width: 1,
+                  ),
+                ),
+                child: Icon(
+                  Icons.delete_forever_rounded,
+                  color: toastAccent,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  '"$title" ${tr('bin.permanentlyDeletedSuccess').toLowerCase()}',
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       } else {
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: const Text('Failed to permanently delete document.'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
+        _showToast(
+          backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+          borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+          content: Row(
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                color: isDark ? AppColors.darkError : AppColors.lightError,
+                size: 18,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Failed to permanently delete document.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       }
     }
   }
@@ -169,41 +267,72 @@ class _BinScreenState extends ConsumerState<BinScreen> {
             (c['_id'] ?? c['id']).toString() == idOrType || (c['type'] ?? '').toString() == idOrType
           );
         });
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: Text('"$title" ${tr('bin.checklistRestoredSuccess').toLowerCase()}'),
-            backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-            behavior: SnackBarBehavior.floating,
+
+        final toastBg = isDark ? const Color(0xFF13271F) : const Color(0xFFECFDF5);
+        final toastBorder = isDark ? const Color(0xFF10B981).withValues(alpha: 0.6) : const Color(0xFF6EE7B7);
+        final toastAccent = isDark ? const Color(0xFF34D399) : const Color(0xFF059669);
+
+        _showToast(
+          duration: const Duration(seconds: 4),
+          backgroundColor: toastBg,
+          borderColor: toastBorder,
+          content: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: toastAccent.withValues(alpha: isDark ? 0.22 : 0.15),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: toastAccent.withValues(alpha: 0.35),
+                    width: 1,
+                  ),
+                ),
+                child: Icon(
+                  Icons.restore_page_rounded,
+                  color: toastAccent,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  '"$title" ${tr('bin.checklistRestoredSuccess').toLowerCase()}',
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? const Color(0xFFF0FDF4) : const Color(0xFF064E3B),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       } else {
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: const Text('Failed to restore checklist. Please try again.'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
+        _showToast(
+          backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+          borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+          content: Row(
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                color: isDark ? AppColors.darkError : AppColors.lightError,
+                size: 18,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Failed to restore checklist. Please try again.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                  ),
+                ),
+              ),
+            ],
           ),
         );
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       }
     }
   }
@@ -223,41 +352,58 @@ class _BinScreenState extends ConsumerState<BinScreen> {
             (c['_id'] ?? c['id']).toString() == idOrType || (c['type'] ?? '').toString() == idOrType
           );
         });
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: Text('"$title" ${tr('bin.checklistPermanentlyDeletedSuccess').toLowerCase()}'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
+        _showToast(
+          duration: const Duration(seconds: 4),
+          content: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.16),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.delete_forever_rounded,
+                  color: isDark ? AppColors.darkError : AppColors.lightError,
+                  size: 15,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  '"$title" ${tr('bin.checklistPermanentlyDeletedSuccess').toLowerCase()}',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       } else {
-        final messenger = ScaffoldMessenger.of(context);
-        messenger.clearSnackBars();
-        final controller = messenger.showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 5),
-            showCloseIcon: true,
-            closeIconColor: Colors.white,
-            content: const Text('Failed to permanently delete checklist.'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
+        _showToast(
+          content: Row(
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                color: isDark ? AppColors.darkError : AppColors.lightError,
+                size: 18,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Failed to permanently delete checklist.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
-        Future.delayed(const Duration(seconds: 5), () {
-          try {
-            controller.close();
-          } catch (_) {}
-        });
       }
     }
   }

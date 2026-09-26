@@ -1,29 +1,21 @@
 const mongoose = require('mongoose');
 
 const clauseSchema = new mongoose.Schema({
-    clauseId: { type: String, required: true },
-    text: { type: String, required: true },
+    clauseId: { type: String, default: '' },
+    text: { type: String, default: '' },
     title: { type: String, default: '' },
     sourcePages: [{ type: Number }],
     categoryHint: { type: String, default: '' }
 }, { _id: false });
 
 const analysisItemSchema = new mongoose.Schema({
-    clauseId: { type: String, required: true },
+    clauseId: { type: String, default: '' },
     title: { type: String, default: '' },
-    text: { type: String, required: true },
+    text: { type: String, default: '' },
     category: { type: String, enum: ['Red', 'Yellow', 'Green'], default: 'Green' }, // Backward-compatible
     riskLevel: { type: String, enum: ['HIGH_RISK', 'CAUTION', 'COMPLIANT'], default: 'COMPLIANT' },
     findingCategory: { 
         type: String, 
-        enum: [
-            'Confirmed statutory violation',
-            'Potential legal concern',
-            'Contractual risk',
-            'Documentation/title concern',
-            'Applicability uncertain',
-            'No material issue identified'
-        ],
         default: 'No material issue identified'
     },
     reason: { type: String, default: '' },
@@ -36,7 +28,7 @@ const analysisItemSchema = new mongoose.Schema({
 }, { _id: false });
 
 const pageClassificationSchema = new mongoose.Schema({
-    page: { type: Number, required: true },
+    page: { type: Number, default: 1 },
     classification: { 
         type: String, 
         enum: ['substantive legal content', 'administrative/supporting document', 'annexure', 'irrelevant/non-legal'],
@@ -47,9 +39,9 @@ const pageClassificationSchema = new mongoose.Schema({
 
 const documentSchema = new mongoose.Schema({
     userId: { type: String, required: true, index: true },
-    fileHash: { type: String, required: true, index: true }, // SHA-256 hex string
-    title: { type: String, required: true },
-    originalText: { type: String, required: true },
+    fileHash: { type: String, default: '', index: true }, // SHA-256 hex string
+    title: { type: String, default: 'Untitled Document' },
+    originalText: { type: String, default: '' },
     sourceType: { type: String, default: 'PDF Document' }, // 'PDF Document', 'Photo Scan', 'Text Description'
     mimeType: { type: String, default: 'text/plain' },
     fileData: { type: String, default: null }, // Base64 string of original uploaded file/photo

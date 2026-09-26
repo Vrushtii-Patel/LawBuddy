@@ -230,16 +230,6 @@ Widget _buildSidebarContent(
                 onNavigate(const ChecklistsListScreen());
               },
             ),
-            SidebarNavItem(
-              icon: Icons.delete_outline_rounded,
-              label: loc.translate('sidebar.bin'),
-              isActive: false,
-              isDark: isDark,
-              onTap: () {
-                if (isDrawer) Navigator.pop(context);
-                onNavigate(const BinScreen());
-              },
-            ),
             const SizedBox(height: 14),
 
             // SECTION: LEGAL TOOLS
@@ -318,6 +308,17 @@ Widget _buildSidebarContent(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         child: Column(
           children: [
+            SidebarNavItem(
+              icon: Icons.delete_outline_rounded,
+              label: loc.translate('sidebar.bin'),
+              isActive: false,
+              isDark: isDark,
+              onTap: () {
+                if (isDrawer) Navigator.pop(context);
+                onNavigate(const BinScreen());
+              },
+            ),
+            const SizedBox(height: 2),
             SidebarNavItem(
               icon: Icons.settings_outlined,
               label: loc.translate('sidebar.settings'),

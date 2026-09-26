@@ -159,6 +159,52 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
     );
   }
 
+  void _showToast({
+    required Widget content,
+    Duration duration = const Duration(seconds: 4),
+    Widget? action,
+    Color? backgroundColor,
+    Color? borderColor,
+  }) {
+    if (!mounted) return;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final toastWidth = screenWidth > 540 ? 460.0 : (screenWidth - 32.0).clamp(280.0, 540.0);
+
+    final effectiveBg = backgroundColor ?? (isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface);
+    final effectiveBorder = borderColor ?? (isDark ? AppColors.darkBorder : AppColors.lightBorder);
+
+    messenger.showSnackBar(
+      SnackBar(
+        width: toastWidth,
+        behavior: SnackBarBehavior.floating,
+        elevation: 8,
+        backgroundColor: effectiveBg,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(
+            color: effectiveBorder,
+            width: 1.2,
+          ),
+        ),
+        duration: duration,
+        content: Row(
+          children: [
+            Expanded(child: content),
+            if (action != null) ...[
+              const SizedBox(width: 12),
+              action,
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   // --- ACTION 3: DOWNLOAD RISK REPORT PDF ---
   Future<void> _downloadRiskReport(Map<String, dynamic> doc) async {
     final tr = ref.read(localeProvider.notifier).translate;
@@ -169,26 +215,30 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
     final sourceType = (doc['sourceType'] as String?) ?? 'PDF Document';
     final fileData = doc['fileData'] as String?;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+    _showToast(
+      duration: const Duration(seconds: 2),
+      content: Row(
+        children: [
+          SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                tr('recentDocs.downloadingReport'),
-                style: const TextStyle(fontSize: 13),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              tr('recentDocs.downloadingReport'),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
-          ],
-        ),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
+          ),
+        ],
       ),
     );
 
@@ -201,33 +251,58 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         fileData: fileData,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle_rounded, color: Colors.white, size: 18),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    tr('recentDocs.reportDownloaded'),
-                    style: const TextStyle(fontSize: 13),
+        _showToast(
+          content: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.16),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.check_rounded,
+                  color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                  size: 15,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  tr('recentDocs.reportDownloaded'),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
-              ],
-            ),
-            backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-            behavior: SnackBarBehavior.floating,
+              ),
+            ],
           ),
         );
       }
     } catch (e) {
       debugPrint('Error downloading risk report: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Failed to download PDF report. Please try again.'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
+        _showToast(
+          content: Row(
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                color: isDark ? AppColors.darkError : AppColors.lightError,
+                size: 18,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Failed to download PDF report. Please try again.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       }
@@ -326,11 +401,33 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                           setState(() {
                             doc['title'] = val.trim();
                           });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(tr('recentDocs.renamedSuccess')),
-                              backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-                              behavior: SnackBarBehavior.floating,
+                          _showToast(
+                            content: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.16),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.edit_rounded,
+                                    color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                    size: 14,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    tr('recentDocs.renamedSuccess'),
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           );
                         }
@@ -370,11 +467,33 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                             setState(() {
                               doc['title'] = newTitle;
                             });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(tr('recentDocs.renamedSuccess')),
-                                backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-                                behavior: SnackBarBehavior.floating,
+                            _showToast(
+                              content: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.16),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.edit_rounded,
+                                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                      size: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      tr('recentDocs.renamedSuccess'),
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             );
                           }
@@ -401,26 +520,30 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
     final fileData = doc['fileData'] as String?;
     final mimeType = doc['mimeType'] as String?;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+    _showToast(
+      duration: const Duration(seconds: 4),
+      content: Row(
+        children: [
+          SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                tr('recentDocs.reanalyzing'),
-                style: const TextStyle(fontSize: 13),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              tr('recentDocs.reanalyzing'),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
               ),
             ),
-          ],
-        ),
-        duration: const Duration(seconds: 4),
-        behavior: SnackBarBehavior.floating,
+          ),
+        ],
       ),
     );
 
@@ -455,33 +578,58 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
           }
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.refresh_rounded, color: Colors.white, size: 18),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    tr('recentDocs.reanalyzeSuccess'),
-                    style: const TextStyle(fontSize: 13),
+        _showToast(
+          content: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.16),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.refresh_rounded,
+                  color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                  size: 15,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  tr('recentDocs.reanalyzeSuccess'),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
-              ],
-            ),
-            backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-            behavior: SnackBarBehavior.floating,
+              ),
+            ],
           ),
         );
       }
     } catch (e) {
       debugPrint('Error re-analyzing document: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${tr('recentDocs.reanalyzeFailed')}. Please try again.'),
-            backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
-            behavior: SnackBarBehavior.floating,
+        _showToast(
+          content: Row(
+            children: [
+              Icon(
+                Icons.error_outline_rounded,
+                color: isDark ? AppColors.darkError : AppColors.lightError,
+                size: 18,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  '${tr('recentDocs.reanalyzeFailed')}. Please try again.',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       }
@@ -551,40 +699,93 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
               onPressed: () async {
                 Navigator.pop(dialogCtx);
                 final success = await ApiService.deleteDocument(docId);
-                if (mounted && success) {
-                  setState(() {
-                    _allDocs.removeWhere((d) => (d['_id'] ?? d['id']).toString() == docId);
-                  });
-                  final messenger = ScaffoldMessenger.of(context);
-                  messenger.clearSnackBars();
-                  final controller = messenger.showSnackBar(
-                    SnackBar(
+                if (mounted) {
+                  if (success) {
+                    setState(() {
+                      _allDocs.removeWhere((d) => (d['_id'] ?? d['id']).toString() == docId);
+                    });
+
+                    _showToast(
                       duration: const Duration(seconds: 5),
-                      showCloseIcon: true,
-                      closeIconColor: Colors.white,
-                      content: Text(tr('recentDocs.deletedSuccess')),
-                      backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-                      behavior: SnackBarBehavior.floating,
-                      action: SnackBarAction(
-                        label: 'View Bin',
-                        textColor: Colors.white,
+                      content: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.16),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Icons.delete_sweep_rounded,
+                              color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                              size: 18,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              tr('recentDocs.deletedSuccess'),
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w600,
+                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      action: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.18),
+                          foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        ),
                         onPressed: () {
-                          messenger.hideCurrentSnackBar();
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (_) => const BinScreen()),
                           ).then((_) => _fetchDocuments());
                         },
+                        child: Text(
+                          'View Bin',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          ),
+                        ),
                       ),
-                    ),
-                  );
-
-                  // Guaranteed programmatic auto-dismiss after 5 seconds
-                  Future.delayed(const Duration(seconds: 5), () {
-                    try {
-                      controller.close();
-                    } catch (_) {}
-                  });
+                    );
+                  } else {
+                    _showToast(
+                      backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+                      borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+                      content: Row(
+                        children: [
+                          Icon(
+                            Icons.error_outline_rounded,
+                            color: isDark ? AppColors.darkError : AppColors.lightError,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Failed to delete document. Please try again.',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 }
               },
               child: Text(tr('recentDocs.delete')),

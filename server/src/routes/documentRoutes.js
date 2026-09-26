@@ -400,20 +400,22 @@ router.patch('/documents/:id/restore', requireAuth, async (req, res) => {
             return res.status(400).json({ error: 'Document is not in the Recycle Bin' });
         }
 
-        doc.isDeleted = false;
-        doc.deletedAt = null;
-        await doc.save();
+        const updatedDoc = await Document.findOneAndUpdate(
+            { _id: req.params.id, userId },
+            { $set: { isDeleted: false, deletedAt: null } },
+            { returnDocument: 'after' }
+        );
 
         // Re-sync checklist issues if document has completed analysis
-        if (doc.analysisStatus === 'completed' && doc.analysis && doc.analysis.length > 0) {
+        if (updatedDoc && updatedDoc.analysisStatus === 'completed' && updatedDoc.analysis && updatedDoc.analysis.length > 0) {
             try {
-                await crossReferenceService.syncDocumentWithChecklists(userId, doc);
+                await crossReferenceService.syncDocumentWithChecklists(userId, updatedDoc);
             } catch (syncErr) {
                 console.warn(`[RestoreDocument] Warning: Checklist sync error:`, syncErr.message);
             }
         }
 
-        res.json({ message: 'Document restored successfully', document: doc });
+        res.json({ message: 'Document restored successfully', document: updatedDoc || doc });
     } catch (error) {
         console.error('Error restoring document:', error);
         res.status(500).json({ error: 'Failed to restore document. Please try again.' });
@@ -468,9 +470,12 @@ router.delete('/documents/:id', requireAuth, async (req, res) => {
             return res.status(400).json({ error: 'Document is already in the Recycle Bin' });
         }
 
-        doc.isDeleted = true;
-        doc.deletedAt = new Date();
-        await doc.save();
+        const now = new Date();
+        const updatedDoc = await Document.findOneAndUpdate(
+            { _id: req.params.id, userId },
+            { $set: { isDeleted: true, deletedAt: now } },
+            { returnDocument: 'after' }
+        );
 
         // Clean up linked checklist issues and auto-created checklists while soft-deleted
         try {
@@ -479,7 +484,12 @@ router.delete('/documents/:id', requireAuth, async (req, res) => {
             console.warn(`[SoftDeleteDocument] Warning: Checklist cleanup error:`, syncErr.message);
         }
 
-        res.json({ message: 'Document moved to Recycle Bin', id: req.params.id, isDeleted: true, deletedAt: doc.deletedAt });
+        res.json({ 
+            message: 'Document moved to Recycle Bin', 
+            id: req.params.id, 
+            isDeleted: true, 
+            deletedAt: updatedDoc ? updatedDoc.deletedAt : now 
+        });
     } catch (error) {
         console.error('Error deleting document:', error);
         res.status(500).json({ error: 'Failed to delete document. Please try again.' });
