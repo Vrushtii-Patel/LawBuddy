@@ -128776,7 +128776,7 @@ p=l}else p=l
 k=o*(d/100)
 j=k+p
 i.J(new A.bgt(f,i,r,q,o,k,j))
-A.a_S(A.f(["state",i.Q,"propertyType",i.z,"applicableValue",o,"totalPayable",j],t.N,t.z)).kl(new A.bgu())},
+A.a_S(A.f(["state",i.Q,"propertyType",i.z,"agreementValue",r,"circleRate",q,"applicableMarketValue",o,"gender",i.as,"firstTimeBuyer",i.at,"stampDutyRate",f.a,"stampDutyAmount",k,"registrationRate",f.b,"registrationAmount",f.c,"totalPayable",j],t.N,t.z)).kl(new A.bgu())},
 aZz(){var s=this,r=s.w.gR()
 if(r!=null)r.ew(0)
 s.x.dN(0,B.bp)
