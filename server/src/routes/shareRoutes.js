@@ -73,7 +73,7 @@ router.post('/shares', optionalAuth, async (req, res) => {
                 return res.status(401).json({ error: 'Authentication required to share a saved document.' });
             }
             try {
-                const doc = await Document.findOne({ _id: documentId, userId });
+                const doc = await Document.findOne({ _id: documentId, userId, isDeleted: { $ne: true } });
                 if (!doc) {
                     return res.status(403).json({ error: 'You do not have access to this document.' });
                 }

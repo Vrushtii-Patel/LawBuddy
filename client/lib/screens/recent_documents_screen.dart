@@ -7,6 +7,7 @@ import '../theme/app_theme.dart';
 import 'analysis_screen.dart';
 import 'scan_screen.dart';
 import 'document_comparison_screen.dart';
+import 'bin_screen.dart';
 import '../widgets/user_profile_button.dart';
 
 class RecentDocumentsScreen extends ConsumerStatefulWidget {
@@ -554,13 +555,36 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                   setState(() {
                     _allDocs.removeWhere((d) => (d['_id'] ?? d['id']).toString() == docId);
                   });
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  final messenger = ScaffoldMessenger.of(context);
+                  messenger.clearSnackBars();
+                  final controller = messenger.showSnackBar(
                     SnackBar(
+                      duration: const Duration(seconds: 5),
+                      showCloseIcon: true,
+                      closeIconColor: Colors.white,
                       content: Text(tr('recentDocs.deletedSuccess')),
                       backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
                       behavior: SnackBarBehavior.floating,
+                      action: SnackBarAction(
+                        label: 'View Bin',
+                        textColor: Colors.white,
+                        onPressed: () {
+                          messenger.hideCurrentSnackBar();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const BinScreen()),
+                          ).then((_) => _fetchDocuments());
+                        },
+                      ),
                     ),
                   );
+
+                  // Guaranteed programmatic auto-dismiss after 5 seconds
+                  Future.delayed(const Duration(seconds: 5), () {
+                    try {
+                      controller.close();
+                    } catch (_) {}
+                  });
                 }
               },
               child: Text(tr('recentDocs.delete')),
@@ -600,6 +624,19 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         elevation: 0,
         actions: [
+          IconButton(
+            icon: Icon(
+              Icons.delete_outline_rounded,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+            tooltip: 'Recycle Bin',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BinScreen()),
+              ).then((_) => _fetchDocuments());
+            },
+          ),
           IconButton(
             icon: Icon(
               Icons.compare_arrows_rounded,

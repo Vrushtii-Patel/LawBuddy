@@ -84,6 +84,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
  */
 function isDocumentCacheValid(doc) {
     if (!doc) return false;
+    if (doc.isDeleted === true) return false;
     if (doc.analysisStatus !== 'completed') return false;
     if (!Array.isArray(doc.analysis) || doc.analysis.length === 0) return false;
     if (!doc.promptVersion || doc.promptVersion !== llmService.PROMPT_VERSION) return false;
@@ -138,10 +139,11 @@ async function createScanJob({
         throw new Error('Either valid text or document file is required.');
     }
 
-    // Version-aware cache query: match user, hash, completed status, prompt version, and model
+    // Version-aware cache query: match user, hash, non-deleted, completed status, prompt version, and model
     const existingDoc = await Document.findOne({
         userId,
         fileHash,
+        isDeleted: { $ne: true },
         analysisStatus: 'completed',
         promptVersion: llmService.PROMPT_VERSION,
         modelName: llmService.MODEL_NAME
@@ -501,6 +503,8 @@ async function executeJobPipeline(jobId) {
                 analysisVersion: llmService.ANALYSIS_VERSION,
                 temperature: llmService.TEMPERATURE,
                 analysisStatus: 'completed',
+                isDeleted: false,
+                deletedAt: null,
                 updatedAt: new Date()
             };
 

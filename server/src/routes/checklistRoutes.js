@@ -1,12 +1,28 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Checklist = require('../models/Checklist');
 const Document = require('../models/Document');
 const { requireAuth } = require('../middleware/authMiddleware');
 const llmService = require('../services/llmService');
 const crossReferenceService = require('../services/crossReferenceService');
+const documentCleanupService = require('../services/documentCleanupService');
 
-// 1. Fetch all checklists for logged-in user
+// Helper to query checklist by either MongoDB _id or type
+function getChecklistQuery(idOrType, userId, activeOnly = false) {
+    let query = { userId };
+    if (mongoose.Types.ObjectId.isValid(idOrType)) {
+        query.$or = [{ _id: idOrType }, { type: idOrType }];
+    } else {
+        query.type = idOrType;
+    }
+    if (activeOnly) {
+        query.isDeleted = { $ne: true };
+    }
+    return query;
+}
+
+// 1. Fetch all active checklists for logged-in user
 router.get('/checklists', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -16,14 +32,14 @@ router.get('/checklists', requireAuth, async (req, res) => {
             await crossReferenceService.cleanOrphanChecklistIssues(userId);
         } catch (_) {}
 
-        let checklists = await Checklist.find({ userId }).sort({ _id: -1 });
+        let checklists = await Checklist.find({ userId, isDeleted: { $ne: true } }).sort({ _id: -1 });
 
-        // If user has no checklists, check if they have analyzed documents and auto-sync
+        // If user has no active checklists, check if they have analyzed documents and auto-sync
         if (!checklists || checklists.length === 0) {
-            const hasDocs = await Document.exists({ userId, analysisStatus: 'completed' });
+            const hasDocs = await Document.exists({ userId, isDeleted: { $ne: true }, analysisStatus: 'completed' });
             if (hasDocs) {
                 await crossReferenceService.syncAllUserDocuments(userId);
-                checklists = await Checklist.find({ userId }).sort({ _id: -1 });
+                checklists = await Checklist.find({ userId, isDeleted: { $ne: true } }).sort({ _id: -1 });
             }
         }
 
@@ -34,12 +50,84 @@ router.get('/checklists', requireAuth, async (req, res) => {
     }
 });
 
-// 2. Fetch single checklist by type
+// 2. Fetch soft-deleted checklists in Recycle Bin (sorted by deletedAt descending)
+// Note: Placed before /checklists/:type so 'bin' is not captured as :type
+router.get('/checklists/bin', requireAuth, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+
+        // Opportunistically purge any checklists binned > 30 days ago
+        try {
+            await documentCleanupService.purgeExpiredBinnedChecklists(userId);
+        } catch (purgeErr) {
+            console.warn('[GetChecklistBin] Warning: Opportunistic purge note:', purgeErr.message);
+        }
+
+        const binnedChecklists = await Checklist.find({
+            userId,
+            isDeleted: true
+        }).sort({ deletedAt: -1 });
+
+        res.json(binnedChecklists);
+    } catch (error) {
+        console.error('Error fetching Recycle Bin checklists:', error);
+        res.status(500).json({ error: 'Failed to fetch Recycle Bin checklists' });
+    }
+});
+
+// 3. Restore soft-deleted checklist from Recycle Bin
+router.patch('/checklists/:id/restore', requireAuth, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const query = getChecklistQuery(req.params.id, userId);
+        const checklist = await Checklist.findOne(query);
+
+        if (!checklist) {
+            return res.status(404).json({ error: 'Checklist not found or unauthorized' });
+        }
+        if (!checklist.isDeleted) {
+            return res.status(400).json({ error: 'Checklist is not in the Recycle Bin' });
+        }
+
+        checklist.isDeleted = false;
+        checklist.deletedAt = null;
+        checklist.updatedAt = new Date();
+        await checklist.save();
+
+        // Cross-reference any active documents to refresh issues
+        try {
+            await crossReferenceService.syncAllUserDocuments(userId);
+        } catch (syncErr) {
+            console.warn('[RestoreChecklist] Warning: Cross-reference sync note:', syncErr.message);
+        }
+
+        res.json({ message: 'Checklist restored successfully', checklist });
+    } catch (error) {
+        console.error('Error restoring checklist:', error);
+        res.status(500).json({ error: 'Failed to restore checklist. Please try again.' });
+    }
+});
+
+// 4. Permanent deletion of a binned checklist
+router.delete('/checklists/:id/permanent', requireAuth, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const result = await documentCleanupService.permanentlyDeleteChecklist(req.params.id, userId);
+        res.json({ message: 'Checklist permanently deleted', id: result.id, type: result.type });
+    } catch (error) {
+        console.error('Error permanently deleting checklist:', error);
+        const status = error.message.includes('not found') ? 404 : (error.message.includes('must be in the bin') ? 400 : 500);
+        res.status(status).json({ error: error.message || 'Failed to permanently delete checklist' });
+    }
+});
+
+// 5. Fetch single active checklist by type or id
 router.get('/checklists/:type', requireAuth, async (req, res) => {
     try {
         const type = req.params.type;
         const userId = req.user.userId;
-        let checklist = await Checklist.findOne({ type, userId });
+        const query = getChecklistQuery(type, userId, true);
+        const checklist = await Checklist.findOne(query);
         
         if (!checklist) {
              return res.status(404).json({ error: 'Checklist not found' });
@@ -51,14 +139,15 @@ router.get('/checklists/:type', requireAuth, async (req, res) => {
     }
 });
 
-// 3. Update single item completion status
+// 6. Update single item completion status in active checklist
 router.put('/checklists/:type/items/:itemId', requireAuth, async (req, res) => {
     try {
         const { type, itemId } = req.params;
         const { isCompleted } = req.body;
         const userId = req.user.userId;
 
-        const checklist = await Checklist.findOne({ type, userId });
+        const query = getChecklistQuery(type, userId, true);
+        const checklist = await Checklist.findOne(query);
         if (!checklist) {
             return res.status(404).json({ error: 'Checklist not found' });
         }
@@ -85,7 +174,7 @@ router.put('/checklists/:type/items/:itemId', requireAuth, async (req, res) => {
     }
 });
 
-// 4. Add new item to a checklist
+// 7. Add new item to an active checklist
 router.post('/checklists/:type/items', requireAuth, async (req, res) => {
     try {
         const { type } = req.params;
@@ -96,7 +185,8 @@ router.post('/checklists/:type/items', requireAuth, async (req, res) => {
             return res.status(400).json({ error: 'Title is required' });
         }
 
-        const checklist = await Checklist.findOne({ type, userId });
+        const query = getChecklistQuery(type, userId, true);
+        const checklist = await Checklist.findOne(query);
         if (!checklist) {
             return res.status(404).json({ error: 'Checklist not found' });
         }
@@ -120,13 +210,14 @@ router.post('/checklists/:type/items', requireAuth, async (req, res) => {
     }
 });
 
-// 5. Delete single item from a checklist
+// 8. Delete single item from an active checklist
 router.delete('/checklists/:type/items/:itemId', requireAuth, async (req, res) => {
     try {
         const { type, itemId } = req.params;
         const userId = req.user.userId;
 
-        const checklist = await Checklist.findOne({ type, userId });
+        const query = getChecklistQuery(type, userId, true);
+        const checklist = await Checklist.findOne(query);
         if (!checklist) {
             return res.status(404).json({ error: 'Checklist not found' });
         }
@@ -149,25 +240,40 @@ router.delete('/checklists/:type/items/:itemId', requireAuth, async (req, res) =
     }
 });
 
-// 6. Delete entire checklist
+// 9. Soft-delete entire checklist (moves to Recycle Bin)
 router.delete('/checklists/:type', requireAuth, async (req, res) => {
     try {
         const { type } = req.params;
         const userId = req.user.userId;
 
-        const result = await Checklist.findOneAndDelete({ type, userId });
-        if (!result) {
-            return res.status(404).json({ error: 'Checklist not found' });
+        const query = getChecklistQuery(type, userId);
+        const checklist = await Checklist.findOne(query);
+        if (!checklist) {
+            return res.status(404).json({ error: 'Checklist not found or unauthorized' });
+        }
+        if (checklist.isDeleted) {
+            return res.status(400).json({ error: 'Checklist is already in the Recycle Bin' });
         }
 
-        res.json({ message: 'Checklist deleted successfully', type });
+        checklist.isDeleted = true;
+        checklist.deletedAt = new Date();
+        checklist.updatedAt = new Date();
+        await checklist.save();
+
+        res.json({
+            message: 'Checklist moved to Recycle Bin',
+            id: checklist._id,
+            type: checklist.type,
+            isDeleted: true,
+            deletedAt: checklist.deletedAt
+        });
     } catch (error) {
         console.error('Error deleting checklist:', error);
         res.status(500).json({ error: 'Failed to delete checklist. Please try again.' });
     }
 });
 
-// 7. Rename checklist title
+// 10. Rename active checklist title
 router.put('/checklists/:type/rename', requireAuth, async (req, res) => {
     try {
         const { type } = req.params;
@@ -178,7 +284,8 @@ router.put('/checklists/:type/rename', requireAuth, async (req, res) => {
             return res.status(400).json({ error: 'Title is required' });
         }
 
-        const checklist = await Checklist.findOne({ type, userId });
+        const query = getChecklistQuery(type, userId, true);
+        const checklist = await Checklist.findOne(query);
         if (!checklist) {
             return res.status(404).json({ error: 'Checklist not found' });
         }
@@ -194,7 +301,7 @@ router.put('/checklists/:type/rename', requireAuth, async (req, res) => {
     }
 });
 
-// 8. Generate AI Checklist & Cross-reference existing issues
+// 11. Generate AI Checklist & Cross-reference existing issues
 router.post('/checklists/generate', requireAuth, async (req, res) => {
     try {
         const { prompt } = req.body;
@@ -253,11 +360,11 @@ router.post('/checklists/generate', requireAuth, async (req, res) => {
     }
 });
 
-// 9. Synchronize specific document findings with checklists
+// 12. Synchronize specific document findings with checklists
 router.post('/checklists/sync/:documentId', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const document = await Document.findOne({ _id: req.params.documentId, userId });
+        const document = await Document.findOne({ _id: req.params.documentId, userId, isDeleted: { $ne: true } });
         if (!document) {
             return res.status(404).json({ error: 'Document not found' });
         }
@@ -270,7 +377,7 @@ router.post('/checklists/sync/:documentId', requireAuth, async (req, res) => {
     }
 });
 
-// 10. Synchronize all user documents with checklists
+// 13. Synchronize all user documents with checklists
 router.post('/checklists/sync', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;

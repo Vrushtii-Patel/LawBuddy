@@ -158,7 +158,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               onPressed: () => Navigator.of(ctx).pop(true),
-              child: Text(loc.translate('common.delete'), style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+              child: Text(loc.translate('chat.deleteAction'), style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
             ),
           ],
         );

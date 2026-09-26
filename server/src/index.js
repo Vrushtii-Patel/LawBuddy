@@ -77,13 +77,45 @@ async function startServer() {
     }
   }
 
-  // Ensure clean collection indexes & background recovery
+const documentCleanupService = require('./services/documentCleanupService');
+
+// Ensure clean collection indexes & background recovery
   try {
     const Checklist = require('./models/Checklist');
     await Checklist.syncIndexes();
   } catch (idxErr) {
     console.warn('Checklist syncIndexes note:', idxErr.message);
   }
+
+  try {
+    const Document = require('./models/Document');
+    await Document.syncIndexes();
+  } catch (docIdxErr) {
+    console.warn('Document syncIndexes note:', docIdxErr.message);
+  }
+
+  // Startup Auto-Purge of expired binned documents & checklists (> 30 days)
+  Promise.all([
+    documentCleanupService.purgeExpiredBinnedDocuments(),
+    documentCleanupService.purgeExpiredBinnedChecklists()
+  ]).then(([docCount, chkCount]) => {
+    if (docCount > 0 || chkCount > 0) {
+      console.log(`✓ Auto-purged ${docCount} expired document(s) and ${chkCount} expired checklist(s) from Recycle Bin on startup.`);
+    }
+  }).catch(purgeErr => {
+    console.warn('Startup bin auto-purge warning:', purgeErr.message);
+  });
+
+  // Hourly background timer for opportunistic auto-purge (unreferenced so server can cleanly terminate)
+  const autoPurgeInterval = setInterval(() => {
+    Promise.all([
+      documentCleanupService.purgeExpiredBinnedDocuments(),
+      documentCleanupService.purgeExpiredBinnedChecklists()
+    ]).catch(err => {
+      console.warn('[Periodic Auto-Purge] Error:', err.message);
+    });
+  }, 60 * 60 * 1000);
+  if (autoPurgeInterval.unref) autoPurgeInterval.unref();
 
   scanJobService.recoverUnfinishedScanJobs().catch(recErr => {
     console.warn('Startup scan recovery warning:', recErr.message);

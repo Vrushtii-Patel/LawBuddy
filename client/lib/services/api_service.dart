@@ -388,7 +388,61 @@ class ApiService {
       );
       return response.statusCode == 200;
     } catch (e) {
-      debugPrint('Error deleting document: $e');
+      debugPrint('Error soft-deleting document: $e');
+      return false;
+    }
+  }
+
+  static Future<List<dynamic>> fetchBinDocuments() async {
+    try {
+      final token = await _getToken();
+      final response = await http.get(
+        Uri.parse('$baseUrl/documents/bin'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as List<dynamic>;
+      }
+      return [];
+    } catch (e) {
+      debugPrint('Error fetching Recycle Bin documents: $e');
+      return [];
+    }
+  }
+
+  static Future<bool> restoreDocument(String documentId) async {
+    try {
+      final token = await _getToken();
+      final response = await http.patch(
+        Uri.parse('$baseUrl/documents/$documentId/restore'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint('Error restoring document: $e');
+      return false;
+    }
+  }
+
+  static Future<bool> permanentlyDeleteDocument(String documentId) async {
+    try {
+      final token = await _getToken();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/documents/$documentId/permanent'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint('Error permanently deleting document: $e');
       return false;
     }
   }
@@ -628,6 +682,60 @@ class ApiService {
       },
     );
     return response.statusCode == 200;
+  }
+
+  static Future<List<dynamic>> fetchBinChecklists() async {
+    try {
+      final token = await _getToken();
+      final response = await http.get(
+        Uri.parse('$baseUrl/checklists/bin'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as List<dynamic>;
+      }
+      return [];
+    } catch (e) {
+      debugPrint('Error fetching Recycle Bin checklists: $e');
+      return [];
+    }
+  }
+
+  static Future<bool> restoreChecklist(String idOrType) async {
+    try {
+      final token = await _getToken();
+      final response = await http.patch(
+        Uri.parse('$baseUrl/checklists/$idOrType/restore'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint('Error restoring checklist: $e');
+      return false;
+    }
+  }
+
+  static Future<bool> permanentlyDeleteChecklist(String idOrType) async {
+    try {
+      final token = await _getToken();
+      final response = await http.delete(
+        Uri.parse('$baseUrl/checklists/$idOrType/permanent'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      );
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint('Error permanently deleting checklist: $e');
+      return false;
+    }
   }
 
   static Future<Map<String, dynamic>> renameChecklist(String type, String title) async {

@@ -142,7 +142,7 @@ async function syncDocumentIssuesWithChecklists(userId, document) {
     }
 
     // 2. Fetch existing checklists for user
-    let checklists = await Checklist.find({ userId });
+    let checklists = await Checklist.find({ userId, isDeleted: { $ne: true } });
 
     // If user has no checklists yet, create the standard Due Diligence Checklist
     if (!checklists || checklists.length === 0) {
@@ -258,7 +258,7 @@ async function syncDocumentIssuesWithChecklists(userId, document) {
  */
 async function syncAllUserDocuments(userId) {
     if (!userId) return [];
-    const docs = await Document.find({ userId, analysisStatus: 'completed' });
+    const docs = await Document.find({ userId, isDeleted: { $ne: true }, analysisStatus: 'completed' });
     let results = [];
     for (const doc of docs) {
         const res = await syncDocumentIssuesWithChecklists(userId, doc);
@@ -272,9 +272,9 @@ async function syncAllUserDocuments(userId) {
  */
 async function cleanOrphanChecklistIssues(userId) {
     if (!userId) return;
-    const docs = await Document.find({ userId });
+    const docs = await Document.find({ userId, isDeleted: { $ne: true } });
     const validDocIds = new Set(docs.map(d => d._id.toString()));
-    const checklists = await Checklist.find({ userId });
+    const checklists = await Checklist.find({ userId, isDeleted: { $ne: true } });
     if (!checklists || checklists.length === 0) return;
 
     if (docs.length === 0) {

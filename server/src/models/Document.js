@@ -97,11 +97,16 @@ const documentSchema = new mongoose.Schema({
         index: true
     },
     
+    // Soft-Delete / Recycle Bin Metadata
+    isDeleted: { type: Boolean, default: false, index: true },
+    deletedAt: { type: Date, default: null, index: true },
+
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 });
 
-// Compound unique index for user-isolated SHA-256 caching
-documentSchema.index({ userId: 1, fileHash: 1 }, { unique: true });
+// Compound index for active document queries and user-isolated SHA-256 caching
+documentSchema.index({ userId: 1, isDeleted: 1, createdAt: -1 });
+documentSchema.index({ userId: 1, fileHash: 1, isDeleted: 1 });
 
 module.exports = mongoose.model('Document', documentSchema);

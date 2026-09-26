@@ -9,6 +9,7 @@ import '../chat_screen.dart';
 import '../checklists_list_screen.dart';
 import '../document_comparison_screen.dart';
 import '../recent_documents_screen.dart';
+import '../bin_screen.dart';
 import '../scan_screen.dart';
 import '../stamp_duty_calculator_screen.dart';
 import 'home_widgets.dart';
@@ -227,6 +228,16 @@ Widget _buildSidebarContent(
               onTap: () {
                 if (isDrawer) Navigator.pop(context);
                 onNavigate(const ChecklistsListScreen());
+              },
+            ),
+            SidebarNavItem(
+              icon: Icons.delete_outline_rounded,
+              label: loc.translate('sidebar.bin'),
+              isActive: false,
+              isDark: isDark,
+              onTap: () {
+                if (isDrawer) Navigator.pop(context);
+                onNavigate(const BinScreen());
               },
             ),
             const SizedBox(height: 14),

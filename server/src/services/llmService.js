@@ -916,12 +916,14 @@ exports.analyzeContractPipeline = async ({
     const cachedDoc = await Document.findOne({
         userId,
         fileHash,
+        isDeleted: { $ne: true },
         analysisStatus: 'completed',
         promptVersion: PROMPT_VERSION,
         modelName: MODEL_NAME
     });
 
     const isCacheValid = cachedDoc &&
+        !cachedDoc.isDeleted &&
         Array.isArray(cachedDoc.analysis) &&
         cachedDoc.analysis.length > 0 &&
         cachedDoc.promptVersion === PROMPT_VERSION &&
@@ -1121,6 +1123,8 @@ analysisStatus: ${cachedDoc.analysisStatus}
         analysisVersion: ANALYSIS_VERSION,
         temperature: TEMPERATURE,
         analysisStatus: 'completed',
+        isDeleted: false,
+        deletedAt: null,
         updatedAt: new Date()
     };
 

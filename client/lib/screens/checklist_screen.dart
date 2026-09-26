@@ -5,6 +5,7 @@ import '../providers/locale_provider.dart';
 import '../services/api_service.dart';
 import '../widgets/user_profile_button.dart';
 import '../theme/app_theme.dart';
+import 'bin_screen.dart';
 
 class ChecklistScreen extends ConsumerStatefulWidget {
   final String type;
@@ -429,25 +430,58 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
       try {
         await ApiService.deleteChecklist(widget.type);
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          final messenger = ScaffoldMessenger.of(context);
+          messenger.clearSnackBars();
+          final controller = messenger.showSnackBar(
             SnackBar(
+              duration: const Duration(seconds: 5),
+              showCloseIcon: true,
+              closeIconColor: Colors.white,
               content: Text(tr('checklists.checklistDeletedSuccess')),
               backgroundColor: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
               behavior: SnackBarBehavior.floating,
+              action: SnackBarAction(
+                label: 'View Bin',
+                textColor: Colors.white,
+                onPressed: () {
+                  messenger.hideCurrentSnackBar();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const BinScreen()),
+                  );
+                },
+              ),
             ),
           );
+
+          Future.delayed(const Duration(seconds: 5), () {
+            try {
+              controller.close();
+            } catch (_) {}
+          });
+
           Navigator.pop(context, true); // Pop back to list screen
         }
       } catch (e) {
         debugPrint('Error deleting checklist: $e');
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
+          final messenger = ScaffoldMessenger.of(context);
+          messenger.clearSnackBars();
+          final controller = messenger.showSnackBar(
             SnackBar(
+              duration: const Duration(seconds: 5),
+              showCloseIcon: true,
+              closeIconColor: Colors.white,
               content: const Text('Unable to delete checklist. Please try again.'),
               backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
               behavior: SnackBarBehavior.floating,
             ),
           );
+          Future.delayed(const Duration(seconds: 5), () {
+            try {
+              controller.close();
+            } catch (_) {}
+          });
         }
       }
     }

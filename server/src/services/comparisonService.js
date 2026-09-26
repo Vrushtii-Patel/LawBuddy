@@ -660,7 +660,7 @@ async function startComparison({
 
     // Resolve Doc A
     if (docAId) {
-        finalDocA = await Document.findOne({ _id: docAId, userId });
+        finalDocA = await Document.findOne({ _id: docAId, userId, isDeleted: { $ne: true } });
         if (!finalDocA) throw new Error(`Document A (${docAId}) not found or unauthorized.`);
     } else if (fileA) {
         const jobA = await scanJobService.createScanJob({
@@ -676,7 +676,7 @@ async function startComparison({
 
     // Resolve Doc B
     if (docBId) {
-        finalDocB = await Document.findOne({ _id: docBId, userId });
+        finalDocB = await Document.findOne({ _id: docBId, userId, isDeleted: { $ne: true } });
         if (!finalDocB) throw new Error(`Document B (${docBId}) not found or unauthorized.`);
     } else if (fileB) {
         const jobB = await scanJobService.createScanJob({

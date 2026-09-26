@@ -24,13 +24,13 @@ router.get('/analytics', requireAdmin, async (req, res) => {
             recentScansDocs
         ] = await Promise.all([
             User.countDocuments(),
-            Document.countDocuments({ analysisStatus: 'completed' }),
+            Document.countDocuments({ analysisStatus: 'completed', isDeleted: { $ne: true } }),
             ChatSession.countDocuments(),
             Checklist.countDocuments(),
             
             // Total clauses evaluated and average pages per completed document
             Document.aggregate([
-                { $match: { analysisStatus: 'completed' } },
+                { $match: { analysisStatus: 'completed', isDeleted: { $ne: true } } },
                 {
                     $group: {
                         _id: null,
@@ -42,7 +42,7 @@ router.get('/analytics', requireAdmin, async (req, res) => {
 
             // Document-level risk distribution
             Document.aggregate([
-                { $match: { analysisStatus: 'completed' } },
+                { $match: { analysisStatus: 'completed', isDeleted: { $ne: true } } },
                 {
                     $group: {
                         _id: '$riskLevel',
@@ -53,7 +53,7 @@ router.get('/analytics', requireAdmin, async (req, res) => {
 
             // Clause-level risk distribution
             Document.aggregate([
-                { $match: { analysisStatus: 'completed' } },
+                { $match: { analysisStatus: 'completed', isDeleted: { $ne: true } } },
                 {
                     $group: {
                         _id: null,
@@ -66,7 +66,7 @@ router.get('/analytics', requireAdmin, async (req, res) => {
 
             // Clause finding category breakdown
             Document.aggregate([
-                { $match: { analysisStatus: 'completed' } },
+                { $match: { analysisStatus: 'completed', isDeleted: { $ne: true } } },
                 { $unwind: '$analysis' },
                 {
                     $group: {
@@ -79,7 +79,7 @@ router.get('/analytics', requireAdmin, async (req, res) => {
 
             // Document input source distribution
             Document.aggregate([
-                { $match: { analysisStatus: 'completed' } },
+                { $match: { analysisStatus: 'completed', isDeleted: { $ne: true } } },
                 {
                     $group: {
                         _id: '$sourceType',
@@ -91,7 +91,7 @@ router.get('/analytics', requireAdmin, async (req, res) => {
 
             // Extraction method pipeline distribution
             Document.aggregate([
-                { $match: { analysisStatus: 'completed' } },
+                { $match: { analysisStatus: 'completed', isDeleted: { $ne: true } } },
                 {
                     $group: {
                         _id: '$extractionMethod',
@@ -102,7 +102,7 @@ router.get('/analytics', requireAdmin, async (req, res) => {
             ]),
 
             // Recent 10 completed analyses (sanitized, excluding private text / credentials)
-            Document.find({ analysisStatus: 'completed' })
+            Document.find({ analysisStatus: 'completed', isDeleted: { $ne: true } })
                 .sort({ createdAt: -1 })
                 .limit(10)
                 .select('_id title riskLevel highRiskCount cautionCount compliantCount totalPages sourceType extractionMethod createdAt')

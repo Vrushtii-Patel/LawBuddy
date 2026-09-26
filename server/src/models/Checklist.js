@@ -33,11 +33,17 @@ const checklistSchema = new mongoose.Schema({
     type: { type: String, required: true }, // e.g., 'buying-resale'
     title: { type: String, required: true },
     items: [checklistItemSchema],
+    // Soft-Delete / Recycle Bin Metadata
+    isDeleted: { type: Boolean, default: false, index: true },
+    deletedAt: { type: Date, default: null, index: true },
+
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 });
 
-// Ensure a user can only have one checklist of each type
-checklistSchema.index({ userId: 1, type: 1 }, { unique: true });
+// Ensure a user can only have one active checklist of each type, and index active checklist queries
+checklistSchema.index({ userId: 1, type: 1 }, { unique: true, partialFilterExpression: { isDeleted: false } });
+checklistSchema.index({ userId: 1, isDeleted: 1, createdAt: -1 });
+checklistSchema.index({ userId: 1, isDeleted: 1, updatedAt: -1 });
 
 module.exports = mongoose.model('Checklist', checklistSchema);
