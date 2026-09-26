@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
 import '../services/api_service.dart';
+import '../services/token_storage.dart';
 
 enum AuthStatus {
   initial,
@@ -49,8 +50,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> checkAuthStatus() async {
     state = state.copyWith(status: AuthStatus.loading);
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('jwt_token');
+      final token = await TokenStorage.getToken();
 
       if (token != null && token.isNotEmpty) {
         final data = await ApiService.getProfile(token);
@@ -110,8 +110,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = UserModel.fromJson(data['user']);
       final String token = data['token'];
       
+      await TokenStorage.saveToken(token);
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('jwt_token', token);
       await prefs.setString('userId', user.userId); // Kept for legacy compatibility if needed
       
       state = state.copyWith(
@@ -152,8 +152,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> logout() async {
     state = state.copyWith(status: AuthStatus.loading);
     try {
+      await TokenStorage.deleteToken();
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('jwt_token');
       await prefs.remove('userId');
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
