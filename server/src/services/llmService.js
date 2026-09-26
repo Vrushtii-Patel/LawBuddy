@@ -912,14 +912,23 @@ exports.analyzeContractPipeline = async ({
         throw new Error('Either valid text or base64Data is required.');
     }
 
-    // Step 2: User-Isolated SHA-256 Cache Check
+    // Step 2: User-Isolated Version-Aware Cache Check
     const cachedDoc = await Document.findOne({
         userId,
         fileHash,
-        analysisStatus: 'completed'
+        analysisStatus: 'completed',
+        promptVersion: PROMPT_VERSION,
+        modelName: MODEL_NAME
     });
 
-    if (cachedDoc && Array.isArray(cachedDoc.analysis) && cachedDoc.analysis.length > 0) {
+    const isCacheValid = cachedDoc &&
+        Array.isArray(cachedDoc.analysis) &&
+        cachedDoc.analysis.length > 0 &&
+        cachedDoc.promptVersion === PROMPT_VERSION &&
+        cachedDoc.modelName === MODEL_NAME &&
+        (!ANALYSIS_VERSION || cachedDoc.analysisVersion === ANALYSIS_VERSION);
+
+    if (isCacheValid) {
         console.log(`==================================================
 [LEGAL ANALYSIS PIPELINE]
 fileHash: ${cachedDoc.fileHash}
@@ -1178,6 +1187,7 @@ exports.analyzeCanonicalClauses = analyzeCanonicalClauses;
 exports.PROMPT_VERSION = PROMPT_VERSION;
 exports.ANALYSIS_VERSION = ANALYSIS_VERSION;
 exports.MODEL_NAME = MODEL_NAME;
+exports.MODEL_VERSION = MODEL_VERSION;
 exports.TEMPERATURE = TEMPERATURE;
 
 exports.analyzeContract = async (text, customTitle = null, userId = "system") => {

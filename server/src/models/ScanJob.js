@@ -76,6 +76,12 @@ const scanJobSchema = new mongoose.Schema({
     canonicalClauses: [clauseSchema],
     analysis: [analysisItemSchema],
 
+    // Pipeline Model & Execution Metadata
+    modelName: { type: String, default: null },
+    modelVersion: { type: String, default: null },
+    promptVersion: { type: String, default: null },
+    analysisVersion: { type: String, default: null },
+
     // Final Document Reference (when COMPLETED)
     documentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Document', default: null },
 

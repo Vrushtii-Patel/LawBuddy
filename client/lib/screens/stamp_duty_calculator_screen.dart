@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../models/stamp_duty_config_model.dart';
 import '../widgets/user_profile_button.dart';
 import '../services/api_service.dart';
 import '../providers/locale_provider.dart';
@@ -31,6 +32,9 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
   AnimationController? _entryController;
   Animation<double>? _fadeAnimation;
   Animation<Offset>? _slideAnimation;
+
+  // Dynamic Backend Configuration Bundle (with local cache & default fallback)
+  StampDutyConfigResponse _config = StampDutyConfigResponse.defaultBundle();
 
   // Calculation Results
   double _enteredPropertyValue = 0.0;
@@ -82,6 +86,8 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
   void initState() {
     super.initState();
 
+    _loadConfig();
+
     _entryController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
@@ -101,6 +107,17 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
     ));
 
     _entryController!.forward();
+  }
+
+  Future<void> _loadConfig() async {
+    try {
+      final fetched = await ApiService.getStampDutyConfig();
+      if (mounted) {
+        setState(() {
+          _config = fetched;
+        });
+      }
+    } catch (_) {}
   }
 
   @override
@@ -163,96 +180,44 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
     // Applicable value is the higher of Property Value or Circle Rate
     final double applicableVal = propVal > circleVal ? propVal : circleVal;
 
-    // Base Stamp Duty Rate determination
-    double baseRate = 5.0; // Default Residential
+    // 1. Resolve State Specific Base Rate from fetched/cached configuration
+    final stateConfig = _config.getConfigForState(_selectedState);
+    double baseRate = stateConfig.baseRate;
 
-    switch (_selectedState) {
-      case 'Maharashtra':
-        baseRate = 6.0;
-        if (_selectedGender == 'Female') baseRate -= 1.0;
-        break;
-      case 'Karnataka':
-        if (applicableVal <= 2000000) {
-          baseRate = 2.0;
-        } else if (applicableVal <= 4500000) {
-          baseRate = 3.0;
-        } else {
-          baseRate = 5.0;
+    if (stateConfig.slabs.isNotEmpty) {
+      for (final slab in stateConfig.slabs) {
+        if (slab.maxValue == null || applicableVal <= slab.maxValue!) {
+          baseRate = slab.rate;
+          break;
         }
-        break;
-      case 'Delhi':
-        if (_selectedGender == 'Female') {
-          baseRate = 4.0;
-        } else if (_selectedGender == 'Joint (Male + Female)') {
-          baseRate = 5.0;
-        } else {
-          baseRate = 6.0;
-        }
-        break;
-      case 'Gujarat':
-        baseRate = 4.9;
-        if (_selectedGender == 'Female') baseRate = 0.0; // 100% exemption for women in GJ
-        break;
-      case 'Tamil Nadu':
-        baseRate = 7.0;
-        break;
-      case 'West Bengal':
-        baseRate = applicableVal > 4000000 ? 6.0 : 5.0;
-        break;
-      case 'Uttar Pradesh':
-        baseRate = 7.0;
-        if (_selectedGender == 'Female') baseRate -= 1.0;
-        break;
-      case 'Haryana':
-        if (_selectedGender == 'Female') {
-          baseRate = 5.0;
-        } else if (_selectedGender == 'Joint (Male + Female)') {
-          baseRate = 6.0;
-        } else {
-          baseRate = 7.0;
-        }
-        break;
-      case 'Telangana':
-        baseRate = 6.0;
-        break;
-      case 'Rajasthan':
-        baseRate = 6.0;
-        if (_selectedGender == 'Female') baseRate -= 1.0;
-        break;
-      case 'Kerala':
-        baseRate = 8.0;
-        break;
-      case 'Madhya Pradesh':
-        baseRate = 7.5;
-        break;
-      case 'Punjab':
-        baseRate = _selectedGender == 'Female' ? 5.0 : 7.0;
-        break;
-      default:
-        baseRate = 5.0;
+      }
+    } else if (stateConfig.genderOverrides.containsKey(_selectedGender) &&
+        stateConfig.genderOverrides[_selectedGender] != null) {
+      baseRate = stateConfig.genderOverrides[_selectedGender]!;
     }
 
-    // Property Type Adjustments
-    if (_selectedPropertyType == 'Commercial') {
-      baseRate += 1.0;
-    } else if (_selectedPropertyType == 'Agricultural') {
-      baseRate = (baseRate * 0.7).clamp(1.0, 10.0);
+    // 2. Apply Global Property Type Adjustments
+    final propRule = _config.globalRules.propertyTypeAdjustments[_selectedPropertyType];
+    if (propRule != null) {
+      if (propRule.type == 'add') {
+        baseRate += propRule.value;
+      } else if (propRule.type == 'multiply') {
+        baseRate = (baseRate * propRule.multiplier).clamp(propRule.minRate, propRule.maxRate);
+      }
     }
 
-    // First-time buyer concession (e.g., 0.5% rebate where applicable)
-    if (_isFirstTimeBuyer == 'Yes' && baseRate > 2.0) {
-      baseRate = (baseRate - 0.5).clamp(1.0, 15.0);
+    // 3. Apply Global First-Time Buyer Concession
+    final ftRule = _config.globalRules.firstTimeBuyerConcession;
+    if (_isFirstTimeBuyer == 'Yes' && baseRate > ftRule.thresholdRate) {
+      baseRate = (baseRate - ftRule.discount).clamp(ftRule.minRate, ftRule.maxRate);
     }
 
-    // Registration fee calculation (Standard: 1% capped at 30,000 in MH/certain states, or flat 1%)
-    double regRate = 1.0;
+    // 4. Calculate Registration Fee from state configuration
+    final double regRate = stateConfig.registrationRate;
     double regAmount = applicableVal * (regRate / 100.0);
 
-    if (_selectedState == 'Maharashtra' && regAmount > 30000) {
-      regAmount = 30000;
-    } else if (_selectedState == 'Tamil Nadu') {
-      regRate = 4.0;
-      regAmount = applicableVal * (regRate / 100.0);
+    if (stateConfig.registrationCap != null && regAmount > stateConfig.registrationCap!) {
+      regAmount = stateConfig.registrationCap!;
     }
 
     final double stampAmount = applicableVal * (baseRate / 100.0);
@@ -779,6 +744,10 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
                 ),
               ],
             ),
+            const SizedBox(height: 16),
+
+            // Statutory Rate Verification Status & Citation
+            _buildVerificationStatusBadge(isDark),
           ],
         ),
       ),
@@ -934,6 +903,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
   // RESULTS SUMMARY CARD
   // ==========================================
   Widget _buildResultSummaryCard(BuildContext context, bool isDark, LocaleNotifier loc) {
+    final isDesktop = MediaQuery.of(context).size.width >= 960;
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
@@ -943,64 +913,76 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
           width: 1.0,
         ),
       ),
-      padding: const EdgeInsets.all(28.0),
+      padding: EdgeInsets.all(isDesktop ? 24.0 : 18.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row
+          // Header Row: title absorbs all remaining space, badge hugs natural width
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(Icons.receipt_long_rounded, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary, size: 22),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    loc.translate('calc.summaryTitle'),
-                    style: GoogleFonts.plusJakartaSans(
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -0.3,
-                    ),
-                  ),
-                ],
-              ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.lightPrimary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: AppColors.lightPrimary.withValues(alpha: 0.2),
-                  ),
+                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.place_rounded, size: 13, color: AppColors.lightPrimary),
-                    const SizedBox(width: 5),
-                    Text(
-                      _selectedState ?? '',
-                      style: GoogleFonts.inter(
-                        color: AppColors.lightPrimary,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 12,
-                      ),
+                child: Icon(
+                  Icons.receipt_long_rounded,
+                  color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                  size: 22,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  loc.translate('calc.summaryTitle'),
+                  style: GoogleFonts.plusJakartaSans(
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 10),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: isDesktop ? 180 : 140),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.lightPrimary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: AppColors.lightPrimary.withValues(alpha: 0.2),
                     ),
-                  ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.place_rounded, size: 13, color: AppColors.lightPrimary),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          _selectedState ?? '',
+                          style: GoogleFonts.inter(
+                            color: AppColors.lightPrimary,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 12,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 20),
 
           _buildResultRow(loc.translate('calc.rowAgreementValue'), _formatIndianRupee(_enteredPropertyValue), isDark),
           const SizedBox(height: 12),
@@ -1028,11 +1010,11 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
             _formatIndianRupee(_registrationAmount),
             isDark,
           ),
-          const SizedBox(height: 22),
+          const SizedBox(height: 20),
 
-          // Total Payable Prominent Box
+          // Total Payable Prominent Box: labels absorb remaining space, amount hugs width
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
               color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
               borderRadius: BorderRadius.circular(16),
@@ -1042,37 +1024,52 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
               ),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      loc.translate('calc.totalPayable'),
-                      style: GoogleFonts.inter(
-                        color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.9,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        loc.translate('calc.totalPayable'),
+                        style: GoogleFonts.inter(
+                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.9,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      loc.translate('calc.stampPlusReg'),
-                      style: GoogleFonts.inter(
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                        fontSize: 12,
+                      const SizedBox(height: 3),
+                      Text(
+                        loc.translate('calc.stampPlusReg'),
+                        style: GoogleFonts.inter(
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          fontSize: 12,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                Text(
-                  _formatIndianRupee(_totalPayable),
-                  style: GoogleFonts.plusJakartaSans(
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.6,
+                const SizedBox(width: 12),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: isDesktop ? 220 : 160),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      _formatIndianRupee(_totalPayable),
+                      style: GoogleFonts.plusJakartaSans(
+                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.6,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -1091,24 +1088,36 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
     Color? highlightColor,
   }) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            color: isBold
-                ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
-                : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
-            fontSize: 14,
-            fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+        Expanded(
+          child: Text(
+            label,
+            style: GoogleFonts.inter(
+              color: isBold
+                  ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
+                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+              fontSize: 14,
+              fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
-        Text(
-          value,
-          style: GoogleFonts.plusJakartaSans(
-            color: highlightColor ?? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
-            fontSize: 15,
-            fontWeight: isBold ? FontWeight.w800 : FontWeight.w700,
+        const SizedBox(width: 12),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 160),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerRight,
+            child: Text(
+              value,
+              style: GoogleFonts.plusJakartaSans(
+                color: highlightColor ?? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                fontSize: 15,
+                fontWeight: isBold ? FontWeight.w800 : FontWeight.w700,
+              ),
+            ),
           ),
         ),
       ],
@@ -1146,6 +1155,108 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
         ],
       ),
     );
+  }
+
+  // ==========================================
+  // STATUTORY RATES VERIFICATION BADGE
+  // ==========================================
+  Widget _buildVerificationStatusBadge(bool isDark) {
+    final stateConfig = _config.getConfigForState(_selectedState);
+    final verifiedDate = stateConfig.lastVerifiedOn;
+    final int daysAgo = DateTime.now().difference(verifiedDate).inDays;
+    final bool isWarning = daysAgo > 90;
+
+    final String formattedDate =
+        '${verifiedDate.day.toString().padLeft(2, '0')} ${_monthName(verifiedDate.month)} ${verifiedDate.year}';
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: isWarning
+            ? (isDark ? const Color(0xFF332005) : const Color(0xFFFFF8E1))
+            : (isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isWarning
+              ? const Color(0xFFFF9800).withValues(alpha: isDark ? 0.6 : 0.4)
+              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            isWarning ? Icons.warning_amber_rounded : Icons.verified_user_outlined,
+            size: 18,
+            color: isWarning
+                ? const Color(0xFFFF9800)
+                : (isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Rates last verified on $formattedDate',
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: isWarning
+                            ? (isDark ? const Color(0xFFFFB74D) : const Color(0xFFE65100))
+                            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                      ),
+                    ),
+                    if (isWarning) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFF9800).withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          '> 90 DAYS',
+                          style: GoogleFonts.inter(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            color: isDark ? const Color(0xFFFFB74D) : const Color(0xFFE65100),
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  isWarning
+                      ? 'Statutory rates may have changed since verification. Please confirm with your local Sub-Registrar or IGR portal.'
+                      : 'Source: ${stateConfig.source}',
+                  style: GoogleFonts.inter(
+                    fontSize: 11,
+                    height: 1.35,
+                    color: isWarning
+                        ? (isDark ? const Color(0xFFFFCC80) : const Color(0xFFBF360C))
+                        : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _monthName(int month) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    if (month >= 1 && month <= 12) return months[month - 1];
+    return '';
   }
 }
 

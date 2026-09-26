@@ -9,6 +9,9 @@ const crossReferenceService = require('./crossReferenceService');
 
 const UPLOADS_DIR = path.join(__dirname, '../../uploads/scan_files');
 
+// In-memory set of currently processing "userId:fileHash" keys to prevent redundant concurrent pipeline executions
+const activeProcessingKeys = new Set();
+
 function ensureUploadsDirectory() {
     if (!fs.existsSync(UPLOADS_DIR)) {
         fs.mkdirSync(UPLOADS_DIR, { recursive: true });
@@ -70,7 +73,30 @@ function isTransientError(error) {
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * Creates and initializes a persistent ScanJob record.
+ * Validates whether a cached Document record is strictly up-to-date.
+ * A cached record is valid ONLY when:
+ * 1. It belongs to the requested user and fileHash.
+ * 2. Its analysis status is 'completed' with non-empty findings.
+ * 3. Its promptVersion strictly matches current llmService.PROMPT_VERSION.
+ * 4. Its modelName strictly matches current llmService.MODEL_NAME.
+ * 5. Its analysisVersion matches llmService.ANALYSIS_VERSION (if defined).
+ * Legacy records lacking version metadata are safely treated as outdated.
+ */
+function isDocumentCacheValid(doc) {
+    if (!doc) return false;
+    if (doc.analysisStatus !== 'completed') return false;
+    if (!Array.isArray(doc.analysis) || doc.analysis.length === 0) return false;
+    if (!doc.promptVersion || doc.promptVersion !== llmService.PROMPT_VERSION) return false;
+    if (!doc.modelName || doc.modelName !== llmService.MODEL_NAME) return false;
+    if (llmService.ANALYSIS_VERSION && (!doc.analysisVersion || doc.analysisVersion !== llmService.ANALYSIS_VERSION)) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Creates and initializes a persistent ScanJob record with version-aware caching
+ * and duplicate concurrent job safeguards.
  */
 async function createScanJob({
     userId,
@@ -112,16 +138,18 @@ async function createScanJob({
         throw new Error('Either valid text or document file is required.');
     }
 
-    // Check if an existing completed Document already exists for this (userId, fileHash)
+    // Version-aware cache query: match user, hash, completed status, prompt version, and model
     const existingDoc = await Document.findOne({
         userId,
         fileHash,
-        analysisStatus: 'completed'
+        analysisStatus: 'completed',
+        promptVersion: llmService.PROMPT_VERSION,
+        modelName: llmService.MODEL_NAME
     });
 
     const jobId = `job_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
 
-    if (existingDoc && Array.isArray(existingDoc.analysis) && existingDoc.analysis.length > 0) {
+    if (isDocumentCacheValid(existingDoc)) {
         // Immediate cache-hit completion without re-processing
         const completedJob = new ScanJob({
             jobId,
@@ -133,6 +161,10 @@ async function createScanJob({
             mimeType: mimeType || existingDoc.mimeType,
             storagePath,
             fileSize,
+            modelName: existingDoc.modelName,
+            modelVersion: existingDoc.modelVersion || 'latest',
+            promptVersion: existingDoc.promptVersion,
+            analysisVersion: existingDoc.analysisVersion,
             status: 'COMPLETED',
             currentStep: 'Analysis completed (from cache)',
             completedSteps: ['UPLOAD', 'TEXT_EXTRACTION', 'AI_ANALYSIS', 'REPORT'],
@@ -146,7 +178,30 @@ async function createScanJob({
         return completedJob;
     }
 
-    // Initialize new pending job
+    // Prevent duplicate concurrent analysis jobs for the same user, file hash, and current analysis version
+    const inFlightStatuses = [
+        'QUEUED',
+        'UPLOADING',
+        'OCR_PROCESSING',
+        'TEXT_EXTRACTED',
+        'AI_ANALYSIS',
+        'REPORT_GENERATION',
+        'RETRYING'
+    ];
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    const inFlightJob = await ScanJob.findOne({
+        userId,
+        fileHash,
+        status: { $in: inFlightStatuses },
+        updatedAt: { $gte: fiveMinutesAgo }
+    }).sort({ updatedAt: -1 });
+
+    if (inFlightJob) {
+        console.log(`[createScanJob] Reusing active in-flight ScanJob ${inFlightJob.jobId} for user ${userId} / hash ${fileHash.substring(0, 8)}...`);
+        return inFlightJob;
+    }
+
+    // Initialize new pending job with explicit version metadata
     const newJob = new ScanJob({
         jobId,
         userId,
@@ -157,6 +212,10 @@ async function createScanJob({
         mimeType,
         storagePath,
         fileSize,
+        modelName: llmService.MODEL_NAME,
+        modelVersion: llmService.MODEL_VERSION || 'latest',
+        promptVersion: llmService.PROMPT_VERSION,
+        analysisVersion: llmService.ANALYSIS_VERSION,
         status: 'QUEUED',
         currentStep: 'Scan queued',
         completedSteps: ['UPLOAD'],
@@ -180,7 +239,41 @@ async function executeJobPipeline(jobId) {
         return job;
     }
 
+    const processKey = `${job.userId}:${job.fileHash}`;
+    if (activeProcessingKeys.has(processKey)) {
+        console.log(`[ScanJob ${job.jobId}] Pipeline already in-progress for ${processKey}. Skipping duplicate invocation.`);
+        return job;
+    }
+
+    activeProcessingKeys.add(processKey);
+
     try {
+        // Fast-check if another worker just completed an up-to-date document for this file
+        const recentDoc = await Document.findOne({
+            userId: job.userId,
+            fileHash: job.fileHash,
+            analysisStatus: 'completed',
+            promptVersion: llmService.PROMPT_VERSION,
+            modelName: llmService.MODEL_NAME
+        });
+
+        if (isDocumentCacheValid(recentDoc)) {
+            job.extractedText = recentDoc.extractedNormalizedText || recentDoc.originalText;
+            job.canonicalClauses = recentDoc.canonicalClauses;
+            job.analysis = recentDoc.analysis;
+            job.documentId = recentDoc._id;
+            job.modelName = recentDoc.modelName;
+            job.modelVersion = recentDoc.modelVersion || 'latest';
+            job.promptVersion = recentDoc.promptVersion;
+            job.analysisVersion = recentDoc.analysisVersion;
+            job.completedSteps = ['UPLOAD', 'TEXT_EXTRACTION', 'AI_ANALYSIS', 'REPORT'];
+            job.status = 'COMPLETED';
+            job.currentStep = 'Analysis completed';
+            job.completedAt = new Date();
+            await job.save();
+            return job;
+        }
+
         // =====================================================================
         // STAGE 2: OCR & TEXT EXTRACTION
         // =====================================================================
@@ -225,6 +318,10 @@ async function executeJobPipeline(jobId) {
                             job.canonicalClauses = scannedResult.canonicalClauses;
                             job.analysis = scannedResult.analysis;
                             job.documentId = scannedResult.documentId;
+                            job.modelName = llmService.MODEL_NAME;
+                            job.modelVersion = llmService.MODEL_VERSION || 'latest';
+                            job.promptVersion = llmService.PROMPT_VERSION;
+                            job.analysisVersion = llmService.ANALYSIS_VERSION;
                             job.completedSteps = ['UPLOAD', 'TEXT_EXTRACTION', 'AI_ANALYSIS', 'REPORT'];
                             job.status = 'COMPLETED';
                             job.currentStep = 'Analysis completed';
@@ -256,6 +353,10 @@ async function executeJobPipeline(jobId) {
                     job.canonicalClauses = imgResult.canonicalClauses;
                     job.analysis = imgResult.analysis;
                     job.documentId = imgResult.documentId;
+                    job.modelName = llmService.MODEL_NAME;
+                    job.modelVersion = llmService.MODEL_VERSION || 'latest';
+                    job.promptVersion = llmService.PROMPT_VERSION;
+                    job.analysisVersion = llmService.ANALYSIS_VERSION;
                     job.completedSteps = ['UPLOAD', 'TEXT_EXTRACTION', 'AI_ANALYSIS', 'REPORT'];
                     job.status = 'COMPLETED';
                     job.currentStep = 'Analysis completed';
@@ -395,7 +496,7 @@ async function executeJobPipeline(jobId) {
                 compliantCount,
                 totalClauseCount,
                 modelName: llmService.MODEL_NAME,
-                modelVersion: 'latest',
+                modelVersion: llmService.MODEL_VERSION || 'latest',
                 promptVersion: llmService.PROMPT_VERSION,
                 analysisVersion: llmService.ANALYSIS_VERSION,
                 temperature: llmService.TEMPERATURE,
@@ -403,7 +504,7 @@ async function executeJobPipeline(jobId) {
                 updatedAt: new Date()
             };
 
-            // Atomic Idempotent Upsert
+            // Atomic Idempotent Upsert (overwrites stale analysis with current version findings)
             const savedDoc = await Document.findOneAndUpdate(
                 { userId: job.userId, fileHash: job.fileHash },
                 { $set: docData, $setOnInsert: { createdAt: new Date() } },
@@ -411,6 +512,10 @@ async function executeJobPipeline(jobId) {
             );
 
             job.documentId = savedDoc._id;
+            job.modelName = llmService.MODEL_NAME;
+            job.modelVersion = llmService.MODEL_VERSION || 'latest';
+            job.promptVersion = llmService.PROMPT_VERSION;
+            job.analysisVersion = llmService.ANALYSIS_VERSION;
             if (!job.completedSteps.includes('REPORT')) {
                 job.completedSteps.push('REPORT');
             }
@@ -451,6 +556,8 @@ async function executeJobPipeline(jobId) {
         };
         await job.save();
         throw err;
+    } finally {
+        activeProcessingKeys.delete(processKey);
     }
 }
 
@@ -533,5 +640,6 @@ module.exports = {
     retryJob,
     recoverUnfinishedScanJobs,
     saveFileToStorage,
-    readFileFromStorage
+    readFileFromStorage,
+    isDocumentCacheValid
 };

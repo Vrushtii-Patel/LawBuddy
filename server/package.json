@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node tests/test_stamp_duty_verification.js && node tests/test_stamp_duty.js && node tests/test_version_aware_caching.js && node tests/test_cross_reference.js",
+    "test:stamp-duty": "node tests/test_stamp_duty_verification.js",
+    "test:caching": "node tests/test_version_aware_caching.js",
+    "test:cross-ref": "node tests/test_cross_reference.js"
   },
   "keywords": [],
   "author": "",

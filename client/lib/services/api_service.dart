@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/analytics_model.dart';
+import '../models/stamp_duty_config_model.dart';
 import 'token_storage.dart';
 
 
@@ -874,6 +876,56 @@ class ApiService {
       debugPrint('Error fetching stamp duty history: $e');
       return [];
     }
+  }
+
+  static const String _stampDutyConfigCacheKey = 'stamp_duty_config_cache';
+
+  /// Fetches authoritative stamp duty rules & state configs from backend,
+  /// with local SharedPreferences offline caching and resilient defaults.
+  static Future<StampDutyConfigResponse> getStampDutyConfig() async {
+    try {
+      final token = await _getToken();
+      final response = await http.get(
+        Uri.parse('$baseUrl/stamp-duty-config'),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 8));
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body is Map<String, dynamic>) {
+          // Cache successful response locally for offline resilience
+          try {
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString(_stampDutyConfigCacheKey, response.body);
+          } catch (cacheErr) {
+            debugPrint('Failed to write stamp duty config to cache: $cacheErr');
+          }
+          return StampDutyConfigResponse.fromJson(body);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error fetching stamp duty config from backend (falling back to cache): $e');
+    }
+
+    // Try reading from SharedPreferences offline cache
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cachedJson = prefs.getString(_stampDutyConfigCacheKey);
+      if (cachedJson != null && cachedJson.isNotEmpty) {
+        final decoded = jsonDecode(cachedJson);
+        if (decoded is Map<String, dynamic>) {
+          return StampDutyConfigResponse.fromJson(decoded);
+        }
+      }
+    } catch (cacheReadErr) {
+      debugPrint('Error reading stamp duty config from local cache: $cacheReadErr');
+    }
+
+    // Fallback to built-in default statutory bundle
+    return StampDutyConfigResponse.defaultBundle();
   }
 
   // Admin Analytics Method

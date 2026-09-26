@@ -1,8 +1,9 @@
+const path = require('path');
 const mongoose = require('mongoose');
-const crossReferenceService = require('./src/services/crossReferenceService');
-const Checklist = require('./src/models/Checklist');
-const Document = require('./src/models/Document');
-require('dotenv').config();
+const crossReferenceService = require('../src/services/crossReferenceService');
+const Checklist = require('../src/models/Checklist');
+const Document = require('../src/models/Document');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 async function runTests() {
     console.log('=== Starting LawBuddy Cross-Referencing Checklist Tests ===\n');

@@ -2,7 +2,29 @@ const express = require('express');
 const router = express.Router();
 const StampDuty = require('../models/StampDuty');
 const { requireAuth } = require('../middleware/authMiddleware');
-const { calculateStampDuty } = require('../services/stampDutyService');
+const { calculateStampDuty, getStampDutyConfigBundle } = require('../services/stampDutyService');
+
+// GET /api/stamp-duty-config - Returns all state configs and global calculation rules
+router.get('/stamp-duty-config', async (req, res) => {
+    try {
+        const bundle = await getStampDutyConfigBundle();
+        res.json(bundle);
+    } catch (error) {
+        console.error('Error fetching stamp duty configuration:', error);
+        res.status(500).json({ error: 'Failed to fetch stamp duty configuration.' });
+    }
+});
+
+// GET /api/stamp-duty-rules - Alias for stamp-duty-config
+router.get('/stamp-duty-rules', async (req, res) => {
+    try {
+        const bundle = await getStampDutyConfigBundle();
+        res.json(bundle);
+    } catch (error) {
+        console.error('Error fetching stamp duty rules:', error);
+        res.status(500).json({ error: 'Failed to fetch stamp duty rules.' });
+    }
+});
 
 // POST /api/stamp-duty/calculate - Authoritative calculation without saving
 router.post('/stamp-duty/calculate', (req, res) => {
