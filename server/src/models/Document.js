@@ -1,4 +1,11 @@
 const mongoose = require('mongoose');
+const {
+    MODEL_NAME,
+    MODEL_VERSION,
+    PROMPT_VERSION,
+    ANALYSIS_VERSION,
+    TEMPERATURE,
+} = require('../config/modelConfig');
 
 const clauseSchema = new mongoose.Schema({
     clauseId: { type: String, default: '' },
@@ -75,11 +82,11 @@ const documentSchema = new mongoose.Schema({
     totalClauseCount: { type: Number, default: 0 },
     
     // Pipeline Model & Execution Metadata
-    modelName: { type: String, default: 'gemini-3.6-flash' },
-    modelVersion: { type: String, default: 'latest' },
-    promptVersion: { type: String, default: 'v1.0.0' },
-    analysisVersion: { type: String, default: 'v1.0.0' },
-    temperature: { type: Number, default: 0.0 },
+    modelName: { type: String, default: MODEL_NAME },
+    modelVersion: { type: String, default: MODEL_VERSION },
+    promptVersion: { type: String, default: PROMPT_VERSION },
+    analysisVersion: { type: String, default: ANALYSIS_VERSION },
+    temperature: { type: Number, default: TEMPERATURE },
     
     // Analysis Processing Status
     analysisStatus: { 

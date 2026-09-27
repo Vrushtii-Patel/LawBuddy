@@ -2,6 +2,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const LawSnippet = require('../src/models/LawSnippet');
+const { EMBEDDING_MODEL_NAME } = require('../src/config/modelConfig');
 
 async function testQuery(query) {
     console.log(`\n======================================================`);
@@ -9,7 +10,7 @@ async function testQuery(query) {
     console.log(`======================================================`);
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-2" });
+    const embeddingModel = genAI.getGenerativeModel({ model: EMBEDDING_MODEL_NAME });
     const embeddingResult = await embeddingModel.embedContent(query);
     const queryVector = embeddingResult.embedding.values;
 

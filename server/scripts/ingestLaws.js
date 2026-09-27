@@ -4,11 +4,14 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const mongoose = require('mongoose');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const LawSnippet = require('../src/models/LawSnippet');
+const { EMBEDDING_MODEL_NAME } = require('../src/config/modelConfig');
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-// Note: We use 'gemini-embedding-2' which produces 3072-dimensional embeddings
-const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-2" });
+// This is the single source of truth for the embedding model — if you change it,
+// stored vectors from prior runs are no longer comparable to newly generated ones
+// and law snippets need to be re-ingested. See src/config/modelConfig.js.
+const embeddingModel = genAI.getGenerativeModel({ model: EMBEDDING_MODEL_NAME });
 
 const DELAY_BETWEEN_REQUESTS_MS = 400;
 const MAX_RETRIES = 5;

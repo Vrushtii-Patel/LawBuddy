@@ -2,10 +2,9 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const { MODEL_NAME, TEMPERATURE } = require('../src/config/modelConfig');
 
 const PDF_PATH = '/Users/vrushti/Downloads/Testing date 2020.pdf';
-const MODEL_NAME = 'gemini-3.5-flash';
-const TEMPERATURE = 0.0;
 
 function extractJpegImagesFromPdfBuffer(pdfBuffer) {
     const images = [];

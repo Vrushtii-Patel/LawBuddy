@@ -5,13 +5,14 @@ const crypto = require('crypto');
 const Document = require('../models/Document');
 const LawSnippet = require('../models/LawSnippet');
 const ChatCache = require('../models/ChatCache');
-
-// Pipeline Versioning & Configuration Constants
-const PROMPT_VERSION = "v1.1.0";
-const ANALYSIS_VERSION = "v1.1.0";
-const MODEL_NAME = "gemini-3.5-flash-lite";
-const MODEL_VERSION = "latest";
-const TEMPERATURE = 0.0;
+const {
+    MODEL_NAME,
+    MODEL_VERSION,
+    PROMPT_VERSION,
+    ANALYSIS_VERSION,
+    TEMPERATURE,
+    EMBEDDING_MODEL_NAME,
+} = require('../config/modelConfig');
 
 function safeParseJson(text, defaultFallback = {}) {
     if (!text || typeof text !== 'string') return defaultFallback;
@@ -1260,9 +1261,9 @@ exports.chat = async (historyArray) => {
 
         try {
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-            // Must match the embedding model used in scripts/ingestLaws.js (gemini-embedding-2),
+            // Must match the embedding model used in scripts/ingestLaws.js,
             // since query vectors and stored vectors have to come from the same model to be comparable.
-            const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-2" });
+            const embeddingModel = genAI.getGenerativeModel({ model: EMBEDDING_MODEL_NAME });
             const embeddingResult = await embeddingModel.embedContent(latestMessage);
             const queryVector = embeddingResult.embedding.values;
 
@@ -1449,7 +1450,7 @@ exports.generateChecklist = async (prompt) => {
 exports.generateEmbedding = async (text) => {
     if (!text || typeof text !== 'string') return new Array(3072).fill(0);
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const embeddingModel = genAI.getGenerativeModel({ model: "gemini-embedding-2" });
+    const embeddingModel = genAI.getGenerativeModel({ model: EMBEDDING_MODEL_NAME });
     const embeddingResult = await embeddingModel.embedContent(text);
     return embeddingResult.embedding.values;
 };
