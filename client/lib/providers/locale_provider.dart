@@ -79,6 +79,10 @@ extension TranslationExtension on BuildContext {
 // 'en' is 100% the verbatim source of truth from existing code.
 // 'hi' is accurate and natural Hindi translation.
 final Map<String, Map<String, String>> _translations = {
+  // Accessibility labels (screen-reader only; not visible on screen)
+  'a11y.chatSendMessage': {'en': 'Send message', 'hi': 'संदेश भेजें'},
+  'a11y.chatSending': {'en': 'Sending message', 'hi': 'संदेश भेजा जा रहा है'},
+
   // Common Actions
   'common.appName': {'en': 'LawBuddy', 'hi': 'LawBuddy'},
   'common.appSubtitle': {'en': 'AI Property Legal Assistant', 'hi': 'एआई संपत्ति कानूनी सहायक'},
@@ -86,6 +90,7 @@ final Map<String, Map<String, String>> _translations = {
   'common.delete': {'en': 'Delete', 'hi': 'हटाएं'},
   'common.retry': {'en': 'Retry', 'hi': 'पुनः प्रयास करें'},
   'common.close': {'en': 'Close', 'hi': 'बंद करें'},
+  'common.clear': {'en': 'Clear', 'hi': 'साफ़ करें'},
   'common.save': {'en': 'Save', 'hi': 'सहेजें'},
   'common.add': {'en': 'Add', 'hi': 'जोड़ें'},
   'common.or': {'en': 'OR', 'hi': 'या'},

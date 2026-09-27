@@ -770,6 +770,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                     IconButton(
                       icon: const Icon(Icons.close_rounded, size: 20),
                       onPressed: () => Navigator.pop(sheetCtx),
+                      tooltip: tr('common.close'),
                     ),
                   ],
                 ),
@@ -1166,6 +1167,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
+          tooltip: tr('common.back'),
         ),
         title: Text(
           title,

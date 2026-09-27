@@ -124,29 +124,36 @@ class HomeRiskBreakdownCard extends ConsumerWidget {
           const SizedBox(height: 18),
 
           // Multi-Segment Progress Bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: SizedBox(
-              height: 8,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  if (highPct > 0)
-                    Flexible(
-                      flex: (highPct * 100).toInt(),
-                      child: Container(color: errorColor),
-                    ),
-                  if (medPct > 0)
-                    Flexible(
-                      flex: (medPct * 100).toInt(),
-                      child: Container(color: cautionColor),
-                    ),
-                  if (lowPct > 0)
-                    Flexible(
-                      flex: (lowPct * 100).toInt(),
-                      child: Container(color: successColor),
-                    ),
-                ],
+          Semantics(
+            label: '${loc.translate('home.highRiskLabel')}: $highRisk, '
+                '${loc.translate('home.mediumRiskLabel')}: $mediumRisk, '
+                '${loc.translate('home.lowRiskLabel')}: $lowRisk',
+            child: ExcludeSemantics(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: SizedBox(
+                  height: 8,
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      if (highPct > 0)
+                        Flexible(
+                          flex: (highPct * 100).toInt(),
+                          child: Container(color: errorColor),
+                        ),
+                      if (medPct > 0)
+                        Flexible(
+                          flex: (medPct * 100).toInt(),
+                          child: Container(color: cautionColor),
+                        ),
+                      if (lowPct > 0)
+                        Flexible(
+                          flex: (lowPct * 100).toInt(),
+                          child: Container(color: successColor),
+                        ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

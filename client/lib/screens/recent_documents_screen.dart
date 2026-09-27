@@ -1259,6 +1259,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
               ? IconButton(
                   icon: const Icon(Icons.clear_rounded, size: 18),
                   color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  tooltip: tr('common.clear'),
                   onPressed: () {
                     _searchController.clear();
                     setState(() => _searchQuery = '');

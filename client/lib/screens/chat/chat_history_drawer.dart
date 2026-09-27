@@ -80,6 +80,7 @@ class ChatHistoryDrawer extends StatelessWidget {
                       color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                     ),
                     onPressed: () => Navigator.of(context).pop(),
+                    tooltip: loc.translate('common.close'),
                   ),
                 ],
               ),

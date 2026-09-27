@@ -278,6 +278,7 @@ class _StampDutyCalculatorScreenState extends ConsumerState<StampDutyCalculatorS
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       behavior: HitTestBehavior.opaque,
+      excludeFromSemantics: true,
       child: Scaffold(
         backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
         body: SafeArea(

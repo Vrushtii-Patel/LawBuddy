@@ -476,6 +476,9 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             medium: docRisk.mediumRisk,
             low: docRisk.lowRisk,
             total: total,
+            semanticLabel: '${loc.translate('adminAnalytics.docRiskHigh')}: ${docRisk.highRisk}, '
+                '${loc.translate('adminAnalytics.docRiskMed')}: ${docRisk.mediumRisk}, '
+                '${loc.translate('adminAnalytics.docRiskLow')}: ${docRisk.lowRisk}',
           ),
           const SizedBox(height: 16),
           _buildRiskStatRow(
@@ -551,6 +554,9 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             medium: clauseRisk.caution,
             low: clauseRisk.compliant,
             total: total,
+            semanticLabel: '${loc.translate('adminAnalytics.clauseRiskHigh')}: ${clauseRisk.highRisk}, '
+                '${loc.translate('adminAnalytics.clauseRiskCaution')}: ${clauseRisk.caution}, '
+                '${loc.translate('adminAnalytics.clauseRiskCompliant')}: ${clauseRisk.compliant}',
           ),
           const SizedBox(height: 16),
           _buildRiskStatRow(
@@ -587,6 +593,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     required int medium,
     required int low,
     required int total,
+    String? semanticLabel,
   }) {
     if (total == 0) {
       return Container(
@@ -602,7 +609,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     final double medFlex = medium.toDouble();
     final double lowFlex = low.toDouble();
 
-    return ClipRRect(
+    final bar = ClipRRect(
       borderRadius: BorderRadius.circular(4),
       child: SizedBox(
         height: 8,
@@ -626,6 +633,12 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
           ],
         ),
       ),
+    );
+
+    if (semanticLabel == null) return bar;
+    return Semantics(
+      label: semanticLabel,
+      child: ExcludeSemantics(child: bar),
     );
   }
 

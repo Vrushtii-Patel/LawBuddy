@@ -112,6 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       behavior: HitTestBehavior.opaque,
+      excludeFromSemantics: true,
       child: Scaffold(
         backgroundColor: bgSurface,
         body: SafeArea(

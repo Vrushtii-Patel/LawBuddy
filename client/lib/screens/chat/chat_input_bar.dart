@@ -109,31 +109,38 @@ class _ChatInputState extends ConsumerState<ChatInput> {
             ),
           ),
           const SizedBox(width: 8),
-          GestureDetector(
-            onTap: widget.isLoading ? null : widget.onSend,
-            child: Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: widget.isLoading
-                  ? Center(
-                      child: SizedBox(
-                        width: 18,
-                        height: 18,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+          Semantics(
+            button: true,
+            enabled: !widget.isLoading,
+            label: widget.isLoading
+                ? ref.watch(localeProvider.notifier).translate('a11y.chatSending')
+                : ref.watch(localeProvider.notifier).translate('a11y.chatSendMessage'),
+            child: GestureDetector(
+              onTap: widget.isLoading ? null : widget.onSend,
+              child: Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: widget.isLoading
+                    ? Center(
+                        child: SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+                          ),
                         ),
+                      )
+                    : Icon(
+                        Icons.arrow_upward_rounded,
+                        color: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+                        size: 22,
                       ),
-                    )
-                  : Icon(
-                      Icons.arrow_upward_rounded,
-                      color: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
-                      size: 22,
-                    ),
+              ),
             ),
           ),
         ],

@@ -68,7 +68,10 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               constraints: BoxConstraints(
                 maxWidth: isDesktop ? 960 : double.infinity,
               ),
-              child: Material(
+              child: Semantics(
+                liveRegion: true,
+                container: true,
+                child: Material(
                 elevation: isDesktop ? 4 : 8,
                 shadowColor: Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
                 borderRadius: BorderRadius.circular(isDesktop ? 12 : 0),
@@ -106,6 +109,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                           borderColor,
                           primaryBtnColor,
                         ),
+                ),
                 ),
               ),
             ),

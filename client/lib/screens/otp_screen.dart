@@ -189,6 +189,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new_rounded, color: colorScheme.onSurface, size: 18),
           onPressed: () => Navigator.pop(context),
+          tooltip: tr('common.back'),
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,

@@ -131,6 +131,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       behavior: HitTestBehavior.opaque,
+      excludeFromSemantics: true,
       child: Scaffold(
         backgroundColor: bgSurface,
         body: SafeArea(
