@@ -11,33 +11,90 @@ const { requireAuth } = require('../middleware/authMiddleware');
 const { uploadDocument } = require('../middleware/uploadMiddleware');
 
 // =========================================================================
+// SCAN HELPER FUNCTIONS (INFERENCE & RESPONSE SHAPING)
+// =========================================================================
+
+/**
+ * Infers mimeType, default sourceType, and prepares normalized scan job parameters from the request.
+ */
+function inferScanJobParams(req, { requireFile = false } = {}) {
+    const file = req.file;
+    const { text, title: customTitle, sourceType, base64Data, mimeType } = req.body || {};
+
+    if (requireFile ? (!file && !base64Data) : (!text && !file && !base64Data)) {
+        return { error: requireFile ? 'Document file is required.' : 'Document file or text description is required.' };
+    }
+
+    const computedMimeType = file
+        ? file.mimetype
+        : (mimeType || (base64Data ? 'application/pdf' : 'text/plain'));
+
+    const isPdf = (computedMimeType || '').toLowerCase().includes('pdf');
+    const defaultSourceType = file
+        ? (isPdf ? 'PDF Document' : 'Photo Scan')
+        : (base64Data ? 'PDF Document' : 'Text Description');
+
+    return {
+        params: {
+            userId: req.user.userId,
+            text,
+            fileBuffer: file ? file.buffer : null,
+            fileName: file ? file.originalname : (customTitle || ''),
+            base64Data: base64Data || null,
+            mimeType: computedMimeType,
+            title: customTitle || (file ? file.originalname : ''),
+            sourceType: sourceType || defaultSourceType
+        }
+    };
+}
+
+/**
+ * Shapes the response payload for synchronous scan execution.
+ */
+function formatScanResult(completedJob, doc, base64Data = null) {
+    const analysis = completedJob.analysis || [];
+    return {
+        jobId: completedJob.jobId,
+        cacheHit: completedJob.currentStep ? completedJob.currentStep.includes('cache') : false,
+        fileHash: completedJob.fileHash,
+        extractedText: completedJob.extractedText,
+        analysis: analysis,
+        canonicalClauses: completedJob.canonicalClauses,
+        highRiskCount: doc ? doc.highRiskCount : analysis.filter(c => c.riskLevel === 'HIGH_RISK').length,
+        cautionCount: doc ? doc.cautionCount : analysis.filter(c => c.riskLevel === 'CAUTION').length,
+        compliantCount: doc ? doc.compliantCount : analysis.filter(c => c.riskLevel === 'COMPLIANT').length,
+        totalClauseCount: analysis.length,
+        riskLevel: doc ? doc.riskLevel : 'Low Risk',
+        sourceType: completedJob.sourceType,
+        fileData: base64Data,
+        mimeType: completedJob.mimeType,
+        document: doc,
+        documentId: completedJob.documentId
+    };
+}
+
+/**
+ * Helper to execute a scan job synchronously and respond with formatted result.
+ */
+async function executeSyncScan(job, base64Data, res) {
+    const completedJob = await scanJobService.executeJobPipeline(job.jobId);
+    const doc = completedJob.documentId ? await Document.findById(completedJob.documentId) : null;
+    return res.json(formatScanResult(completedJob, doc, base64Data));
+}
+
+// =========================================================================
 // RESUMABLE SCAN JOB ENDPOINTS
 // =========================================================================
 
 // POST /api/scans/start - Initializes a persistent scan job
 router.post('/scans/start', requireAuth, uploadDocument, async (req, res) => {
     try {
-        const file = req.file;
-        const { text, title: customTitle, sourceType, base64Data, mimeType } = req.body || {};
-        
-        if (!text && !file && !base64Data) {
-            return res.status(400).json({ error: 'Document file or text description is required.' });
+        const { error, params } = inferScanJobParams(req);
+        if (error) {
+            return res.status(400).json({ error });
         }
-        const userId = req.user.userId;
 
-        const computedMimeType = file ? file.mimetype : (mimeType || 'application/pdf');
-        const defaultSourceType = file ? ((computedMimeType.includes('pdf')) ? 'PDF Document' : 'Photo Scan') : (base64Data ? 'PDF Document' : 'Text Description');
-
-        const job = await scanJobService.createScanJob({
-            userId,
-            text,
-            fileBuffer: file ? file.buffer : null,
-            fileName: file ? file.originalname : (customTitle || ''),
-            base64Data,
-            mimeType: computedMimeType,
-            title: customTitle || (file ? file.originalname : ''),
-            sourceType: sourceType || defaultSourceType
-        });
+        const job = await scanJobService.createScanJob(params);
 
         // Trigger background processing if not already completed from cache
         if (job.status !== 'COMPLETED') {
@@ -181,51 +238,13 @@ router.post('/scans/:jobId/retry', requireAuth, async (req, res) => {
 // POST /api/scan
 router.post('/scan', requireAuth, uploadDocument, async (req, res) => {
     try {
-        const file = req.file;
-        const { text, title: customTitle, sourceType, base64Data = null, mimeType } = req.body || {};
-        
-        if (!text && !file && !base64Data) {
-            return res.status(400).json({ error: 'Document file or text description is required.' });
+        const { error, params } = inferScanJobParams(req);
+        if (error) {
+            return res.status(400).json({ error });
         }
-        const userId = req.user.userId;
 
-        const computedMimeType = file ? file.mimetype : (mimeType || (base64Data ? 'application/pdf' : 'text/plain'));
-        const defaultSourceType = file ? (computedMimeType.includes('pdf') ? 'PDF Document' : 'Photo Scan') : (base64Data ? 'PDF Document' : 'Text Description');
-
-        // Create persistent job
-        const job = await scanJobService.createScanJob({
-            userId,
-            text,
-            fileBuffer: file ? file.buffer : null,
-            fileName: file ? file.originalname : (customTitle || ''),
-            base64Data,
-            mimeType: computedMimeType,
-            title: customTitle || (file ? file.originalname : ''),
-            sourceType: sourceType || defaultSourceType
-        });
-
-        // Execute pipeline synchronously
-        const completedJob = await scanJobService.executeJobPipeline(job.jobId);
-        const doc = completedJob.documentId ? await Document.findById(completedJob.documentId) : null;
-
-        res.json({
-            jobId: completedJob.jobId,
-            cacheHit: completedJob.currentStep.includes('cache'),
-            fileHash: completedJob.fileHash,
-            extractedText: completedJob.extractedText,
-            analysis: completedJob.analysis,
-            canonicalClauses: completedJob.canonicalClauses,
-            highRiskCount: doc ? doc.highRiskCount : completedJob.analysis.filter(c => c.riskLevel === 'HIGH_RISK').length,
-            cautionCount: doc ? doc.cautionCount : completedJob.analysis.filter(c => c.riskLevel === 'CAUTION').length,
-            compliantCount: doc ? doc.compliantCount : completedJob.analysis.filter(c => c.riskLevel === 'COMPLIANT').length,
-            totalClauseCount: completedJob.analysis.length,
-            riskLevel: doc ? doc.riskLevel : 'Low Risk',
-            sourceType: completedJob.sourceType,
-            fileData: base64Data,
-            mimeType: completedJob.mimeType,
-            document: doc,
-            documentId: completedJob.documentId
-        });
+        const job = await scanJobService.createScanJob(params);
+        await executeSyncScan(job, params.base64Data, res);
     } catch (error) {
         console.error('Error analyzing document:', error);
         if (error.status === 429) {
@@ -238,55 +257,13 @@ router.post('/scan', requireAuth, uploadDocument, async (req, res) => {
 // POST /api/scan-file
 router.post('/scan-file', requireAuth, uploadDocument, async (req, res) => {
     try {
-        const file = req.file;
-        const { base64Data, mimeType, title: customTitle, sourceType: reqSourceType } = req.body || {};
-        
-        if (!file && !base64Data) {
-            return res.status(400).json({ error: 'Document file is required.' });
-        }
-        const userId = req.user.userId;
-
-        const computedMimeType = file ? file.mimetype : (mimeType || 'application/pdf');
-        let computedSourceType = reqSourceType;
-        if (!computedSourceType) {
-            if ((computedMimeType || '').toLowerCase().includes('pdf')) {
-                computedSourceType = 'PDF Document';
-            } else {
-                computedSourceType = 'Photo Scan';
-            }
+        const { error, params } = inferScanJobParams(req, { requireFile: true });
+        if (error) {
+            return res.status(400).json({ error });
         }
 
-        const job = await scanJobService.createScanJob({
-            userId,
-            fileBuffer: file ? file.buffer : null,
-            fileName: file ? file.originalname : (customTitle || ''),
-            base64Data,
-            mimeType: computedMimeType,
-            title: customTitle || (file ? file.originalname : ''),
-            sourceType: computedSourceType
-        });
-
-        const completedJob = await scanJobService.executeJobPipeline(job.jobId);
-        const doc = completedJob.documentId ? await Document.findById(completedJob.documentId) : null;
-
-        res.json({
-            jobId: completedJob.jobId,
-            cacheHit: completedJob.currentStep.includes('cache'),
-            fileHash: completedJob.fileHash,
-            extractedText: completedJob.extractedText,
-            analysis: completedJob.analysis,
-            canonicalClauses: completedJob.canonicalClauses,
-            highRiskCount: doc ? doc.highRiskCount : completedJob.analysis.filter(c => c.riskLevel === 'HIGH_RISK').length,
-            cautionCount: doc ? doc.cautionCount : completedJob.analysis.filter(c => c.riskLevel === 'CAUTION').length,
-            compliantCount: doc ? doc.compliantCount : completedJob.analysis.filter(c => c.riskLevel === 'COMPLIANT').length,
-            totalClauseCount: completedJob.analysis.length,
-            riskLevel: doc ? doc.riskLevel : 'Low Risk',
-            sourceType: completedJob.sourceType,
-            fileData: base64Data,
-            mimeType: completedJob.mimeType,
-            document: doc,
-            documentId: completedJob.documentId
-        });
+        const job = await scanJobService.createScanJob(params);
+        await executeSyncScan(job, params.base64Data, res);
     } catch (error) {
         console.error('Error analyzing file:', error);
         if (error.status === 429) {
@@ -484,11 +461,11 @@ router.delete('/documents/:id', requireAuth, async (req, res) => {
             console.warn(`[SoftDeleteDocument] Warning: Checklist cleanup error:`, syncErr.message);
         }
 
-        res.json({ 
-            message: 'Document moved to Recycle Bin', 
-            id: req.params.id, 
-            isDeleted: true, 
-            deletedAt: updatedDoc ? updatedDoc.deletedAt : now 
+        res.json({
+            message: 'Document moved to Recycle Bin',
+            id: req.params.id,
+            isDeleted: true,
+            deletedAt: updatedDoc ? updatedDoc.deletedAt : now
         });
     } catch (error) {
         console.error('Error deleting document:', error);

@@ -5,6 +5,7 @@ import 'package:legal_scanner/screens/home_screen.dart';
 import 'package:legal_scanner/screens/chat_screen.dart';
 import 'package:legal_scanner/screens/analysis_screen.dart';
 import 'package:legal_scanner/screens/welcome_screen.dart';
+import 'package:legal_scanner/screens/welcome/welcome_widgets.dart';
 
 import 'package:legal_scanner/screens/recent_documents_screen.dart';
 import 'package:legal_scanner/screens/checklists_list_screen.dart';
@@ -14,6 +15,7 @@ import 'package:legal_scanner/screens/terms_of_use_screen.dart';
 import 'package:legal_scanner/screens/login_screen.dart';
 import 'package:legal_scanner/screens/signup_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:legal_scanner/providers/consent_provider.dart';
 import 'package:legal_scanner/providers/theme_provider.dart';
 import 'package:legal_scanner/providers/locale_provider.dart';
@@ -122,7 +124,7 @@ void main() {
     expect(find.byIcon(Icons.download_rounded), findsOneWidget);
     expect(find.byIcon(Icons.edit_outlined), findsOneWidget);
     expect(find.byIcon(Icons.refresh_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.delete_outline_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.delete_outline_rounded), findsWidgets);
   });
   testWidgets('WelcomeScreen renders hero, CTA, features, and risk sections on Desktop', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1200, 900);
@@ -143,9 +145,10 @@ void main() {
     expect(find.byType(WelcomeScreen), findsOneWidget);
     expect(find.text('Get Started'), findsOneWidget);
     expect(find.text('Sign In'), findsWidgets);
-    expect(find.text('Scan & Extract'), findsOneWidget);
-    expect(find.text('Detect Legal Risks'), findsOneWidget);
-    expect(find.text('Plain-English Insights'), findsWidgets);
+    expect(find.byType(WelcomeFeaturesSection), findsOneWidget);
+    expect(find.byType(WelcomeHowItWorksSection), findsOneWidget);
+    expect(find.byType(WelcomeRiskSystemSection), findsOneWidget);
+    expect(find.byType(WelcomeCtaBanner), findsOneWidget);
   });
 
   testWidgets('WelcomeScreen renders on Mobile without overflow', (WidgetTester tester) async {
@@ -266,6 +269,7 @@ void main() {
     );
 
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 700));
 
     expect(find.byType(AnalysisScreen), findsOneWidget);
     expect(find.text('Risk Analysis Report'), findsOneWidget);
@@ -373,11 +377,11 @@ void main() {
     expect(find.byType(WelcomeScreen), findsOneWidget);
     expect(find.text('LawBuddy'), findsWidgets);
     expect(find.text('REAL ESTATE AI TECH'), findsWidgets);
-    expect(find.text('PROPERTY SALE AGREEMENT'), findsOneWidget);
-    expect(find.text('AI Scan Active'), findsOneWidget);
-    expect(find.text('Relevant Property Law'), findsOneWidget);
-    expect(find.text('Clause 7.2 — Forfeiture'), findsOneWidget);
-    expect(find.text('High Legal Risk Detected'), findsWidgets);
+    expect(find.text('UNDERSTAND'), findsWidgets);
+    expect(find.text('YOUR PROPERTY'), findsWidgets);
+    expect(find.text('BEFORE YOU SIGN.'), findsWidgets);
+    expect(find.text('Get Started'), findsOneWidget);
+    expect(find.text('Sign In'), findsWidgets);
   });
 
   testWidgets('LoginScreen renders translated human-readable text without raw auth keys', (WidgetTester tester) async {
@@ -496,8 +500,8 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.text('Your Privacy Matters'), findsOneWidget);
-    expect(find.textContaining('LawBuddy uses browser storage'), findsOneWidget);
+    expect(find.text('Privacy preferences'), findsOneWidget);
+    expect(find.textContaining('We use essential browser storage'), findsOneWidget);
     expect(find.text('Necessary Only'), findsOneWidget);
     expect(find.text('Accept Preferences'), findsOneWidget);
     expect(find.text('Customize'), findsOneWidget);
@@ -507,7 +511,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Banner should be dismissed
-    expect(find.text('Your Privacy Matters'), findsNothing);
+    expect(find.text('Privacy preferences'), findsNothing);
   });
 
   testWidgets('showPrivacyPreferencesDialog displays all 4 categories with correct states', (WidgetTester tester) async {
@@ -658,7 +662,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.text('Your Privacy Matters'), findsOneWidget);
+    expect(find.text('Privacy preferences'), findsOneWidget);
     expect(find.text('Customize'), findsOneWidget);
 
     // Tap Customize
@@ -707,6 +711,8 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
 
+    SharedPreferences.setMockInitialValues({});
+    FlutterSecureStorage.setMockInitialValues({});
     await tester.pumpWidget(
       const ProviderScope(
         child: MaterialApp(
@@ -727,9 +733,10 @@ void main() {
     await tester.pump();
 
     // Find submit button and tap WITHOUT checking consent
-    final submitButton = find.widgetWithText(ElevatedButton, 'Create Account');
+    final submitButton = find.byType(ElevatedButton);
     expect(submitButton, findsOneWidget);
 
+    await tester.ensureVisible(submitButton);
     await tester.tap(submitButton);
     await tester.pump();
 

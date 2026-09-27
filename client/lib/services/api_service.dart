@@ -7,14 +7,13 @@ import '../models/analytics_model.dart';
 import '../models/stamp_duty_config_model.dart';
 import 'token_storage.dart';
 
-
 class ApiService {
   static String get baseUrl {
     const String envApiUrl = String.fromEnvironment('API_URL');
     if (envApiUrl.isNotEmpty) {
       return envApiUrl;
     }
-    
+
     if (kIsWeb) {
       return 'http://localhost:3000/api';
     }
@@ -34,6 +33,233 @@ class ApiService {
     return MediaType('application', 'pdf');
   }
 
+  static Future<String?> _getToken() async {
+    return TokenStorage.getToken();
+  }
+
+  // =========================================================================
+  // SHARED HTTP PIPELINE HELPERS
+  // =========================================================================
+
+  /// Core HTTP dispatcher handling token retrieval, header construction,
+  /// request execution, and timeout management.
+  static Future<http.Response> _sendRequest(
+    String method,
+    String endpoint, {
+    Object? body,
+    Map<String, String>? headers,
+    String? explicitToken,
+    bool requiresAuth = true,
+    Duration? timeout,
+  }) async {
+    final token = explicitToken ?? (requiresAuth ? await _getToken() : null);
+    final url = Uri.parse(endpoint.startsWith('http') ? endpoint : '$baseUrl$endpoint');
+
+    final effectiveHeaders = <String, String>{
+      if (body != null && body is! Uint8List) 'Content-Type': 'application/json',
+      if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
+      if (headers != null) ...headers,
+    };
+
+    final encodedBody = (body != null && body is! String && body is! Uint8List)
+        ? jsonEncode(body)
+        : body;
+
+    Future<http.Response> sendFuture;
+    switch (method.toUpperCase()) {
+      case 'GET':
+        sendFuture = http.get(url, headers: effectiveHeaders);
+        break;
+      case 'POST':
+        sendFuture = http.post(url, headers: effectiveHeaders, body: encodedBody);
+        break;
+      case 'PUT':
+        sendFuture = http.put(url, headers: effectiveHeaders, body: encodedBody);
+        break;
+      case 'PATCH':
+        sendFuture = http.patch(url, headers: effectiveHeaders, body: encodedBody);
+        break;
+      case 'DELETE':
+        sendFuture = http.delete(url, headers: effectiveHeaders, body: encodedBody);
+        break;
+      default:
+        throw ArgumentError('Unsupported HTTP method: $method');
+    }
+
+    if (timeout != null) {
+      sendFuture = sendFuture.timeout(timeout);
+    }
+
+    return await sendFuture;
+  }
+
+  /// Sends a multipart request (e.g. for document upload), handling token injection,
+  /// fields, file bytes, content type, and streaming response conversion.
+  static Future<http.Response> _sendMultipartRequest(
+    String endpoint, {
+    required String fileField,
+    required Uint8List fileBytes,
+    required String filename,
+    required String mimeType,
+    Map<String, String>? fields,
+    String? explicitToken,
+    bool requiresAuth = true,
+  }) async {
+    final token = explicitToken ?? (requiresAuth ? await _getToken() : null);
+    final url = Uri.parse(endpoint.startsWith('http') ? endpoint : '$baseUrl$endpoint');
+    final request = http.MultipartRequest('POST', url);
+
+    if (token != null && token.isNotEmpty) {
+      request.headers['Authorization'] = 'Bearer $token';
+    }
+
+    request.files.add(http.MultipartFile.fromBytes(
+      fileField,
+      fileBytes,
+      filename: filename,
+      contentType: _getMediaType(mimeType),
+    ));
+
+    if (fields != null) {
+      request.fields.addAll(fields);
+    }
+
+    final streamedResponse = await request.send();
+    return await http.Response.fromStream(streamedResponse);
+  }
+
+  /// Extracts error message from response body with fallbacks.
+  static String _parseErrorMessage(http.Response response, {String fallback = 'An unexpected error occurred'}) {
+    try {
+      final body = jsonDecode(response.body);
+      if (body is Map) {
+        if (body['error'] != null && body['error'].toString().isNotEmpty) {
+          return body['error'].toString();
+        }
+        if (body['details'] != null && body['details'].toString().isNotEmpty) {
+          return body['details'].toString();
+        }
+        if (body['message'] != null && body['message'].toString().isNotEmpty) {
+          return body['message'].toString();
+        }
+      }
+    } catch (_) {}
+    return fallback;
+  }
+
+  /// Evaluates the HTTP response for common error statuses (413, 429, 401, 403, 400+) and throws descriptive exceptions.
+  static void _handleCommonErrors(
+    http.Response response, {
+    String? defaultErrorMessage,
+    Map<int, String>? customStatusMessages,
+  }) {
+    final status = response.statusCode;
+    if (status >= 200 && status < 300) return;
+
+    if (customStatusMessages != null && customStatusMessages.containsKey(status)) {
+      throw Exception(customStatusMessages[status]!);
+    }
+
+    if (status == 429) {
+      throw RateLimitException(defaultErrorMessage != null && defaultErrorMessage.contains('Rate limit')
+          ? defaultErrorMessage
+          : 'Rate limit reached. Please wait a moment before trying again.');
+    }
+    if (status == 413) {
+      throw Exception('This document is too large. Please upload a smaller file.');
+    }
+    if (status == 401) {
+      throw Exception('Authentication expired. Please log in again.');
+    }
+    if (status == 403) {
+      throw Exception('Access Denied: Admin authorization is required to view system analytics.');
+    }
+
+    final parsedError = _parseErrorMessage(response, fallback: defaultErrorMessage ?? 'Request failed ($status)');
+    throw Exception(parsedError);
+  }
+
+  /// Convenience wrapper that sends a request, verifies 2xx status, and decodes JSON.
+  static Future<dynamic> _requestJson(
+    String method,
+    String endpoint, {
+    Object? body,
+    Map<String, String>? headers,
+    String? explicitToken,
+    bool requiresAuth = true,
+    String? defaultErrorMessage,
+    Map<int, String>? customStatusMessages,
+    Duration? timeout,
+  }) async {
+    final response = await _sendRequest(
+      method,
+      endpoint,
+      body: body,
+      headers: headers,
+      explicitToken: explicitToken,
+      requiresAuth: requiresAuth,
+      timeout: timeout,
+    );
+
+    _handleCommonErrors(response, defaultErrorMessage: defaultErrorMessage, customStatusMessages: customStatusMessages);
+    return jsonDecode(response.body);
+  }
+
+  /// Convenience wrapper for safe boolean endpoints (returns true on 200/201, false on error without throwing).
+  static Future<bool> _requestBoolSafe(
+    String method,
+    String endpoint, {
+    Object? body,
+    Map<String, String>? headers,
+    String? explicitToken,
+    bool requiresAuth = true,
+  }) async {
+    try {
+      final response = await _sendRequest(
+        method,
+        endpoint,
+        body: body,
+        headers: headers,
+        explicitToken: explicitToken,
+        requiresAuth: requiresAuth,
+      );
+      return response.statusCode >= 200 && response.statusCode < 300;
+    } catch (e) {
+      debugPrint('API $method $endpoint error: $e');
+      return false;
+    }
+  }
+
+  /// Convenience wrapper for safe list endpoints (returns parsed List on 200/201, [] on error without throwing).
+  static Future<List<dynamic>> _requestListSafe(
+    String endpoint, {
+    Map<String, String>? headers,
+    String? explicitToken,
+    bool requiresAuth = true,
+  }) async {
+    try {
+      final response = await _sendRequest(
+        'GET',
+        endpoint,
+        headers: headers,
+        explicitToken: explicitToken,
+        requiresAuth: requiresAuth,
+      );
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final decoded = jsonDecode(response.body);
+        if (decoded is List) return decoded;
+      }
+      return [];
+    } catch (e) {
+      debugPrint('API GET $endpoint error: $e');
+      return [];
+    }
+  }
+
+  // =========================================================================
+  // DOCUMENT SCANNING & SCAN JOBS
+  // =========================================================================
+
   static Future<Map<String, dynamic>> scanDocument(
     String text, {
     String? title,
@@ -43,74 +269,38 @@ class ApiService {
     String? mimeType,
     String? base64Data,
   }) async {
-    final token = await _getToken();
-
+    http.Response response;
     if (fileBytes != null && fileBytes.isNotEmpty) {
-      final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/scan'));
-      if (token != null) {
-        request.headers['Authorization'] = 'Bearer $token';
-      }
       final cleanMime = mimeType ?? 'application/pdf';
       final effectiveFileName = (fileName != null && fileName.isNotEmpty) ? fileName : (title ?? 'document.pdf');
-      request.files.add(http.MultipartFile.fromBytes(
-        'document',
-        fileBytes,
+      response = await _sendMultipartRequest(
+        '/scan',
+        fileField: 'document',
+        fileBytes: fileBytes,
         filename: effectiveFileName,
-        contentType: _getMediaType(cleanMime),
-      ));
-      if (title != null && title.isNotEmpty) request.fields['title'] = title;
-      if (sourceType != null && sourceType.isNotEmpty) request.fields['sourceType'] = sourceType;
-      if (text.isNotEmpty) request.fields['text'] = text;
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else if (response.statusCode == 413) {
-        throw Exception('This document is too large. Please upload a smaller file.');
-      } else if (response.statusCode == 429) {
-        throw RateLimitException('Rate limit reached. Please try again later.');
-      } else {
-        String errorMessage = 'Failed to analyze document';
-        try {
-          final body = jsonDecode(response.body);
-          if (body is Map && (body['error'] != null || body['details'] != null)) {
-            errorMessage = body['error'] ?? body['details'];
-          }
-        } catch (_) {}
-        throw Exception(errorMessage);
-      }
-    } else {
-      final response = await http.post(
-        Uri.parse('$baseUrl/scan'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
+        mimeType: cleanMime,
+        fields: {
+          if (title != null && title.isNotEmpty) 'title': title,
+          if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
+          if (text.isNotEmpty) 'text': text,
         },
-        body: jsonEncode({
+      );
+    } else {
+      response = await _sendRequest(
+        'POST',
+        '/scan',
+        body: {
           'text': text,
           if (title != null && title.isNotEmpty) 'title': title,
           if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
           if (base64Data != null && base64Data.isNotEmpty) 'base64Data': base64Data,
           if (mimeType != null && mimeType.isNotEmpty) 'mimeType': mimeType,
-        }),
+        },
       );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else if (response.statusCode == 429) {
-        throw RateLimitException('Rate limit reached. Please try again later.');
-      } else {
-        String errorMessage = 'Failed to analyze document';
-        try {
-          final body = jsonDecode(response.body);
-          if (body is Map && (body['error'] != null || body['details'] != null)) {
-            errorMessage = body['error'] ?? body['details'];
-          }
-        } catch (_) {}
-        throw Exception(errorMessage);
-      }
     }
+
+    _handleCommonErrors(response, defaultErrorMessage: 'Failed to analyze document');
+    return jsonDecode(response.body);
   }
 
   static Future<Map<String, dynamic>> scanDocumentFile(
@@ -120,46 +310,23 @@ class ApiService {
     String? sourceType,
     String? fileName,
   }) async {
-    final token = await _getToken();
-    final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/scan-file'));
-    if (token != null) {
-      request.headers['Authorization'] = 'Bearer $token';
-    }
     final effectiveFileName = (fileName != null && fileName.isNotEmpty) ? fileName : (title ?? 'document.pdf');
-    request.files.add(http.MultipartFile.fromBytes(
-      'document',
-      bytes,
+    final response = await _sendMultipartRequest(
+      '/scan-file',
+      fileField: 'document',
+      fileBytes: bytes,
       filename: effectiveFileName,
-      contentType: _getMediaType(mimeType),
-    ));
-    if (title != null && title.isNotEmpty) request.fields['title'] = title;
-    if (sourceType != null && sourceType.isNotEmpty) request.fields['sourceType'] = sourceType;
-    request.fields['mimeType'] = mimeType;
+      mimeType: mimeType,
+      fields: {
+        if (title != null && title.isNotEmpty) 'title': title,
+        if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
+        'mimeType': mimeType,
+      },
+    );
 
-    final streamedResponse = await request.send();
-    final response = await http.Response.fromStream(streamedResponse);
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else if (response.statusCode == 413) {
-      throw Exception('This document is too large. Please upload a smaller file.');
-    } else if (response.statusCode == 429) {
-      throw RateLimitException('Rate limit reached. Please try again later.');
-    } else {
-      String errorMessage = 'Failed to analyze document file';
-      try {
-        final body = jsonDecode(response.body);
-        if (body is Map && (body['error'] != null || body['details'] != null)) {
-          errorMessage = body['error'] ?? body['details'];
-        }
-      } catch (_) {}
-      throw Exception(errorMessage);
-    }
+    _handleCommonErrors(response, defaultErrorMessage: 'Failed to analyze document file');
+    return jsonDecode(response.body);
   }
-
-  // =========================================================================
-  // RESUMABLE SCAN JOB API METHODS
-  // =========================================================================
 
   static Future<Map<String, dynamic>> startScanJob({
     String? text,
@@ -170,92 +337,53 @@ class ApiService {
     String? sourceType,
     String? base64Data,
   }) async {
-    final token = await _getToken();
-
+    http.Response response;
     if (fileBytes != null && fileBytes.isNotEmpty) {
-      final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/scans/start'));
-      if (token != null) {
-        request.headers['Authorization'] = 'Bearer $token';
-      }
       final cleanMime = mimeType ?? 'application/pdf';
       final effectiveFileName = (fileName != null && fileName.isNotEmpty) ? fileName : (title ?? 'document.pdf');
-      request.files.add(http.MultipartFile.fromBytes(
-        'document',
-        fileBytes,
+      response = await _sendMultipartRequest(
+        '/scans/start',
+        fileField: 'document',
+        fileBytes: fileBytes,
         filename: effectiveFileName,
-        contentType: _getMediaType(cleanMime),
-      ));
-      if (title != null && title.isNotEmpty) request.fields['title'] = title;
-      if (sourceType != null && sourceType.isNotEmpty) request.fields['sourceType'] = sourceType;
-      if (text != null && text.isNotEmpty) request.fields['text'] = text;
-      if (mimeType != null && mimeType.isNotEmpty) request.fields['mimeType'] = mimeType;
-
-      final streamedResponse = await request.send();
-      final response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else if (response.statusCode == 413) {
-        throw Exception('This document is too large. Please upload a smaller file.');
-      } else if (response.statusCode == 400) {
-        String errorMessage = 'This file type is not supported. Please upload a PDF or supported image.';
-        try {
-          final body = jsonDecode(response.body);
-          if (body is Map && body['error'] != null) errorMessage = body['error'];
-        } catch (_) {}
-        throw Exception(errorMessage);
-      } else {
-        String errorMessage = 'Failed to start scan job';
-        try {
-          final body = jsonDecode(response.body);
-          if (body is Map && (body['error'] != null || body['details'] != null)) {
-            errorMessage = body['error'] ?? body['details'];
-          }
-        } catch (_) {}
-        throw Exception(errorMessage);
-      }
-    } else {
-      final response = await http.post(
-        Uri.parse('$baseUrl/scans/start'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
+        mimeType: cleanMime,
+        fields: {
+          if (title != null && title.isNotEmpty) 'title': title,
+          if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
+          if (text != null && text.isNotEmpty) 'text': text,
+          if (mimeType != null && mimeType.isNotEmpty) 'mimeType': mimeType,
         },
-        body: jsonEncode({
+      );
+    } else {
+      response = await _sendRequest(
+        'POST',
+        '/scans/start',
+        body: {
           if (text != null && text.isNotEmpty) 'text': text,
           if (base64Data != null && base64Data.isNotEmpty) 'base64Data': base64Data,
           if (mimeType != null && mimeType.isNotEmpty) 'mimeType': mimeType,
           if (title != null && title.isNotEmpty) 'title': title,
           if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
-        }),
+        },
       );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
-      } else {
-        String errorMessage = 'Failed to start scan job';
-        try {
-          final body = jsonDecode(response.body);
-          if (body is Map && (body['error'] != null || body['details'] != null)) {
-            errorMessage = body['error'] ?? body['details'];
-          }
-        } catch (_) {}
-        throw Exception(errorMessage);
-      }
     }
+
+    _handleCommonErrors(
+      response,
+      defaultErrorMessage: 'Failed to start scan job',
+      customStatusMessages: {
+        400: _parseErrorMessage(
+          response,
+          fallback: 'This file type is not supported. Please upload a PDF or supported image.',
+        ),
+      },
+    );
+    return jsonDecode(response.body);
   }
 
   static Future<Map<String, dynamic>?> getActiveScanJob() async {
     try {
-      final token = await _getToken();
-      if (token == null) return null;
-      final response = await http.get(
-        Uri.parse('$baseUrl/scans/active'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await _sendRequest('GET', '/scans/active');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data is Map && data['activeJob'] != null) {
@@ -270,84 +398,33 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> getScanJob(String jobId) async {
-    final token = await _getToken();
-    final response = await http.get(
-      Uri.parse('$baseUrl/scans/$jobId'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      String errorMessage = 'Failed to get scan job status';
-      try {
-        final body = jsonDecode(response.body);
-        if (body is Map && (body['error'] != null || body['details'] != null)) {
-          errorMessage = body['error'] ?? body['details'];
-        }
-      } catch (_) {}
-      throw Exception(errorMessage);
-    }
+    final res = await _requestJson('GET', '/scans/$jobId', defaultErrorMessage: 'Failed to get scan job status');
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>> retryScanJob(String jobId) async {
-    final token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/scans/$jobId/retry'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
+    final res = await _requestJson(
+      'POST',
+      '/scans/$jobId/retry',
+      defaultErrorMessage: 'Failed to retry scan job',
+      customStatusMessages: {
+        429: 'Rate limit reached. Please wait before retrying.',
       },
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else if (response.statusCode == 429) {
-      throw RateLimitException('Rate limit reached. Please wait before retrying.');
-    } else {
-      String errorMessage = 'Failed to retry scan job';
-      try {
-        final body = jsonDecode(response.body);
-        if (body is Map && (body['error'] != null || body['details'] != null)) {
-          errorMessage = body['error'] ?? body['details'];
-        }
-      } catch (_) {}
-      throw Exception(errorMessage);
-    }
+    return res as Map<String, dynamic>;
   }
 
+  // =========================================================================
+  // DOCUMENT MANAGEMENT & RECYCLE BIN
+  // =========================================================================
+
   static Future<List<dynamic>> fetchRecentDocuments() async {
-    try {
-      final token = await _getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/documents'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      }
-      return [];
-    } catch (e) {
-      debugPrint('Error fetching documents: $e');
-      return [];
-    }
+    return _requestListSafe('/documents');
   }
 
   static Future<Uint8List?> fetchDocumentFile(String documentId) async {
     try {
-      final token = await _getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/documents/$documentId/file'),
-        headers: {
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await _sendRequest('GET', '/documents/$documentId/file');
       if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
         return response.bodyBytes;
       }
@@ -359,92 +436,23 @@ class ApiService {
   }
 
   static Future<bool> renameDocument(String documentId, String newTitle) async {
-    try {
-      final token = await _getToken();
-      final response = await http.patch(
-        Uri.parse('$baseUrl/documents/$documentId'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({'title': newTitle.trim()}),
-      );
-      return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('Error renaming document: $e');
-      return false;
-    }
+    return _requestBoolSafe('PATCH', '/documents/$documentId', body: {'title': newTitle.trim()});
   }
 
   static Future<bool> deleteDocument(String documentId) async {
-    try {
-      final token = await _getToken();
-      final response = await http.delete(
-        Uri.parse('$baseUrl/documents/$documentId'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('Error soft-deleting document: $e');
-      return false;
-    }
+    return _requestBoolSafe('DELETE', '/documents/$documentId');
   }
 
   static Future<List<dynamic>> fetchBinDocuments() async {
-    try {
-      final token = await _getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/documents/bin'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body) as List<dynamic>;
-      }
-      return [];
-    } catch (e) {
-      debugPrint('Error fetching Recycle Bin documents: $e');
-      return [];
-    }
+    return _requestListSafe('/documents/bin');
   }
 
   static Future<bool> restoreDocument(String documentId) async {
-    try {
-      final token = await _getToken();
-      final response = await http.patch(
-        Uri.parse('$baseUrl/documents/$documentId/restore'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('Error restoring document: $e');
-      return false;
-    }
+    return _requestBoolSafe('PATCH', '/documents/$documentId/restore');
   }
 
   static Future<bool> permanentlyDeleteDocument(String documentId) async {
-    try {
-      final token = await _getToken();
-      final response = await http.delete(
-        Uri.parse('$baseUrl/documents/$documentId/permanent'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('Error permanently deleting document: $e');
-      return false;
-    }
+    return _requestBoolSafe('DELETE', '/documents/$documentId/permanent');
   }
 
   // =========================================================================
@@ -462,14 +470,10 @@ class ApiService {
     int? totalClauseCount,
   }) async {
     try {
-      final token = await _getToken();
-      final response = await http.post(
-        Uri.parse('$baseUrl/shares'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode({
+      final response = await _sendRequest(
+        'POST',
+        '/shares',
+        body: {
           if (documentId != null && documentId.isNotEmpty) 'documentId': documentId,
           'title': title,
           'riskLevel': riskLevel,
@@ -478,7 +482,7 @@ class ApiService {
           if (cautionCount != null) 'cautionCount': cautionCount,
           if (compliantCount != null) 'compliantCount': compliantCount,
           if (totalClauseCount != null) 'totalClauseCount': totalClauseCount,
-        }),
+        },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -496,13 +500,7 @@ class ApiService {
 
   static Future<Map<String, dynamic>?> getSharedSummary(String shareToken) async {
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/shares/$shareToken'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
-
+      final response = await _sendRequest('GET', '/shares/$shareToken', requiresAuth: false);
       if (response.statusCode == 200) {
         return jsonDecode(response.body) as Map<String, dynamic>;
       } else {
@@ -538,233 +536,102 @@ class ApiService {
   }
 
   static Future<String> explainSnippet(String context, String snippet) async {
-    final token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/explain'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({'context': context, 'snippet': snippet}),
+    final data = await _requestJson(
+      'POST',
+      '/explain',
+      body: {'context': context, 'snippet': snippet},
+      defaultErrorMessage: 'Failed to explain snippet',
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['explanation'];
-    } else if (response.statusCode == 429) {
-      throw RateLimitException('Rate limit reached. Please try again later.');
-    } else {
-      throw Exception('Failed to explain snippet');
-    }
+    return data['explanation'];
   }
 
   static Future<List<dynamic>> getLegalNews() async {
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/news/legal-updates'));
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      }
-      return [];
-    } catch (e) {
-      debugPrint('Error fetching legal news: $e');
-      return [];
-    }
+    return _requestListSafe('/news/legal-updates', requiresAuth: false);
   }
 
-  static Future<String?> _getToken() async {
-    return TokenStorage.getToken();
-  }
+  // =========================================================================
+  // CHECKLISTS API METHODS
+  // =========================================================================
 
   static Future<List<dynamic>> fetchAllChecklists() async {
-    final token = await _getToken();
-    final response = await http.get(
-      Uri.parse('$baseUrl/checklists'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      }
-    );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load checklists');
-    }
+    final res = await _requestJson('GET', '/checklists', defaultErrorMessage: 'Failed to load checklists');
+    return res as List<dynamic>;
   }
 
   static Future<Map<String, dynamic>> fetchChecklist(String type) async {
-    final token = await _getToken();
-    final response = await http.get(
-      Uri.parse('$baseUrl/checklists/$type'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      }
-    );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load checklist');
-    }
+    final res = await _requestJson('GET', '/checklists/$type', defaultErrorMessage: 'Failed to load checklist');
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>> updateChecklistItem(String type, String itemId, bool isCompleted) async {
-    final token = await _getToken();
-    final response = await http.put(
-      Uri.parse('$baseUrl/checklists/$type/items/$itemId'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({'isCompleted': isCompleted}),
+    final res = await _requestJson(
+      'PUT',
+      '/checklists/$type/items/$itemId',
+      body: {'isCompleted': isCompleted},
+      defaultErrorMessage: 'Failed to update checklist item',
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to update checklist item');
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>> addChecklistItem(String type, String title) async {
-    final token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/checklists/$type/items'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({'title': title}),
+    final res = await _requestJson(
+      'POST',
+      '/checklists/$type/items',
+      body: {'title': title},
+      defaultErrorMessage: 'Failed to add checklist item',
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to add checklist item');
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>> generateChecklist(String prompt) async {
-    final token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/checklists/generate'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({'prompt': prompt}),
+    final res = await _requestJson(
+      'POST',
+      '/checklists/generate',
+      body: {'prompt': prompt},
+      defaultErrorMessage: 'Failed to generate checklist',
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to generate checklist');
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>> deleteChecklistItem(String type, String itemId) async {
-    final token = await _getToken();
-    final response = await http.delete(
-      Uri.parse('$baseUrl/checklists/$type/items/$itemId'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
+    final res = await _requestJson(
+      'DELETE',
+      '/checklists/$type/items/$itemId',
+      defaultErrorMessage: 'Failed to delete checklist item',
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to delete checklist item');
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<bool> deleteChecklist(String type) async {
-    final token = await _getToken();
-    final response = await http.delete(
-      Uri.parse('$baseUrl/checklists/$type'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-    );
+    final response = await _sendRequest('DELETE', '/checklists/$type');
     return response.statusCode == 200;
   }
 
   static Future<List<dynamic>> fetchBinChecklists() async {
-    try {
-      final token = await _getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/checklists/bin'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body) as List<dynamic>;
-      }
-      return [];
-    } catch (e) {
-      debugPrint('Error fetching Recycle Bin checklists: $e');
-      return [];
-    }
+    return _requestListSafe('/checklists/bin');
   }
 
   static Future<bool> restoreChecklist(String idOrType) async {
-    try {
-      final token = await _getToken();
-      final response = await http.patch(
-        Uri.parse('$baseUrl/checklists/$idOrType/restore'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('Error restoring checklist: $e');
-      return false;
-    }
+    return _requestBoolSafe('PATCH', '/checklists/$idOrType/restore');
   }
 
   static Future<bool> permanentlyDeleteChecklist(String idOrType) async {
-    try {
-      final token = await _getToken();
-      final response = await http.delete(
-        Uri.parse('$baseUrl/checklists/$idOrType/permanent'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('Error permanently deleting checklist: $e');
-      return false;
-    }
+    return _requestBoolSafe('DELETE', '/checklists/$idOrType/permanent');
   }
 
   static Future<Map<String, dynamic>> renameChecklist(String type, String title) async {
-    final token = await _getToken();
-    final response = await http.put(
-      Uri.parse('$baseUrl/checklists/$type/rename'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({'title': title}),
+    final res = await _requestJson(
+      'PUT',
+      '/checklists/$type/rename',
+      body: {'title': title},
+      defaultErrorMessage: 'Failed to rename checklist',
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to rename checklist');
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<void> syncChecklistsWithDocument(String documentId) async {
     try {
-      final token = await _getToken();
-      await http.post(
-        Uri.parse('$baseUrl/checklists/sync/$documentId'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
+      await _sendRequest('POST', '/checklists/sync/$documentId');
     } catch (e) {
       debugPrint('Checklist sync error: $e');
     }
@@ -772,120 +639,67 @@ class ApiService {
 
   static Future<void> syncAllChecklists() async {
     try {
-      final token = await _getToken();
-      await http.post(
-        Uri.parse('$baseUrl/checklists/sync'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
+      await _sendRequest('POST', '/checklists/sync');
     } catch (e) {
       debugPrint('Checklist sync all error: $e');
     }
   }
 
+  // =========================================================================
+  // CHAT API METHODS
+  // =========================================================================
+
   static Future<Map<String, dynamic>> chat(List<Map<String, dynamic>> history, {String? sessionId}) async {
-    final token = await _getToken();
     final sanitizedHistory = history.map((m) => {
       'role': m['role'],
       'text': m['text'],
       if (m['time'] != null) 'time': m['time'],
     }).toList();
-    
-    final response = await http.post(
-      Uri.parse('$baseUrl/chat'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
+
+    final res = await _requestJson(
+      'POST',
+      '/chat',
+      body: {
         'history': sanitizedHistory,
         if (sessionId != null && sessionId.isNotEmpty) 'sessionId': sessionId,
-      }),
+      },
+      defaultErrorMessage: 'Failed to send chat message',
+      customStatusMessages: {
+        429: 'Rate limit reached. Please wait a moment before sending another message.',
+      },
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else if (response.statusCode == 429) {
-      throw RateLimitException('Rate limit reached. Please wait a moment before sending another message.');
-    } else {
-      throw Exception('Failed to send chat message');
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<List<dynamic>> fetchChatSessions() async {
-    try {
-      final token = await _getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/chat/sessions'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      }
-      return [];
-    } catch (e) {
-      debugPrint('Error fetching chat sessions: $e');
-      return [];
-    }
+    return _requestListSafe('/chat/sessions');
   }
 
   static Future<Map<String, dynamic>> fetchChatSession(String sessionId) async {
-    final token = await _getToken();
-    final response = await http.get(
-      Uri.parse('$baseUrl/chat/sessions/$sessionId'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-    );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load chat session');
-    }
+    final res = await _requestJson('GET', '/chat/sessions/$sessionId', defaultErrorMessage: 'Failed to load chat session');
+    return res as Map<String, dynamic>;
   }
 
   static Future<bool> deleteChatSession(String sessionId) async {
-    try {
-      final token = await _getToken();
-      final response = await http.delete(
-        Uri.parse('$baseUrl/chat/sessions/$sessionId'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('Error deleting chat session: $e');
-      return false;
-    }
+    return _requestBoolSafe('DELETE', '/chat/sessions/$sessionId');
   }
 
-  // Auth Methods
+  // =========================================================================
+  // AUTHENTICATION API METHODS
+  // =========================================================================
+
   static Future<Map<String, dynamic>> sendOtp({
     required String email,
     required String type, // 'login' or 'signup'
   }) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/auth/send-otp'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'email': email,
-        'type': type,
-      }),
+    final res = await _requestJson(
+      'POST',
+      '/auth/send-otp',
+      body: {'email': email, 'type': type},
+      requiresAuth: false,
+      defaultErrorMessage: 'Failed to send OTP',
     );
-    
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      final error = jsonDecode(response.body)['error'] ?? 'Failed to send OTP';
-      throw Exception(error);
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>> verifyOtp({
@@ -894,68 +708,49 @@ class ApiService {
     required String type,
     String? fullName,
   }) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/auth/verify-otp'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
+    final res = await _requestJson(
+      'POST',
+      '/auth/verify-otp',
+      body: {
         'email': email,
         'otp': otp,
         'type': type,
         if (fullName != null && fullName.isNotEmpty) 'full_name': fullName,
-      }),
+      },
+      requiresAuth: false,
+      defaultErrorMessage: 'Failed to verify OTP',
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      final error = jsonDecode(response.body)['error'] ?? 'Failed to verify OTP';
-      throw Exception(error);
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>> resendOtp(String email) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/auth/resend-otp'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email}),
+    final res = await _requestJson(
+      'POST',
+      '/auth/resend-otp',
+      body: {'email': email},
+      requiresAuth: false,
+      defaultErrorMessage: 'Failed to resend OTP',
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      final error = jsonDecode(response.body)['error'] ?? 'Failed to resend OTP';
-      throw Exception(error);
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>> getProfile(String token) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/auth/me'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
+    final res = await _requestJson(
+      'GET',
+      '/auth/me',
+      explicitToken: token,
+      defaultErrorMessage: 'Failed to fetch profile',
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to fetch profile');
-    }
+    return res as Map<String, dynamic>;
   }
 
-  // Stamp Duty DB methods
+  // =========================================================================
+  // STAMP DUTY CALCULATOR & CONFIG METHODS
+  // =========================================================================
+
   static Future<Map<String, dynamic>> saveStampDutyCalculation(Map<String, dynamic> data) async {
     try {
-      final token = await _getToken();
-      final response = await http.post(
-        Uri.parse('$baseUrl/stamp-duty'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-        body: jsonEncode(data),
-      );
+      final response = await _sendRequest('POST', '/stamp-duty', body: data);
       if (response.statusCode == 201 || response.statusCode == 200) {
         return jsonDecode(response.body);
       }
@@ -967,23 +762,7 @@ class ApiService {
   }
 
   static Future<List<dynamic>> fetchStampDutyHistory() async {
-    try {
-      final token = await _getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/stamp-duty'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      }
-      return [];
-    } catch (e) {
-      debugPrint('Error fetching stamp duty history: $e');
-      return [];
-    }
+    return _requestListSafe('/stamp-duty');
   }
 
   static const String _stampDutyConfigCacheKey = 'stamp_duty_config_cache';
@@ -992,14 +771,11 @@ class ApiService {
   /// with local SharedPreferences offline caching and resilient defaults.
   static Future<StampDutyConfigResponse> getStampDutyConfig() async {
     try {
-      final token = await _getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/stamp-duty-config'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      ).timeout(const Duration(seconds: 8));
+      final response = await _sendRequest(
+        'GET',
+        '/stamp-duty-config',
+        timeout: const Duration(seconds: 8),
+      );
 
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
@@ -1036,20 +812,17 @@ class ApiService {
     return StampDutyConfigResponse.defaultBundle();
   }
 
-  // Admin Analytics Method
+  // =========================================================================
+  // ADMIN ANALYTICS METHODS
+  // =========================================================================
+
   static Future<AdminAnalyticsData> fetchAdminAnalytics() async {
     final token = await _getToken();
     if (token == null || token.isEmpty) {
       throw Exception('Authentication required. Please log in.');
     }
 
-    final response = await http.get(
-      Uri.parse('$baseUrl/admin/analytics'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+    final response = await _sendRequest('GET', '/admin/analytics', explicitToken: token);
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -1059,18 +832,15 @@ class ApiService {
     } else if (response.statusCode == 403) {
       throw Exception('Access Denied: Admin authorization is required to view system analytics.');
     } else {
-      String errorMessage = 'Failed to load system analytics (${response.statusCode})';
-      try {
-        final body = jsonDecode(response.body);
-        if (body is Map && body['error'] != null) {
-          errorMessage = body['error'];
-        }
-      } catch (_) {}
-      throw Exception(errorMessage);
+      final parsedError = _parseErrorMessage(response, fallback: 'Failed to load system analytics (${response.statusCode})');
+      throw Exception(parsedError);
     }
   }
 
-  // Document Comparison methods
+  // =========================================================================
+  // DOCUMENT COMPARISON METHODS
+  // =========================================================================
+
   static Future<Map<String, dynamic>> startComparison({
     String? docAId,
     String? docBId,
@@ -1079,46 +849,25 @@ class ApiService {
     String? titleA,
     String? titleB,
   }) async {
-    final token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/comparisons/start'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
+    final res = await _requestJson(
+      'POST',
+      '/comparisons/start',
+      body: {
         if (docAId != null) 'docAId': docAId,
         if (docBId != null) 'docBId': docBId,
         if (fileA != null) 'fileA': fileA,
         if (fileB != null) 'fileB': fileB,
         if (titleA != null) 'titleA': titleA,
         if (titleB != null) 'titleB': titleB,
-      }),
+      },
+      defaultErrorMessage: 'Failed to start comparison',
     );
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      String errorMessage = 'Failed to start comparison';
-      try {
-        final body = jsonDecode(response.body);
-        if (body is Map && (body['error'] != null || body['details'] != null)) {
-          errorMessage = body['error'] ?? body['details'];
-        }
-      } catch (_) {}
-      throw Exception(errorMessage);
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>?> getActiveComparison() async {
     try {
-      final token = await _getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/comparisons/active'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
+      final response = await _sendRequest('GET', '/comparisons/active');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data['activeComparison'];
@@ -1131,79 +880,36 @@ class ApiService {
   }
 
   static Future<Map<String, dynamic>> getComparison(String comparisonId) async {
-    final token = await _getToken();
-    final response = await http.get(
-      Uri.parse('$baseUrl/comparisons/$comparisonId'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
+    final res = await _requestJson(
+      'GET',
+      '/comparisons/$comparisonId',
+      defaultErrorMessage: 'Failed to load comparison details',
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to load comparison details');
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<Map<String, dynamic>> retryComparison(String comparisonId) async {
-    final token = await _getToken();
-    final response = await http.post(
-      Uri.parse('$baseUrl/comparisons/$comparisonId/retry'),
-      headers: {
-        'Content-Type': 'application/json',
-        if (token != null) 'Authorization': 'Bearer $token',
-      },
+    final res = await _requestJson(
+      'POST',
+      '/comparisons/$comparisonId/retry',
+      defaultErrorMessage: 'Failed to retry comparison',
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to retry comparison');
-    }
+    return res as Map<String, dynamic>;
   }
 
   static Future<List<dynamic>> fetchComparisons() async {
-    try {
-      final token = await _getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/comparisons'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      }
-      return [];
-    } catch (e) {
-      debugPrint('Error fetching comparisons: $e');
-      return [];
-    }
+    return _requestListSafe('/comparisons');
   }
 
   static Future<bool> deleteComparison(String comparisonId) async {
-    try {
-      final token = await _getToken();
-      final response = await http.delete(
-        Uri.parse('$baseUrl/comparisons/$comparisonId'),
-        headers: {
-          'Content-Type': 'application/json',
-          if (token != null) 'Authorization': 'Bearer $token',
-        },
-      );
-      return response.statusCode == 200;
-    } catch (e) {
-      debugPrint('Error deleting comparison: $e');
-      return false;
-    }
+    return _requestBoolSafe('DELETE', '/comparisons/$comparisonId');
   }
 }
 
 class RateLimitException implements Exception {
   final String message;
   RateLimitException(this.message);
-  
+
   @override
   String toString() => message;
 }
