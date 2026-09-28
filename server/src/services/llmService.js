@@ -1243,9 +1243,13 @@ exports.chat = async (historyArray) => {
         const latestMessage = historyArray[historyArray.length - 1].text;
 
         const normQuery = normalizeQuery(latestMessage);
-        const cachedResponse = await ChatCache.findOne({
-            $or: [{ query: latestMessage }, { query: normQuery }]
-        });
+        // Only single-turn questions are cacheable: replies to follow-ups depend on
+        // conversation history, which is not part of the cache key.
+        const isCacheable = historyArray.length === 1 && normQuery.length > 0;
+        // The raw-text lookup is kept only so entries written before this change still hit.
+        const cachedResponse = isCacheable
+            ? await ChatCache.findOne({ query: { $in: [normQuery, latestMessage] } })
+            : null;
         if (cachedResponse) {
             return {
                 reply: cachedResponse.reply,
@@ -1257,6 +1261,7 @@ exports.chat = async (historyArray) => {
         let contextLaws = "";
         let retrievedSources = [];
         let hasSufficientContext = false;
+        let ragUnavailable = false; // don't cache degraded answers produced while retrieval was down
         const RAG_SIMILARITY_THRESHOLD = 0.80; // Minimum cosine similarity for authoritative grounding
 
         try {
@@ -1324,6 +1329,7 @@ exports.chat = async (historyArray) => {
             }
         } catch (ragError) {
             console.warn('RAG vector search lookup failed:', ragError.message);
+            ragUnavailable = true;
             contextLaws = "RAG_LOOKUP_UNAVAILABLE: Vector search service is temporarily unreachable.";
         }
 
@@ -1395,13 +1401,22 @@ ${latestMessage}
         };
 
         try {
-            const newCache = new ChatCache({
-                query: latestMessage,
-                reply: finalResponse.reply,
-                suggestions: finalResponse.suggestions,
-                sources: finalResponse.sources
-            });
-            await newCache.save();
+            if (isCacheable && !ragUnavailable) {
+                // Write under the normalized key so the read side can actually match it.
+                await ChatCache.updateOne(
+                    { query: normQuery },
+                    {
+                        $setOnInsert: {
+                            query: normQuery,
+                            reply: finalResponse.reply,
+                            suggestions: finalResponse.suggestions,
+                            sources: finalResponse.sources,
+                            createdAt: new Date()
+                        }
+                    },
+                    { upsert: true }
+                );
+            }
         } catch (cacheErr) {
             console.warn('Failed to save to cache:', cacheErr.message);
         }
@@ -1475,5 +1490,3 @@ exports.generateTextWithFallback = async (prompt, customConfig = {}) => {
 };
 
 exports.safeParseJson = safeParseJson;
-
-

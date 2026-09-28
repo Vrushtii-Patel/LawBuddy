@@ -9,13 +9,13 @@ function inferScanJobParams(req, { requireFile = false } = {}) {
         return { error: requireFile ? 'Document file is required.' : 'Document file or text description is required.' };
     }
 
-    const computedMimeType = file 
-        ? file.mimetype 
+    const computedMimeType = file
+        ? file.mimetype
         : (mimeType || (base64Data ? 'application/pdf' : 'text/plain'));
-    
+
     const isPdf = (computedMimeType || '').toLowerCase().includes('pdf');
-    const defaultSourceType = file 
-        ? (isPdf ? 'PDF Document' : 'Photo Scan') 
+    const defaultSourceType = file
+        ? (isPdf ? 'PDF Document' : 'Photo Scan')
         : (base64Data ? 'PDF Document' : 'Text Description');
 
     return {
