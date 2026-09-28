@@ -30,8 +30,14 @@ async function handleSendOtp(email, isSignup, res) {
       return res.status(400).json({ error: 'Please enter a valid email address' });
     }
 
-    // Check if user exists (for logging/metadata)
+    // Signup and login must behave consistently: check before sending any OTP.
     const existingUser = await User.findOne({ email });
+    if (isSignup && existingUser) {
+      return res.status(409).json({ error: 'An account with this email already exists. Please log in instead.' });
+    }
+    if (!isSignup && !existingUser) {
+      return res.status(404).json({ error: 'No account found with this email. Please check the address or sign up.' });
+    }
 
     // Generate OTP
     const otp = generateOtp();
@@ -165,7 +171,7 @@ router.post('/verify-otp', otpVerifyIpLimiter, otpVerifyEmailLimiter, async (req
 
     let user = await User.findOne({ email });
 
-    if (type === 'signup' || (!user && full_name)) {
+    if (type === 'signup') {
       if (user) {
         return res.status(400).json({ error: 'User already exists' });
       }
@@ -180,22 +186,13 @@ router.post('/verify-otp', otpVerifyIpLimiter, otpVerifyEmailLimiter, async (req
       });
       await user.save();
     } else {
+      // Login never creates accounts. Unknown email means the user should sign up.
       if (!user) {
-        user = new User({
-          userId: generateUserId(),
-          full_name: sanitizeInput(full_name || email.split('@')[0]),
-          email,
-          emailVerified: true,
-          created_at: new Date(),
-          last_login: new Date(),
-          profile_photo: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`
-        });
-        await user.save();
-      } else {
-        user.last_login = new Date();
-        user.emailVerified = true;
-        await user.save();
+        return res.status(404).json({ error: 'No account found with this email. Please check the address or sign up.' });
       }
+      user.last_login = new Date();
+      user.emailVerified = true;
+      await user.save();
     }
 
     // Generate JWT

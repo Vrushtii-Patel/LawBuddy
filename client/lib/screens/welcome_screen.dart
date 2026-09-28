@@ -118,12 +118,9 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProvid
           },
           child: Container(
             color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              physics: const ClampingScrollPhysics(),
-              child: Column(
-                children: [
-                // Top Navigation Header
+            child: Column(
+              children: [
+                // Fixed/Constant Sticky Top Navigation Header
                 WelcomeHeader(
                   isDark: isDark,
                   isDesktop: isDesktop,
@@ -140,72 +137,82 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProvid
                   onLoginTap: _navigateToLogin,
                 ),
 
-                // 1. Cinematic Hero Section
-                WelcomeHeroSection(
-                  isDark: isDark,
-                  isDesktop: isDesktop,
-                  isTablet: isTablet,
-                  scrollController: _scrollController,
-                  headlineLine1: _headlineLine1,
-                  headlineLine2: _headlineLine2,
-                  headlineLine3: _headlineLine3,
-                  sideWordsAnim: _sideWordsAnim,
-                  onGetStarted: _navigateToSignup,
-                  onSignIn: _navigateToLogin,
+                // Scrollable Landing Page Content
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    physics: const ClampingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        // 1. Cinematic Hero Section
+                        WelcomeHeroSection(
+                          isDark: isDark,
+                          isDesktop: isDesktop,
+                          isTablet: isTablet,
+                          scrollController: _scrollController,
+                          headlineLine1: _headlineLine1,
+                          headlineLine2: _headlineLine2,
+                          headlineLine3: _headlineLine3,
+                          sideWordsAnim: _sideWordsAnim,
+                          onGetStarted: _navigateToSignup,
+                          onSignIn: _navigateToLogin,
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // 2. Dual-Direction Moving Marquee Strip
+                        DualDirectionMarquee(isDark: isDark),
+
+                        const SizedBox(height: 64),
+
+                        // 3. Core Features Section
+                        WelcomeFeaturesSection(
+                          key: _featuresKey,
+                          isDark: isDark,
+                          isDesktop: isDesktop,
+                          isTablet: isTablet,
+                        ),
+
+                        const SizedBox(height: 80),
+
+                        // 4. How It Works Section (4-Step Flow)
+                        WelcomeHowItWorksSection(
+                          key: _howItWorksKey,
+                          isDark: isDark,
+                          isDesktop: isDesktop,
+                          isTablet: isTablet,
+                        ),
+
+                        const SizedBox(height: 80),
+
+                        // 5. Risk Assessment Preview & Mock Document Showcase
+                        WelcomeRiskSystemSection(
+                          key: _riskSystemKey,
+                          isDark: isDark,
+                          isDesktop: isDesktop,
+                          isTablet: isTablet,
+                        ),
+
+                        const SizedBox(height: 80),
+
+                        // 6. Bottom CTA Callout Card
+                        WelcomeCtaBanner(
+                          isDark: isDark,
+                          isDesktop: isDesktop,
+                          onExploreFeatures: () => _scrollToSection(_featuresKey),
+                          onAnalyzeDoc: _navigateToSignup,
+                        ),
+
+                        const SizedBox(height: 56),
+                      ],
+                    ),
+                  ),
                 ),
-
-                const SizedBox(height: 24),
-
-                // 2. Dual-Direction Moving Marquee Strip
-                DualDirectionMarquee(isDark: isDark),
-
-                const SizedBox(height: 64),
-
-                // 3. Core Features Section
-                WelcomeFeaturesSection(
-                  key: _featuresKey,
-                  isDark: isDark,
-                  isDesktop: isDesktop,
-                  isTablet: isTablet,
-                ),
-
-                const SizedBox(height: 80),
-
-                // 4. How It Works Section (4-Step Flow)
-                WelcomeHowItWorksSection(
-                  key: _howItWorksKey,
-                  isDark: isDark,
-                  isDesktop: isDesktop,
-                  isTablet: isTablet,
-                ),
-
-                const SizedBox(height: 80),
-
-                // 5. Risk Assessment Preview & Mock Document Showcase
-                WelcomeRiskSystemSection(
-                  key: _riskSystemKey,
-                  isDark: isDark,
-                  isDesktop: isDesktop,
-                  isTablet: isTablet,
-                ),
-
-                const SizedBox(height: 80),
-
-                // 6. Bottom CTA Callout Card
-                WelcomeCtaBanner(
-                  isDark: isDark,
-                  isDesktop: isDesktop,
-                  onExploreFeatures: () => _scrollToSection(_featuresKey),
-                  onAnalyzeDoc: _navigateToSignup,
-                ),
-
-                const SizedBox(height: 56),
               ],
             ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

@@ -939,6 +939,21 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'सरल अर्थ: भुगतान में मामूली देरी के लिए भी बिल्डर आपके सारे अग्रिम पैसे जब्त कर सकता है।',
   },
 
+  'welcome.heroDocTitle': {'en': 'PROPERTY SALE AGREEMENT', 'hi': 'संपत्ति बिक्री समझौता'},
+  'welcome.heroScanActive': {'en': 'AI Scan Active', 'hi': 'एआई स्कैन सक्रिय'},
+  'welcome.heroClauseTitle': {'en': 'Clause 7.2 — Forfeiture', 'hi': 'खंड 7.2 — जब्ती'},
+  'welcome.heroClauseBadge': {'en': 'Relevant Property Law', 'hi': 'प्रासंगिक संपत्ति कानून'},
+  'welcome.heroClauseBody': {
+    'en': '"In case of delay beyond 30 days, 100% of earnest deposit shall be forfeited without notice."',
+    'hi': '"30 दिनों से अधिक की देरी के मामले में, बिना किसी सूचना के 100% बयाना राशि जब्त कर ली जाएगी।"',
+  },
+  'welcome.heroRiskDetected': {'en': 'High Legal Risk Detected', 'hi': 'उच्च कानूनी जोखिम का पता चला'},
+  'welcome.heroRiskScore': {'en': 'Score: {score}', 'hi': 'स्कोर: {score}'},
+  'welcome.heroPlainEnglish': {
+    'en': 'Plain English: The builder can confiscate all your advance money even for minor payment delays.',
+    'hi': 'सरल अर्थ: भुगतान में मामूली देरी के लिए भी बिल्डर आपके सारे अग्रिम पैसे जब्त कर सकता है।',
+  },
+
   'welcome.marqueeTrack1': {
     'en': 'SCAN CONTRACTS  ✦  RERA COMPLIANCE AUDIT  ✦  PLAIN-ENGLISH INSIGHTS  ✦  DETECT UNFAIR CLAUSES  ✦  INDIAN PROPERTY LAW  ✦  ',
     'hi': 'अनुबंध स्कैन करें  ✦  रेरा अनुपालन ऑडिट  ✦  सरल भाषा अंतर्दृष्टि  ✦  अनुचित खंडों की पहचान  ✦  भारतीय संपत्ति कानून  ✦  ',
@@ -1310,4 +1325,139 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'हम तृतीय-पक्ष विज्ञापन या ट्रैकिंग पिक्सेल प्रदर्शित नहीं करते हैं।',
   },
   'consent.readFullPrivacyPolicy': {'en': 'Read our full Privacy Policy', 'hi': 'हमारी पूरी गोपनीयता नीति पढ़ें'},
+
+  // ==========================================
+  // Welcome Screen & Features Section
+  // ==========================================
+  'welcome.feature1Tag': {'en': 'OCR & PDF', 'hi': 'ओसीआर और पीडीएफ'},
+  'welcome.feature1Title': {'en': 'Scan & Extract', 'hi': 'स्कैन और निष्कर्षण'},
+  'welcome.feature1Desc': {
+    'en': 'Upload PDF agreements, capture physical contracts via OCR camera, or paste legal text directly.',
+    'hi': 'पीडीएफ अनुबंध अपलोड करें, ओसीआर कैमरे से भौतिक अनुबंध कैप्चर करें, या सीधे कानूनी पाठ पेस्ट करें।',
+  },
+  'welcome.feature2Tag': {'en': 'AI AUDIT', 'hi': 'एआई ऑडिट'},
+  'welcome.feature2Title': {'en': 'Detect Legal Risks', 'hi': 'कानूनी जोखिमों का पता लगाएं'},
+  'welcome.feature2Desc': {
+    'en': 'Identify potentially unfair, non-compliant, or one-sided builder clauses with RERA-trained AI.',
+    'hi': 'रेरा-प्रशिक्षित एआई के साथ संभावित अनुचित, गैर-अनुपालन या एकतरफा बिल्डर खंडों की पहचान करें।',
+  },
+  'welcome.feature3Tag': {'en': 'SIMPLIFIED', 'hi': 'सरलीकृत'},
+  'welcome.feature3Title': {'en': 'Plain-English Insights', 'hi': 'सरल भाषा अंतर्दृष्टि'},
+  'welcome.feature3Desc': {
+    'en': 'Demystify dense legal jargon into 2-3 sentence layman explanations and negotiation advice.',
+    'hi': 'जटिल कानूनी शब्दावली को 2-3 वाक्यों के सरल स्पष्टीकरण और बातचीत की सलाह में बदलें।',
+  },
+  'welcome.feature4Tag': {'en': 'STATE-WISE', 'hi': 'राज्य-वार'},
+  'welcome.feature4Title': {'en': 'Stamp Duty Calculator', 'hi': 'स्टाम्प शुल्क कैलकुलेटर'},
+  'welcome.feature4Desc': {
+    'en': 'Compute state-wise stamp duty, registration charges, local cess, and female buyer discounts across India.',
+    'hi': 'पूरे भारत में राज्य-वार स्टाम्प शुल्क, पंजीकरण शुल्क, स्थानीय उपकर और महिला खरीदार छूट की गणना करें।',
+  },
+  'welcome.feature5Tag': {'en': '24/7 CHAT', 'hi': '24/7 चैट'},
+  'welcome.feature5Title': {'en': 'AI Legal Assistant', 'hi': 'एआई कानूनी सहायक'},
+  'welcome.feature5Desc': {
+    'en': 'Get instant 24/7 answers on property laws, tenancy disputes, builder notices, and contract clauses.',
+    'hi': 'संपत्ति कानूनों, किरायेदारी विवादों, बिल्डर नोटिस और अनुबंध खंडों पर 24/7 त्वरित उत्तर प्राप्त करें।',
+  },
+  'welcome.feature6Tag': {'en': 'VERIFICATION', 'hi': 'सत्यापन'},
+  'welcome.feature6Title': {'en': 'Due Diligence Checklists', 'hi': 'उचित सावधानी चेकलिस्ट'},
+  'welcome.feature6Desc': {
+    'en': 'Step-by-step buyer verification covering title clearance, RERA approvals, encumbrance & OC records.',
+    'hi': 'शीर्षक मंजूरी, रेरा अनुमोदन, भार प्रमाणपत्र और ओसी रिकॉर्ड को कवर करने वाला चरण-दर-चरण सत्यापन।',
+  },
+
+  // Welcome How It Works
+  'welcome.howItWorksEyebrow': {'en': 'SIMPLE 4-STEP PROCESS', 'hi': 'सरल 4-चरणीय प्रक्रिया'},
+  'welcome.howItWorksTitle': {'en': 'How It Works', 'hi': 'यह कैसे काम करता है'},
+
+  // Welcome Risk Showcase
+  'welcome.riskSectionEyebrow': {'en': 'AI-POWERED AUDIT PREVIEW', 'hi': 'एआई-संचालित ऑडिट पूर्वावलोकन'},
+  'welcome.riskSectionTitle': {'en': 'See What LawBuddy Finds', 'hi': 'देखें LawBuddy क्या खोजता है'},
+  'welcome.riskSectionSubtitle': {
+    'en': 'Our RERA-trained engine inspects agreement clauses line-by-line to flag unfair conditions, non-compliant timelines, and asymmetric liabilities.',
+    'hi': 'हमारा रेरा-प्रशिक्षित इंजन अनुचित शर्तों, गैर-अनुपालन समय-सीमाओं और एकतरफा देनदारियों को चिह्नित करने के लिए अनुबंध खंडों का पंक्ति-दर-पंक्ति निरीक्षण करता है।',
+  },
+  'welcome.riskExtractTitle': {'en': 'AGREEMENT FOR SALE (EXTRACT)', 'hi': 'बिक्री के लिए समझौता (अंश)'},
+  'welcome.riskPotentialDetected': {'en': 'POTENTIAL RISK DETECTED', 'hi': 'संभावित जोखिम का पता चला'},
+  'welcome.riskClauseNote': {
+    'en': 'Excessive forfeiture clause exceeds statutory 10% ceiling prescribed under Section 13(1) of RERA Model Rules.',
+    'hi': 'अत्यधिक जब्ती खंड रेरा मॉडल नियमों की धारा 13(1) के तहत निर्धारित वैधानिक 10% सीमा से अधिक है।',
+  },
+  'welcome.riskAssessmentScore': {'en': '{score} / 100 • Elevated', 'hi': '{score} / 100 • बढ़ा हुआ'},
+  'welcome.riskTagHigh': {'en': '🔴 High Risk', 'hi': '🔴 उच्च जोखिम'},
+  'welcome.riskTagCaution': {'en': '🟡 Caution', 'hi': '🟡 सावधानी'},
+  'welcome.riskTagStandard': {'en': '🟢 Standard', 'hi': '🟢 मानक'},
+  'welcome.riskItem1': {'en': 'Clause 7.2: Unilateral earnest forfeiture (100%)', 'hi': 'खंड 7.2: एकतरफा बयाना जब्ती (100%)'},
+  'welcome.riskItem2': {'en': 'Clause 14.1: Asymmetric delay penalty compensation', 'hi': 'खंड 14.1: असममित विलंब जुर्माना मुआवजा'},
+  'welcome.riskItem3': {'en': 'Clause 3.1: Carpet area specification & RERA warranty', 'hi': 'खंड 3.1: कारपेट एरिया विनिर्देश और रेरा वारंटी'},
+
+  // Welcome CTA Banner
+  'welcome.ctaBannerTitle': {
+    'en': 'Before You Sign,\nKnow What You\'re Signing.',
+    'hi': 'हस्ताक्षर करने से पहले,\nजानें कि आप क्या हस्ताक्षर कर रहे हैं।',
+  },
+  'welcome.ctaBannerSubtitle': {
+    'en': 'Upload your property document and let LawBuddy help you understand the clauses, risks, and important legal considerations.',
+    'hi': 'अपना संपत्ति दस्तावेज़ अपलोड करें और LawBuddy को खंडों, जोखिमों और महत्वपूर्ण कानूनी विचारों को समझने में आपकी मदद करने दें।',
+  },
+  'welcome.exploreFeatures': {'en': 'Explore Features', 'hi': 'सुविधाएं देखें'},
+  'welcome.analyzeDocBtn': {'en': 'Analyze Your Document →', 'hi': 'अपना दस्तावेज़ जांचें →'},
+
+  // General Time Formatting
+  'time.justNow': {'en': 'Just now', 'hi': 'अभी'},
+  'time.minutesAgo': {'en': '{count}m ago', 'hi': '{count} मि. पहले'},
+  'time.hoursAgo': {'en': '{count}h ago', 'hi': '{count} घंटे पहले'},
+  'time.daysAgo': {'en': '{count}d ago', 'hi': '{count} दिन पहले'},
+
+  // Chat Citation Card
+  'chatCitation.india': {'en': 'India', 'hi': 'भारत'},
+  'chatCitation.openError': {'en': 'Could not open citation link. Please check your browser.', 'hi': 'उद्धरण लिंक खोलने में असमर्थ। कृपया अपना ब्राउज़र जांचें।'},
+  'chatCitation.title': {'en': 'Statutory Legal Citations ({count})', 'hi': 'वैधानिक कानूनी उद्धरण ({count})'},
+
+  // Admin Analytics Screen Extended Aliases
+  'adminAnalytics.loading': {'en': 'Aggregating system telemetry & insights...', 'hi': 'सिस्टम टेलीमेट्री और अंतर्दृष्टि एकत्रित की जा रही है...'},
+  'adminAnalytics.badgeChatSessions': {'en': 'Chat Sessions', 'hi': 'चैट सत्र'},
+  'adminAnalytics.badgeDiligenceChecklists': {'en': 'Diligence Checklists', 'hi': 'सावधानी चेकलिस्ट'},
+  'adminAnalytics.riskSectionSubtitle': {
+    'en': 'Dual-level evaluation: Overall Contract Risk vs. Granular Clause Severity',
+    'hi': 'दोहरे स्तर का मूल्यांकन: समग्र अनुबंध जोखिम बनाम सूक्ष्म खंड गंभीरता',
+  },
+  'adminAnalytics.docRiskTotal': {'en': '{count} docs', 'hi': '{count} दस्तावेज़'},
+  'adminAnalytics.docRiskHigh': {'en': 'High Risk', 'hi': 'उच्च जोखिम'},
+  'adminAnalytics.docRiskMed': {'en': 'Medium Risk', 'hi': 'मध्यम जोखिम'},
+  'adminAnalytics.docRiskLow': {'en': 'Low Risk', 'hi': 'कम जोखिम'},
+  'adminAnalytics.clauseRiskTitle': {'en': 'Clause-Level Severity', 'hi': 'खंड-स्तरीय गंभीरता'},
+  'adminAnalytics.clauseRiskTotal': {'en': '{count} clauses', 'hi': '{count} खंड'},
+  'adminAnalytics.clauseRiskHigh': {'en': 'High Risk', 'hi': 'उच्च जोखिम'},
+  'adminAnalytics.clauseRiskCaution': {'en': 'Caution', 'hi': 'सावधानी'},
+  'adminAnalytics.clauseRiskCompliant': {'en': 'Compliant', 'hi': 'अनुपालन'},
+  'adminAnalytics.issueCategoriesTitle': {'en': 'Legal Issue Categories Breakdown', 'hi': 'कानूनी मुद्दा श्रेणियां विभाजन'},
+  'adminAnalytics.issueCategoriesSubtitle': {
+    'en': 'Actual categorized findings identified during contract analysis',
+    'hi': 'अनुबंध विश्लेषण के दौरान पहचाने गए वास्तविक वर्गीकृत निष्कर्ष',
+  },
+  'adminAnalytics.issueCategoryCount': {'en': '{count} clauses ({percent}%)', 'hi': '{count} खंड ({percent}%)'},
+  'adminAnalytics.noCategories': {'en': 'No categorized clause issues recorded yet.', 'hi': 'अभी तक कोई वर्गीकृत खंड मुद्दा दर्ज नहीं किया गया है।'},
+  'adminAnalytics.pipelineSubtitle': {
+    'en': 'Distribution of uploaded document formats and extraction engines',
+    'hi': 'अपलोड किए गए दस्तावेज़ प्रारूपों और निष्कर्षण इंजनों का वितरण',
+  },
+  'adminAnalytics.recentActivitySubtitle': {
+    'en': 'Real-time telemetry of completed document risk evaluations (sanitized metadata)',
+    'hi': 'पूर्ण दस्तावेज़ जोखिम मूल्यांकनों की वास्तविक समय टेलीमेट्री (स्वच्छ मेटाडेटा)',
+  },
+  'adminAnalytics.noRecentActivity': {'en': 'No recent document analysis telemetry recorded.', 'hi': 'कोई हालिया दस्तावेज़ विश्लेषण टेलीमेट्री दर्ज नहीं की गई है।'},
+  'adminAnalytics.unauthorizedTitle': {'en': 'Access Restricted', 'hi': 'पहुंच प्रतिबंधित है'},
+  'adminAnalytics.unauthorizedDesc': {
+    'en': 'You do not have administrator permissions to access the system analytics dashboard. Only verified administrators can view system-wide telemetry.',
+    'hi': 'सिस्टम एनालिटिक्स डैशबोर्ड तक पहुंचने के लिए आपके पास व्यवस्थापक अनुमतियां नहीं हैं। केवल सत्यापित व्यवस्थापक ही सिस्टम-व्यापी टेलीमेट्री देख सकते हैं।',
+  },
+  'adminAnalytics.errorTitle': {'en': 'Failed to Load Analytics', 'hi': 'एनालिटिक्स लोड करने में विफल'},
+  'adminAnalytics.defaultError': {'en': 'An unexpected error occurred while loading analytics.', 'hi': 'एनालिटिक्स लोड करते समय एक अप्रत्याशित त्रुटि हुई।'},
+  'adminAnalytics.emptyTitle': {'en': 'No Analytics Telemetry Available', 'hi': 'कोई एनालिटिक्स टेलीमेट्री उपलब्ध नहीं है'},
+  'adminAnalytics.emptyDesc': {
+    'en': 'As users upload and evaluate real estate contracts, system metrics will populate here in real time.',
+    'hi': 'जैसे-जैसे उपयोगकर्ता रियल एस्टेट अनुबंध अपलोड और मूल्यांकन करेंगे, सिस्टम मेट्रिक्स यहां वास्तविक समय में दिखाई देंगे।',
+  },
+  'adminAnalytics.refresh': {'en': 'Refresh', 'hi': 'ताज़ा करें'},
 };
