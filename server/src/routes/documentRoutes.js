@@ -48,40 +48,6 @@ function inferScanJobParams(req, { requireFile = false } = {}) {
     };
 }
 
-/**
- * Shapes the response payload for synchronous scan execution.
- */
-function formatScanResult(completedJob, doc, base64Data = null) {
-    const analysis = completedJob.analysis || [];
-    return {
-        jobId: completedJob.jobId,
-        cacheHit: completedJob.currentStep ? completedJob.currentStep.includes('cache') : false,
-        fileHash: completedJob.fileHash,
-        extractedText: completedJob.extractedText,
-        analysis: analysis,
-        canonicalClauses: completedJob.canonicalClauses,
-        highRiskCount: doc ? doc.highRiskCount : analysis.filter(c => c.riskLevel === 'HIGH_RISK').length,
-        cautionCount: doc ? doc.cautionCount : analysis.filter(c => c.riskLevel === 'CAUTION').length,
-        compliantCount: doc ? doc.compliantCount : analysis.filter(c => c.riskLevel === 'COMPLIANT').length,
-        totalClauseCount: analysis.length,
-        riskLevel: doc ? doc.riskLevel : 'Low Risk',
-        sourceType: completedJob.sourceType,
-        fileData: base64Data,
-        mimeType: completedJob.mimeType,
-        document: doc,
-        documentId: completedJob.documentId
-    };
-}
-
-/**
- * Helper to execute a scan job synchronously and respond with formatted result.
- */
-async function executeSyncScan(job, base64Data, res) {
-    const completedJob = await scanJobService.executeJobPipeline(job.jobId);
-    const doc = completedJob.documentId ? await Document.findById(completedJob.documentId) : null;
-    return res.json(formatScanResult(completedJob, doc, base64Data));
-}
-
 // =========================================================================
 // RESUMABLE SCAN JOB ENDPOINTS
 // =========================================================================
@@ -232,45 +198,21 @@ router.post('/scans/:jobId/retry', requireAuth, async (req, res) => {
 });
 
 // =========================================================================
-// SYNCHRONOUS / LEGACY SCAN ENDPOINTS (BACKED BY PERSISTENT SCAN JOB)
+// DEPRECATED SYNCHRONOUS SCAN ENDPOINTS (410 GONE)
 // =========================================================================
 
-// POST /api/scan
-router.post('/scan', requireAuth, uploadDocument, async (req, res) => {
-    try {
-        const { error, params } = inferScanJobParams(req);
-        if (error) {
-            return res.status(400).json({ error });
-        }
-
-        const job = await scanJobService.createScanJob(params);
-        await executeSyncScan(job, params.base64Data, res);
-    } catch (error) {
-        console.error('Error analyzing document:', error);
-        if (error.status === 429) {
-            return res.status(429).json({ error: 'Rate limit reached. Please wait a moment before trying again.' });
-        }
-        res.status(500).json({ error: 'Failed to analyze document. Please try again.' });
-    }
+// POST /api/scan (Deprecated)
+router.post('/scan', (req, res) => {
+    res.status(410).json({
+        error: 'The synchronous /api/scan endpoint is deprecated and disabled to prevent timeout errors. Please use the asynchronous ScanJob pipeline: POST /api/scans/start and poll GET /api/scans/:jobId.'
+    });
 });
 
-// POST /api/scan-file
-router.post('/scan-file', requireAuth, uploadDocument, async (req, res) => {
-    try {
-        const { error, params } = inferScanJobParams(req, { requireFile: true });
-        if (error) {
-            return res.status(400).json({ error });
-        }
-
-        const job = await scanJobService.createScanJob(params);
-        await executeSyncScan(job, params.base64Data, res);
-    } catch (error) {
-        console.error('Error analyzing file:', error);
-        if (error.status === 429) {
-            return res.status(429).json({ error: 'Rate limit reached. Please wait a moment before trying again.' });
-        }
-        res.status(500).json({ error: 'Failed to analyze file. Please try again.' });
-    }
+// POST /api/scan-file (Deprecated)
+router.post('/scan-file', (req, res) => {
+    res.status(410).json({
+        error: 'The synchronous /api/scan-file endpoint is deprecated and disabled to prevent timeout errors. Please use the asynchronous ScanJob pipeline: POST /api/scans/start and poll GET /api/scans/:jobId.'
+    });
 });
 
 // Import cleanup service

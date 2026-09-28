@@ -289,38 +289,51 @@ class ApiService {
     String? mimeType,
     String? base64Data,
   }) async {
-    http.Response response;
-    if (fileBytes != null && fileBytes.isNotEmpty) {
-      final cleanMime = mimeType ?? 'application/pdf';
-      final effectiveFileName = (fileName != null && fileName.isNotEmpty) ? fileName : (title ?? 'document.pdf');
-      response = await _sendMultipartRequest(
-        '/scan',
-        fileField: 'document',
-        fileBytes: fileBytes,
-        filename: effectiveFileName,
-        mimeType: cleanMime,
-        fields: {
-          if (title != null && title.isNotEmpty) 'title': title,
-          if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
-          if (text.isNotEmpty) 'text': text,
-        },
-      );
-    } else {
-      response = await _sendRequest(
-        'POST',
-        '/scan',
-        body: {
-          'text': text,
-          if (title != null && title.isNotEmpty) 'title': title,
-          if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
-          if (base64Data != null && base64Data.isNotEmpty) 'base64Data': base64Data,
-          if (mimeType != null && mimeType.isNotEmpty) 'mimeType': mimeType,
-        },
-      );
+    final startRes = await startScanJob(
+      text: text,
+      title: title,
+      sourceType: sourceType,
+      fileBytes: fileBytes,
+      fileName: fileName,
+      mimeType: mimeType,
+      base64Data: base64Data,
+    );
+
+    final String jobId = (startRes['jobId'] ?? '').toString();
+    if (jobId.isEmpty) {
+      return startRes;
     }
 
-    _handleCommonErrors(response, defaultErrorMessage: 'Failed to analyze document');
-    return jsonDecode(response.body);
+    if (startRes['status'] == 'COMPLETED') {
+      if (startRes['document'] is Map) {
+        return Map<String, dynamic>.from(startRes['document']);
+      }
+      return startRes;
+    }
+
+    // Poll until completed to prevent single-request HTTP timeouts
+    int polls = 0;
+    const maxPolls = 120; // 3 minutes max
+    Map<String, dynamic> job = startRes;
+
+    while (job['status'] != 'COMPLETED' && job['status'] != 'FAILED' && polls < maxPolls) {
+      polls++;
+      await Future.delayed(const Duration(milliseconds: 1500));
+      try {
+        job = await getScanJob(jobId);
+      } catch (pollErr) {
+        debugPrint('Polling transient error: $pollErr');
+      }
+    }
+
+    if (job['status'] == 'COMPLETED') {
+      if (job['document'] is Map) {
+        return Map<String, dynamic>.from(job['document']);
+      }
+      return job;
+    }
+
+    throw Exception(job['errorInfo']?['message'] ?? 'Document scanning failed or timed out');
   }
 
   static Future<Map<String, dynamic>> scanDocumentFile(
@@ -330,23 +343,16 @@ class ApiService {
     String? sourceType,
     String? fileName,
   }) async {
-    final effectiveFileName = (fileName != null && fileName.isNotEmpty) ? fileName : (title ?? 'document.pdf');
-    final response = await _sendMultipartRequest(
-      '/scan-file',
-      fileField: 'document',
+    return scanDocument(
+      '',
+      title: title,
+      sourceType: sourceType,
       fileBytes: bytes,
-      filename: effectiveFileName,
+      fileName: fileName,
       mimeType: mimeType,
-      fields: {
-        if (title != null && title.isNotEmpty) 'title': title,
-        if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
-        'mimeType': mimeType,
-      },
     );
-
-    _handleCommonErrors(response, defaultErrorMessage: 'Failed to analyze document file');
-    return jsonDecode(response.body);
   }
+
 
   static Future<Map<String, dynamic>> startScanJob({
     String? text,

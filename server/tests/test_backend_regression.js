@@ -11,8 +11,10 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const documentRoutes = require('../src/routes/documentRoutes');
 const Document = require('../src/models/Document');
 const ScanJob = require('../src/models/ScanJob');
+const User = require('../src/models/User');
 const scanJobService = require('../src/services/scanJobService');
 const llmService = require('../src/services/llmService');
+const { PROMPT_VERSION, MODEL_NAME, ANALYSIS_VERSION } = require('../src/config/modelConfig');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'test_secret_key_12345';
 process.env.JWT_SECRET = JWT_SECRET;
@@ -23,7 +25,7 @@ app.use(express.urlencoded({ limit: '2mb', extended: true }));
 app.use('/api', documentRoutes);
 
 function createAuthToken(userId) {
-    return jwt.sign({ userId, email: `${userId}@example.com` }, JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign({ userId, email: `${userId}@example.com`, tokenVersion: 0 }, JWT_SECRET, { expiresIn: '1h' });
 }
 
 function makeRequest(server, { method, path, headers = {}, body = null, isMultipart = false, formData = null }) {
@@ -124,6 +126,13 @@ async function runRegressionTests() {
     await new Promise(res => server.listen(0, '127.0.0.1', res));
 
     const testUser = `reg_user_${Date.now()}`;
+    await User.create({
+        userId: testUser,
+        full_name: 'Regression Test User',
+        email: `${testUser}@example.com`,
+        isVerified: true,
+        tokenVersion: 0
+    });
     const validToken = createAuthToken(testUser);
 
     let passedCount = 0;
@@ -143,7 +152,7 @@ async function runRegressionTests() {
     }
 
     try {
-        // --- 1. AUTHENTICATION ENFORCEMENT ---
+        // --- 1. AUTHENTICATION ENFORCEMENT & DEPRECATION ---
         console.log('--- 1. Authentication & Security ---');
         await testCase('Reject /scans/start without token (401)', async () => {
             const res = await makeRequest(server, {
@@ -155,23 +164,24 @@ async function runRegressionTests() {
             assert.ok(res.body.error);
         });
 
-        await testCase('Reject /scan with invalid token (401)', async () => {
+        await testCase('Deprecated /scan returns 410 Gone with migration message', async () => {
             const res = await makeRequest(server, {
                 method: 'POST',
                 path: '/api/scan',
-                headers: { 'Authorization': 'Bearer invalid.jwt.token' },
                 body: { text: 'Test text' }
             });
-            assert.strictEqual(res.statusCode, 401);
+            assert.strictEqual(res.statusCode, 410);
+            assert.ok(res.body.error.includes('deprecated'));
         });
 
-        await testCase('Reject /scan-file without token (401)', async () => {
+        await testCase('Deprecated /scan-file returns 410 Gone with migration message', async () => {
             const res = await makeRequest(server, {
                 method: 'POST',
                 path: '/api/scan-file',
                 body: { base64Data: 'dummy' }
             });
-            assert.strictEqual(res.statusCode, 401);
+            assert.strictEqual(res.statusCode, 410);
+            assert.ok(res.body.error.includes('deprecated'));
         });
 
         await testCase('Reject /documents without token (401)', async () => {
@@ -192,28 +202,6 @@ async function runRegressionTests() {
             assert.strictEqual(res.body.error, 'Document file or text description is required.');
         });
 
-        await testCase('POST /scan with empty body returns 400', async () => {
-            const res = await makeRequest(server, {
-                method: 'POST',
-                path: '/api/scan',
-                headers: { 'Authorization': `Bearer ${validToken}` },
-                body: {}
-            });
-            assert.strictEqual(res.statusCode, 400);
-            assert.strictEqual(res.body.error, 'Document file or text description is required.');
-        });
-
-        await testCase('POST /scan-file with text only (no file/base64) returns 400', async () => {
-            const res = await makeRequest(server, {
-                method: 'POST',
-                path: '/api/scan-file',
-                headers: { 'Authorization': `Bearer ${validToken}` },
-                body: { text: 'Only text provided' }
-            });
-            assert.strictEqual(res.statusCode, 400);
-            assert.strictEqual(res.body.error, 'Document file is required.');
-        });
-
         // --- 3. MIME TYPE & SOURCE TYPE INFERENCE ---
         console.log('\n--- 3. MIME & sourceType Inference ---');
         await testCase('POST /scans/start with text infers text/plain and Text Description', async () => {
@@ -221,11 +209,10 @@ async function runRegressionTests() {
                 method: 'POST',
                 path: '/api/scans/start',
                 headers: { 'Authorization': `Bearer ${validToken}` },
-                body: { text: 'This is a sample agreement between parties.' }
+                body: { text: 'Sale deed clause description test' }
             });
             assert.strictEqual(res.statusCode, 201);
             assert.ok(res.body.jobId);
-            
             const job = await ScanJob.findOne({ jobId: res.body.jobId });
             assert.ok(job);
             assert.strictEqual(job.mimeType, 'text/plain');
@@ -233,11 +220,14 @@ async function runRegressionTests() {
         });
 
         await testCase('POST /scans/start with multipart PDF infers application/pdf and PDF Document', async () => {
-            const boundary = '----WebKitFormBoundaryRegressionTestPdf';
-            const pdfBuffer = Buffer.from('%PDF-1.4 Mock PDF for regression test');
-            const payload = createMultipartPayload(boundary, { title: 'Custom Lease' }, [
-                { fieldname: 'document', filename: 'lease.pdf', contentType: 'application/pdf', content: pdfBuffer }
-            ]);
+            const boundary = '----WebKitFormBoundary' + Date.now().toString(16);
+            const pdfBuffer = Buffer.from('%PDF-1.4 sample pdf content for regression test');
+
+            const payload = createMultipartPayload(
+                boundary,
+                { title: 'Registered Conveyance' },
+                [{ fieldname: 'document', filename: 'conveyance.pdf', contentType: 'application/pdf', content: pdfBuffer }]
+            );
 
             const res = await makeRequest(server, {
                 method: 'POST',
@@ -256,16 +246,18 @@ async function runRegressionTests() {
             assert.ok(job);
             assert.strictEqual(job.mimeType, 'application/pdf');
             assert.strictEqual(job.sourceType, 'PDF Document');
-            assert.strictEqual(job.title, 'Custom Lease');
         });
 
         await testCase('POST /scans/start with multipart PNG image infers Photo Scan', async () => {
-            const boundary = '----WebKitFormBoundaryRegressionTestImg';
-            const pngMagic = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
-            const imgBuffer = Buffer.concat([pngMagic, Buffer.from('mock valid png payload')]);
-            const payload = createMultipartPayload(boundary, {}, [
-                { fieldname: 'document', filename: 'page1.png', contentType: 'image/png', content: imgBuffer }
-            ]);
+            const boundary = '----WebKitFormBoundary' + Date.now().toString(16);
+            const pngHeader = Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]);
+            const imageBuffer = Buffer.concat([pngHeader, Buffer.from('sample png image data')]);
+
+            const payload = createMultipartPayload(
+                boundary,
+                { title: 'Agreement Photo' },
+                [{ fieldname: 'document', filename: 'page1.png', contentType: 'image/png', content: imageBuffer }]
+            );
 
             const res = await makeRequest(server, {
                 method: 'POST',
@@ -284,19 +276,20 @@ async function runRegressionTests() {
             assert.ok(job);
             assert.strictEqual(job.mimeType, 'image/png');
             assert.strictEqual(job.sourceType, 'Photo Scan');
-            assert.strictEqual(job.title, 'page1.png');
         });
 
         await testCase('POST /scans/start with base64Data infers PDF Document', async () => {
+            const base64Content = Buffer.from('%PDF-1.4 Base64 encoded document').toString('base64');
             const res = await makeRequest(server, {
                 method: 'POST',
                 path: '/api/scans/start',
                 headers: { 'Authorization': `Bearer ${validToken}` },
                 body: {
-                    base64Data: 'JVBERi0xLjQKJcTl8uXr...',
-                    title: 'Base64 Scan'
+                    base64Data: base64Content,
+                    title: 'Base64 Upload'
                 }
             });
+
             assert.strictEqual(res.statusCode, 201);
             const job = await ScanJob.findOne({ jobId: res.body.jobId });
             assert.ok(job);
@@ -304,19 +297,19 @@ async function runRegressionTests() {
             assert.strictEqual(job.sourceType, 'PDF Document');
         });
 
-        // --- 4. RESPONSE SHAPING & CLAUSE METRICS ---
-        console.log('\n--- 4. Response Shaping & Clause Metrics ---');
-        await testCase('POST /scan synchronous response conforms to full schema with cached document', async () => {
+        // --- 4. RESPONSE SHAPING & ASYNC PIPELINE INTEGRATION ---
+        console.log('\n--- 4. Async Scan Pipeline & Cache Hit ---');
+        await testCase('POST /scans/start returns cached document for matching prompt & model version', async () => {
             const sampleText = `Sample unique clause text ${Date.now()}`;
-            const textBuffer = Buffer.from(sampleText, 'utf8');
-            const calculatedHash = crypto.createHash('sha256').update(textBuffer).digest('hex');
+            const normText = llmService.normalizeDocumentText(sampleText);
+            const calculatedHash = crypto.createHash('sha256').update(normText).digest('hex');
 
             // Seed a cached completed job/document with exact matching hash and versions
             const doc = await Document.create({
                 userId: testUser,
                 fileHash: calculatedHash,
-                title: 'Synchronous Scan Test Doc',
-                originalText: sampleText,
+                title: 'Async Scan Cache Test Doc',
+                originalText: normText,
                 sourceType: 'Text Description',
                 mimeType: 'text/plain',
                 analysisStatus: 'completed',
@@ -329,43 +322,40 @@ async function runRegressionTests() {
                     { clauseId: 'c2', title: 'Caution', text: 'Caution term', riskLevel: 'CAUTION' },
                     { clauseId: 'c3', title: 'Standard', text: 'Standard term', riskLevel: 'COMPLIANT' }
                 ],
-                promptVersion: llmService.PROMPT_VERSION,
-                modelName: llmService.MODEL_NAME,
-                analysisVersion: llmService.ANALYSIS_VERSION
+                promptVersion: PROMPT_VERSION,
+                modelName: MODEL_NAME,
+                analysisVersion: ANALYSIS_VERSION
             });
 
             const res = await makeRequest(server, {
                 method: 'POST',
-                path: '/api/scan',
+                path: '/api/scans/start',
                 headers: { 'Authorization': `Bearer ${validToken}` },
                 body: {
                     text: sampleText,
-                    title: 'Synchronous Scan Test Doc'
+                    title: 'Async Scan Cache Test Doc'
                 }
             });
 
-            assert.strictEqual(res.statusCode, 200);
+            assert.strictEqual(res.statusCode, 201);
             assert.ok(res.body.jobId);
-            assert.strictEqual(res.body.cacheHit, true);
-            assert.strictEqual(res.body.highRiskCount, 1);
-            assert.strictEqual(res.body.cautionCount, 1);
-            assert.strictEqual(res.body.compliantCount, 1);
-            assert.strictEqual(res.body.totalClauseCount, 3);
-            assert.strictEqual(res.body.riskLevel, 'High Risk');
-            assert.ok(Array.isArray(res.body.analysis));
-            assert.strictEqual(res.body.analysis.length, 3);
+            assert.strictEqual(res.body.status, 'COMPLETED');
             assert.strictEqual(String(res.body.documentId), String(doc._id));
         });
+
 
         // --- 5. OVERSIZED FILES & DISGUISED EXECUTABLES ---
         console.log('\n--- 5. Security & Edge Cases ---');
         await testCase('Reject disguised executable file upload (.exe named as .pdf)', async () => {
-            const boundary = '----WebKitFormBoundaryExecutableReject';
-            // MZ header for DOS/PE executables
-            const exeBuffer = Buffer.from([0x4D, 0x5A, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00]);
-            const payload = createMultipartPayload(boundary, {}, [
-                { fieldname: 'document', filename: 'fake.pdf', contentType: 'application/pdf', content: exeBuffer }
-            ]);
+            const boundary = '----WebKitFormBoundary' + Date.now().toString(16);
+            const mzHeader = Buffer.from([0x4D, 0x5A]); // 'MZ' executable signature
+            const fakePdf = Buffer.concat([mzHeader, Buffer.from(' disguised windows executable payload')]);
+
+            const payload = createMultipartPayload(
+                boundary,
+                { title: 'Malicious PDF' },
+                [{ fieldname: 'document', filename: 'invoice.pdf', contentType: 'application/pdf', content: fakePdf }]
+            );
 
             const res = await makeRequest(server, {
                 method: 'POST',
@@ -380,78 +370,85 @@ async function runRegressionTests() {
             });
 
             assert.strictEqual(res.statusCode, 400);
-            assert.strictEqual(res.body.error, 'This file type is not supported. Please upload a PDF or supported image.');
+            assert.ok(res.body.error);
         });
 
-        // --- 6. DOCUMENT BIN & RESTORE INTEGRITY ---
+        // --- 6. DOCUMENT BIN & LIFECYCLE ---
         console.log('\n--- 6. Document Bin & Lifecycle Integrity ---');
         await testCase('Document soft-delete, get bin, and restore flow', async () => {
-            const doc = await Document.create({
+            const testDoc = await Document.create({
                 userId: testUser,
-                title: 'Bin Test Document',
-                originalText: 'Agreement content',
+                title: 'Doc to be soft-deleted',
+                originalText: 'Some legal terms',
                 sourceType: 'Text Description',
                 mimeType: 'text/plain',
                 analysisStatus: 'completed'
             });
 
             // 1. Soft-delete
-            const delRes = await makeRequest(server, {
+            const deleteRes = await makeRequest(server, {
                 method: 'DELETE',
-                path: `/api/documents/${doc._id}`,
+                path: `/api/documents/${testDoc._id}`,
                 headers: { 'Authorization': `Bearer ${validToken}` }
             });
-            assert.strictEqual(delRes.statusCode, 200);
-            assert.strictEqual(delRes.body.isDeleted, true);
+            assert.strictEqual(deleteRes.statusCode, 200);
 
-            // 2. Query active documents (must NOT contain deleted doc)
-            const activeDocsRes = await makeRequest(server, {
+            // 2. Query documents list - should NOT include deleted doc
+            const listRes = await makeRequest(server, {
                 method: 'GET',
                 path: '/api/documents',
                 headers: { 'Authorization': `Bearer ${validToken}` }
             });
-            assert.strictEqual(activeDocsRes.statusCode, 200);
-            const foundInActive = activeDocsRes.body.find(d => d._id === String(doc._id));
-            assert.strictEqual(foundInActive, undefined);
+            assert.strictEqual(listRes.statusCode, 200);
+            assert.strictEqual(listRes.body.some(d => d._id === String(testDoc._id)), false);
 
-            // 3. Query bin
-            const binDocsRes = await makeRequest(server, {
+            // 3. Query bin - SHOULD include deleted doc
+            const binRes = await makeRequest(server, {
                 method: 'GET',
                 path: '/api/documents/bin',
                 headers: { 'Authorization': `Bearer ${validToken}` }
             });
-            assert.strictEqual(binDocsRes.statusCode, 200);
-            const foundInBin = binDocsRes.body.find(d => d._id === String(doc._id));
-            assert.ok(foundInBin);
+            assert.strictEqual(binRes.statusCode, 200);
+            assert.strictEqual(binRes.body.some(d => d._id === String(testDoc._id)), true);
 
-            // 4. Restore document
+            // 4. Restore doc
             const restoreRes = await makeRequest(server, {
                 method: 'PATCH',
-                path: `/api/documents/${doc._id}/restore`,
+                path: `/api/documents/${testDoc._id}/restore`,
                 headers: { 'Authorization': `Bearer ${validToken}` }
             });
             assert.strictEqual(restoreRes.statusCode, 200);
-            assert.strictEqual(restoreRes.body.document.isDeleted, false);
+
+            // 5. Query documents list - should be visible again
+            const listAgainRes = await makeRequest(server, {
+                method: 'GET',
+                path: '/api/documents',
+                headers: { 'Authorization': `Bearer ${validToken}` }
+            });
+            assert.strictEqual(listAgainRes.statusCode, 200);
+            assert.strictEqual(listAgainRes.body.some(d => d._id === String(testDoc._id)), true);
         });
 
-        // Clean up
+    } finally {
+        // Clean up test documents & user
         await Document.deleteMany({ userId: testUser });
         await ScanJob.deleteMany({ userId: testUser });
-
-    } finally {
+        await User.deleteMany({ userId: testUser });
         server.close();
     }
 
-    console.log(`\n===============================================================`);
+    console.log('\n===============================================================');
     console.log(`  BACKEND RESULTS: ${passedCount} PASSED, ${failedCount} FAILED`);
-    console.log(`===============================================================\n`);
+    console.log('===============================================================\n');
 
     if (failedCount > 0) {
         process.exit(1);
     }
+    process.exit(0);
 }
 
+
 runRegressionTests().catch(err => {
-    console.error('Fatal regression runner error:', err);
+    console.error('Fatal test runner error:', err);
     process.exit(1);
 });

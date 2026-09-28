@@ -6,6 +6,7 @@ const ScanJob = require('../models/ScanJob');
 const Document = require('../models/Document');
 const llmService = require('./llmService');
 const crossReferenceService = require('./crossReferenceService');
+const { MODEL_NAME, PROMPT_VERSION, ANALYSIS_VERSION } = require('../config/modelConfig');
 
 const UPLOADS_DIR = path.join(__dirname, '../../uploads/scan_files');
 
@@ -87,13 +88,14 @@ function isDocumentCacheValid(doc) {
     if (doc.isDeleted === true) return false;
     if (doc.analysisStatus !== 'completed') return false;
     if (!Array.isArray(doc.analysis) || doc.analysis.length === 0) return false;
-    if (!doc.promptVersion || doc.promptVersion !== llmService.PROMPT_VERSION) return false;
-    if (!doc.modelName || doc.modelName !== llmService.MODEL_NAME) return false;
-    if (llmService.ANALYSIS_VERSION && (!doc.analysisVersion || doc.analysisVersion !== llmService.ANALYSIS_VERSION)) {
+    if (!doc.promptVersion || doc.promptVersion !== PROMPT_VERSION) return false;
+    if (!doc.modelName || doc.modelName !== MODEL_NAME) return false;
+    if (ANALYSIS_VERSION && (!doc.analysisVersion || doc.analysisVersion !== ANALYSIS_VERSION)) {
         return false;
     }
     return true;
 }
+
 
 /**
  * Creates and initializes a persistent ScanJob record with version-aware caching

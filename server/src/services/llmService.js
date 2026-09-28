@@ -209,36 +209,43 @@ const GEMINI_CANDIDATE_MODELS = [
 ];
 
 async function withRetry(fn, fallbackFn = null, retries = 2, baseDelay = 1000) {
+    const maxRetries = typeof retries === 'number' && !isNaN(retries)
+        ? Math.max(0, Math.floor(retries))
+        : 2;
+
+    const delay = typeof baseDelay === 'number' && !isNaN(baseDelay)
+        ? Math.max(0, baseDelay)
+        : 1000;
+
     let lastError = null;
 
     for (const modelCandidate of GEMINI_CANDIDATE_MODELS) {
-        try {
-            return await fn(modelCandidate);
-        } catch (error) {
-            lastError = error;
-            console.warn(`Attempt with ${modelCandidate} failed:`, error.message);
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+            try {
+                return await fn(modelCandidate);
+            } catch (error) {
+                lastError = error;
+                const errMsg = error && error.message ? error.message : String(error);
+                console.warn(`Attempt ${attempt + 1}/${maxRetries + 1} with ${modelCandidate} failed:`, errMsg);
 
-            // If 404, 429, or model unavailable: fail over immediately to next candidate model without sleeping
-            if (
-                error.message.includes('QuotaFailure') ||
-                error.message.includes('ResourceExhausted') ||
-                error.message.includes('429') ||
-                error.message.includes('404') ||
-                error.message.includes('no longer available')
-            ) {
-                console.log(`Rate limit or unavailable model ${modelCandidate}, failing over immediately to next candidate...`);
-                continue;
-            }
+                // If 404, 429, or model unavailable: fail over immediately to next candidate model without wasting retries
+                if (
+                    errMsg.includes('QuotaFailure') ||
+                    errMsg.includes('ResourceExhausted') ||
+                    errMsg.includes('429') ||
+                    errMsg.includes('404') ||
+                    errMsg.includes('no longer available')
+                ) {
+                    console.log(`Rate limit or unavailable model ${modelCandidate}, failing over immediately to next candidate...`);
+                    break;
+                }
 
-            // For transient 503 (high demand spike), retry once quickly after 1s
-            if (error.message.includes('503')) {
-                await sleep(1000);
-                try {
-                    return await fn(modelCandidate);
-                } catch (retryErr) {
-                    lastError = retryErr;
-                    console.warn(`Retry with ${modelCandidate} failed:`, retryErr.message);
-                    continue;
+                // If we have remaining retries for this candidate model, apply exponential backoff using baseDelay
+                if (attempt < maxRetries) {
+                    const backoffMs = delay > 0 ? delay * Math.pow(2, attempt) : 0;
+                    if (backoffMs > 0) {
+                        await sleep(backoffMs);
+                    }
                 }
             }
         }
@@ -255,6 +262,7 @@ async function withRetry(fn, fallbackFn = null, retries = 2, baseDelay = 1000) {
 
     throw lastError || new Error('AI Generation failed across all candidate models');
 }
+
 
 /**
  * STAGE A: Multi-Page Scanned PDF Vision Processor
@@ -1490,3 +1498,11 @@ exports.generateTextWithFallback = async (prompt, customConfig = {}) => {
 };
 
 exports.safeParseJson = safeParseJson;
+exports.withRetry = withRetry;
+exports.GEMINI_CANDIDATE_MODELS = GEMINI_CANDIDATE_MODELS;
+exports.MODEL_NAME = MODEL_NAME;
+exports.MODEL_VERSION = MODEL_VERSION;
+exports.PROMPT_VERSION = PROMPT_VERSION;
+exports.ANALYSIS_VERSION = ANALYSIS_VERSION;
+
+

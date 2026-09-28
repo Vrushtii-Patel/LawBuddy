@@ -30,7 +30,7 @@ async function runRealPdfVerification() {
 
     async function callScanFileApi(token, title = 'Testing date 2020.pdf') {
         const start = Date.now();
-        const response = await fetch(`${BASE_URL}/scan-file`, {
+        const startRes = await fetch(`${BASE_URL}/scans/start`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -44,15 +44,42 @@ async function runRealPdfVerification() {
             })
         });
 
-        const elapsed = ((Date.now() - start) / 1000).toFixed(2);
-        if (!response.ok) {
-            const errBody = await response.text();
-            throw new Error(`API returned status ${response.status}: ${errBody}`);
+        if (!startRes.ok) {
+            const errBody = await startRes.text();
+            throw new Error(`API returned status ${startRes.status}: ${errBody}`);
         }
-        const data = await response.json();
-        data._elapsedSeconds = elapsed;
-        return data;
+        let job = await startRes.json();
+        const jobId = job.jobId;
+
+        while (job.status !== 'COMPLETED' && job.status !== 'FAILED') {
+            await new Promise(r => setTimeout(r, 1500));
+            const pollRes = await fetch(`${BASE_URL}/scans/${jobId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (pollRes.ok) {
+                job = await pollRes.json();
+            }
+        }
+
+        const elapsed = ((Date.now() - start) / 1000).toFixed(2);
+        if (job.status !== 'COMPLETED') {
+            throw new Error(`ScanJob failed: ${JSON.stringify(job.errorInfo || job)}`);
+        }
+
+        const docRes = await fetch(`${BASE_URL}/documents/${job.documentId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const doc = docRes.ok ? await docRes.json() : null;
+
+        return {
+            ...job,
+            document: doc,
+            cacheHit: job.currentStep ? job.currentStep.includes('cache') : false,
+            totalClauseCount: doc && doc.analysis ? doc.analysis.length : 0,
+            _elapsedSeconds: elapsed
+        };
     }
+
 
     console.log('\n--------------------------------------------------');
     console.log('RUN 1: User A first scan (Fresh analysis expected)...');
