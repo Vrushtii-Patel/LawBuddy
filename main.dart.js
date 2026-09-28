@@ -211,7 +211,7 @@ bIA(a){return J.eR(a).gt2(a)},
 bos(a){return J.eR(a).glH(a)},
 JZ(a){return J.cy(a).gY(a)},
 bIB(a){return J.kR(a).gd1(a)},
-a5(a){return J.lF(a).gG(a)},
+a6(a){return J.lF(a).gG(a)},
 bIC(a){return J.kR(a).giM(a)},
 eS(a){return J.a7(a).ga8(a)},
 e2(a){return J.a7(a).gbS(a)},
@@ -991,7 +991,7 @@ for(;;)switch(s){case 0:if($.ZJ!==B.xQ){s=1
 break}$.ZJ=B.Uw
 p=A.fu()
 if(a!=null)p.b=a
-if(!B.c.bJ("ext.flutter.disassemble","ext."))A.l(A.a9("ext.flutter.disassemble","method","Must begin with ext."))
+if(!B.c.bJ("ext.flutter.disassemble","ext."))A.l(A.aa("ext.flutter.disassemble","method","Must begin with ext."))
 if($.bCv.i(0,"ext.flutter.disassemble")!=null)A.l(A.bE("Extension already registered: ext.flutter.disassemble",null))
 $.bCv.h(0,"ext.flutter.disassemble",$.aX.b6p(new A.bmG(),t.Z9,t.N,t.GU))
 p=A.fu().b
@@ -4477,9 +4477,9 @@ if(s!=null)return s
 s=new A.XC(a)
 if(typeof a==="object")a.$cachedTrace=s
 return s},
-xH(a){if(a==null)return J.a5(a)
+xH(a){if(a==null)return J.a6(a)
 if(typeof a=="object")return A.ia(a)
-return J.a5(a)},
+return J.a6(a)},
 bWy(a){if(typeof a=="number")return B.d.gG(a)
 if(a instanceof A.Y8)return A.ia(a)
 if(a instanceof A.IV)return a.gG(a)
@@ -5816,7 +5816,7 @@ e4(a,b){var s=a==null?b.a(a):a,r=new A.aD($.aX,b.j("aD<0>"))
 r.ma(s)
 return r},
 fJ(a,b,c){var s
-if(b==null&&!c.b(null))throw A.d(A.a9(null,"computation","The type parameter is not nullable"))
+if(b==null&&!c.b(null))throw A.d(A.aa(null,"computation","The type parameter is not nullable"))
 s=new A.aD($.aX,c.j("aD<0>"))
 A.dk(a,new A.azn(b,s,c))
 return s},
@@ -5929,7 +5929,7 @@ h.c=q}f.a=h
 e=h}},
 bCP(a,b){if(t.Hg.b(a))return b.Rj(a)
 if(t.C_.b(a))return a
-throw A.d(A.a9(a,"onError",u.x))},
+throw A.d(A.aa(a,"onError",u.x))},
 bVn(){var s,r
 for(s=$.Jw;s!=null;s=$.Jw){$.ZN=null
 r=s.b
@@ -6358,7 +6358,7 @@ dm(a,b,c){var s=new A.xg(a,b,c.j("xg<0>"))
 s.c=a.e
 return s},
 bUe(a,b){return J.e(a,b)},
-bUf(a){return J.a5(a)},
+bUf(a){return J.a6(a)},
 bxa(a){var s=J.bs(a)
 if(s.F())return s.gZ(s)
 return null},
@@ -6645,7 +6645,7 @@ f[g]=a.charCodeAt(l>>>10&63)
 f[n]=a.charCodeAt(l>>>4&63)
 f[m]=a.charCodeAt(l<<2&63)
 f[m+1]=61}return 0}return(l<<2|3-k)>>>0}for(q=c;q<d;){o=s.i(b,q)
-if(o<0||o>255)break;++q}throw A.d(A.a9(b,"Not a byte value at index "+q+": 0x"+B.e.fu(s.i(b,q),16),null))},
+if(o<0||o>255)break;++q}throw A.d(A.aa(b,"Not a byte value at index "+q+": 0x"+B.e.fu(s.i(b,q),16),null))},
 bRS(a,b,c,d,e,f){var s,r,q,p,o,n,m,l="Invalid encoding before padding",k="Invalid character",j=B.e.b2(f,2),i=f&3,h=$.btJ()
 for(s=d.$flags|0,r=b,q=0;r<c;++r){p=a.charCodeAt(r)
 q|=p
@@ -7029,7 +7029,7 @@ bwt(a){return new A.E3(new WeakMap(),a.j("E3<0>"))},
 E4(a){var s=!0
 s=typeof a=="string"
 if(s)A.a2O(a)},
-a2O(a){throw A.d(A.a9(a,"object","Expandos are not allowed on strings, numbers, bools, records or null"))},
+a2O(a){throw A.d(A.aa(a,"object","Expandos are not allowed on strings, numbers, bools, records or null"))},
 bTJ(){if(typeof WeakRef=="function")return WeakRef
 var s=function LeakRef(a){this._=a}
 s.prototype={
@@ -7156,7 +7156,7 @@ else throw r}},
 a1Q(a,b,c){var s="microsecond"
 if(b<0||b>999)throw A.d(A.cZ(b,0,999,s,null))
 if(a<-864e13||a>864e13)throw A.d(A.cZ(a,-864e13,864e13,"millisecondsSinceEpoch",null))
-if(a===864e13&&b!==0)throw A.d(A.a9(b,s,"Time including microseconds is outside valid range"))
+if(a===864e13&&b!==0)throw A.d(A.aa(b,s,"Time including microseconds is outside valid range"))
 A.us(c,"isUtc",t.y)
 return a},
 bvS(a){var s=Math.abs(a),r=a<0?"-":""
@@ -7175,7 +7175,7 @@ return"0"+a},
 fH(a,b,c){return new A.bJ(a+1000*b+1e6*c)},
 bLz(a,b){var s,r
 for(s=0;s<3;++s){r=a[s]
-if(r.b===b)return r}throw A.d(A.a9(b,"name","No enum value with that name"))},
+if(r.b===b)return r}throw A.d(A.aa(b,"name","No enum value with that name"))},
 yR(a){if(typeof a=="number"||A.Cv(a)||a==null)return J.a8(a)
 if(typeof a=="string")return JSON.stringify(a)
 return A.byP(a)},
@@ -7184,7 +7184,7 @@ A.us(b,"stackTrace",t.Km)
 A.bLD(a,b)},
 lH(a){return new A.y5(a)},
 bE(a,b){return new A.kV(!1,null,b,a)},
-a9(a,b,c){return new A.kV(!0,a,b,c)},
+aa(a,b,c){return new A.kV(!0,a,b,c)},
 arh(a){return new A.kV(!1,null,a,"Must not be null")},
 jt(a,b){return a==null?A.l(A.arh(b)):a},
 c7(a){var s=null
@@ -7258,222 +7258,222 @@ jG(a,b,c,d,e){var s,r,q
 if(d==null)d=0
 s=J.a7(c)
 r=A.d4(d,e,s.gA(c),null,null)-d
-if(a.length<b+r)throw A.d(A.a9(a,"target","Not big enough to hold "+r+" elements at position "+b))
+if(a.length<b+r)throw A.d(A.aa(a,"target","Not big enough to hold "+r+" elements at position "+b))
 if(c!==a||d>=b)for(q=0;q<r;++q)a[b+q]=s.i(c,d+q)
 else for(q=r;--q,q>=0;)a[b+q]=s.i(c,d+q)},
 bxz(a,b,c,d,e){return new A.yl(a,b.j("@<0>").b1(c).b1(d).b1(e).j("yl<1,2,3,4>"))},
 ae(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,a0,a1){var s
-if(B.a===c)return A.brh(J.a5(a),J.a5(b),$.ii())
-if(B.a===d){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-return A.it(A.ai(A.ai(A.ai($.ii(),s),b),c))}if(B.a===e)return A.bQv(J.a5(a),J.a5(b),J.a5(c),J.a5(d),$.ii())
-if(B.a===f){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e))}if(B.a===g){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f))}if(B.a===h){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g))}if(B.a===i){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h))}if(B.a===j){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i))}if(B.a===k){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j))}if(B.a===l){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k))}if(B.a===m){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-l=J.a5(l)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l))}if(B.a===n){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-l=J.a5(l)
-m=J.a5(m)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m))}if(B.a===o){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-l=J.a5(l)
-m=J.a5(m)
-n=J.a5(n)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n))}if(B.a===p){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-l=J.a5(l)
-m=J.a5(m)
-n=J.a5(n)
-o=J.a5(o)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o))}if(B.a===q){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-l=J.a5(l)
-m=J.a5(m)
-n=J.a5(n)
-o=J.a5(o)
-p=J.a5(p)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o),p))}if(B.a===r){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-l=J.a5(l)
-m=J.a5(m)
-n=J.a5(n)
-o=J.a5(o)
-p=J.a5(p)
-q=J.a5(q)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o),p),q))}if(B.a===a0){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-l=J.a5(l)
-m=J.a5(m)
-n=J.a5(n)
-o=J.a5(o)
-p=J.a5(p)
-q=J.a5(q)
-r=J.a5(r)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o),p),q),r))}if(B.a===a1){s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-l=J.a5(l)
-m=J.a5(m)
-n=J.a5(n)
-o=J.a5(o)
-p=J.a5(p)
-q=J.a5(q)
-r=J.a5(r)
-a0=J.a5(a0)
-return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o),p),q),r),a0))}s=J.a5(a)
-b=J.a5(b)
-c=J.a5(c)
-d=J.a5(d)
-e=J.a5(e)
-f=J.a5(f)
-g=J.a5(g)
-h=J.a5(h)
-i=J.a5(i)
-j=J.a5(j)
-k=J.a5(k)
-l=J.a5(l)
-m=J.a5(m)
-n=J.a5(n)
-o=J.a5(o)
-p=J.a5(p)
-q=J.a5(q)
-r=J.a5(r)
-a0=J.a5(a0)
-a1=J.a5(a1)
+if(B.a===c)return A.brh(J.a6(a),J.a6(b),$.ii())
+if(B.a===d){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+return A.it(A.ai(A.ai(A.ai($.ii(),s),b),c))}if(B.a===e)return A.bQv(J.a6(a),J.a6(b),J.a6(c),J.a6(d),$.ii())
+if(B.a===f){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e))}if(B.a===g){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f))}if(B.a===h){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g))}if(B.a===i){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h))}if(B.a===j){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i))}if(B.a===k){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j))}if(B.a===l){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k))}if(B.a===m){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+l=J.a6(l)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l))}if(B.a===n){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+l=J.a6(l)
+m=J.a6(m)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m))}if(B.a===o){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+l=J.a6(l)
+m=J.a6(m)
+n=J.a6(n)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n))}if(B.a===p){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+l=J.a6(l)
+m=J.a6(m)
+n=J.a6(n)
+o=J.a6(o)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o))}if(B.a===q){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+l=J.a6(l)
+m=J.a6(m)
+n=J.a6(n)
+o=J.a6(o)
+p=J.a6(p)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o),p))}if(B.a===r){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+l=J.a6(l)
+m=J.a6(m)
+n=J.a6(n)
+o=J.a6(o)
+p=J.a6(p)
+q=J.a6(q)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o),p),q))}if(B.a===a0){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+l=J.a6(l)
+m=J.a6(m)
+n=J.a6(n)
+o=J.a6(o)
+p=J.a6(p)
+q=J.a6(q)
+r=J.a6(r)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o),p),q),r))}if(B.a===a1){s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+l=J.a6(l)
+m=J.a6(m)
+n=J.a6(n)
+o=J.a6(o)
+p=J.a6(p)
+q=J.a6(q)
+r=J.a6(r)
+a0=J.a6(a0)
+return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o),p),q),r),a0))}s=J.a6(a)
+b=J.a6(b)
+c=J.a6(c)
+d=J.a6(d)
+e=J.a6(e)
+f=J.a6(f)
+g=J.a6(g)
+h=J.a6(h)
+i=J.a6(i)
+j=J.a6(j)
+k=J.a6(k)
+l=J.a6(l)
+m=J.a6(m)
+n=J.a6(n)
+o=J.a6(o)
+p=J.a6(p)
+q=J.a6(q)
+r=J.a6(r)
+a0=J.a6(a0)
+a1=J.a6(a1)
 return A.it(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai(A.ai($.ii(),s),b),c),d),e),f),g),h),i),j),k),l),m),n),o),p),q),r),a0),a1))},
 bT(a){var s,r=$.ii()
-for(s=J.bs(a);s.F();)r=A.ai(r,J.a5(s.gZ(s)))
+for(s=J.bs(a);s.F();)r=A.ai(r,J.a6(s.gZ(s)))
 return A.it(r)},
 bNQ(a){var s,r,q,p,o
-for(s=a.gau(a),r=0,q=0;s.F();){p=J.a5(s.gZ(s))
+for(s=a.gau(a),r=0,q=0;s.F();){p=J.a6(s.gZ(s))
 o=((p^p>>>16)>>>0)*569420461>>>0
 o=((o^o>>>15)>>>0)*3545902487>>>0
 r=r+((o^o>>>15)>>>0)&1073741823;++q}return A.brh(r,q,0)},
@@ -7727,10 +7727,10 @@ else return A.fF(s,s,s,r,s,s)},
 bTD(a,b){var s,r,q,p,o="\\",n=null,m="file"
 if(B.c.bJ(a,"\\\\?\\"))if(B.c.fK(a,"UNC\\",4))a=B.c.hV(a,0,7,o)
 else{a=B.c.bu(a,4)
-if(a.length<3||a.charCodeAt(1)!==58||a.charCodeAt(2)!==92)throw A.d(A.a9(a,"path","Windows paths with \\\\?\\ prefix must be absolute"))}else a=A.aJ(a,"/",o)
+if(a.length<3||a.charCodeAt(1)!==58||a.charCodeAt(2)!==92)throw A.d(A.aa(a,"path","Windows paths with \\\\?\\ prefix must be absolute"))}else a=A.aJ(a,"/",o)
 s=a.length
 if(s>1&&a.charCodeAt(1)===58){A.bTv(a.charCodeAt(0),!0)
-if(s===2||a.charCodeAt(2)!==92)throw A.d(A.a9(a,"path","Windows paths with drive letter must be absolute"))
+if(s===2||a.charCodeAt(2)!==92)throw A.d(A.aa(a,"path","Windows paths with drive letter must be absolute"))
 r=A.b(a.split(o),t.s)
 A.bjr(r,!0,1)
 return A.fF(n,n,n,r,n,m)}if(B.c.bJ(a,o))if(B.c.fK(a,o,1)){q=B.c.el(a,o,2)
@@ -7968,9 +7968,9 @@ o+=2}else if(e&&r===43)p.push(32)
 else p.push(r)}}return d.dr(0,p)},
 bBT(a){var s=a|32
 return 97<=s&&s<=122},
-bRl(a){if(!a.arr("data"))throw A.d(A.a9(a,"uri","Scheme must be 'data'"))
-if(a.c!=null)throw A.d(A.a9(a,"uri","Data uri must not have authority"))
-if(a.r!=null)throw A.d(A.a9(a,"uri","Data uri must not have a fragment part"))
+bRl(a){if(!a.arr("data"))throw A.d(A.aa(a,"uri","Scheme must be 'data'"))
+if(a.c!=null)throw A.d(A.aa(a,"uri","Data uri must not have authority"))
+if(a.r!=null)throw A.d(A.aa(a,"uri","Data uri must not have a fragment part"))
 if(a.f==null)return A.aWm(a.e,0,a)
 return A.aWm(a.gAu(),5,a)},
 bRn(a,b,c,d,e){d.a=d.a},
@@ -7999,7 +7999,7 @@ o=A.aP(n.charCodeAt(p>>>4))
 c.a+=o
 o=A.aP(n.charCodeAt(p&15))
 c.a+=o}}if((r&4294967040)!==0)for(q=0;q<s;++q){p=b[q]
-if(p>255)throw A.d(A.a9(p,"non-byte value",null))}},
+if(p>255)throw A.d(A.aa(p,"non-byte value",null))}},
 bCY(a,b,c,d,e){var s,r,q
 for(s=b;s<c;++s){r=a.charCodeAt(s)^96
 if(r>95)r=31
@@ -10357,7 +10357,7 @@ if(g==null)s=i?"MISSING":null
 else s=g
 return new A.kZ(s,f,i,b,d,h,n.j("kZ<0>"))},
 bpq(a,b,c){return new A.a2b(c)},
-c4(a){return B.c.eB(B.e.fu(J.a5(a)&1048575,16),5,"0")},
+c4(a){return B.c.eB(B.e.fu(J.a6(a)&1048575,16),5,"0")},
 bKE(a,b,c,d,e,f,g){return new A.M1(g)},
 M0:function M0(a,b){this.a=a
 this.b=b},
@@ -24956,8 +24956,8 @@ q=p
 return A.iM(a,b,d,null,r,q,g,h)},
 bLP(a,b,c,d,e,f,g,h,i,j){return new A.vb(c,e,f,b,i,j,h,g,a,d)},
 I(a,b,c,d,e,f,g){return new A.Gn(B.bd,d,e,b,null,B.eN,g,f,a,c)},
-a6(a,b,c,d,e){return new A.Dr(B.aj,d,e,b,null,B.eN,null,0,a,c)},
-aa(a,b){return new A.j5(b,B.dQ,a,null)},
+a5(a,b,c,d,e){return new A.Dr(B.aj,d,e,b,null,B.eN,null,0,a,c)},
+a9(a,b){return new A.j5(b,B.dQ,a,null)},
 fS(a,b,c,d,e){return new A.abS(a,e,d,c,b,null)},
 a8J(a,b,c,d,e,f,g,h,i,j,k,l,m,n){return new A.QC(i,j,k,g,d,A.bz8(m,1),c,b,h,n,l,f,e,A.bAx(i,A.bz8(m,1)),a)},
 bz8(a,b){var s,r
@@ -31496,7 +31496,7 @@ _.d=d
 _.e=e
 _.f=!1},
 bNx(a,b){var s=t.N,r=A.b([],t.yt),q=$.bti()
-if(!q.b.test(a))A.l(A.a9(a,"method","Not a valid method"))
+if(!q.b.test(a))A.l(A.aa(a,"method","Not a valid method"))
 return new A.aGV(A.t(s,s),r,a,b,A.aD0(new A.a0m(),new A.a0n(),s,s))},
 aGV:function aGV(a,b,c,d,e){var _=this
 _.x=a
@@ -31508,7 +31508,7 @@ _.w=!1},
 aGW:function aGW(a,b){this.a=a
 this.b=b},
 bPp(a,b){var s=new Uint8Array(0),r=$.bti()
-if(!r.b.test(a))A.l(A.a9(a,"method","Not a valid method"))
+if(!r.b.test(a))A.l(A.aa(a,"method","Not a valid method"))
 r=t.N
 return new A.aOb(B.ao,s,a,b,A.aD0(new A.a0m(),new A.a0n(),r,r))},
 aOb:function aOb(a,b,c,d,e){var _=this
@@ -32873,13 +32873,13 @@ q=r.length!==0?r[0].toUpperCase():"U"
 p=A.C(f,B.YS,B.i,f,f,new A.E(B.o,f,f,A.n(10),f,f,f,B.n),f,36,f,f,f,f,36)
 o=A.k("LawBuddy",f,f,f,f,f,A.J().$4$color$fontSize$fontWeight$letterSpacing(c?B.j:B.m,16.5,B.Q,-0.3),f,f)
 n=t.p
-o=A.I(A.b([p,B.af,A.aa(A.a6(A.b([o,A.k("REAL ESTATE AI TECH",f,f,f,f,f,A.J().$4$color$fontSize$fontWeight$letterSpacing(c?B.k:B.o,8,B.r,1.1),f,f)],n),B.v,f,B.f,B.C),1)],n),B.l,f,B.f,B.h,0,f)
+o=A.I(A.b([p,B.af,A.a9(A.a5(A.b([o,A.k("REAL ESTATE AI TECH",f,f,f,f,f,A.J().$4$color$fontSize$fontWeight$letterSpacing(c?B.k:B.o,8,B.r,1.1),f,f)],n),B.v,f,B.f,B.C),1)],n),B.l,f,B.f,B.h,0,f)
 p=A.iF(c?B.y:B.k,f,1,f,f,f)
 m=A.b([A.apl(s.I(0,"sidebar.overview"),c),new A.kx(B.Y4,s.I(0,"sidebar.dashboard"),!0,c,new A.bkz(a2,a),f),B.aA,A.apl(s.I(0,"sidebar.workspace"),c),new A.kx(B.zm,s.I(0,"sidebar.documents"),!1,c,new A.bkA(a2,a,a1),f),new A.kx(B.kr,s.I(0,"sidebar.riskAnalysis"),!1,c,new A.bkB(a2,a,a1),f),new A.kx(B.fG,s.I(0,"sidebar.checklists"),!1,c,new A.bkD(a2,a,a1),f),B.aA,A.apl(s.I(0,"sidebar.legalTools"),c),new A.kx(B.zl,s.I(0,"sidebar.documentComparison"),!1,c,new A.bkE(a2,a,a1),f),new A.kx(B.mS,s.I(0,"sidebar.legalAi"),!1,c,new A.bkF(a2,a,a1),f),new A.kx(B.ry,s.I(0,"sidebar.stampDuty"),!1,c,new A.bkG(a2,a,a1),f),B.aA,A.apl(s.I(0,"sidebar.legalInfo"),c),new A.kx(B.cy,s.I(0,"sidebar.reraCompliance"),!1,c,new A.bkH(a2,a,b,a0),f)],n)
 if((e?f:d.w==="admin")!==!0){l=(e?f:d.w)==="admin"
 e=l}else e=!0
 if(e)B.b.N(m,A.b([B.aA,A.apl(s.I(0,"sidebar.administration"),c),new A.kx(B.XW,s.I(0,"sidebar.adminAnalytics"),!1,c,new A.bkI(a2,a,a1),f)],n))
-e=A.aa(A.EI(m,B.VI,f,f,!1),1)
+e=A.a9(A.EI(m,B.VI,f,f,!1),1)
 m=A.iF(c?B.y:B.k,f,1,f,f,f)
 l=s.I(0,"sidebar.bin")
 k=s.I(0,"sidebar.settings")
@@ -32888,7 +32888,7 @@ i=(c?B.k:B.o).E(0.15)
 i=A.atj(i,A.k(q,f,f,f,f,f,A.a3(f,f,c?B.j:B.m,f,f,f,f,f,f,f,f,11,f,f,B.r,f,f,!0,f,f,f,f,f,f,f,f),f,f),14)
 h=A.k(r,f,1,B.X,f,f,A.J().$3$color$fontSize$fontWeight(c?B.j:B.m,12.5,B.D),f,f)
 g=s.I(0,"sidebar.profile")
-return A.a6(A.b([new A.av(B.b6,o,f),p,e,m,new A.av(B.c5,A.a6(A.b([new A.kx(B.eG,l,!1,c,new A.bkJ(a2,a,a1),f),B.bT,new A.kx(B.zc,k,!1,c,new A.bkK(a2,a,b),f),B.b_,A.d8(!1,j,!0,new A.av(B.ec,A.I(A.b([i,B.ah,A.aa(A.a6(A.b([h,A.k(g,f,f,f,f,f,A.J().$2$color$fontSize(c?B.t:B.u,10.5),f,f)],n),B.v,f,B.f,B.C),1)],n),B.l,f,B.f,B.h,0,f),f),f,!0,f,f,f,f,f,f,f,f,f,new A.bkC(a2,a,b),f,f,f,f,f,f,f,f)],n),B.l,f,B.f,B.h),f)],n),B.dg,f,B.f,B.h)},
+return A.a5(A.b([new A.av(B.b6,o,f),p,e,m,new A.av(B.c5,A.a5(A.b([new A.kx(B.eG,l,!1,c,new A.bkJ(a2,a,a1),f),B.bT,new A.kx(B.zc,k,!1,c,new A.bkK(a2,a,b),f),B.b_,A.d8(!1,j,!0,new A.av(B.ec,A.I(A.b([i,B.ah,A.a9(A.a5(A.b([h,A.k(g,f,f,f,f,f,A.J().$2$color$fontSize(c?B.t:B.u,10.5),f,f)],n),B.v,f,B.f,B.C),1)],n),B.l,f,B.f,B.h,0,f),f),f,!0,f,f,f,f,f,f,f,f,f,new A.bkC(a2,a,b),f,f,f,f,f,f,f,f)],n),B.l,f,B.f,B.h),f)],n),B.dg,f,B.f,B.h)},
 apl(a,b){var s=null
 return new A.av(B.kd,A.k(a,s,s,s,s,s,A.J().$4$color$fontSize$fontWeight$letterSpacing(b?B.k:B.o,9.5,B.r,1.1),s,s),s)},
 bVu(a,b,c){var s,r,q,p="RERA: The regulator that was supposed to protect homebuyers \u2014 but has it become part of the problem?",o=J.bor(c,new A.bls(),new A.blt()),n=o!=null
@@ -37185,7 +37185,7 @@ l.a.push(A.ak(p.jg(q.gxL())))}e=p.CW
 e.ar(0,"LE",r.fx)
 l=r.fy
 if(l!=null)e.ar(0,"L",l)
-else A.l(A.a9("LinePoints cannot be null",c1,c1))
+else A.l(A.aa("LinePoints cannot be null",c1,c1))
 l=q.b
 l===$&&A.a()
 if(l.gbN(0).e===0){l=q.b.gbN(0).f
@@ -37464,7 +37464,7 @@ l.ag(a7)
 a5.cR(0,1,l)
 l=new A.a1()
 l.ag(a8)
-a5.cR(0,2,l)}r.CW.ar(0,"C",a5)}else A.l(A.a9("TextMarkupColor is not null",c1,c1))}if(p.dx||p.cx){m=r.Yc()
+a5.cR(0,2,l)}r.CW.ar(0,"C",a5)}else A.l(A.aa("TextMarkupColor is not null",c1,c1))}if(p.dx||p.cx){m=r.Yc()
 if(p.dx){l=q.a.b
 if(l!=null)if(!r.r){if(m!=null){k=l.a
 k===$&&A.a()
@@ -38185,7 +38185,7 @@ while(r<32){p=s
 o=r
 r=o+1
 J.d6(p,o,5)}$.bpn=A.a1U(s)}catch(m){q=A.an(m)
-p=A.a9(q,"DecompressorHuffmanTree: fixed trees generation failed",null)
+p=A.aa(q,"DecompressorHuffmanTree: fixed trees generation failed",null)
 throw A.d(p)}},
 a1T:function a1T(){this.a=$},
 a1S:function a1S(){this.a=null
@@ -39830,7 +39830,7 @@ a=q.z
 q=q.y
 q===$&&A.a()
 a5.b=q
-if(a==null)A.l(A.a9(a,"font internal cannot be null",a0))
+if(a==null)A.l(A.aa(a,"font internal cannot be null",a0))
 a5.c=a
 return a6},
 nc:function nc(a){this.b=$
@@ -41071,7 +41071,7 @@ if(p==null){a=b.a.f
 a===$&&A.a()
 o=t.W.a(a.t(0,a.q(d)))}else o=p.gbd() instanceof A.a0?t.W.a(p.gbd()):h
 if(o!=null&&o.p(0,c)){n=s.a(o.t(0,o.q(c)))
-if(n!=null)if(t.W.a(n.gbd())==null)o.H(0,c)}}}else A.l(A.a9(r,"Cannot find the PDF catalog information",h))
+if(n!=null)if(t.W.a(n.gbd())==null)o.H(0,c)}}}else A.l(A.aa(r,"Cannot find the PDF catalog information",h))
 if(r.p(0,"Version")){m=t.Q.a(r.t(0,r.q("Version")))
 l=m!=null
 if(l){a=m.b
@@ -41258,22 +41258,22 @@ _.d=_.c=_.b=_.a=null},
 a1:function a1(){var _=this
 _.e=_.d=_.c=_.b=_.a=null},
 jL(a,b){var s="not a number"
-if(isNaN(a))A.l(A.a9(a,s,null))
-if(isNaN(b))A.l(A.a9(b,s,null))
+if(isNaN(a))A.l(A.aa(a,s,null))
+if(isNaN(b))A.l(A.aa(b,s,null))
 return new A.iK(a,b)},
 iK:function iK(a,b){var _=this
 _.a=a
 _.b=b
 _.f=_.e=_.d=_.c=null},
 bF(a){var s=new A.aF(null)
-if(a==null)A.l(A.a9(a,"object","value cannot be null"))
+if(a==null)A.l(A.aa(a,"object","value cannot be null"))
 if(t.lg.b(a))s.a=A.ja(a)
 else if(t.B_.b(a))s.a=a
-else A.l(A.a9(u.m,null,null))
+else A.l(A.aa(u.m,null,null))
 return s},
 bqA(a,b){var s=new A.aF(a)
 if(b!=null)s.r=b
-else A.l(A.a9(b,"crossTable value cannot be null",null))
+else A.l(A.aa(b,"crossTable value cannot be null",null))
 return s},
 aF:function aF(a){var _=this
 _.a=null
@@ -41302,7 +41302,7 @@ s.Q=s.ax=!1
 return s},
 byD(a){return J.eB(a,new A.aKD(),t.N).eJ(0).toUpperCase()},
 a7f(a){var s,r,q,p,o
-if(a==null)throw A.d(A.a9(a,"value","value cannot be null"))
+if(a==null)throw A.d(A.aa(a,"value","value cannot be null"))
 s=A.b([],t.t)
 for(r=t.Y.b(a),q=typeof a=="string",p=0,o=0;o<a.length;++o){if(q)p=a.charCodeAt(o)
 else if(r)p=a[o]
@@ -41387,7 +41387,7 @@ return s-a.gap(a)}},
 bv0(a,b,c){var s,r,q
 switch(a){case 1:s=A.boW(b,c)
 r=new A.LQ()
-if(s.length!==1)A.l(A.a9(s,"bytes","Invalid length in bytes"))
+if(s.length!==1)A.l(A.aa(s,"bytes","Invalid length in bytes"))
 r.c=s[0]
 return r
 case 10:s=A.boW(b,c)
@@ -41432,10 +41432,10 @@ for(q=0;q<p;++q)r[q]=0
 b[p]=r
 s=r}p=a.w
 r=s.length
-if(p!==r)A.l(A.a9(s,"bytes","Invalid length in bytes"))
+if(p!==r)A.l(A.aa(s,"bytes","Invalid length in bytes"))
 p-=a.Rb(s,0,r)
 a.w=p
-if(p!==0)A.l(A.a9(s,"bytes","Object truncated"))
+if(p!==0)A.l(A.aa(s,"bytes","Object truncated"))
 a.z9(!0)
 return s},
 bv1(a,b){var s,r,q=b&31
@@ -41539,7 +41539,7 @@ s.a=A.b([B.vX],t.qd)
 s.b=A.b([],t.t)
 return s},
 jz(a){a.toString
-if(!A.bKB(a))A.l(A.a9(a,"id","Invalid ID"))
+if(!A.bKB(a))A.l(A.aa(a,"id","Invalid ID"))
 return new A.yF(a)},
 bKA(a,b){var s,r,q,p=a.length
 for(s=!1;--p,p>=b;s=q){r=a[p]
@@ -45081,17 +45081,17 @@ if(d==null)o=s?B.y:B.k
 else o=d
 n=A.n(14)
 m=t.p
-l=A.b([A.aa(e,1)],m)
+l=A.b([A.a9(e,1)],m)
 if(b!=null)B.b.N(l,A.b([B.af,b],m))
 j.Dd(A.RE(k,k,k,p,B.i7,B.O,k,A.I(l,B.l,k,B.f,B.h,0,k),k,f,8,k,k,k,k,B.ed,k,new A.aN(n,new A.al(o,1.2,B.z,-1)),k,q))},
 CT(a,b,c){var s=null,r=A.B(a).ax.a===B.N,q=r?B.L:B.K,p=q.E(0.16),o=A.n(8)
 o=A.C(s,A.Z(B.fF,q,s,s,s,18),B.i,s,s,new A.E(p,s,s,o,s,s,s,B.n),s,s,s,B.c6,s,s,s)
-A.boU(a,s,s,s,A.I(A.b([o,B.af,A.aa(A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(r?B.j:B.m,13.5,B.D),s,s),1)],t.p),B.l,s,B.f,B.h,0,s),c)},
+A.boU(a,s,s,s,A.I(A.b([o,B.af,A.a9(A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(r?B.j:B.m,13.5,B.D),s,s),1)],t.p),B.l,s,B.f,B.h,0,s),c)},
 h9(a,b,c,d){var s=null,r=A.B(a).ax.a===B.N,q=r?B.J:B.H,p=r?B.dd:B.df,o=r?B.dc.E(0.5):B.de,n=A.Z(B.bG,q,s,s,s,18)
-A.boU(a,c,p,o,A.I(A.b([n,B.ah,A.aa(A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(r?B.ez:B.eA,13,B.D),s,s),1)],t.p),B.l,s,B.f,B.h,0,s),d)},
+A.boU(a,c,p,o,A.I(A.b([n,B.ah,A.a9(A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(r?B.ez:B.eA,13,B.D),s,s),1)],t.p),B.l,s,B.f,B.h,0,s),d)},
 arb(a,b){var s=null,r=A.B(a).ax.a===B.N,q=r?B.k:B.o,p=q.E(0.16),o=A.n(8)
 o=A.C(s,A.Z(B.ks,q,s,s,s,18),B.i,s,s,new A.E(p,s,s,o,s,s,s,B.n),s,s,s,B.c6,s,s,s)
-A.boU(a,s,s,s,A.I(A.b([o,B.af,A.aa(A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(r?B.j:B.m,13.5,B.D),s,s),1)],t.p),B.l,s,B.f,B.h,0,s),B.aN)},
+A.boU(a,s,s,s,A.I(A.b([o,B.af,A.a9(A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(r?B.j:B.m,13.5,B.D),s,s),1)],t.p),B.l,s,B.f,B.h,0,s),B.aN)},
 yw(a,b){a=A.aFW(0,100,a)
 b=A.aFW(0,100,b)
 return A.bph(A.ys(a),A.ys(b))},
@@ -45665,7 +45665,7 @@ xG(a,b){var s=0,r=A.z(t.y),q,p
 var $async$xG=A.u(function(c,d){if(c===1)return A.w(d,r)
 for(;;)switch(s){case 0:if(b===B.a_E||b===B.a_F)p=!(a.gfA()==="https"||a.gfA()==="http")
 else p=!1
-if(p)throw A.d(A.a9(a,"url","To use an in-app web view, you must provide an http(s) URL."))
+if(p)throw A.d(A.aa(a,"url","To use an in-app web view, you must provide an http(s) URL."))
 q=$.btG().Hr(a.l(0),new A.a4I(A.bWB(b),new A.a4n(!0,!0,B.nr),null))
 s=1
 break
@@ -53203,7 +53203,7 @@ o.m0(b,s.gA(c))
 for(s=s.gau(c);s.F();)o.jE(0,b,s.gZ(s))}else if(t.f.b(c)){b.b.jJ(0,13)
 s=J.a7(c)
 o.m0(b,s.gA(c))
-s.ao(c,new A.aTU(o,b))}else throw A.d(A.a9(c,null,null))},
+s.ao(c,new A.aTU(o,b))}else throw A.d(A.aa(c,null,null))},
 oF(a,b){if(b.b>=b.a.byteLength)throw A.d(B.dS)
 return this.tE(b.z1(0),b)},
 tE(a,b){var s,r,q,p,o,n,m,l,k,j=this
@@ -57455,7 +57455,7 @@ else r.c=q
 if(q==null)s.f=r
 else q.d=r;--s.a
 s.XF()},
-BD(a){return J.a5(a)&1073741823},
+BD(a){return J.a6(a)&1073741823},
 ade(a,b){return a[this.BD(b)]},
 y9(a,b){var s,r
 if(a==null)return-1
@@ -57631,7 +57631,7 @@ Je(a){return this.b[a]},
 i(a,b){return this.b[b]},
 lP(a){var s,r=this.b.groups
 if(r!=null){s=r[a]
-if(s!=null||a in r)return s}throw A.d(A.a9(a,"name","Not a capture group name"))},
+if(s!=null||a in r)return s}throw A.d(A.aa(a,"name","Not a capture group name"))},
 $izM:1,
 $iGd:1}
 A.ach.prototype={
@@ -58266,7 +58266,7 @@ return p}catch(s){if(t.ns.b(A.an(s))){if((this.c&1)!==0)throw A.d(A.bE("The erro
 throw A.d(A.bE("The error handler of Future.catchError must return a value of the future's type","onError"))}else throw s}}}
 A.aD.prototype={
 e0(a,b,c,d){var s,r,q=$.aX
-if(q===B.c4){if(c!=null&&!t.Hg.b(c)&&!t.C_.b(c))throw A.d(A.a9(c,"onError",u.x))}else if(c!=null)c=A.bCP(c,q)
+if(q===B.c4){if(c!=null&&!t.Hg.b(c)&&!t.C_.b(c))throw A.d(A.aa(c,"onError",u.x))}else if(c!=null)c=A.bCP(c,q)
 s=new A.aD(q,d.j("aD<0>"))
 r=c==null?1:3
 this.zo(new A.nH(s,r,b,c,this.$ti.j("@<1>").b1(d).j("nH<1,2>")))
@@ -59026,7 +59026,7 @@ if(a!=null&&a[b]!=null){s=A.brT(a,b)
 delete a[b];--this.a
 this.e=null
 return s}else return null},
-mT(a){return J.a5(a)&1073741823},
+mT(a){return J.a6(a)&1073741823},
 aaP(a,b){return a[this.mT(b)]},
 me(a,b){var s,r
 if(a==null)return-1
@@ -59170,7 +59170,7 @@ return!0},
 uk(a,b){if(a!=null&&a[b]!=null){delete a[b];--this.a
 this.e=null
 return!0}else return!1},
-mT(a){return J.a5(a)&1073741823},
+mT(a){return J.a6(a)&1073741823},
 me(a,b){var s,r
 if(a==null)return-1
 s=a.length
@@ -59276,7 +59276,7 @@ else r.b=q
 if(q==null)s.f=r
 else q.c=r;--s.a
 s.UU()},
-mT(a){return J.a5(a)&1073741823},
+mT(a){return J.a6(a)&1073741823},
 me(a,b){var s,r
 if(a==null)return-1
 s=a.length
@@ -59548,7 +59548,7 @@ s=c.$1(s==null?A.db(a).j("bZ.V").a(s):s)
 r.h(a,b,s)
 return s}if(d!=null){s=d.$0()
 r.h(a,b,s)
-return s}throw A.d(A.a9(b,"key","Key not in map."))},
+return s}throw A.d(A.aa(b,"key","Key not in map."))},
 ee(a,b,c){return this.bjb(a,b,c,null)},
 au7(a,b){var s,r,q,p
 for(s=J.bs(this.gdN(a)),r=A.db(a).j("bZ.V");s.F();){q=s.gZ(s)
@@ -60249,7 +60249,7 @@ gGp(){return B.vT}}
 A.amX.prototype={
 bm(a){var s,r,q,p=A.d4(0,null,a.length,null,null),o=new Uint8Array(p)
 for(s=~this.a,r=0;r<p;++r){q=a.charCodeAt(r)
-if((q&s)!==0)throw A.d(A.a9(a,"string","Contains invalid characters."))
+if((q&s)!==0)throw A.d(A.aa(a,"string","Contains invalid characters."))
 o[r]=q}return o},
 fk(a){var s=a instanceof A.KT?a:new A.u2(a)
 return new A.amY(s,this.a)}}
@@ -64886,7 +64886,7 @@ $1(a){return a.b},
 $S(){return this.a.$ti.j("dn.V(c_<dn.K,dn.V>)")}}
 A.a2_.prototype={
 nk(a,b){return J.e(a,b)},
-jR(a,b){return J.a5(b)}}
+jR(a,b){return J.a6(b)}}
 A.a4Y.prototype={
 nk(a,b){var s,r,q,p,o
 if(a===b)return!0
@@ -64964,7 +64964,7 @@ jR(a,b){var s=this
 if(t.Ro.b(b))return new A.GC(s,t.n5).jR(0,b)
 if(t.f.b(b))return new A.rL(s,s,t.Dx).jR(0,b)
 if(t.JY.b(b))return new A.Hx(s,t.N2).jR(0,b)
-return J.a5(b)},
+return J.a6(b)},
 bdV(a){return!0}}
 A.a3B.prototype={
 KN(a){var s=this.b[a]
@@ -65571,7 +65571,7 @@ A.E7.prototype={
 k(a,b){if(b==null)return!1
 if(this===b)return!0
 return b instanceof A.E7&&A.dS(b.a,this.a)},
-gG(a){return J.a5(this.a)},
+gG(a){return J.a6(this.a)},
 l(a){return"FilePickerResult(files: "+A.p(this.a)+")"}}
 A.a2U.prototype={
 M(){return"FileType."+this.b}}
@@ -65595,7 +65595,7 @@ var $async$Em=A.u(function(a6,a7){if(a6===1){o.push(a7)
 s=p}for(;;)switch(s){case 0:c=a.b
 if(!J.e(c,"custom"))h=a1.length!==0
 else h=!1
-if(h)throw A.d(A.a9(a1,"allowedExtensions","Custom extension filters are only allowed with FileType.custom. Remove the extension filter or change the FileType to FileType.custom."))
+if(h)throw A.d(A.aa(a1,"allowedExtensions","Custom extension filters are only allowed with FileType.custom. Remove the extension filter or change the FileType to FileType.custom."))
 p=4
 h=$.bNq
 h=h==null?null:h.bs(0)
@@ -66156,7 +66156,7 @@ A.fs.prototype={
 acI(a,b,c){var s=1-c
 return 3*a*s*s*c+3*b*s*c*c+c*c*c},
 tJ(a){var s,r,q,p,o,n,m=this
-if(isNaN(a))throw A.d(A.a9(a,"t","must not be NaN"))
+if(isNaN(a))throw A.d(A.aa(a,"t","must not be NaN"))
 if(a<=0)return 0
 if(a>=1)return 1
 for(s=m.a,r=m.c,q=0,p=1;;){o=(q+p)/2
@@ -66919,7 +66919,7 @@ O8(a,b,c,d){return B.aH},
 CG(a,b){return B.q}}
 A.ao0.prototype={}
 A.a1F.prototype={
-O(a){var s=null,r=A.bk(a,B.cV,t.w).w.r.b+8,q=this.c.ab(0,new A.f(8,r)),p=A.a6(this.d,B.l,s,B.f,B.C),o=A.b([2.574,-1.43,-0.144,0,0,-0.426,1.57,-0.144,0,0,-0.426,-1.43,2.856,0,0,0,0,0,1,0],t.n)
+O(a){var s=null,r=A.bk(a,B.cV,t.w).w.r.b+8,q=this.c.ab(0,new A.f(8,r)),p=A.a5(this.d,B.l,s,B.f,B.C),o=A.b([2.574,-1.43,-0.144,0,0,-0.426,1.57,-0.144,0,0,-0.426,-1.43,2.856,0,0,0,0,0,1,0],t.n)
 $.as()
 o=A.bDm(new A.DY(s,s,o,B.Rh))
 o.toString
@@ -67394,7 +67394,7 @@ r=this.a
 r=s==null?r==null:s===r
 s=r}else s=!1
 return s},
-gG(a){return J.a5(this.a)}}
+gG(a){return J.a6(this.a)}}
 A.b3n.prototype={
 $1(a){var s=A.a4(null,a,this.a)
 s.toString
@@ -68374,7 +68374,7 @@ bhe(a,b,c){var s=this.a,r=s==null?$.a_c():s,q=r.qS(0,0,b,A.ia(b),c)
 if(q===s)return this
 return new A.Pt(q,this.$ti)},
 i(a,b){var s=this.a
-return s==null?null:s.nN(0,0,b,J.a5(b))}}
+return s==null?null:s.nN(0,0,b,J.a6(b))}}
 A.bj9.prototype={}
 A.afw.prototype={
 qS(a,b,c,d,e){var s,r,q,p,o=B.e.Ar(d,b)&31,n=this.a,m=n[o]
@@ -70903,7 +70903,7 @@ if(r.x!=null){s=A.b([new A.eE(1,B.bt,new A.cj(new A.aq(0,1/0,0,m),b1,b5),b5)],t.
 r=b4.a.x
 r.toString
 s.push(r)
-b1=A.a6(s,B.l,b5,B.av,B.h)}b4.a.toString
+b1=A.a5(s,B.l,b5,B.av,B.h)}b4.a.toString
 b1=A.hh(!1,b1,B.V,!0)
 s=b8.ay
 b2=s==null?b5:s
@@ -73716,7 +73716,7 @@ CG(a,b){return B.q}}
 A.ao1.prototype={}
 A.a28.prototype={
 O(a){var s=null,r=A.bk(a,B.cV,t.w).w.r.b+8
-return new A.av(new A.X(8,r,8,8),new A.kc(new A.a29(this.c.ab(0,new A.f(8,r))),new A.aZ(222,s,A.fh(!1,B.a6,!0,B.w8,A.a6(this.d,B.l,s,B.f,B.C),B.bm,s,1,s,s,s,s,s,B.fM),s),s),s)}}
+return new A.av(new A.X(8,r,8,8),new A.kc(new A.a29(this.c.ab(0,new A.f(8,r))),new A.aZ(222,s,A.fh(!1,B.a6,!0,B.w8,A.a5(this.d,B.l,s,B.f,B.C),B.bm,s,1,s,s,s,s,s,B.fM),s),s),s)}}
 A.DO.prototype={
 O(a){var s=null
 return new A.aZ(1/0,s,A.dr(this.d,this.c,A.fR(B.bX,s,s,s,s,B.bV,s,s,B.bV,s,A.B(a).ax.a===B.N?B.x:B.b5,s,B.ac7,B.VU,s,B.i3,s,s,s,s,s)),s)}}
@@ -73795,13 +73795,13 @@ if(b.k1){n=A.b([],o)
 o=A.b([],o)
 if(i!=null)o.push(i)
 if(f!=null)o.push(f)
-n.push(new A.eE(1,B.bt,A.dW(A.a6(o,B.dg,a,B.f,B.C),a,B.I,a,a,B.aj),a))
+n.push(new A.eE(1,B.bt,A.dW(A.a5(o,B.dg,a,B.f,B.C),a,B.I,a,a,B.aj),a))
 if(e!=null)n.push(e)
 d=n}else{o=A.b([],o)
 if(i!=null)o.push(i)
 if(f!=null)o.push(new A.eE(1,B.bt,f,a))
 if(e!=null)o.push(e)
-d=o}c=A.aC8(A.a6(d,B.dg,a,B.f,B.C),a)
+d=o}c=A.aC8(A.a5(d,B.dg,a,B.f,B.C),a)
 if(p!=null)c=A.bU(a,a,a,c,!1,a,a,!1,a,!0,a,a,a,a,a,a,a,a,a,p,a,a,a,a,a,a,!0,a,a,a,a,a,a,a,a,a,a,a,!0,a,a,a,a,a,a,a,B.S,a)
 return A.bpr(a,b.cx,c,a,a,a,b.fr,B.aaJ,a,b.fy,a)}}
 A.If.prototype={
@@ -74601,7 +74601,7 @@ m=B.V.aa(a6.aD(t.I).w)
 l=t.p
 h=A.b([],l)
 a2.a.toString
-h.push(A.aa(n,1))
+h.push(A.a9(n,1))
 if(a2.a.ok==null)h.push(k)
 a5=A.kd(new A.aZ(a3,r,new A.av(m,A.I(h,B.l,a3,B.av,B.C,0,a3),a3),a3),a3,a3,B.cS,!0,a4,a3,a3,B.bq)
 if(a6.aD(t.sh)==null){a4=a2.a
@@ -74683,7 +74683,7 @@ $0(){this.a.z=!0},
 $S:0}
 A.b4Q.prototype={
 $1(a){var s=this.a.a.cx
-return s!=null?new A.aZ(null,s,a,null):A.a6(A.b([a],t.p),B.l,null,B.f,B.C)},
+return s!=null?new A.aZ(null,s,a,null):A.a5(A.b([a],t.p),B.l,null,B.f,B.C)},
 $S:643}
 A.b4R.prototype={
 $1(a){var s=this.a
@@ -74840,7 +74840,7 @@ if(a.n(0,B.a0))return s.a.gmV().b
 return s.a.gmV().b},
 $S:6}
 A.yP.prototype={
-gG(a){return J.a5(this.a)},
+gG(a){return J.a6(this.a)},
 k(a,b){if(b==null)return!1
 if(this===b)return!0
 if(J.am(b)!==A.O(this))return!1
@@ -74943,7 +74943,7 @@ r=s.d
 if(r==null)r=B.a8
 s=s.e
 if(s==null)s=B.V
-return new A.d3(r,q,q,new A.av(s,A.a6(p.r,B.l,q,B.f,B.h),q),q)},
+return new A.d3(r,q,q,new A.av(s,A.a5(p.r,B.l,q,B.f,B.h),q),q)},
 aFq(a,b,c,d){var s,r,q,p,o,n=this,m=null,l=n.r,k=$.bGp(),j=A.q(l).j("e7<aU.T>")
 l=new A.e7(k,l,j)
 t.G.a(d)
@@ -74963,7 +74963,7 @@ q=l.b.aB(0,k.gu(k))
 if(q==null)q=B.wb
 n.a.toString
 n.as===$&&A.a()
-p=new A.av(q.gni(),A.a6(A.b([b,c],t.p),B.l,m,B.f,B.C),m)
+p=new A.av(q.gni(),A.a5(A.b([b,c],t.p),B.l,m,B.f,B.C),m)
 n.a.toString
 o=!0
 l=n.as
@@ -75158,7 +75158,7 @@ if(a.n(0,B.a0))return s.a.gmW().c
 return s.a.gmW().c},
 $S:6}
 A.Mz.prototype={
-gG(a){return J.a5(this.a)},
+gG(a){return J.a6(this.a)},
 k(a,b){if(b==null)return!1
 if(this===b)return!0
 if(J.am(b)!==A.O(this))return!1
@@ -75624,7 +75624,7 @@ s=r==null?s.k3:r}else s=r
 return new A.al(s,1,B.z,-1)}},
 $S:665}
 A.pL.prototype={
-gG(a){return J.a5(this.a)},
+gG(a){return J.a6(this.a)},
 k(a,b){if(b==null)return!1
 if(this===b)return!0
 if(J.am(b)!==A.O(this))return!1
@@ -78439,7 +78439,7 @@ $0(){},
 $S:0}
 A.a5k.prototype={}
 A.O9.prototype={
-gG(a){return J.a5(this.a)},
+gG(a){return J.a6(this.a)},
 k(a,b){if(b==null)return!1
 if(this===b)return!0
 if(J.am(b)!==A.O(this))return!1
@@ -78571,7 +78571,7 @@ s=r==null?s.k3:r}else s=r
 return new A.al(s,1,B.z,-1)},
 $S:101}
 A.A8.prototype={
-gG(a){return J.a5(this.a)},
+gG(a){return J.a6(this.a)},
 k(a,b){if(b==null)return!1
 if(this===b)return!0
 if(J.am(b)!==A.O(this))return!1
@@ -81549,7 +81549,7 @@ h=(m+0+0)/j>i
 s=t.p
 m=A.b([],s)
 g=a.a
-g=A.b([A.aa(new A.av(B.V,A.kd(g.c,a0,a0,B.cS,!0,a5,a0,a0,B.bq),a0),1)],s)
+g=A.b([A.a9(new A.av(B.V,A.kd(g.c,a0,a0,B.cS,!0,a5,a0,a0,B.bq),a0),1)],s)
 if(!h)B.b.N(g,m)
 if(h)g.push(new A.aZ(j*0.4,a0,a0,a0))
 s=A.b([A.I(g,B.l,a0,B.f,B.h,0,a0)],s)
@@ -82664,7 +82664,7 @@ aFD(){var s=null,r=A.k(this.c,s,s,B.Mh,s,!1,s,s,s)
 return r},
 O(a){var s,r=null
 A.B(a)
-s=A.a6(A.b([new A.av(B.Vn,this.e,r),this.aFD()],t.p),B.l,r,B.bn,B.h)
+s=A.a5(A.b([new A.av(B.Vn,this.e,r),this.aFD()],t.p),B.l,r,B.bn,B.h)
 return new A.aZ(r,72,A.bH(s,r,r,1),r)},
 gR_(){return B.ace}}
 A.alG.prototype={
@@ -83424,7 +83424,7 @@ if(a.n(0,B.a0))return s.a.gqe().b
 return s.a.gqe().b},
 $S:6}
 A.Sb.prototype={
-gG(a){return J.a5(this.a)},
+gG(a){return J.a6(this.a)},
 k(a,b){if(b==null)return!1
 if(this===b)return!0
 if(J.am(b)!==A.O(this))return!1
@@ -86368,7 +86368,7 @@ k(a,b){if(b==null)return!1
 if(this===b)return!0
 if(J.am(b)!==A.O(this))return!1
 return b instanceof A.hI&&J.e(b.a,this.a)},
-gG(a){return J.a5(this.a)}}
+gG(a){return J.a6(this.a)}}
 A.aC1.prototype={
 $1(a){var s=a.a5R(this.b,this.c)
 this.a.a=s
@@ -98736,7 +98736,7 @@ l.m0(b,s.gA(c))
 for(s=s.gau(c);s.F();)l.jE(0,b,s.gZ(s))}else if(t.f.b(c)){b.kd(0,13)
 s=J.a7(c)
 l.m0(b,s.gA(c))
-s.ao(c,new A.aTT(l,b))}else throw A.d(A.a9(c,null,null))},
+s.ao(c,new A.aTT(l,b))}else throw A.d(A.aa(c,null,null))},
 oF(a,b){if(b.b>=b.a.byteLength)throw A.d(B.dS)
 return this.tE(b.z1(0),b)},
 tE(a,b){var s,r,q,p,o,n,m,l,k=this
@@ -100054,7 +100054,7 @@ case 1:return A.x(q,r)}})
 return A.y($async$no,r)}}
 A.aUw.prototype={
 $1(a){var s,r=A.t(t.N,t.z)
-r.h(0,"callbackId",J.a5(a.ghF(a)))
+r.h(0,"callbackId",J.a6(a.ghF(a)))
 s=a.ghF(a)
 if(s!=null)r.h(0,"title",s)
 r.h(0,"type",a.guz())
@@ -100062,7 +100062,7 @@ return r},
 $S:429}
 A.j9.prototype={
 ghF(a){return null},
-gG(a){return J.a5(this.ghF(this))},
+gG(a){return J.a6(this.ghF(this))},
 k(a,b){var s=this
 if(b==null)return!1
 if(s===b)return!0
@@ -108236,7 +108236,7 @@ O(a){var s=this,r=A.SL(s.w,new A.lZ(s.c,s.d),null,s.r,!0)
 return A.uM(new A.a5V(B.fp,0,1/0,0,1/0,r,null),s.e,null)}}
 A.SO.prototype={
 dd(a){var s=this.a,r=new A.bQ(new Float64Array(16))
-if(r.km(s)===0)A.l(A.a9(s,"other","Matrix cannot be inverted"))
+if(r.km(s)===0)A.l(A.aa(s,"other","Matrix cannot be inverted"))
 s=new A.d9(new Float64Array(3))
 s.hn(a.a,a.b,0)
 s=r.r2(s).a
@@ -116825,7 +116825,7 @@ m(){},
 U(a,b){},
 $iaK:1}
 A.aah.prototype={
-O(a){return A.aa(B.aH,1)}}
+O(a){return A.a9(B.aH,1)}}
 A.RH.prototype={
 b8O(a,b,c,d){var s=this
 if(!s.e)return B.li
@@ -119429,7 +119429,7 @@ if(typeof r=="number")return s+A.mG(r)+")"
 else return s+A.p(r)+")"},
 k(a,b){if(b==null)return!1
 return this.$ti.b(b)&&A.O(b)===A.O(this)&&J.e(b.a,this.a)},
-gG(a){return J.a5(this.a)},
+gG(a){return J.a6(this.a)},
 $ida:1}
 A.abN.prototype={
 ee(a,b,c){var s=this.a
@@ -119781,7 +119781,7 @@ $R:3,
 $S:625}
 A.aDD.prototype={
 $0(){var s=this.b.b
-if(s.length!==0)return A.a6(s,B.v,null,B.f,B.C)
+if(s.length!==0)return A.a5(s,B.v,null,B.f,B.C)
 else return B.i6},
 $S:243}
 A.aDA.prototype={
@@ -119925,7 +119925,7 @@ $S:0}
 A.a5a.prototype={
 ex(a,b){var s=b.length
 if(s===1)return B.b.gbr(b)
-return A.a6(b,B.v,null,B.f,B.C)}}
+return A.a5(b,B.v,null,B.f,B.C)}}
 A.Dz.prototype={
 ex(a,b){return this.e.$3(a,b,null)}}
 A.Lr.prototype={
@@ -120816,7 +120816,7 @@ A.aGh.prototype={
 aN1(a,b,c,d,e,f){var s
 if(a!=null)s=a>100
 else s=!1
-if(s)throw A.d(A.a9(a,"imageQuality","must be between 0 and 100"))
+if(s)throw A.d(A.aa(a,"imageQuality","must be between 0 and 100"))
 s=t.N
 return B.a5l.iF("pickImage",A.c(["source",f.a,"maxWidth",c,"maxHeight",b,"imageQuality",a,"cameraDevice",d.a,"requestFullMetadata",!0],s,t.z),!1,s)},
 tV(a,b){return this.avm(a,b)},
@@ -120838,7 +120838,7 @@ A.aBj.prototype={
 aD1(a,b,c,d){var s,r=this.c
 if(r!=null)s=r>100
 else s=!1
-if(s)A.l(A.a9(r,"imageQuality","must be between 0 and 100"))}}
+if(s)A.l(A.aa(r,"imageQuality","must be between 0 and 100"))}}
 A.a4h.prototype={
 M(){return"ImageSource."+this.b}}
 A.a1O.prototype={
@@ -121009,7 +121009,7 @@ $1(a){A.bDa().$1(a)},
 $S:644}
 A.bmW.prototype={
 $1(a){var s=null
-return A.fh(!1,B.a6,!0,s,A.bH(new A.av(B.bP,A.a6(A.b([B.Z9,B.aI,A.k("Temporarily adjusting layout...",s,s,s,s,s,A.a3(s,s,B.hl,s,s,s,s,s,s,s,s,12,s,s,B.U,s,s,!0,s,s,s,s,s,s,s,s),s,s)],t.p),B.l,s,B.f,B.C),s),s,s,s),B.i,B.E,0,s,s,s,s,s,B.bR)},
+return A.fh(!1,B.a6,!0,s,A.bH(new A.av(B.bP,A.a5(A.b([B.Z9,B.aI,A.k("Temporarily adjusting layout...",s,s,s,s,s,A.a3(s,s,B.hl,s,s,s,s,s,s,s,s,12,s,s,B.U,s,s,!0,s,s,s,s,s,s,s,s),s,s)],t.p),B.l,s,B.f,B.C),s),s,s,s),B.i,B.E,0,s,s,s,s,s,B.bR)},
 $S:645}
 A.a4J.prototype={
 ex(a1,a2){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e=null,d="shareToken",c=a2.cM($.JY(),t.jm),b=a2.cM($.bt(),t.A),a=A.oV().gyt().i(0,"theme"),a0=a==null?e:a.toLowerCase()
@@ -121633,13 +121633,13 @@ p=s.I(0,"adminAnalytics.title")
 o=t.p
 p=A.I(A.b([q,B.M,A.k(p,m,m,m,m,m,A.a3(m,m,r?B.j:B.m,m,m,m,m,m,m,m,m,18,m,m,B.r,m,m,!0,m,m,m,m,m,m,m,m),m,m)],o),B.l,m,B.f,B.h,0,m)
 q=s.I(0,"adminAnalytics.subtitle")
-q=A.a6(A.b([p,A.k(q,m,m,m,m,m,A.a3(m,m,r?B.t:B.u,m,m,m,m,m,m,m,m,12,m,m,m,m,m,!0,m,m,m,m,m,m,m,m),m,m)],o),B.v,m,B.f,B.h)
+q=A.a5(A.b([p,A.k(q,m,m,m,m,m,A.a3(m,m,r?B.t:B.u,m,m,m,m,m,m,m,m,12,m,m,m,m,m,!0,m,m,m,m,m,m,m,m),m,m)],o),B.v,m,B.f,B.h)
 p=s.I(0,"adminAnalytics.refreshTooltip")
 return A.ip(A.pj(A.b([A.f2(m,m,m,m,m,B.Zf,m,m,n.x?m:n.gLK(),m,m,m,m,p),B.bS,B.a6Y],o),k,m,m,0,m,1,q),l,n.aEh(r,s),m,m,m,m)},
 aEh(a,b){var s,r,q,p,o,n=this,m=null
 if(n.x){s=A.jv(m,B.o,m,m,m,m,m,m,m,m)
 r=b.I(0,"adminAnalytics.loading")
-return A.bH(A.a6(A.b([s,B.ai,A.k(r,m,m,m,m,m,A.a3(m,m,a?B.t:B.u,m,m,m,m,m,m,m,m,13,m,m,m,m,m,!0,m,m,m,m,m,m,m,m),m,m)],t.p),B.l,m,B.f,B.C),m,m,m)}if(n.z)return n.aG5(a,b)
+return A.bH(A.a5(A.b([s,B.ai,A.k(r,m,m,m,m,m,A.a3(m,m,a?B.t:B.u,m,m,m,m,m,m,m,m,13,m,m,m,m,m,!0,m,m,m,m,m,m,m,m),m,m)],t.p),B.l,m,B.f,B.C),m,m,m)}if(n.z)return n.aG5(a,b)
 if(n.y!=null){s=A.Z(B.bG,a?B.J:B.H,m,m,m,48)
 r=b.I(0,"adminAnalytics.errorTitle")
 r=A.k(r,m,m,m,m,m,A.a3(m,m,a?B.j:B.m,m,m,m,m,m,m,m,m,18,m,m,B.r,m,m,!0,m,m,m,m,m,m,m,m),m,m)
@@ -121648,25 +121648,25 @@ if(q==null)q=b.I(0,"adminAnalytics.defaultError")
 q=A.k(q,m,m,m,m,m,A.a3(m,m,a?B.t:B.u,m,m,m,m,m,m,m,m,13,m,m,m,m,m,!0,m,m,m,m,m,m,m,m),B.an,m)
 p=A.k(b.I(0,"adminAnalytics.retryConnection"),m,m,m,m,m,m,m,m)
 o=a?B.m:B.x
-return A.bH(new A.av(B.di,A.a6(A.b([s,B.ai,r,B.aI,q,B.bg,A.j4(B.n1,p,n.gLK(),A.dt(m,m,B.o,m,m,m,m,m,m,m,o,m,m,m,m,new A.aN(A.n(10),B.w),m,m,m,m,m))],t.p),B.l,m,B.f,B.C),m),m,m,m)}s=n.w
+return A.bH(new A.av(B.di,A.a5(A.b([s,B.ai,r,B.aI,q,B.bg,A.j4(B.n1,p,n.gLK(),A.dt(m,m,B.o,m,m,m,m,m,m,m,o,m,m,m,m,new A.aN(A.n(10),B.w),m,m,m,m,m))],t.p),B.l,m,B.f,B.C),m),m,m,m)}s=n.w
 if(s==null){s=A.Z(B.Yb,a?B.t:B.u,m,m,m,48)
 r=b.I(0,"adminAnalytics.emptyTitle")
 r=A.k(r,m,m,m,m,m,A.a3(m,m,a?B.j:B.m,m,m,m,m,m,m,m,m,18,m,m,B.r,m,m,!0,m,m,m,m,m,m,m,m),m,m)
 q=b.I(0,"adminAnalytics.emptyDesc")
-return A.bH(new A.av(B.di,A.a6(A.b([s,B.ai,r,B.aI,A.k(q,m,m,m,m,m,A.a3(m,m,a?B.t:B.u,m,m,m,m,m,m,m,m,13,m,m,m,m,m,!0,m,m,m,m,m,m,m,m),B.an,m),B.bg,A.j4(B.n1,A.k(b.I(0,"adminAnalytics.refresh"),m,m,m,m,m,m,m,m),n.gLK(),m)],t.p),B.l,m,B.f,B.C),m),m,m,m)}r=n.aFC(a,s.a,b)
+return A.bH(new A.av(B.di,A.a5(A.b([s,B.ai,r,B.aI,A.k(q,m,m,m,m,m,A.a3(m,m,a?B.t:B.u,m,m,m,m,m,m,m,m,13,m,m,m,m,m,!0,m,m,m,m,m,m,m,m),B.an,m),B.bg,A.j4(B.n1,A.k(b.I(0,"adminAnalytics.refresh"),m,m,m,m,m,m,m,m),n.gLK(),m)],t.p),B.l,m,B.f,B.C),m),m,m,m)}r=n.aFC(a,s.a,b)
 s=n.aFV(a,s.b,b)
 q=n.aFw(a,n.w.c,b)
 p=n.w
-return A.bqR(A.dW(A.bH(new A.cj(B.Oy,A.a6(A.b([r,B.aU,s,B.aU,q,B.aU,n.aFR(a,p.d,p.e,b),B.aU,n.aFT(a,n.w.f,b),B.dJ],t.p),B.v,m,B.f,B.h),m),m,m,m),m,B.I,B.yg,B.jG,B.aj),B.o,n.gLK())},
+return A.bqR(A.dW(A.bH(new A.cj(B.Oy,A.a5(A.b([r,B.aU,s,B.aU,q,B.aU,n.aFR(a,p.d,p.e,b),B.aU,n.aFT(a,n.w.f,b),B.dJ],t.p),B.v,m,B.f,B.h),m),m,m,m),m,B.I,B.yg,B.jG,B.aj),B.o,n.gLK())},
 aFC(a,b,c){return A.jD(new A.aYm(this,a,c,b))},
 Kd(a,b,c,d,e,f){var s=null,r=c?B.m:B.j,q=A.n(14),p=A.ag(c?B.y:B.k,1),o=A.k(e,s,s,s,s,s,A.a3(s,s,c?B.t:B.u,s,s,s,s,s,s,s,s,13,s,s,B.D,s,s,!0,s,s,s,s,s,s,s,s),s,s),n=a.E(0.15),m=A.n(8),l=t.p
 m=A.I(A.b([o,A.C(s,A.Z(b,a,s,s,s,16),B.i,s,s,new A.E(n,s,s,m,s,s,s,B.n),s,s,s,B.c6,s,s,s)],l),B.l,s,B.av,B.h,0,s)
 o=A.k(f,s,s,s,s,s,A.a3(s,s,c?B.j:B.m,s,s,s,s,s,s,s,s,26,s,s,B.Q,s,s,!0,s,-0.5,s,s,s,s,s,s),s,s)
-return A.C(s,A.a6(A.b([m,B.b8,o,B.b_,A.k(d,s,s,s,s,s,A.a3(s,s,c?B.t.E(0.8):B.u.E(0.8),s,s,s,s,s,s,s,s,11,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],l),B.v,s,B.f,B.h),B.i,s,s,new A.E(r,s,p,q,s,s,s,B.n),s,s,s,B.bP,s,s,s)},
+return A.C(s,A.a5(A.b([m,B.b8,o,B.b_,A.k(d,s,s,s,s,s,A.a3(s,s,c?B.t.E(0.8):B.u.E(0.8),s,s,s,s,s,s,s,s,11,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],l),B.v,s,B.f,B.h),B.i,s,s,new A.E(r,s,p,q,s,s,s,B.n),s,s,s,B.bP,s,s,s)},
 a9E(a,b,c){var s=null,r=b?B.ad:B.aD,q=A.n(6)
 return A.C(s,A.k(""+a+" "+c,s,s,s,s,s,A.a3(s,s,b?B.t:B.u,s,s,s,s,s,s,s,s,11,s,s,B.U,s,s,!0,s,s,s,s,s,s,s,s),s,s),B.i,s,s,new A.E(r,s,s,q,s,s,s,B.n),s,s,s,B.f4,s,s,s)},
 aFV(a,b,c){var s=c.I(0,"adminAnalytics.riskSectionTitle")
-return A.a6(A.b([this.Kh(B.YC,a,c.I(0,"adminAnalytics.riskSectionSubtitle"),s),B.au,A.jD(new A.aYq(this,a,b,c))],t.p),B.v,null,B.f,B.h)},
+return A.a5(A.b([this.Kh(B.YC,a,c.I(0,"adminAnalytics.riskSectionSubtitle"),s),B.au,A.jD(new A.aYq(this,a,b,c))],t.p),B.v,null,B.f,B.h)},
 a9w(a,b,c){var s,r,q=this,p=null,o="adminAnalytics.docRiskHigh",n="adminAnalytics.docRiskMed",m="adminAnalytics.docRiskLow",l=b.a,k=b.b,j=b.c,i=l+k+j,h=a?B.m:B.j,g=A.n(14),f=A.ag(a?B.y:B.k,1),e=A.Z(B.XE,B.o,p,p,p,18),d=c.I(0,"adminAnalytics.docRiskTitle")
 d=A.k(d,p,p,p,p,p,A.a3(p,p,a?B.j:B.m,p,p,p,p,p,p,p,p,15,p,p,B.r,p,p,!0,p,p,p,p,p,p,p,p),p,p)
 s=t.N
@@ -121679,7 +121679,7 @@ l=q.zs(a?B.J:B.H,l,a,e,i)
 e=c.I(0,n)
 k=q.zs(a?B.aC:B.aB,k,a,e,i)
 e=c.I(0,m)
-return A.C(p,A.a6(A.b([s,B.aA,d,B.ai,l,B.aI,k,B.aI,q.zs(a?B.L:B.K,j,a,e,i)],r),B.v,p,B.f,B.h),B.i,p,p,new A.E(h,p,f,g,p,p,p,B.n),p,p,p,B.dh,p,p,p)},
+return A.C(p,A.a5(A.b([s,B.aA,d,B.ai,l,B.aI,k,B.aI,q.zs(a?B.L:B.K,j,a,e,i)],r),B.v,p,B.f,B.h),B.i,p,p,new A.E(h,p,f,g,p,p,p,B.n),p,p,p,B.dh,p,p,p)},
 a9t(a,b,c){var s,r,q=this,p=null,o="adminAnalytics.clauseRiskHigh",n="adminAnalytics.clauseRiskCaution",m="adminAnalytics.clauseRiskCompliant",l=b.a,k=b.b,j=b.c,i=l+k+j,h=a?B.m:B.j,g=A.n(14),f=A.ag(a?B.y:B.k,1),e=A.Z(B.zw,a?B.aC:B.aB,p,p,p,18),d=c.I(0,"adminAnalytics.clauseRiskTitle")
 d=A.k(d,p,p,p,p,p,A.a3(p,p,a?B.j:B.m,p,p,p,p,p,p,p,p,15,p,p,B.r,p,p,!0,p,p,p,p,p,p,p,p),p,p)
 s=t.N
@@ -121692,17 +121692,17 @@ l=q.zs(a?B.J:B.H,l,a,e,i)
 e=c.I(0,n)
 k=q.zs(a?B.aC:B.aB,k,a,e,i)
 e=c.I(0,m)
-return A.C(p,A.a6(A.b([s,B.aA,d,B.ai,l,B.aI,k,B.aI,q.zs(a?B.L:B.K,j,a,e,i)],r),B.v,p,B.f,B.h),B.i,p,p,new A.E(h,p,f,g,p,p,p,B.n),p,p,p,B.dh,p,p,p)},
+return A.C(p,A.a5(A.b([s,B.aA,d,B.ai,l,B.aI,k,B.aI,q.zs(a?B.L:B.K,j,a,e,i)],r),B.v,p,B.f,B.h),B.i,p,p,new A.E(h,p,f,g,p,p,p,B.n),p,p,p,B.dh,p,p,p)},
 a9G(a,b,c,d,e,f){var s,r,q,p,o=null
 if(f===0){s=b?B.y:B.k
 return A.C(o,o,B.i,o,o,new A.E(s,o,o,A.n(4),o,o,o,B.n),o,8,o,o,o,o,o)}s=A.n(4)
 r=A.b([],t.p)
 if(a>0){q=B.e.a6(a*100)
-r.push(A.aa(A.C(o,o,B.i,b?B.J:B.H,o,o,o,o,o,o,o,o,o),q))}if(d>0){q=B.e.a6(d*100)
-r.push(A.aa(A.C(o,o,B.i,b?B.aC:B.aB,o,o,o,o,o,o,o,o,o),q))}if(c>0){q=B.e.a6(c*100)
-r.push(A.aa(A.C(o,o,B.i,b?B.L:B.K,o,o,o,o,o,o,o,o,o),q))}p=A.jw(s,new A.aZ(o,8,A.I(r,B.l,o,B.f,B.h,0,o),o),B.bm)
+r.push(A.a9(A.C(o,o,B.i,b?B.J:B.H,o,o,o,o,o,o,o,o,o),q))}if(d>0){q=B.e.a6(d*100)
+r.push(A.a9(A.C(o,o,B.i,b?B.aC:B.aB,o,o,o,o,o,o,o,o,o),q))}if(c>0){q=B.e.a6(c*100)
+r.push(A.a9(A.C(o,o,B.i,b?B.L:B.K,o,o,o,o,o,o,o,o,o),q))}p=A.jw(s,new A.aZ(o,8,A.I(r,B.l,o,B.f,B.h,0,o),o),B.bm)
 return A.bU(o,o,o,new A.o8(!0,p,o),!1,o,o,!1,o,!1,o,o,o,o,o,o,o,o,o,e,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,B.S,o)},
-zs(a,b,c,d,e){var s=null,r=e>0?b/e*100:0,q=A.C(s,s,B.i,s,s,new A.E(a,s,s,A.n(2.5),s,s,s,B.n),s,10,s,s,s,s,10),p=A.aa(A.k(d,s,s,s,s,s,A.a3(s,s,c?B.j:B.m,s,s,s,s,s,s,s,s,13,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s),1),o=A.k(""+b,s,s,s,s,s,A.a3(s,s,c?B.j:B.m,s,s,s,s,s,s,s,s,13,s,s,B.r,s,s,!0,s,s,s,s,s,s,s,s),s,s),n=B.d.aJ(r,0)
+zs(a,b,c,d,e){var s=null,r=e>0?b/e*100:0,q=A.C(s,s,B.i,s,s,new A.E(a,s,s,A.n(2.5),s,s,s,B.n),s,10,s,s,s,s,10),p=A.a9(A.k(d,s,s,s,s,s,A.a3(s,s,c?B.j:B.m,s,s,s,s,s,s,s,s,13,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s),1),o=A.k(""+b,s,s,s,s,s,A.a3(s,s,c?B.j:B.m,s,s,s,s,s,s,s,s,13,s,s,B.r,s,s,!0,s,s,s,s,s,s,s,s),s,s),n=B.d.aJ(r,0)
 return A.I(A.b([q,B.M,p,o,B.aZ,new A.aZ(48,s,A.k("("+n+"%)",s,s,s,s,s,A.a3(s,s,c?B.t:B.u,s,s,s,s,s,s,s,s,12,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),B.h0,s),s)],t.p),B.l,s,B.f,B.h,0,s)},
 aFw(a,b,c){var s,r,q,p,o=null,n=B.b.ku(b,0,new A.aYk()),m=c.I(0,"adminAnalytics.issueCategoriesTitle")
 m=this.Kh(B.Y2,a,c.I(0,"adminAnalytics.issueCategoriesSubtitle"),m)
@@ -121712,7 +121712,7 @@ q=A.ag(a?B.y:B.k,1)
 if(b.length===0)p=this.Uf(a,c)
 else{p=A.ab(b).j("af<1,av>")
 p=A.aj(new A.af(b,new A.aYl(this,n,a,c),p),p.j("aY.E"))
-p=A.a6(p,B.l,o,B.f,B.h)}return A.a6(A.b([m,B.au,A.C(o,p,B.i,o,o,new A.E(s,o,q,r,o,o,o,B.n),o,o,o,B.dh,o,o,o)],t.p),B.v,o,B.f,B.h)},
+p=A.a5(p,B.l,o,B.f,B.h)}return A.a5(A.b([m,B.au,A.C(o,p,B.i,o,o,new A.E(s,o,q,r,o,o,o,B.n),o,o,o,B.dh,o,o,o)],t.p),B.v,o,B.f,B.h)},
 aMk(a,b){var s=a.toLowerCase()
 if(B.c.n(s,"statutory")||B.c.n(s,"violation"))return b?B.J:B.H
 else if(B.c.n(s,"contractual")||B.c.n(s,"title")||B.c.n(s,"concern"))return b?B.aC:B.aB
@@ -121721,12 +121721,12 @@ return B.o},
 Uf(a,b){var s=null,r=b.I(0,"adminAnalytics.noCategories")
 return new A.av(B.qy,A.bH(A.k(r,s,s,s,s,s,A.a3(s,s,a?B.t:B.u,s,s,s,s,s,s,s,s,13,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s),s,s,s),s)},
 aFR(a,b,c,d){var s=d.I(0,"adminAnalytics.pipelineTitle")
-return A.a6(A.b([this.Kh(B.Yj,a,d.I(0,"adminAnalytics.pipelineSubtitle"),s),B.au,A.jD(new A.aYn(this,a,b,d,c))],t.p),B.v,null,B.f,B.h)},
+return A.a5(A.b([this.Kh(B.Yj,a,d.I(0,"adminAnalytics.pipelineSubtitle"),s),B.au,A.jD(new A.aYn(this,a,b,d,c))],t.p),B.v,null,B.f,B.h)},
 a9P(a,b,c){var s=null,r=B.b.ku(b,0,new A.aYr()),q=a?B.m:B.j,p=A.n(14),o=A.ag(a?B.y:B.k,1),n=A.Z(B.Y9,B.o,s,s,s,18),m=c.I(0,"adminAnalytics.sourceTypesTitle"),l=t.p
 l=A.b([A.I(A.b([n,B.M,A.k(m,s,s,s,s,s,A.a3(s,s,a?B.j:B.m,s,s,s,s,s,s,s,s,15,s,s,B.r,s,s,!0,s,s,s,s,s,s,s,s),s,s)],l),B.l,s,B.f,B.h,0,s),B.aA],l)
 if(b.length===0)l.push(this.Uf(a,c))
 else B.b.N(l,new A.af(b,new A.aYs(this,r,a),A.ab(b).j("af<1,h>")))
-return A.C(s,A.a6(l,B.v,s,B.f,B.h),B.i,s,s,new A.E(q,s,o,p,s,s,s,B.n),s,s,s,B.dh,s,s,s)},
+return A.C(s,A.a5(l,B.v,s,B.f,B.h),B.i,s,s,new A.E(q,s,o,p,s,s,s,B.n),s,s,s,B.dh,s,s,s)},
 aNR(a){var s=a.toLowerCase()
 if(B.c.n(s,"pdf"))return B.kt
 if(B.c.n(s,"photo")||B.c.n(s,"scan")||B.c.n(s,"image"))return B.zh
@@ -121735,7 +121735,7 @@ a9z(a,b,c){var s=null,r=B.b.ku(b,0,new A.aYi()),q=a?B.m:B.j,p=A.n(14),o=A.ag(a?B
 l=A.b([A.I(A.b([n,B.M,A.k(m,s,s,s,s,s,A.a3(s,s,a?B.j:B.m,s,s,s,s,s,s,s,s,15,s,s,B.r,s,s,!0,s,s,s,s,s,s,s,s),s,s)],l),B.l,s,B.f,B.h,0,s),B.aA],l)
 if(b.length===0)l.push(this.Uf(a,c))
 else B.b.N(l,new A.af(b,new A.aYj(r,a),A.ab(b).j("af<1,h>")))
-return A.C(s,A.a6(l,B.v,s,B.f,B.h),B.i,s,s,new A.E(q,s,o,p,s,s,s,B.n),s,s,s,B.dh,s,s,s)},
+return A.C(s,A.a5(l,B.v,s,B.f,B.h),B.i,s,s,new A.E(q,s,o,p,s,s,s,B.n),s,s,s,B.dh,s,s,s)},
 aFT(a,b,c){var s,r,q,p,o=null,n=c.I(0,"adminAnalytics.recentActivityTitle")
 n=this.Kh(B.mX,a,c.I(0,"adminAnalytics.recentActivitySubtitle"),n)
 s=a?B.m:B.j
@@ -121744,7 +121744,7 @@ q=A.ag(a?B.y:B.k,1)
 p=b.length
 if(p===0){p=c.I(0,"adminAnalytics.noRecentActivity")
 p=new A.av(B.di,A.bH(A.k(p,o,o,o,o,o,A.a3(o,o,a?B.t:B.u,o,o,o,o,o,o,o,o,13,o,o,o,o,o,!0,o,o,o,o,o,o,o,o),o,o),o,o,o),o)}else p=A.a50(new A.aYo(this,b,a,c),p,o,B.hN,new A.aYp(a),!0)
-return A.a6(A.b([n,B.au,A.C(o,p,B.i,o,o,new A.E(s,o,q,r,o,o,o,B.n),o,o,o,o,o,o,o)],t.p),B.v,o,B.f,B.h)},
+return A.a5(A.b([n,B.au,A.C(o,p,B.i,o,o,new A.E(s,o,q,r,o,o,o,B.n),o,o,o,o,o,o,o)],t.p),B.v,o,B.f,B.h)},
 Kl(a,b,c){var s=null,r=A.Z(a,b?B.t:B.u,s,s,s,12)
 return A.I(A.b([r,B.bS,A.k(c,s,s,s,s,s,A.a3(s,s,b?B.t:B.u,s,s,s,s,s,s,s,s,11,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],t.p),B.l,s,B.f,B.C,0,s)},
 aMF(a,b){var s=a.toLowerCase()
@@ -121760,7 +121760,7 @@ return b.d3(0,"time.hoursAgo",A.c(["count",B.e.l(r)],s,s))}s=B.e.aS(s,864e8)
 if(s<7){r=t.N
 return b.d3(0,"time.daysAgo",A.c(["count",B.e.l(s)],r,r))}return""+A.oB(a)+"/"+A.hO(a)+"/"+A.ln(a)},
 Kh(a,b,c,d){var s=null,r=A.Z(a,B.o,s,s,s,20),q=A.k(d,s,s,s,s,s,A.a3(s,s,b?B.j:B.m,s,s,s,s,s,s,s,s,16,s,s,B.r,s,s,!0,s,s,s,s,s,s,s,s),s,s),p=t.p
-return A.I(A.b([r,B.M,A.aa(A.a6(A.b([q,A.k(c,s,s,s,s,s,A.a3(s,s,b?B.t:B.u,s,s,s,s,s,s,s,s,12,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],p),B.v,s,B.f,B.h),1)],p),B.l,s,B.f,B.h,0,s)},
+return A.I(A.b([r,B.M,A.a9(A.a5(A.b([q,A.k(c,s,s,s,s,s,A.a3(s,s,b?B.t:B.u,s,s,s,s,s,s,s,s,12,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s)],p),B.v,s,B.f,B.h),1)],p),B.l,s,B.f,B.h,0,s)},
 aG5(a,b){var s,r,q,p,o=null,n=(a?B.J:B.H).E(0.12)
 n=A.C(o,A.Z(B.YN,a?B.J:B.H,o,o,o,48),B.i,o,o,new A.E(n,o,o,o,o,o,o,B.aM),o,o,o,B.dh,o,o,o)
 s=b.I(0,"adminAnalytics.unauthorizedTitle")
@@ -121769,7 +121769,7 @@ r=b.I(0,"adminAnalytics.unauthorizedDesc")
 r=A.k(r,o,o,o,o,o,A.a3(o,o,a?B.t:B.u,o,o,o,o,o,o,o,o,13,o,o,o,o,1.4,!0,o,o,o,o,o,o,o,o),B.an,o)
 q=A.k(b.I(0,"adminAnalytics.returnToWorkspace"),o,o,o,o,o,o,o,o)
 p=a?B.m:B.x
-return A.bH(new A.av(B.di,A.a6(A.b([n,B.bg,s,B.aI,new A.cj(B.pJ,r,o),B.aU,A.j4(B.zH,q,new A.aYt(this),A.dt(o,o,B.o,o,o,o,o,o,o,o,p,o,o,B.f3,o,new A.aN(A.n(10),B.w),o,o,o,o,o))],t.p),B.l,o,B.f,B.C),o),o,o,o)}}
+return A.bH(new A.av(B.di,A.a5(A.b([n,B.bg,s,B.aI,new A.cj(B.pJ,r,o),B.aU,A.j4(B.zH,q,new A.aYt(this),A.dt(o,o,B.o,o,o,o,o,o,o,o,p,o,o,B.f3,o,new A.aN(A.n(10),B.w),o,o,o,o,o))],t.p),B.l,o,B.f,B.C),o),o,o,o)}}
 A.aYu.prototype={
 $0(){var s=this.a
 s.x=!0
@@ -121813,13 +121813,13 @@ o=A.n(12)
 n=A.ag(s?B.y:B.k,1)
 m=A.Z(B.XR,s?B.t:B.u,h,h,h,18)
 j=r.I(0,"adminAnalytics.supportingActivity")
-return A.a6(A.b([l,B.au,A.C(h,A.I(A.b([m,B.M,A.k(j,h,h,h,h,h,A.a3(h,h,s?B.j:B.m,h,h,h,h,h,h,h,h,12,h,h,B.D,h,h,!0,h,h,h,h,h,h,h,h),h,h),B.af,g.a9E(p.e,s,r.I(0,"adminAnalytics.badgeChatSessions")),B.M,g.a9E(p.f,s,r.I(0,"adminAnalytics.badgeDiligenceChecklists"))],k),B.l,h,B.f,B.h,0,h),B.i,h,h,new A.E(q,h,n,o,h,h,h,B.n),h,h,h,B.ed,h,h,h)],k),B.v,h,B.f,B.h)},
+return A.a5(A.b([l,B.au,A.C(h,A.I(A.b([m,B.M,A.k(j,h,h,h,h,h,A.a3(h,h,s?B.j:B.m,h,h,h,h,h,h,h,h,12,h,h,B.D,h,h,!0,h,h,h,h,h,h,h,h),h,h),B.af,g.a9E(p.e,s,r.I(0,"adminAnalytics.badgeChatSessions")),B.M,g.a9E(p.f,s,r.I(0,"adminAnalytics.badgeDiligenceChecklists"))],k),B.l,h,B.f,B.h,0,h),B.i,h,h,new A.E(q,h,n,o,h,h,h,B.n),h,h,h,B.ed,h,h,h)],k),B.v,h,B.f,B.h)},
 $S:249}
 A.aYq.prototype={
 $2(a,b){var s=this,r=s.a,q=s.b,p=s.c,o=s.d,n=t.p,m=p.a
 p=p.b
-if(b.b>700)return A.I(A.b([A.aa(r.a9w(q,m,o),1),B.dI,A.aa(r.a9t(q,p,o),1)],n),B.v,null,B.f,B.h,0,null)
-else return A.a6(A.b([r.a9w(q,m,o),B.ai,r.a9t(q,p,o)],n),B.l,null,B.f,B.h)},
+if(b.b>700)return A.I(A.b([A.a9(r.a9w(q,m,o),1),B.dI,A.a9(r.a9t(q,p,o),1)],n),B.v,null,B.f,B.h,0,null)
+else return A.a5(A.b([r.a9w(q,m,o),B.ai,r.a9t(q,p,o)],n),B.l,null,B.f,B.h)},
 $S:79}
 A.aYk.prototype={
 $2(a,b){return a+b.b},
@@ -121828,19 +121828,19 @@ A.aYl.prototype={
 $1(a){var s,r,q,p,o,n=this,m=null,l=n.b,k=l>0?a.b/l:0
 l=a.a
 s=n.c
-r=A.aa(A.k(l,m,m,m,m,m,A.a3(m,m,s?B.j:B.m,m,m,m,m,m,m,m,m,13,m,m,B.D,m,m,!0,m,m,m,m,m,m,m,m),m,m),1)
+r=A.a9(A.k(l,m,m,m,m,m,A.a3(m,m,s?B.j:B.m,m,m,m,m,m,m,m,m,13,m,m,B.D,m,m,!0,m,m,m,m,m,m,m,m),m,m),1)
 q=t.N
 q=n.d.d3(0,"adminAnalytics.issueCategoryCount",A.c(["count",B.e.l(a.b),"percent",B.d.aJ(k*100,1)],q,q))
 p=t.p
 q=A.I(A.b([r,A.k(q,m,m,m,m,m,A.a3(m,m,s?B.t:B.u,m,m,m,m,m,m,m,m,12,m,m,B.U,m,m,!0,m,m,m,m,m,m,m,m),m,m)],p),B.l,m,B.av,B.h,0,m)
 r=A.n(3)
 o=s?B.ad:B.aD
-return new A.av(B.VF,A.a6(A.b([q,B.aS,A.jw(r,A.ED(o,6,k,new A.h8(n.a.aMk(l,s),t.ZU)),B.bm)],p),B.v,m,B.f,B.h),m)},
+return new A.av(B.VF,A.a5(A.b([q,B.aS,A.jw(r,A.ED(o,6,k,new A.h8(n.a.aMk(l,s),t.ZU)),B.bm)],p),B.v,m,B.f,B.h),m)},
 $S:667}
 A.aYn.prototype={
 $2(a,b){var s=this,r=s.a,q=s.b,p=s.c,o=s.d,n=s.e,m=t.p
-if(b.b>700)return A.I(A.b([A.aa(r.a9P(q,p,o),1),B.dI,A.aa(r.a9z(q,n,o),1)],m),B.v,null,B.f,B.h,0,null)
-else return A.a6(A.b([r.a9P(q,p,o),B.ai,r.a9z(q,n,o)],m),B.l,null,B.f,B.h)},
+if(b.b>700)return A.I(A.b([A.a9(r.a9P(q,p,o),1),B.dI,A.a9(r.a9z(q,n,o),1)],m),B.v,null,B.f,B.h,0,null)
+else return A.a5(A.b([r.a9P(q,p,o),B.ai,r.a9z(q,n,o)],m),B.l,null,B.f,B.h)},
 $S:79}
 A.aYr.prototype={
 $2(a,b){return a+b.b},
@@ -121851,7 +121851,7 @@ n=a.a
 s=this.a.aNR(n)
 r=this.c
 s=A.Z(s,r?B.t:B.u,o,o,o,16)
-n=A.aa(A.k(n,o,o,o,o,o,A.a3(o,o,r?B.j:B.m,o,o,o,o,o,o,o,o,13,o,o,o,o,o,!0,o,o,o,o,o,o,o,o),o,o),1)
+n=A.a9(A.k(n,o,o,o,o,o,A.a3(o,o,r?B.j:B.m,o,o,o,o,o,o,o,o,13,o,o,o,o,o,!0,o,o,o,o,o,o,o,o),o,o),1)
 q=A.k(""+a.b,o,o,o,o,o,A.a3(o,o,r?B.j:B.m,o,o,o,o,o,o,o,o,13,o,o,B.r,o,o,!0,o,o,o,o,o,o,o,o),o,o)
 p=B.d.aJ(m*100,0)
 return new A.av(B.yd,A.I(A.b([s,B.M,n,q,B.aZ,new A.aZ(46,o,A.k("("+p+"%)",o,o,o,o,o,A.a3(o,o,r?B.t:B.u,o,o,o,o,o,o,o,o,12,o,o,o,o,o,!0,o,o,o,o,o,o,o,o),B.h0,o),o)],t.p),B.l,o,B.f,B.h,0,o),o)},
@@ -121864,7 +121864,7 @@ $1(a){var s,r,q,p,o=null,n=this.a,m=n>0?a.b/n:0
 n=this.b
 s=A.Z(B.YA,n?B.t:B.u,o,o,o,16)
 r=a.gb9L()
-r=A.aa(A.k(r,o,o,o,o,o,A.a3(o,o,n?B.j:B.m,o,o,o,o,o,o,o,o,13,o,o,o,o,o,!0,o,o,o,o,o,o,o,o),o,o),1)
+r=A.a9(A.k(r,o,o,o,o,o,A.a3(o,o,n?B.j:B.m,o,o,o,o,o,o,o,o,13,o,o,o,o,o,!0,o,o,o,o,o,o,o,o),o,o),1)
 q=A.k(""+a.b,o,o,o,o,o,A.a3(o,o,n?B.j:B.m,o,o,o,o,o,o,o,o,13,o,o,B.r,o,o,!0,o,o,o,o,o,o,o,o),o,o)
 p=B.d.aJ(m*100,0)
 return new A.av(B.yd,A.I(A.b([s,B.M,r,q,B.aZ,new A.aZ(46,o,A.k("("+p+"%)",o,o,o,o,o,A.a3(o,o,n?B.t:B.u,o,o,o,o,o,o,o,o,12,o,o,o,o,o,!0,o,o,o,o,o,o,o,o),B.h0,o),o)],t.p),B.l,o,B.f,B.h,0,o),o)},
@@ -121879,12 +121879,12 @@ h=A.C(p,A.Z(B.rw,j,p,p,p,20),B.i,p,p,new A.E(i,p,p,h,p,p,p,B.n),p,p,p,B.aW,p,p,p
 i=A.k(o.b,p,1,B.X,p,p,A.a3(p,p,m?B.j:B.m,p,p,p,p,p,p,p,p,14,p,p,B.r,p,p,!0,p,p,p,p,p,p,p,p),p,p)
 s=o.r
 r=t.p
-l=A.aa(A.a6(A.b([i,B.b_,A.fS(B.ay,A.b([n.Kl(B.Xw,m,""+s+" "+l.I(0,s===1?"docView.page":"docView.pages")),n.Kl(B.XA,m,o.w),n.Kl(B.XK,m,o.gbaZ()),n.Kl(B.XU,m,n.aLR(o.y,l))],r),B.cr,4,8)],r),B.v,p,B.f,B.h),1)
+l=A.a9(A.a5(A.b([i,B.b_,A.fS(B.ay,A.b([n.Kl(B.Xw,m,""+s+" "+l.I(0,s===1?"docView.page":"docView.pages")),n.Kl(B.XA,m,o.w),n.Kl(B.XK,m,o.gbaZ()),n.Kl(B.XU,m,n.aLR(o.y,l))],r),B.cr,4,8)],r),B.v,p,B.f,B.h),1)
 n=j.E(0.18)
 s=A.n(6)
 i=A.ag(j.E(0.4),1)
 s=A.C(p,A.k(k,p,p,p,p,p,A.a3(p,p,j,p,p,p,p,p,p,p,p,11,p,p,B.r,p,p,!0,p,p,p,p,p,p,p,p),p,p),B.i,p,p,new A.E(n,p,i,s,p,p,p,B.n),p,p,p,B.ee,p,p,p)
-return new A.av(B.fB,A.I(A.b([h,B.cG,l,B.ah,A.a6(A.b([s,B.aS,A.k(""+o.d+"H \u2022 "+o.e+"C \u2022 "+o.f+"OK",p,p,p,p,p,A.a3(p,p,m?B.t:B.u,p,p,p,p,p,p,p,p,11,p,p,B.D,p,p,!0,p,p,p,p,p,p,p,p),p,p)],r),B.fv,p,B.f,B.h)],r),B.v,p,B.f,B.h,0,p),p)},
+return new A.av(B.fB,A.I(A.b([h,B.cG,l,B.ah,A.a5(A.b([s,B.aS,A.k(""+o.d+"H \u2022 "+o.e+"C \u2022 "+o.f+"OK",p,p,p,p,p,A.a3(p,p,m?B.t:B.u,p,p,p,p,p,p,p,p,11,p,p,B.D,p,p,!0,p,p,p,p,p,p,p,p),p,p)],r),B.fv,p,B.f,B.h)],r),B.v,p,B.f,B.h,0,p),p)},
 $S:174}
 A.aYt.prototype={
 $0(){var s=this.a.c
@@ -122161,7 +122161,7 @@ Ki(a,b,c,d,e,f,g,h){var s,r,q=null,p=A.n(12),o=e?B.m:B.j,n=A.n(12),m=A.ag(e?B.y:
 l=A.C(q,A.Z(b,d,q,q,q,20),B.i,q,q,new A.E(c,q,q,l,q,q,q,B.n),q,q,q,B.bO,q,q,q)
 s=A.k(h,q,q,q,q,q,A.a3(q,q,e?B.j:B.m,q,q,q,q,q,q,q,q,14,q,q,B.r,q,q,!0,q,q,q,q,q,q,q,q),q,q)
 r=t.p
-s=A.aa(A.a6(A.b([s,B.bT,A.k(g,q,q,q,q,q,A.a3(q,q,e?B.t:B.u,q,q,q,q,q,q,q,q,11,q,q,q,q,q,!0,q,q,q,q,q,q,q,q),q,q)],r),B.v,q,B.f,B.h),1)
+s=A.a9(A.a5(A.b([s,B.bT,A.k(g,q,q,q,q,q,A.a3(q,q,e?B.t:B.u,q,q,q,q,q,q,q,q,11,q,q,q,q,q,!0,q,q,q,q,q,q,q,q),q,q)],r),B.v,q,B.f,B.h),1)
 return A.d8(!1,p,!0,A.C(q,A.I(A.b([l,B.cG,s,A.Z(B.mU,e?B.t:B.u,q,q,q,20)],r),B.l,q,B.f,B.h,0,q),B.i,q,q,new A.E(o,q,m,n,q,q,q,B.n),q,q,q,B.ms,q,q,q),q,!0,q,q,q,q,q,q,q,q,q,f,q,q,q,q,q,q,q,q)},
 E5(){var s=0,r=A.z(t.H),q,p=2,o=[],n=[],m=this,l,k,j,i,h,g,f,e,d,c,b
 var $async$E5=A.u(function(a,a0){if(a===1){o.push(a0)
@@ -122300,7 +122300,7 @@ c=a1.Kk(c,r?B.aC:B.aB,r)
 b=s.$2("analysis.compliantCount",A.c(["count",""+o],f,f))
 b=a1.Kk(b,r?B.L:B.K,r)
 f=s.$2("analysis.clausesTotal",A.c(["count",""+J.aC(a1.a.e)],f,f))
-a3=A.b([A.C(a2,A.a6(A.b([a3,B.aA,A.fS(B.ay,A.b([d,c,b,a1.Kk(f,r?B.t:B.u,r)],e),B.cr,8,8)],e),B.v,a2,B.f,B.h),B.i,a2,a2,new A.E(i,a2,g,h,a2,a2,a2,B.n),a2,a2,B.qv,B.dh,a2,a2,a2)],e)
+a3=A.b([A.C(a2,A.a5(A.b([a3,B.aA,A.fS(B.ay,A.b([d,c,b,a1.Kk(f,r?B.t:B.u,r)],e),B.cr,8,8)],e),B.v,a2,B.f,B.h),B.i,a2,a2,new A.E(i,a2,g,h,a2,a2,a2,B.n),a2,a2,B.qv,B.dh,a2,a2,a2)],e)
 if(B.c.bC(a1.a.d).length!==0){i=r?B.m:B.j
 h=A.n(16)
 g=A.ag(r?B.y:B.k,1)
@@ -122318,7 +122318,7 @@ b=A.n(8)
 a=a1.gur()
 d=A.I(A.b([new A.eE(1,B.bt,d,a2),B.M,A.C(a2,A.k(a,a2,a2,a2,a2,a2,A.a3(a2,a2,B.k,a2,a2,a2,a2,a2,a2,a2,a2,10,a2,a2,B.r,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2),B.i,a2,a2,new A.E(c,a2,a2,b,a2,a2,a2,B.n),a2,a2,a2,B.yr,a2,a2,a2)],e),B.l,a2,B.f,B.h,0,a2)
 c=s.$1("analysis.originalUploaded")
-d=A.aa(A.a6(A.b([d,B.bT,A.k(c,a2,a2,a2,a2,a2,A.a3(a2,a2,r?B.t:B.u,a2,a2,a2,a2,a2,a2,a2,a2,12,a2,a2,a2,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2)],e),B.v,a2,B.f,B.h),1)
+d=A.a9(A.a5(A.b([d,B.bT,A.k(c,a2,a2,a2,a2,a2,A.a3(a2,a2,r?B.t:B.u,a2,a2,a2,a2,a2,a2,a2,a2,12,a2,a2,a2,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2)],e),B.v,a2,B.f,B.h),1)
 c=A.k(s.$1("analysis.expandWindow"),a2,a2,a2,a2,a2,a2,a2,a2)
 b=r?B.k:B.o
 a=r?B.ad:B.x
@@ -122348,7 +122348,7 @@ c=r?B.Y:B.j
 b=A.n(10)
 a=A.ag(r?B.y:B.k,1)
 a0=a1.a.d
-B.b.N(f,A.b([d,B.aS,A.C(a2,A.dW(A.br1(a0,A.a3(a2,a2,r?B.j:B.m,a2,a2,a2,a2,a2,"monospace",a2,a2,13,a2,a2,a2,a2,1.6,!0,a2,a2,a2,a2,a2,a2,a2,a2)),a2,B.I,a2,a2,B.aj),B.i,a2,B.Or,new A.E(c,a2,a,b,a2,a2,a2,B.n),a2,a2,a2,B.fA,a2,a2,1/0)],e))}B.b.N(a3,A.b([A.C(a2,A.a6(f,B.v,a2,B.f,B.h),B.i,a2,a2,new A.E(i,a2,g,h,a2,a2,a2,B.n),a2,a2,B.qv,B.b6,a2,a2,a2)],e))}i=A.Z(B.zw,r?B.k:B.o,a2,a2,a2,18)
+B.b.N(f,A.b([d,B.aS,A.C(a2,A.dW(A.br1(a0,A.a3(a2,a2,r?B.j:B.m,a2,a2,a2,a2,a2,"monospace",a2,a2,13,a2,a2,a2,a2,1.6,!0,a2,a2,a2,a2,a2,a2,a2,a2)),a2,B.I,a2,a2,B.aj),B.i,a2,B.Or,new A.E(c,a2,a,b,a2,a2,a2,B.n),a2,a2,a2,B.fA,a2,a2,1/0)],e))}B.b.N(a3,A.b([A.C(a2,A.a5(f,B.v,a2,B.f,B.h),B.i,a2,a2,new A.E(i,a2,g,h,a2,a2,a2,B.n),a2,a2,B.qv,B.b6,a2,a2,a2)],e))}i=A.Z(B.zw,r?B.k:B.o,a2,a2,a2,18)
 h=s.$1("analysis.analyzedClauses")
 a3.push(new A.av(B.Wi,A.I(A.b([i,B.M,A.k(h,a2,a2,a2,a2,a2,A.a3(a2,a2,r?B.j:B.m,a2,a2,a2,a2,a2,a2,a2,a2,16,a2,a2,B.r,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2)],e),B.l,a2,B.f,B.h,0,a2),a2))
 B.b.N(a3,A.NR(J.aC(a1.a.e),new A.aYY(a1,a5,r,s),!0,t.l7))
@@ -122356,7 +122356,7 @@ a3=A.b([A.EI(a3,B.bP,a2,a2,!1)],e)
 if(a1.w){i=r?B.Y:B.j
 h=A.jv(a2,r?B.k:B.o,a2,a2,a2,a2,a2,a2,a2,a2)
 g=s.$1("analysis.simplifyingJargon")
-a3.push(A.C(a2,A.bH(A.bvp(new A.av(B.di,A.a6(A.b([h,B.ai,A.k(g,a2,a2,a2,a2,a2,A.a3(a2,a2,r?B.j:B.m,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2)],e),B.l,a2,B.f,B.C),a2),i,a2,a2,a2),a2,a2,a2),B.i,B.aR,a2,a2,a2,a2,a2,a2,a2,a2,a2))}return A.ip(m,a4,A.e0(B.bv,a3,B.O,B.aO,a2),a2,a2,a2,a2)},
+a3.push(A.C(a2,A.bH(A.bvp(new A.av(B.di,A.a5(A.b([h,B.ai,A.k(g,a2,a2,a2,a2,a2,A.a3(a2,a2,r?B.j:B.m,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2)],e),B.l,a2,B.f,B.C),a2),i,a2,a2,a2),a2,a2,a2),B.i,B.aR,a2,a2,a2,a2,a2,a2,a2,a2,a2))}return A.ip(m,a4,A.e0(B.bv,a3,B.O,B.aO,a2),a2,a2,a2,a2)},
 Kk(a,b,c){var s,r,q,p,o=null
 if(c)s=b.k(0,B.J)||B.c.n(a.toLowerCase(),"high")
 else s=!1
@@ -122401,7 +122401,7 @@ else l=n?"SCANNED PHOTO DOCUMENT RECORD":"LEGAL TEXT DOCUMENT RECORD"
 l=A.k(l,f,f,f,f,f,A.a3(f,f,b?B.k:B.o,f,f,f,f,f,f,f,f,11,f,f,B.r,f,f,!0,f,0.8,f,f,f,f,f,f),f,f)
 k=this.a.f
 j=t.p
-k=A.I(A.b([m,B.ah,A.a6(A.b([l,A.k(k,f,f,f,f,f,A.a3(f,f,b?B.j:B.m,f,f,f,f,f,f,f,f,16,f,f,B.r,f,f,!0,f,f,f,f,f,f,f,f),f,f)],j),B.v,f,B.f,B.h)],j),B.l,f,B.f,B.h,0,f)
+k=A.I(A.b([m,B.ah,A.a5(A.b([l,A.k(k,f,f,f,f,f,A.a3(f,f,b?B.j:B.m,f,f,f,f,f,f,f,f,16,f,f,B.r,f,f,!0,f,f,f,f,f,f,f,f),f,f)],j),B.v,f,B.f,B.h)],j),B.l,f,B.f,B.h,0,f)
 m=(b?B.L:B.K).E(0.15)
 l=A.n(20)
 i=A.ag((b?B.L:B.K).E(0.3),1)
@@ -122413,7 +122413,7 @@ k=b?B.Y:B.j
 i=A.n(10)
 h=A.ag(b?B.y:B.k,1)
 g=this.a.d
-return A.C(f,A.bH(new A.cj(B.OJ,A.C(f,A.a6(A.b([m,B.aA,l,B.aA,A.aa(A.C(f,A.dW(A.br1(g,A.a3(f,f,b?B.j:B.m,f,f,f,f,f,"serif",f,f,13.5,f,f,f,f,1.65,!0,f,f,f,f,f,f,f,f)),f,B.I,f,f,B.aj),B.i,f,f,new A.E(k,f,h,i,f,f,f,B.n),f,f,f,B.bP,f,f,f),1)],j),B.v,f,B.f,B.h),B.i,f,f,new A.E(r,f,p,q,f,f,f,B.n),f,f,f,B.qC,f,f,1/0),f),f,f,f),B.i,s,f,f,f,f,f,B.ym,f,f,f)},
+return A.C(f,A.bH(new A.cj(B.OJ,A.C(f,A.a5(A.b([m,B.aA,l,B.aA,A.a9(A.C(f,A.dW(A.br1(g,A.a3(f,f,b?B.j:B.m,f,f,f,f,f,"serif",f,f,13.5,f,f,f,f,1.65,!0,f,f,f,f,f,f,f,f)),f,B.I,f,f,B.aj),B.i,f,f,new A.E(k,f,h,i,f,f,f,B.n),f,f,f,B.bP,f,f,f),1)],j),B.v,f,B.f,B.h),B.i,f,f,new A.E(r,f,p,q,f,f,f,B.n),f,f,f,B.qC,f,f,1/0),f),f,f,f),B.i,s,f,f,f,f,f,B.ym,f,f,f)},
 aFr(a,b){var s,r,q,p,o,n,m,l=this,k=null,j=l.gbB().b6(0,$.bt().gbc(),t.O),i=j.gev(j)
 j=B.c.bC(l.a.d)
 s=j.length===0?0:B.c.oR(j,A.az("\\s+",!0,!1,!1)).length
@@ -122430,7 +122430,7 @@ q=b?B.m:B.j
 p=A.n(12)
 o=A.ag(b?B.y:B.k,1)
 m=l.a.d
-return A.C(k,A.a6(A.b([r,A.aa(new A.av(B.b6,A.C(k,A.dW(A.br1(m,A.a3(k,k,b?B.j:B.m,k,k,k,k,k,"monospace",k,k,13,k,k,k,k,1.6,!0,k,k,k,k,k,k,k,k)),k,B.I,k,k,B.aj),B.i,k,k,new A.E(q,k,o,p,k,k,k,B.n),k,k,k,B.bP,k,k,1/0),k),1)],n),B.l,k,B.f,B.h),B.i,j,k,k,k,k,k,k,k,k,k)}}
+return A.C(k,A.a5(A.b([r,A.a9(new A.av(B.b6,A.C(k,A.dW(A.br1(m,A.a3(k,k,b?B.j:B.m,k,k,k,k,k,"monospace",k,k,13,k,k,k,k,1.6,!0,k,k,k,k,k,k,k,k)),k,B.I,k,k,B.aj),B.i,k,k,new A.E(q,k,o,p,k,k,k,B.n),k,k,k,B.bP,k,k,1/0),k),1)],n),B.l,k,B.f,B.h),B.i,j,k,k,k,k,k,k,k,k,k)}}
 A.aYE.prototype={
 $0(){this.a.at=!0},
 $S:0}
@@ -122459,7 +122459,7 @@ s=f.$1("analysis.shareModalTitle")
 s=A.k(s,k,k,k,k,k,A.a3(k,k,i?B.j:B.m,k,k,k,k,k,k,k,k,18,k,k,B.r,k,k,!0,k,k,k,k,k,k,k,k),k,k)
 r=f.$1("analysis.shareModalSubtitle")
 q=t.p
-r=A.I(A.b([g,B.af,A.aa(A.a6(A.b([s,B.bT,A.k(r,k,k,k,k,k,A.a3(k,k,i?B.t:B.u,k,k,k,k,k,k,k,k,12,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),k,k)],q),B.v,k,B.f,B.h),1)],q),B.l,k,B.f,B.h,0,k)
+r=A.I(A.b([g,B.af,A.a9(A.a5(A.b([s,B.bT,A.k(r,k,k,k,k,k,A.a3(k,k,i?B.t:B.u,k,k,k,k,k,k,k,k,12,k,k,k,k,k,!0,k,k,k,k,k,k,k,k),k,k)],q),B.v,k,B.f,B.h),1)],q),B.l,k,B.f,B.h,0,k)
 s=this.a
 g=B.xn.E(0.12)
 p=f.$1("analysis.shareWhatsApp")
@@ -122474,7 +122474,7 @@ o=s.Ki(a,B.Yg,g,B.o,i,new A.aYQ(s,a),f.$1("analysis.copyShareLinkDesc"),o)
 g=i?B.L:B.K
 m=(i?B.L:B.K).E(0.12)
 l=f.$1("analysis.exportPdf")
-return A.hh(!0,new A.cj(new A.aq(0,1/0,0,j.a.b*0.85),A.dW(A.a6(A.b([h,r,B.ai,B.qp,B.aA,p,B.b8,n,B.b8,o,B.b8,s.Ki(a,B.mQ,m,g,i,new A.aYR(s,a),f.$1("analysis.downloadPdfDesc"),l)],q),B.v,k,B.f,B.C),k,B.I,B.b6,k,B.aj),k),B.V,!0)},
+return A.hh(!0,new A.cj(new A.aq(0,1/0,0,j.a.b*0.85),A.dW(A.a5(A.b([h,r,B.ai,B.qp,B.aA,p,B.b8,n,B.b8,o,B.b8,s.Ki(a,B.mQ,m,g,i,new A.aYR(s,a),f.$1("analysis.downloadPdfDesc"),l)],q),B.v,k,B.f,B.C),k,B.I,B.b6,k,B.aj),k),B.V,!0)},
 $S:252}
 A.aYO.prototype={
 $0(){A.aG(this.b,!1).bY(null)
@@ -122519,11 +122519,11 @@ s=p?B.m:B.j
 n=A.n(10)
 m=A.ag(p?B.y:B.k,1)
 s=A.C(k,A.k('"'+l.c+'"',k,k,k,k,k,A.a3(k,k,p?B.t:B.u,k,k,k,k,k,k,k,k,13,B.cL,k,k,k,k,!0,k,k,k,k,k,k,k,k),k,k),B.i,k,k,new A.E(s,k,m,n,k,k,k,B.n),k,k,k,B.c5,k,k,1/0)
-s=A.dW(A.a6(A.b([s,B.ai,A.k(l.d,k,k,k,k,k,A.a3(k,k,p?B.j:B.m,k,k,k,k,k,k,k,k,15,k,k,k,k,1.5,!0,k,k,k,k,k,k,k,k),k,k)],o),B.v,k,B.f,B.h),k,B.I,k,k,B.aj)
+s=A.dW(A.a5(A.b([s,B.ai,A.k(l.d,k,k,k,k,k,A.a3(k,k,p?B.j:B.m,k,k,k,k,k,k,k,k,15,k,k,k,k,1.5,!0,k,k,k,k,k,k,k,k),k,k)],o),B.v,k,B.f,B.h),k,B.I,k,k,B.aj)
 n=p?B.k:B.o
 p=p?B.ad:B.x
 p=A.dt(k,k,n,k,k,k,k,k,k,k,p,k,k,B.qy,k,new A.aN(A.n(8),B.w),k,k,k,k,k)
-return A.hh(!0,A.C(k,A.a6(A.b([q,B.ai,new A.eE(1,B.bt,s,k),B.bg,new A.aZ(1/0,k,A.fY(A.k(r.$1("common.gotIt"),k,k,k,k,k,B.ep,k,k),new A.aYM(a),p),k)],o),B.v,k,B.f,B.C),B.i,k,new A.aq(0,1/0,0,i.a.b*0.85),k,k,k,k,new A.X(24,24,24,j.f.d+20),k,k,k),B.V,!0)},
+return A.hh(!0,A.C(k,A.a5(A.b([q,B.ai,new A.eE(1,B.bt,s,k),B.bg,new A.aZ(1/0,k,A.fY(A.k(r.$1("common.gotIt"),k,k,k,k,k,B.ep,k,k),new A.aYM(a),p),k)],o),B.v,k,B.f,B.C),B.i,k,new A.aq(0,1/0,0,i.a.b*0.85),k,k,k,k,new A.X(24,24,24,j.f.d+20),k,k,k),B.V,!0)},
 $S:252}
 A.aYM.prototype={
 $0(){A.aG(this.a,!1).bY(null)
@@ -122578,7 +122578,7 @@ d=t.N
 d=i.$2("analysis.riskRationale",A.c(["reason",q],d,d))
 i=A.b([A.k(d,b,b,b,b,b,A.a3(b,b,k?B.j:B.m,b,b,b,b,b,b,b,b,12.5,b,b,B.U,b,b,!0,b,b,b,b,b,b,b,b),b,b)],m)
 if(p.length!==0)B.b.N(i,A.b([B.b_,A.k("RERA Citations: "+p,b,b,b,b,b,A.a3(b,b,k?B.k:B.o,b,b,b,b,b,b,b,b,11.5,b,b,B.D,b,b,!0,b,b,b,b,b,b,b,b),b,b)],m))
-return new A.Bi(a6,A.bvp(A.d8(!1,n,!0,new A.av(B.bP,A.a6(A.b([l,B.b8,j,B.b8,A.C(b,A.I(A.b([e,B.M,A.aa(A.a6(i,B.v,b,B.f,B.h),1)],m),B.v,b,B.f,B.h,0,b),B.i,b,b,new A.E(h,b,f,g,b,b,b,B.n),b,b,b,B.bO,b,b,b)],m),B.v,b,B.f,B.h),b),b,!0,b,b,b,b,b,b,b,b,b,new A.aYU(a1,r),b,b,b,b,b,b,b,b),a3,0,B.hn,new A.aN(a4,new A.al(o,1.2,B.z,-1))),b)},
+return new A.Bi(a6,A.bvp(A.d8(!1,n,!0,new A.av(B.bP,A.a5(A.b([l,B.b8,j,B.b8,A.C(b,A.I(A.b([e,B.M,A.a9(A.a5(i,B.v,b,B.f,B.h),1)],m),B.v,b,B.f,B.h,0,b),B.i,b,b,new A.E(h,b,f,g,b,b,b,B.n),b,b,b,B.bO,b,b,b)],m),B.v,b,B.f,B.h),b),b,!0,b,b,b,b,b,b,b,b,b,new A.aYU(a1,r),b,b,b,b,b,b,b,b),a3,0,B.hn,new A.aN(a4,new A.al(o,1.2,B.z,-1))),b)},
 $S:676}
 A.aYU.prototype={
 $0(){return this.a.KQ(this.b)},
@@ -122601,7 +122601,7 @@ s=B.k.E(0.12)
 r=A.n(6)
 s=A.C(n,A.k(c,n,n,n,n,n,A.a3(n,n,B.k,n,n,n,n,n,n,n,n,10,n,n,B.r,n,n,!0,n,n,n,n,n,n,n,n),n,n),B.i,n,n,new A.E(s,n,n,r,n,n,n,B.n),n,n,n,B.yr,n,n,n)
 r=t.p
-s=A.aa(A.a6(A.b([d,B.bT,A.I(A.b([s,B.M,A.k("In-App Document Viewer",n,n,n,n,n,A.a3(n,n,k?B.t:B.u,n,n,n,n,n,n,n,n,11,n,n,n,n,n,!0,n,n,n,n,n,n,n,n),n,n)],r),B.l,n,B.f,B.h,0,n)],r),B.v,n,B.f,B.C),1)
+s=A.a9(A.a5(A.b([d,B.bT,A.I(A.b([s,B.M,A.k("In-App Document Viewer",n,n,n,n,n,A.a3(n,n,k?B.t:B.u,n,n,n,n,n,n,n,n,11,n,n,n,n,n,!0,n,n,n,n,n,n,n,n),n,n)],r),B.l,n,B.f,B.h,0,n)],r),B.v,n,B.f,B.C),1)
 g=A.C(n,A.I(A.b([e,B.cG,s,B.af,A.f2(n,n,n,n,n,A.Z(B.mV,k?B.j:B.m,n,n,n,n),n,n,new A.aYK(a),n,n,n,n,"Close Modal")],r),B.l,n,B.f,B.h,0,n),B.i,n,n,new A.E(g,n,new A.dl(B.w,B.w,new A.al(f,1,B.z,-1),B.w),B.O7,n,n,n,B.n),n,n,n,B.VW,n,n,n)
 f=k?B.Y:B.j
 e=k?B.k:B.o
@@ -122611,7 +122611,7 @@ q=A.Z(b?B.zb:B.mQ,n,n,n,n,18)
 if(b)b="Uploaded Photo View"
 else b=c==="PDF Document"?"Uploaded PDF Document":"Document Layout"
 p=o.a
-return A.bpr(n,B.E,A.C(n,new A.LJ(2,A.a6(A.b([g,A.C(n,new A.S2(A.b([new A.S1(b,q,n),B.ada],r),s,2,e,d,n),B.i,f,n,n,n,n,n,n,n,n,n),A.aa(new A.S4(A.b([p.aFu(m,k,c,o.f),p.aFr(m,k)],r),n),1)],r),B.l,n,B.f,B.h),n),B.i,n,n,new A.E(j,n,h,i,n,n,n,B.n),n,l.a.b*0.88,n,n,n,n,920),n,n,n,B.VQ,B.L1,n,n,n)},
+return A.bpr(n,B.E,A.C(n,new A.LJ(2,A.a5(A.b([g,A.C(n,new A.S2(A.b([new A.S1(b,q,n),B.ada],r),s,2,e,d,n),B.i,f,n,n,n,n,n,n,n,n,n),A.a9(new A.S4(A.b([p.aFu(m,k,c,o.f),p.aFr(m,k)],r),n),1)],r),B.l,n,B.f,B.h),n),B.i,n,n,new A.E(j,n,h,i,n,n,n,B.n),n,l.a.b*0.88,n,n,n,n,920),n,n,n,B.VQ,B.L1,n,n,n)},
 $S:678}
 A.aYK.prototype={
 $0(){A.aG(this.a,!1).bY(null)
@@ -122671,7 +122671,7 @@ else o=a
 if(b==null)n=s?B.y:B.k
 else n=b
 k=A.n(14)
-m=A.b([A.aa(c,1)],t.p)
+m=A.b([A.a9(c,1)],t.p)
 r.Dd(A.RE(l,l,l,o,B.i7,B.O,l,A.I(m,B.l,l,B.f,B.h,0,l),l,d,8,l,l,l,l,B.ed,l,new A.aN(k,new A.al(n,1.2,B.z,-1)),l,p))},
 Ua(a,b,c){return this.DF(a,b,c,B.aN)},
 a9j(a,b){return this.DF(null,null,a,b)},
@@ -122691,10 +122691,10 @@ l=(p?B.L:B.K).E(0.16)
 n=A.n(8)
 l=A.C(null,A.Z(B.zv,p?B.L:B.K,null,null,null,18),B.i,null,null,new A.E(l,null,null,n,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 m=m.gev(m).$1("bin.restoredSuccess").toLowerCase()
-q.a9j(A.I(A.b([l,B.af,A.aa(A.k('"'+b+'" '+m,null,null,null,null,null,A.a3(null,null,p?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null),B.aN)}else{m=p?B.dd:B.df
+q.a9j(A.I(A.b([l,B.af,A.a9(A.k('"'+b+'" '+m,null,null,null,null,null,A.a3(null,null,p?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null),B.aN)}else{m=p?B.dd:B.df
 l=p?B.dc.E(0.5):B.de
 n=A.Z(B.bG,p?B.J:B.H,null,null,null,18)
-q.Ua(m,l,A.I(A.b([n,B.ah,A.aa(A.k("Failed to restore document. Please try again.",null,null,null,null,null,A.a3(null,null,p?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}return A.x(null,r)}})
+q.Ua(m,l,A.I(A.b([n,B.ah,A.a9(A.k("Failed to restore document. Please try again.",null,null,null,null,null,A.a3(null,null,p?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}return A.x(null,r)}})
 return A.y($async$MI,r)},
 F0(a,b){return this.aYb(a,b)},
 aYb(a,b){var s=0,r=A.z(t.H),q,p=this,o,n,m,l,k,j,i,h,g
@@ -122718,10 +122718,10 @@ j=A.n(8)
 i=A.ag(k.E(0.35),1)
 j=A.C(null,A.Z(B.rB,k,null,null,null,18),B.i,null,null,new A.E(g,null,i,j,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 h=h.gev(h).$1("bin.permanentlyDeletedSuccess").toLowerCase()
-p.DF(m,l,A.I(A.b([j,B.af,A.aa(A.k('"'+b+'" '+h,null,null,null,null,null,A.a3(null,null,o?B.ez:B.eA,null,null,null,null,null,null,null,null,13.5,null,null,B.r,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null),B.aN)}else{h=o?B.dd:B.df
+p.DF(m,l,A.I(A.b([j,B.af,A.a9(A.k('"'+b+'" '+h,null,null,null,null,null,A.a3(null,null,o?B.ez:B.eA,null,null,null,null,null,null,null,null,13.5,null,null,B.r,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null),B.aN)}else{h=o?B.dd:B.df
 g=o?B.dc.E(0.5):B.de
 j=A.Z(B.bG,o?B.J:B.H,null,null,null,18)
-p.Ua(h,g,A.I(A.b([j,B.ah,A.aa(A.k("Failed to permanently delete document.",null,null,null,null,null,A.a3(null,null,o?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}case 1:return A.x(q,r)}})
+p.Ua(h,g,A.I(A.b([j,B.ah,A.a9(A.k("Failed to permanently delete document.",null,null,null,null,null,A.a3(null,null,o?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}case 1:return A.x(q,r)}})
 return A.y($async$F0,r)},
 MH(a,b){return this.b_j(a,b)},
 b_j(a,b){var s=0,r=A.z(t.H),q=this,p,o,n,m,l,k,j,i,h
@@ -122742,10 +122742,10 @@ k=A.n(8)
 j=A.ag(l.E(0.35),1)
 k=A.C(null,A.Z(B.zv,l,null,null,null,18),B.i,null,null,new A.E(h,null,j,k,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 i=i.gev(i).$1("bin.checklistRestoredSuccess").toLowerCase()
-q.DF(n,m,A.I(A.b([k,B.af,A.aa(A.k('"'+b+'" '+i,null,null,null,null,null,A.a3(null,null,p?B.SP:B.Ti,null,null,null,null,null,null,null,null,13.5,null,null,B.r,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null),B.aN)}else{i=p?B.dd:B.df
+q.DF(n,m,A.I(A.b([k,B.af,A.a9(A.k('"'+b+'" '+i,null,null,null,null,null,A.a3(null,null,p?B.SP:B.Ti,null,null,null,null,null,null,null,null,13.5,null,null,B.r,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null),B.aN)}else{i=p?B.dd:B.df
 h=p?B.dc.E(0.5):B.de
 k=A.Z(B.bG,p?B.J:B.H,null,null,null,18)
-q.Ua(i,h,A.I(A.b([k,B.ah,A.aa(A.k("Failed to restore checklist. Please try again.",null,null,null,null,null,A.a3(null,null,p?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}return A.x(null,r)}})
+q.Ua(i,h,A.I(A.b([k,B.ah,A.a9(A.k("Failed to restore checklist. Please try again.",null,null,null,null,null,A.a3(null,null,p?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}return A.x(null,r)}})
 return A.y($async$MH,r)},
 F_(a,b){return this.aYa(a,b)},
 aYa(a,b){var s=0,r=A.z(t.H),q,p=this,o,n,m,l
@@ -122764,8 +122764,8 @@ if(p.c!=null)if(n){p.K(new A.b_t(p,a))
 l=(o?B.J:B.H).E(0.16)
 l=A.C(null,A.Z(B.rB,o?B.J:B.H,null,null,null,15),B.i,null,null,new A.E(l,null,null,null,null,null,null,B.aM),null,null,null,B.d_,null,null,null)
 m=m.gev(m).$1("bin.checklistPermanentlyDeletedSuccess").toLowerCase()
-p.a9j(A.I(A.b([l,B.ah,A.aa(A.k('"'+b+'" '+m,null,null,null,null,null,A.a3(null,null,o?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null),B.aN)}else{m=A.Z(B.bG,o?B.J:B.H,null,null,null,18)
-p.aEQ(A.I(A.b([m,B.ah,A.aa(A.k("Failed to permanently delete checklist.",null,null,null,null,null,A.a3(null,null,o?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,null,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}case 1:return A.x(q,r)}})
+p.a9j(A.I(A.b([l,B.ah,A.a9(A.k('"'+b+'" '+m,null,null,null,null,null,A.a3(null,null,o?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null),B.aN)}else{m=A.Z(B.bG,o?B.J:B.H,null,null,null,18)
+p.aEQ(A.I(A.b([m,B.ah,A.a9(A.k("Failed to permanently delete checklist.",null,null,null,null,null,A.a3(null,null,o?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,null,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}case 1:return A.x(q,r)}})
 return A.y($async$F_,r)},
 ajM(a,b){var s,r=this.gbB().b6(0,$.bt().gbc(),t.O),q=this.c
 q.toString
@@ -122809,24 +122809,24 @@ s=g.z
 if(s!=null){r=A.Z(B.bG,b?B.J:B.H,f,f,f,48)
 s=A.k(s,f,f,f,f,f,A.J().$2$color$fontSize(b?B.t:B.u,14),B.an,f)
 q=b?B.k:B.o
-return A.bH(new A.av(B.di,A.a6(A.b([r,B.ai,s,B.ai,A.j4(B.zF,B.Mr,g.gacO(),A.dt(f,f,q,f,f,f,f,f,f,f,b?B.ad:B.x,f,f,f,f,f,f,f,f,f,f))],t.p),B.l,f,B.f,B.C),f),f,f,f)}p=g.Q===0?g.w:g.x
+return A.bH(new A.av(B.di,A.a5(A.b([r,B.ai,s,B.ai,A.j4(B.zF,B.Mr,g.gacO(),A.dt(f,f,q,f,f,f,f,f,f,f,b?B.ad:B.x,f,f,f,f,f,f,f,f,f,f))],t.p),B.l,f,B.f,B.C),f),f,f,f)}p=g.Q===0?g.w:g.x
 s=d?960:700
 r=d?24:16
 q=b?B.m:B.j
 o=A.n(12)
 n=A.ag(b?B.y:B.k,1)
 m=c.$1("bin.documentsTab")
-m=A.aa(g.a9Q(J.aC(g.w),B.eF,0,b,m),1)
+m=A.a9(g.a9Q(J.aC(g.w),B.eF,0,b,m),1)
 l=c.$1("bin.checklistsTab")
 k=t.p
-o=A.C(f,A.I(A.b([m,A.aa(g.a9Q(J.aC(g.x),B.rz,1,b,l),1)],k),B.l,f,B.f,B.h,0,f),B.i,f,f,new A.E(q,f,n,o,f,f,f,B.n),f,f,f,B.d_,f,f,f)
+o=A.C(f,A.I(A.b([m,A.a9(g.a9Q(J.aC(g.x),B.rz,1,b,l),1)],k),B.l,f,B.f,B.h,0,f),B.i,f,f,new A.E(q,f,n,o,f,f,f,B.n),f,f,f,B.d_,f,f,f)
 q=b?B.RD:B.Sp
 n=A.n(14)
 m=A.ag((b?B.k:B.o).E(0.3),1)
 l=A.Z(B.ks,b?B.k:B.o,f,f,f,20)
 j=A.k("30-Day Auto-Purge Policy",f,f,f,f,f,A.J().$3$color$fontSize$fontWeight(b?B.j:B.m,12.5,B.r),f,f)
 i=c.$1("bin.autoPurgeNote")
-q=A.b([o,B.ai,A.C(f,A.I(A.b([l,B.af,A.aa(A.a6(A.b([j,B.bT,A.k(i,f,f,f,f,f,A.J().$3$color$fontSize$height(b?B.t:B.u,11.5,1.4),f,f)],k),B.v,f,B.f,B.h),1)],k),B.v,f,B.f,B.h,0,f),B.i,f,f,new A.E(q,f,m,n,f,f,f,B.n),f,f,f,B.ed,f,f,f),B.c9],k)
+q=A.b([o,B.ai,A.C(f,A.I(A.b([l,B.af,A.a9(A.a5(A.b([j,B.bT,A.k(i,f,f,f,f,f,A.J().$3$color$fontSize$height(b?B.t:B.u,11.5,1.4),f,f)],k),B.v,f,B.f,B.h),1)],k),B.v,f,B.f,B.h,0,f),B.i,f,f,new A.E(q,f,m,n,f,f,f,B.n),f,f,f,B.ed,f,f,f),B.c9],k)
 if(J.eS(p)){h=g.Q===0
 o=b?B.Y:B.j
 n=A.ag(b?B.y:B.k,1)
@@ -122835,7 +122835,7 @@ o=A.C(f,A.Z(m,b?B.t:B.u,f,f,f,36),B.i,f,f,new A.E(o,f,n,f,f,f,f,B.aM),f,72,f,f,f
 n=h?c.$1("bin.emptyTitle"):c.$1("bin.emptyChecklistsTitle")
 n=A.k(n,f,f,f,f,f,A.ez().$3$color$fontSize$fontWeight(b?B.j:B.m,17,B.r),f,f)
 m=h?c.$1("bin.emptySubtitle"):c.$1("bin.emptyChecklistsSubtitle")
-q.push(A.C(B.a8,A.a6(A.b([o,B.c9,n,B.aI,new A.cj(B.pJ,A.k(m,f,f,f,f,f,A.J().$3$color$fontSize$height(b?B.t:B.u,13,1.5),B.an,f),f)],k),B.l,f,B.bn,B.h),B.i,f,f,f,f,f,f,B.yn,f,f,f))}else{o=t.l7
+q.push(A.C(B.a8,A.a5(A.b([o,B.c9,n,B.aI,new A.cj(B.pJ,A.k(m,f,f,f,f,f,A.J().$3$color$fontSize$height(b?B.t:B.u,13,1.5),B.an,f),f)],k),B.l,f,B.bn,B.h),B.i,f,f,f,f,f,f,B.yn,f,f,f))}else{o=t.l7
 if(g.Q===0)B.b.N(q,J.eB(g.w,new A.b_l(g,a,b,c),o))
 else B.b.N(q,J.eB(g.x,new A.b_m(g,a,b,c),o))}q.push(B.dJ)
 return A.bH(new A.cj(new A.aq(0,s,0,1/0),A.EI(q,new A.X(r,20,r,20),B.jG,f,!1),f),f,f,f)},
@@ -122886,7 +122886,7 @@ i=A.k("\u2022",d,d,d,d,d,A.a3(d,d,a2?B.y:B.k,d,d,d,d,d,d,d,d,d,d,d,d,d,d,!0,d,d,
 h=n.E(0.12)
 g=A.n(6)
 f=t.p
-g=A.I(A.b([l,B.cG,A.aa(A.a6(A.b([k,B.b_,A.I(A.b([j,B.M,i,B.M,A.C(d,A.k(o,d,d,d,d,d,A.J().$3$color$fontSize$fontWeight(n,10.5,B.r),d,d),B.i,d,d,new A.E(h,d,d,g,d,d,d,B.n),d,d,d,B.ki,d,d,d)],f),B.l,d,B.f,B.h,0,d)],f),B.v,d,B.f,B.h),1),B.ah,e.a9K(p,a2)],f),B.v,d,B.f,B.h,0,d)
+g=A.I(A.b([l,B.cG,A.a9(A.a5(A.b([k,B.b_,A.I(A.b([j,B.M,i,B.M,A.C(d,A.k(o,d,d,d,d,d,A.J().$3$color$fontSize$fontWeight(n,10.5,B.r),d,d),B.i,d,d,new A.E(h,d,d,g,d,d,d,B.n),d,d,d,B.ki,d,d,d)],f),B.l,d,B.f,B.h,0,d)],f),B.v,d,B.f,B.h),1),B.ah,e.a9K(p,a2)],f),B.v,d,B.f,B.h,0,d)
 l=A.iF(a2?B.y:B.k,d,1,d,d,d)
 k=a2?B.J:B.H
 j=(a2?B.J:B.H).E(0.5)
@@ -122895,7 +122895,7 @@ j=A.rU(B.zD,A.k(a3.$1("bin.deletePermanently"),d,d,d,d,d,A.J().$2$fontSize$fontW
 k=a2?B.k:B.o
 i=a2?B.ad:B.x
 i=A.dt(d,d,k,d,d,d,0,d,d,d,i,d,d,B.kf,d,new A.aN(A.n(10),B.w),d,d,d,d,d)
-return A.C(d,A.a6(A.b([g,B.ai,l,B.au,A.I(A.b([j,B.ah,A.j4(B.zG,A.k(a3.$1("bin.restore"),d,d,d,d,d,A.J().$2$fontSize$fontWeight(12,B.r),d,d),new A.b_k(e,a,s),i)],f),B.l,d,B.f8,B.h,0,d)],f),B.v,d,B.f,B.h),B.i,d,d,new A.E(c,d,m,b,d,d,d,B.n),d,d,B.hn,B.bP,d,d,d)},
+return A.C(d,A.a5(A.b([g,B.ai,l,B.au,A.I(A.b([j,B.ah,A.j4(B.zG,A.k(a3.$1("bin.restore"),d,d,d,d,d,A.J().$2$fontSize$fontWeight(12,B.r),d,d),new A.b_k(e,a,s),i)],f),B.l,d,B.f8,B.h,0,d)],f),B.v,d,B.f,B.h),B.i,d,d,new A.E(c,d,m,b,d,d,d,B.n),d,d,B.hn,B.bP,d,d,d)},
 aF8(a0,a1,a2,a3){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d=this,c=null,b=J.a7(a1),a=b.i(a1,"_id")
 if(a==null)a=b.i(a1,"id")
 s=J.a8(a==null?b.i(a1,"type"):a)
@@ -122922,7 +122922,7 @@ h=(a2?B.k:B.o).E(0.12)
 g=A.n(6)
 f=J.aC(p)
 e=t.p
-g=A.I(A.b([l,B.cG,A.aa(A.a6(A.b([k,B.b_,A.I(A.b([j,B.M,i,B.M,A.C(c,A.k(""+f+" tasks",c,c,c,c,c,A.J().$3$color$fontSize$fontWeight(a2?B.k:B.o,10.5,B.r),c,c),B.i,c,c,new A.E(h,c,c,g,c,c,c,B.n),c,c,c,B.ki,c,c,c)],e),B.l,c,B.f,B.h,0,c)],e),B.v,c,B.f,B.h),1),B.ah,d.a9K(n,a2)],e),B.v,c,B.f,B.h,0,c)
+g=A.I(A.b([l,B.cG,A.a9(A.a5(A.b([k,B.b_,A.I(A.b([j,B.M,i,B.M,A.C(c,A.k(""+f+" tasks",c,c,c,c,c,A.J().$3$color$fontSize$fontWeight(a2?B.k:B.o,10.5,B.r),c,c),B.i,c,c,new A.E(h,c,c,g,c,c,c,B.n),c,c,c,B.ki,c,c,c)],e),B.l,c,B.f,B.h,0,c)],e),B.v,c,B.f,B.h),1),B.ah,d.a9K(n,a2)],e),B.v,c,B.f,B.h,0,c)
 l=A.iF(a2?B.y:B.k,c,1,c,c,c)
 k=a2?B.J:B.H
 j=(a2?B.J:B.H).E(0.5)
@@ -122931,7 +122931,7 @@ j=A.rU(B.zD,A.k(a3.$1("bin.deletePermanently"),c,c,c,c,c,A.J().$2$fontSize$fontW
 k=a2?B.k:B.o
 i=a2?B.ad:B.x
 i=A.dt(c,c,k,c,c,c,0,c,c,c,i,c,c,B.kf,c,new A.aN(A.n(10),B.w),c,c,c,c,c)
-return A.C(c,A.a6(A.b([g,B.ai,l,B.au,A.I(A.b([j,B.ah,A.j4(B.zG,A.k(a3.$1("bin.restore"),c,c,c,c,c,A.J().$2$fontSize$fontWeight(12,B.r),c,c),new A.b_i(d,r,s,q),i)],e),B.l,c,B.f8,B.h,0,c)],e),B.v,c,B.f,B.h),B.i,c,c,new A.E(b,c,m,a,c,c,c,B.n),c,c,B.hn,B.bP,c,c,c)},
+return A.C(c,A.a5(A.b([g,B.ai,l,B.au,A.I(A.b([j,B.ah,A.j4(B.zG,A.k(a3.$1("bin.restore"),c,c,c,c,c,A.J().$2$fontSize$fontWeight(12,B.r),c,c),new A.b_i(d,r,s,q),i)],e),B.l,c,B.f8,B.h,0,c)],e),B.v,c,B.f,B.h),B.i,c,c,new A.E(b,c,m,a,c,c,c,B.n),c,c,B.hn,B.bP,c,c,c)},
 a9K(a,b){var s,r,q,p,o=null,n=a<=3
 if(n)s=b?B.J.E(0.15):B.H.E(0.1)
 else s=b?B.Y:B.j
@@ -123000,10 +123000,10 @@ s=o.b
 r=o.c
 q=s?r.$1("bin.permanentConfirmChecklistTitle"):r.$1("bin.permanentConfirmTitle")
 p=t.p
-q=A.I(A.b([i,B.af,A.aa(A.k(q,n,n,n,n,n,A.ez().$3$color$fontSize$fontWeight(m?B.j:B.m,17,B.r),n,n),1)],p),B.l,n,B.f,B.h,0,n)
+q=A.I(A.b([i,B.af,A.a9(A.k(q,n,n,n,n,n,A.ez().$3$color$fontSize$fontWeight(m?B.j:B.m,17,B.r),n,n),1)],p),B.l,n,B.f,B.h,0,n)
 i=A.k('Are you sure you want to permanently delete "'+o.d+'"?',n,n,n,n,n,A.J().$3$color$fontSize$fontWeight(m?B.j:B.m,14,B.D),n,n)
 s=s?r.$1("bin.permanentConfirmChecklistMessage"):r.$1("bin.permanentConfirmMessage")
-i=A.a6(A.b([i,B.aI,A.k(s,n,n,n,n,n,A.J().$3$color$fontSize$height(m?B.t:B.u,13,1.4),n,n)],p),B.v,n,B.f,B.C)
+i=A.a5(A.b([i,B.aI,A.k(s,n,n,n,n,n,A.J().$3$color$fontSize$height(m?B.t:B.u,13,1.4),n,n)],p),B.v,n,B.f,B.C)
 s=r.$1("recentDocs.cancel")
 s=A.dr(A.k(s,n,n,n,n,n,A.J().$2$color$fontWeight(m?B.t:B.u,B.D),n,n),new A.b_A(a),n)
 m=m?B.J:B.H
@@ -123112,8 +123112,8 @@ i=A.C(f,A.k(s.I(0,"chatCitation.ragGrounded"),f,f,f,f,f,A.J().$4$color$fontSize$
 j=g.w?B.Yc:B.zo
 h=t.p
 j=A.b([A.d8(!1,m,!0,new A.av(B.yf,A.I(A.b([l,B.os,k,B.ov,i,B.aZ,A.Z(j,r?B.t:B.u,f,f,f,16)],h),B.l,f,B.f,B.h,0,f),f),f,!0,f,f,f,f,f,f,f,f,f,new A.b8M(g),f,f,f,f,f,f,f,f)],h)
-if(g.w)B.b.N(j,A.b([A.iF(o,f,1,f,f,f),new A.av(B.bO,A.a6(J.eB(g.a.d,new A.b8N(g,s,r,o,p,q),t.dT).dV(0),B.v,f,B.f,B.h),f)],h))
-return A.C(f,A.a6(j,B.v,f,B.f,B.h),B.i,f,f,new A.E(e,f,n,d,f,f,f,B.n),f,f,B.Vy,f,f,f,f)}}
+if(g.w)B.b.N(j,A.b([A.iF(o,f,1,f,f,f),new A.av(B.bO,A.a5(J.eB(g.a.d,new A.b8N(g,s,r,o,p,q),t.dT).dV(0),B.v,f,B.f,B.h),f)],h))
+return A.C(f,A.a5(j,B.v,f,B.f,B.h),B.i,f,f,new A.E(e,f,n,d,f,f,f,B.n),f,f,B.Vy,f,f,f,f)}}
 A.b8M.prototype={
 $0(){var s=this.a
 return s.K(new A.b8L(s))},
@@ -123149,7 +123149,7 @@ d=A.n(4)
 f.push(A.C(b,A.k(o,b,b,b,b,b,A.J().$3$color$fontSize$fontWeight(i,10.5,B.r),b,b),B.i,b,b,new A.E(e,b,b,d,b,b,b,B.n),b,b,b,B.Wr,b,b,b))}i=A.fS(B.ay,f,B.eO,4,6)
 f=A.b([A.k(m+" \u2022 "+n,b,b,b,b,b,A.J().$2$color$fontSize(r?B.t:B.u,10.5),b,b)],g)
 if(l!=null&&l.length!==0){r=c.f
-B.b.N(f,A.b([B.M,A.d8(!1,b,!0,A.I(A.b([A.k(c.b.I(0,"chatCitation.officialSource"),b,b,b,b,b,A.J().$4$color$decoration$fontSize$fontWeight(r,B.e0,10.5,B.D),b,b),B.acg,A.Z(B.zs,r,b,b,b,10)],g),B.l,b,B.f,B.C,0,b),b,!0,b,b,b,b,b,b,b,b,b,new A.b8K(c.a,l),b,b,b,b,b,b,b,b)],g))}return A.C(b,A.I(A.b([new A.av(B.qz,h,b),B.M,A.aa(A.a6(A.b([i,B.fi,A.I(f,B.l,b,B.f,B.h,0,b)],g),B.v,b,B.f,B.h),1)],g),B.v,b,B.f,B.h,0,b),B.i,b,b,new A.E(q,b,j,k,b,b,b,B.n),b,b,B.ya,B.yt,b,b,b)},
+B.b.N(f,A.b([B.M,A.d8(!1,b,!0,A.I(A.b([A.k(c.b.I(0,"chatCitation.officialSource"),b,b,b,b,b,A.J().$4$color$decoration$fontSize$fontWeight(r,B.e0,10.5,B.D),b,b),B.acg,A.Z(B.zs,r,b,b,b,10)],g),B.l,b,B.f,B.C,0,b),b,!0,b,b,b,b,b,b,b,b,b,new A.b8K(c.a,l),b,b,b,b,b,b,b,b)],g))}return A.C(b,A.I(A.b([new A.av(B.qz,h,b),B.M,A.a9(A.a5(A.b([i,B.fi,A.I(f,B.l,b,B.f,B.h,0,b)],g),B.v,b,B.f,B.h),1)],g),B.v,b,B.f,B.h,0,b),B.i,b,b,new A.E(q,b,j,k,b,b,b,B.n),b,b,B.ya,B.yt,b,b,b)},
 $S:258}
 A.b8K.prototype={
 $0(){return this.a.EG(this.b)},
@@ -123192,28 +123192,28 @@ n=l.Ug(B.eF,n,c?B.k:B.o,c)
 m=e.I(0,"chat.tagTransfer")
 a=A.b([B.aI,a,B.c9,s,B.au,a0,B.aI,new A.cj(B.pH,r,f),B.ai,A.fS(B.h5,A.b([q,n,l.Ug(B.rG,m,c?B.L:B.K,c)],o),B.cr,8,8),B.fY],o)
 if(d){d=new A.ok(p,t.aS)
-a.push(A.a6(d.glH(d).hu(0,new A.at7(l),t.iF).dV(0),B.l,f,B.f,B.h))}else{d=A.bK(p[0].i(0,k))
+a.push(A.a5(d.glH(d).hu(0,new A.at7(l),t.iF).dV(0),B.l,f,B.f,B.h))}else{d=A.bK(p[0].i(0,k))
 a0=t.tk
 s=a0.a(p[0].i(0,j))
 r=t.n8
 q=r.a(p[0].i(0,i))
 n=A.bK(p[0].i(0,h))
-n=A.aa(A.a7N(q,d,A.bK(p[0].i(0,g)),s,0,c,new A.at8(l,p),n),1)
+n=A.a9(A.a7N(q,d,A.bK(p[0].i(0,g)),s,0,c,new A.at8(l,p),n),1)
 s=A.bK(p[1].i(0,k))
 d=a0.a(p[1].i(0,j))
 q=r.a(p[1].i(0,i))
 m=A.bK(p[1].i(0,h))
-m=A.I(A.b([n,B.dI,A.aa(A.a7N(q,s,A.bK(p[1].i(0,g)),d,1,c,new A.at9(l,p),m),1)],o),B.v,f,B.f,B.h,0,f)
+m=A.I(A.b([n,B.dI,A.a9(A.a7N(q,s,A.bK(p[1].i(0,g)),d,1,c,new A.at9(l,p),m),1)],o),B.v,f,B.f,B.h,0,f)
 d=A.bK(p[2].i(0,k))
 s=a0.a(p[2].i(0,j))
 q=r.a(p[2].i(0,i))
 n=A.bK(p[2].i(0,h))
-n=A.aa(A.a7N(q,d,A.bK(p[2].i(0,g)),s,2,c,new A.ata(l,p),n),1)
+n=A.a9(A.a7N(q,d,A.bK(p[2].i(0,g)),s,2,c,new A.ata(l,p),n),1)
 s=A.bK(p[3].i(0,k))
 a0=a0.a(p[3].i(0,j))
 r=r.a(p[3].i(0,i))
 d=A.bK(p[3].i(0,h))
-a.push(A.a6(A.b([m,B.ai,A.I(A.b([n,B.dI,A.aa(A.a7N(r,s,A.bK(p[3].i(0,g)),a0,3,c,new A.atb(l,p),d),1)],o),B.v,f,B.f,B.h,0,f)],o),B.l,f,B.f,B.h))}a.push(B.aU)
+a.push(A.a5(A.b([m,B.ai,A.I(A.b([n,B.dI,A.a9(A.a7N(r,s,A.bK(p[3].i(0,g)),a0,3,c,new A.atb(l,p),d),1)],o),B.v,f,B.f,B.h,0,f)],o),B.l,f,B.f,B.h))}a.push(B.aU)
 d=t.ws
 d=A.aj(new A.af(A.b([e.I(0,"chat.chip1"),e.I(0,"chat.chip2"),e.I(0,"chat.chip3"),e.I(0,"chat.chip4")],t.s),new A.atc(l),d),d.j("aY.E"))
 a.push(A.fS(B.h5,d,B.cr,8,8))
@@ -123224,7 +123224,7 @@ s=A.ag(c?B.y:B.k,1)
 r=A.Z(B.mZ,c?B.t:B.u,f,f,f,13)
 e=e.I(0,"chat.disclaimer")
 a.push(A.C(f,A.I(A.b([r,B.aZ,new A.eE(1,B.bt,A.k(e,f,f,f,f,f,A.J().$2$color$fontSize(c?B.t:B.u,11),B.an,f),f)],o),B.l,f,B.f,B.C,0,f),B.i,f,f,new A.E(d,f,s,a0,f,f,f,B.n),f,f,f,B.cj,f,f,f))
-return A.dW(A.bH(new A.cj(B.OB,A.a6(a,B.l,f,B.f,B.h),f),f,f,f),f,B.I,new A.X(b,20,b,20),B.dL,B.aj)}}
+return A.dW(A.bH(new A.cj(B.OB,A.a5(a,B.l,f,B.f,B.h),f),f,f,f),f,B.I,new A.X(b,20,b,20),B.dL,B.aj)}}
 A.at7.prototype={
 $1(a){var s=a.b,r=J.a7(s),q=A.bK(r.i(s,"category")),p=t.tk.a(r.i(s,"icon")),o=t.n8.a(r.i(s,"color")),n=A.bK(r.i(s,"title")),m=this.a
 return new A.av(B.hn,A.a7N(o,q,A.bK(r.i(s,"desc")),p,a.a,m.c,new A.at6(m,s),n),null)},
@@ -123277,9 +123277,9 @@ o=A.iF(s?B.y:B.k,d,1,d,d,d)
 if(e.f)c=A.bH(A.jv(d,s?B.k:B.o,d,d,d,d,d,d,d,d),d,d,d)
 else if(e.r!=null){c=A.Z(B.zA,s?B.t:B.u,d,d,d,28)
 m=A.k("Couldn't load conversations",d,d,d,d,d,A.J().$2$color$fontSize(s?B.t:B.u,13),B.an,d)
-c=A.bH(new A.av(B.di,A.a6(A.b([c,B.aI,m,B.b8,A.dr(A.k("Retry",d,d,d,d,d,A.J().$3$color$fontSize$fontWeight(s?B.k:B.o,13,B.D),d,d),e.z,d)],n),B.l,d,B.f,B.C),d),d,d,d)}else{m=J.a7(b)
+c=A.bH(new A.av(B.di,A.a5(A.b([c,B.aI,m,B.b8,A.dr(A.k("Retry",d,d,d,d,d,A.J().$3$color$fontSize$fontWeight(s?B.k:B.o,13,B.D),d,d),e.z,d)],n),B.l,d,B.f,B.C),d),d,d,d)}else{m=J.a7(b)
 if(m.ga8(b)){c=c.length!==0?"No sessions found":"No previous conversations"
-c=A.bH(new A.av(B.di,A.k(c,d,d,d,d,d,A.J().$2$color$fontSize(s?B.t:B.u,13),d,d),d),d,d,d)}else c=A.a50(new A.ath(e,b),m.gA(b),B.c5,d,new A.ati(),!1)}return A.bwf(r,A.hh(!0,A.a6(A.b([new A.av(B.VS,q,d),new A.av(B.qA,p,d),B.aI,o,A.aa(c,1)],n),B.l,d,B.f,B.h),B.V,!0))}}
+c=A.bH(new A.av(B.di,A.k(c,d,d,d,d,d,A.J().$2$color$fontSize(s?B.t:B.u,13),d,d),d),d,d,d)}else c=A.a50(new A.ath(e,b),m.gA(b),B.c5,d,new A.ati(),!1)}return A.bwf(r,A.hh(!0,A.a5(A.b([new A.av(B.VS,q,d),new A.av(B.qA,p,d),B.aI,o,A.a9(c,1)],n),B.l,d,B.f,B.h),B.V,!0))}}
 A.atf.prototype={
 $1(a){var s,r=J.a7(a),q=r.i(a,"title")
 q=J.a8(q==null?"":q)
@@ -123330,7 +123330,7 @@ f=A.n(4)
 e=t.N
 e=b.d.d3(0,"chat.turnsCount",A.c(["count",J.a8(q)],e,e))
 i.push(A.I(A.b([A.C(d,A.k(e,d,d,d,d,d,A.J().$3$color$fontSize$fontWeight(n?B.t:B.u,10,B.U),d,d),B.i,d,d,new A.E(g,d,d,f,d,d,d,B.n),d,d,d,B.fD,d,d,d)],h),B.l,d,B.f,B.h,0,d))
-i=A.aa(A.a6(i,B.v,d,B.f,B.h),1)
+i=A.a9(A.a5(i,B.v,d,B.f,B.h),1)
 return A.d8(!1,a,!0,A.C(d,A.I(A.b([j,B.M,i,A.f2(d,B.eS,d,d,d,A.Z(B.eG,n?B.J:B.H,d,d,d,16),d,d,new A.atd(b,a0),B.V,d,d,d,"Delete session")],h),B.v,d,B.f,B.h,0,d),B.i,d,d,new A.E(o,d,k,l,d,d,d,B.n),d,d,d,B.c5,d,d,d),d,!0,d,d,d,d,d,d,d,d,d,new A.ate(b,a0),d,d,d,d,d,d,d,d)},
 $S:686}
 A.ate.prototype={
@@ -123367,7 +123367,7 @@ l=h.gbB()
 k=$.bt().gbc()
 j=t.O
 i=l.cM(k,j).I(0,"chat.inputHint")
-d=A.aa(A.ns(g,B.cz,!1,g,!0,B.O,g,A.pf(),n,g,g,g,g,g,2,A.hJ(g,B.dx,g,B.kc,g,g,g,g,!0,B.dx,g,g,g,g,g,g,!1,g,g,g,g,B.dx,g,g,g,g,g,g,g,g,A.J().$2$color$fontSize(f?B.t:B.u,13.5),i,g,g,g,g,g,g,g,g,g,!0,!0,!1,g,g,g,g,g,g,g,g,g,g,g,g,g,g),B.I,!0,g,!0,g,!1,d,B.ca,g,g,g,g,g,g,g,g,4,1,g,!1,"\u2022",g,g,g,new A.b0w(h),g,!1,g,g,!1,g,!0,g,B.b6,g,g,g,g,g,g,g,g,g,g,g,m,!0,B.aG,g,B.bK,g,g,g,g),1)
+d=A.a9(A.ns(g,B.cz,!1,g,!0,B.O,g,A.pf(),n,g,g,g,g,g,2,A.hJ(g,B.dx,g,B.kc,g,g,g,g,!0,B.dx,g,g,g,g,g,g,!1,g,g,g,g,B.dx,g,g,g,g,g,g,g,g,A.J().$2$color$fontSize(f?B.t:B.u,13.5),i,g,g,g,g,g,g,g,g,g,!0,!0,!1,g,g,g,g,g,g,g,g,g,g,g,g,g,g),B.I,!0,g,!0,g,!1,d,B.ca,g,g,g,g,g,g,g,g,4,1,g,!1,"\u2022",g,g,g,new A.b0w(h),g,!1,g,g,!1,g,!0,g,B.b6,g,g,g,g,g,g,g,g,g,g,g,m,!0,B.aG,g,B.bK,g,g,g,g),1)
 n=h.a.f
 m=n?l.cM(k,j).I(0,"a11y.chatSending"):l.cM(k,j).I(0,"a11y.chatSendMessage")
 l=h.a
@@ -123526,10 +123526,10 @@ if(b3)a8=B.x
 else a8=b5?B.j:B.m
 j.push(new A.a5a(q,!0,A.bq8(b0,b0,b,B.ay,new A.E(a,b0,new A.dl(B.w,B.w,B.w,new A.al(a1,3.5,B.z,-1)),a0,b0,b0,b0,B.n),B.hq,b0,a3,B.ay,new A.E(a2,b0,a5,a4,b0,b0,b0,B.n),B.c5,b0,d,h,B.ay,B.Vz,g,B.ay,B.yb,f,B.ay,B.Vv,b0,B.ay,b0,b0,B.ay,b0,b0,B.ay,b0,b0,b0,c,B.qw,22,B.ay,i,B.y7,e,b0,A.J().$2$color$fontSize(a8,13),a6,b0,B.ec,b0,a7,b0,b0,b0,B.v9,B.ay,b0,b0,B.ay),b0,b0,b0,b0,b0,b0,b0,b0,b0,b0,b0,b0,b0,B.a4V,B.a4W,!0,B.a58,!1,b0))
 if(k&&!b4&&!a9.z&&a9.a.d.i(0,b1)!=null&&J.e2(t.j.a(a9.a.d.i(0,b1))))j.push(new A.NH(t.j.a(a9.a.d.i(0,b1)),b5,b0))
-o=A.b([A.C(b0,A.a6(j,B.v,b0,B.f,B.h),B.i,b0,b0,new A.E(o,b0,n,m,b0,b0,b0,B.n),b0,b0,B.yb,B.dh,b0,b0,b0)],l)
+o=A.b([A.C(b0,A.a5(j,B.v,b0,B.f,B.h),B.i,b0,b0,new A.E(o,b0,n,m,b0,b0,b0,B.n),b0,b0,B.yb,B.dh,b0,b0,b0)],l)
 if(a9.a.d.i(0,"time")!=null){n=a9.a.d.i(0,"time")
 o.push(new A.av(B.fC,A.k(n,b0,b0,b0,b0,b0,A.J().$2$color$fontSize(b5?B.t:B.u,11),b0,b0),b0))}if(k&&!a9.z&&a9.a.d.i(0,b2)!=null&&J.e2(t.j.a(a9.a.d.i(0,b2))))o.push(new A.av(B.Vw,A.fS(B.ay,J.eB(t.j.a(a9.a.d.i(0,b2)),new A.aZn(a9,b5),t.eO).dV(0),B.cr,8,8),b0))
-return new A.d3(s,b0,b0,new A.cj(B.Oq,A.a6(o,p,b0,B.f,B.h),b0),b0)}}
+return new A.d3(s,b0,b0,new A.cj(B.Oq,A.a5(o,p,b0,B.f,B.h),b0),b0)}}
 A.aZh.prototype={
 $1(a){var s=a.b[0]
 s.toString
@@ -123620,10 +123620,10 @@ k=A.I(A.b([l,A.C(f,A.k(i,f,f,f,f,f,A.J().$4$color$fontSize$fontWeight$letterSpac
 j=g.a.w
 m=A.k(j,f,f,f,f,f,A.J().$4$color$fontSize$fontWeight$letterSpacing(q?B.j:B.m,15,B.Q,-0.3),f,f)
 l=g.a.x
-m=A.a6(A.b([k,B.ai,m,B.aS,A.k(l,f,f,f,f,f,A.J().$3$color$fontSize$height(q?B.t:B.u,12,1.4),f,f)],h),B.v,f,B.f,B.h)
+m=A.a5(A.b([k,B.ai,m,B.aS,A.k(l,f,f,f,f,f,A.J().$3$color$fontSize$height(q?B.t:B.u,12,1.4),f,f)],h),B.v,f,B.f,B.h)
 l=s.I(0,"chat.askLegalAi")
 l=A.k(l,f,f,f,f,f,A.J().$3$color$fontSize$fontWeight(q?B.k:B.o,12.5,B.r),f,f)
-return A.dy(A.dH(f,A.fx(f,A.a6(A.b([m,B.c9,A.I(A.b([l,B.d2,A.Z(B.f6,q?B.k:B.o,f,f,f,14)],h),B.l,f,B.f,B.C,0,f)],h),B.v,f,B.av,B.h),f,B.a1,new A.E(p,f,n,o,f,f,f,B.n),B.bN,f,f,f,B.b6,e,f),B.I,!1,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,d,f,f,f,f,f,f,!1,B.aL),B.bw,f,f,new A.bc3(g),new A.bc4(g),f)}}
+return A.dy(A.dH(f,A.fx(f,A.a5(A.b([m,B.c9,A.I(A.b([l,B.d2,A.Z(B.f6,q?B.k:B.o,f,f,f,14)],h),B.l,f,B.f,B.C,0,f)],h),B.v,f,B.av,B.h),f,B.a1,new A.E(p,f,n,o,f,f,f,B.n),B.bN,f,f,f,B.b6,e,f),B.I,!1,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,f,d,f,f,f,f,f,f,!1,B.aL),B.bw,f,f,new A.bc3(g),new A.bc4(g),f)}}
 A.bc3.prototype={
 $1(a){var s=this.a
 return s.K(new A.bc2(s))},
@@ -123693,7 +123693,7 @@ for(m=this.w,l=0;l<3;++l){m===$&&A.a()
 n[l]=new A.K6(new A.bjh(this,l,i),j,m,j)}m=t.p
 o=A.I(A.b([o,B.aZ,A.I(n,B.l,j,B.f,B.h,0,j)],m),B.l,j,B.f,B.C,0,j)
 k=s.I(0,"chat.typingSubtitle")
-return new A.d3(B.bX,j,j,A.C(j,A.I(A.b([p,B.ah,A.a6(A.b([o,A.k(k,j,j,j,j,j,A.J().$2$color$fontSize(i?B.t:B.u,10.5),j,j)],m),B.v,j,B.f,B.C)],m),B.l,j,B.f,B.C,0,j),B.i,j,j,new A.E(r,j,g,h,j,j,j,B.n),j,j,B.ho,B.ed,j,j,j),j)}}
+return new A.d3(B.bX,j,j,A.C(j,A.I(A.b([p,B.ah,A.a5(A.b([o,A.k(k,j,j,j,j,j,A.J().$2$color$fontSize(i?B.t:B.u,10.5),j,j)],m),B.v,j,B.f,B.C)],m),B.l,j,B.f,B.C,0,j),B.i,j,j,new A.E(r,j,g,h,j,j,j,B.n),j,j,B.ho,B.ed,j,j,j),j)}}
 A.bjh.prototype={
 $2(a,b){var s,r,q=null,p=this.a.w
 p===$&&A.a()
@@ -123922,12 +123922,12 @@ if(k===0)k=new A.a0Q(f,s,r,new A.b0R(h),g)
 else{j=r?16:32
 j=A.EJ(h.y,new A.b0S(h),k,g,new A.X(j,16,j,16),B.dL,!1)
 k=j}j=t.p
-k=A.b([A.aa(k,1)],j)
+k=A.b([A.a9(k,1)],j)
 if(h.at){i=r?16:32
 k.push(new A.av(new A.X(i,0,i,0),B.ajO,g))}k.push(new A.KY(h.x,h.z,h.at,new A.b0T(h),r,g))
 i=r?16:32
 k.push(new A.av(new A.X(i,0,r?16:32,10),B.WT,g))
-return A.ip(g,e,A.C(g,A.hh(!0,A.a6(A.b([B.aS,l,B.b_,A.aa(A.bH(new A.cj(B.we,A.a6(k,B.l,g,B.f,B.h),g),g,g,g),1)],j),B.l,g,B.f,B.h),B.V,!0),B.i,m,g,g,g,g,g,g,g,g,g),g,new A.a0R(f,s,d,q,p,o,h.Q,n,h.gaUd(),new A.b0U(h),h.gaUb(),h.gaJ8(),g),g,h.w)},
+return A.ip(g,e,A.C(g,A.hh(!0,A.a5(A.b([B.aS,l,B.b_,A.a9(A.bH(new A.cj(B.we,A.a5(k,B.l,g,B.f,B.h),g),g,g,g),1)],j),B.l,g,B.f,B.h),B.V,!0),B.i,m,g,g,g,g,g,g,g,g,g),g,new A.a0R(f,s,d,q,p,o,h.Q,n,h.gaUd(),new A.b0U(h),h.gaUb(),h.gaJ8(),g),g,h.w)},
 aGG(a,b,c){var s,r,q,p=null,o=A.bk(a,p,t.w).w,n=A.Z(B.dD,b?B.j:B.m,p,p,p,18),m=c.I(0,"common.back"),l=t.p
 m=A.b([new A.d3(B.bX,p,p,new A.N5(A.I(A.b([n,B.M,A.k(m,p,p,p,p,p,A.J().$3$color$fontSize$fontWeight(b?B.j:B.m,13,B.r),p,p)],l),B.l,p,B.f,B.C,0,p),new A.b0x(a),b,p),p)],l)
 if(o.a.a>=700){o=B.o.E(0.12)
@@ -124171,7 +124171,7 @@ e=(k?B.L:B.K).E(0.16)
 h=A.n(8)
 e=A.C(null,A.Z(B.fF,k?B.L:B.K,null,null,null,18),B.i,null,null,new A.E(e,null,null,h,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 h=d.$1("checklists.taskDeletedSuccess")
-n.UJ(A.I(A.b([e,B.af,A.aa(A.k(h,null,null,null,null,null,A.a3(null,null,k?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))
+n.UJ(A.I(A.b([e,B.af,A.a9(A.k(h,null,null,null,null,null,A.a3(null,null,k?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))
 p=2
 s=9
 break
@@ -124219,7 +124219,7 @@ if(c==null)n=s?B.y:B.k
 else n=c
 j=A.n(14)
 m=t.p
-l=A.b([A.aa(d,1)],m)
+l=A.b([A.a9(d,1)],m)
 if(a!=null)B.b.N(l,A.b([B.af,a],m))
 r.Dd(A.RE(k,k,k,o,B.i7,B.O,k,A.I(l,B.l,k,B.f,B.h,0,k),k,e,8,k,k,k,k,B.ed,k,new A.aN(j,new A.al(n,1.2,B.z,-1)),k,p))},
 UJ(a){return this.UK(null,null,null,a,B.aN)},
@@ -124248,7 +124248,7 @@ case 9:if(o.c!=null){h=(n?B.L:B.K).E(0.16)
 k=A.n(8)
 h=A.C(null,A.Z(B.rC,n?B.L:B.K,null,null,null,18),B.i,null,null,new A.E(h,null,null,k,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 k=g.$1("checklists.checklistDeletedSuccess")
-h=A.I(A.b([h,B.af,A.aa(A.k(k,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null)
+h=A.I(A.b([h,B.af,A.a9(A.k(k,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null)
 k=B.o.E(0.18)
 j=n?B.j:B.m
 j=A.fR(null,null,k,null,null,null,null,null,null,null,j,null,B.W,B.cj,null,new A.aN(A.n(20),B.w),null,null,B.dX,null,null)
@@ -124265,7 +124265,7 @@ A.cV().$1("Error deleting checklist: "+A.p(m))
 if(o.c!=null){h=n?B.dd:B.df
 k=n?B.dc.E(0.5):B.de
 j=A.Z(B.bG,n?B.J:B.H,null,null,null,18)
-o.DM(h,k,A.I(A.b([j,B.ah,A.aa(A.k(u.h,null,null,null,null,null,A.a3(null,null,n?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}s=8
+o.DM(h,k,A.I(A.b([j,B.ah,A.a9(A.k(u.h,null,null,null,null,null,A.a3(null,null,n?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}s=8
 break
 case 5:s=1
 break
@@ -124316,7 +124316,7 @@ c=s.$1("checklists.addNewTask")
 if(b0.x)h=B.R6
 else{b=b0.y
 if(b!=null){h=A.Z(B.bG,r?B.J:B.H,b1,b1,b1,48)
-h=A.bH(A.a6(A.b([h,B.au,A.k(b,b1,b1,b1,b1,b1,A.a3(b1,b1,r?B.J:B.H,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,!0,b1,b1,b1,b1,b1,b1,b1,b1),b1,b1),B.ai,A.fY(A.k(s.$1("checklists.retryAction"),b1,b1,b1,b1,b1,b1,b1,b1),b0.gaU2(),b1)],d),B.l,b1,B.bn,B.h),b1,b1,b1)}else{a=B.d.a6(i*100)
+h=A.bH(A.a5(A.b([h,B.au,A.k(b,b1,b1,b1,b1,b1,A.a3(b1,b1,r?B.J:B.H,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,b1,!0,b1,b1,b1,b1,b1,b1,b1,b1),b1,b1),B.ai,A.fY(A.k(s.$1("checklists.retryAction"),b1,b1,b1,b1,b1,b1,b1,b1),b0.gaU2(),b1)],d),B.l,b1,B.bn,B.h),b1,b1,b1)}else{a=B.d.a6(i*100)
 b=r?B.m:B.j
 a0=A.n(18)
 a1=A.ag(r?B.y:B.k,1)
@@ -124344,7 +124344,7 @@ if(a5)a5=r?B.L:B.K
 else a5=B.o
 a5=A.jw(a2,A.ED(a6,8,i,new A.h8(a5,t.ZU)),B.bm)
 e=s.$2("checklists.completedRatio",A.c(["completed",B.e.l(k),"total",B.e.l(l)],e,e))
-e=A.C(b1,A.a6(A.b([a3,B.au,a5,B.b8,A.k(e,b1,b1,b1,b1,b1,A.a3(b1,b1,r?B.t:B.u,b1,b1,b1,b1,b1,b1,b1,b1,12,b1,b1,B.D,b1,b1,!0,b1,b1,b1,b1,b1,b1,b1,b1),b1,b1)],d),B.v,b1,B.f,B.h),B.i,b1,b1,new A.E(b,b1,a1,a0,b1,b1,b1,B.n),b1,b1,b1,B.dh,b1,b1,b1)
+e=A.C(b1,A.a5(A.b([a3,B.au,a5,B.b8,A.k(e,b1,b1,b1,b1,b1,A.a3(b1,b1,r?B.t:B.u,b1,b1,b1,b1,b1,b1,b1,b1,12,b1,b1,B.D,b1,b1,!0,b1,b1,b1,b1,b1,b1,b1,b1),b1,b1)],d),B.v,b1,B.f,B.h),B.i,b1,b1,new A.E(b,b1,a1,a0,b1,b1,b1,B.n),b1,b1,b1,B.dh,b1,b1,b1)
 b=b0.aFe("All",A.p(s.$1("checklists.filterAll"))+" ("+l+")",r)
 a0=A.p(s.$1("checklists.filterPending"))
 a1=r?B.aC:B.aB
@@ -124367,8 +124367,8 @@ a4=A.Z(a4,r?B.L:B.K,b1,b1,b1,40)
 if(a3)a2="No completed tasks yet."
 else if(a2==="Flagged")a2="No flagged document issues in this checklist."
 else a2=a2==="Pending"?s.$1("checklists.allDone"):"No tasks found in this checklist."
-a1.push(A.C(B.a8,A.a6(A.b([a4,B.au,A.k(a2,b1,b1,b1,b1,b1,A.a3(b1,b1,h,b1,b1,b1,b1,b1,b1,b1,b1,14,b1,b1,B.D,b1,b1,!0,b1,b1,b1,b1,b1,b1,b1,b1),b1,b1)],d),B.l,b1,B.f,B.C),B.i,b1,b1,new A.E(e,b1,a0,b,b1,b1,b1,B.n),b1,b1,b1,B.kh,b1,b1,b1))}else B.b.N(a1,new A.af(m,new A.b1O(b0,r,q,s,b4),A.ab(m).j("af<1,h>")))
-h=A.hh(!0,A.dW(A.a6(a1,B.dg,b1,B.f,B.h),b1,B.I,B.qB,B.dL,B.aj),B.V,!0)}}return A.ip(f,b2,h,b1,b1,new A.yY(B.Zc,c,g,b3,b0.gb1s(),2,b1,b1,!1,B.akN,b1,b1),b1)},
+a1.push(A.C(B.a8,A.a5(A.b([a4,B.au,A.k(a2,b1,b1,b1,b1,b1,A.a3(b1,b1,h,b1,b1,b1,b1,b1,b1,b1,b1,14,b1,b1,B.D,b1,b1,!0,b1,b1,b1,b1,b1,b1,b1,b1),b1,b1)],d),B.l,b1,B.f,B.C),B.i,b1,b1,new A.E(e,b1,a0,b,b1,b1,b1,B.n),b1,b1,b1,B.kh,b1,b1,b1))}else B.b.N(a1,new A.af(m,new A.b1O(b0,r,q,s,b4),A.ab(m).j("af<1,h>")))
+h=A.hh(!0,A.dW(A.a5(a1,B.dg,b1,B.f,B.h),b1,B.I,B.qB,B.dL,B.aj),B.V,!0)}}return A.ip(f,b2,h,b1,b1,new A.yY(B.Zc,c,g,b3,b0.gb1s(),2,b1,b1,!1,B.akN,b1,b1),b1)},
 K8(a,b,c,d){var s,r,q,p,o,n=null,m=this.z===a,l=d==null?B.o:d,k=A.n(20)
 if(m)s=l.E(c?0.25:0.12)
 else s=c?B.m:B.j
@@ -124440,7 +124440,7 @@ p=A.n(12)
 o=j?B.y:B.k
 n=A.n(12)
 m=j?B.y:B.k
-i=A.a6(A.b([b,B.aI,A.ns(k,B.cz,!0,k,!0,B.O,k,A.pf(),s,k,k,k,k,k,2,A.hJ(k,new A.cl(4,p,new A.al(o,1,B.z,-1)),k,B.ms,k,k,k,k,!0,new A.cl(4,n,new A.al(m,1,B.z,-1)),k,k,k,k,k,q,!0,k,k,k,k,new A.cl(4,A.n(12),B.pF),k,k,k,k,k,k,k,k,k,r,k,k,k,k,k,k,k,k,k,!0,!0,!1,k,k,k,k,k,k,k,k,k,k,k,k,k,k),B.I,!0,k,!0,k,!1,k,B.ca,k,k,k,k,k,k,k,k,2,k,k,!1,"\u2022",k,k,k,k,k,!1,k,k,!1,k,!0,k,B.b6,k,k,k,k,k,k,k,k,k,k,k,i,!0,B.aG,k,B.bK,k,k,k,k)],d),B.v,k,B.f,B.C)
+i=A.a5(A.b([b,B.aI,A.ns(k,B.cz,!0,k,!0,B.O,k,A.pf(),s,k,k,k,k,k,2,A.hJ(k,new A.cl(4,p,new A.al(o,1,B.z,-1)),k,B.ms,k,k,k,k,!0,new A.cl(4,n,new A.al(m,1,B.z,-1)),k,k,k,k,k,q,!0,k,k,k,k,new A.cl(4,A.n(12),B.pF),k,k,k,k,k,k,k,k,k,r,k,k,k,k,k,k,k,k,k,!0,!0,!1,k,k,k,k,k,k,k,k,k,k,k,k,k,k),B.I,!0,k,!0,k,!1,k,B.ca,k,k,k,k,k,k,k,k,2,k,k,!1,"\u2022",k,k,k,k,k,!1,k,k,!1,k,!0,k,B.b6,k,k,k,k,k,k,k,k,k,k,k,i,!0,B.aG,k,B.bK,k,k,k,k)],d),B.v,k,B.f,B.C)
 b=l.a
 r=b.a?k:new A.b1j(l.e)
 q=e.$1("checklists.cancel")
@@ -124475,7 +124475,7 @@ g=(h?B.L:B.K).E(0.16)
 f=A.n(8)
 g=A.C(null,A.Z(B.fF,h?B.L:B.K,null,null,null,18),B.i,null,null,new A.E(g,null,null,f,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 f=n.r.$1("checklists.taskAddedSuccess")
-i.UJ(A.I(A.b([g,B.af,A.aa(A.k(f,null,null,null,null,null,A.a3(null,null,h?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}p=2
+i.UJ(A.I(A.b([g,B.af,A.a9(A.k(f,null,null,null,null,null,A.a3(null,null,h?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}p=2
 s=6
 break
 case 4:p=3
@@ -124543,7 +124543,7 @@ k=(l?B.L:B.K).E(0.16)
 j=A.n(8)
 k=A.C(null,A.Z(B.fF,l?B.L:B.K,null,null,null,18),B.i,null,null,new A.E(k,null,null,j,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 j=o.f.$1("checklists.renameSuccess")
-m.UJ(A.I(A.b([k,B.af,A.aa(A.k(j,null,null,null,null,null,A.a3(null,null,l?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}q=1
+m.UJ(A.I(A.b([k,B.af,A.a9(A.k(j,null,null,null,null,null,A.a3(null,null,l?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}q=1
 s=8
 break
 case 6:q=5
@@ -124611,7 +124611,7 @@ r=i.c
 q=r.$1("checklists.relatedIssueModalTitle")
 q=A.k(q,h,h,h,h,h,A.ez().$3$color$fontSize$fontWeight(f?B.j:B.m,16,B.Q),h,h)
 p=t.p
-q=A.I(A.b([s,B.af,A.aa(A.a6(A.b([q,A.k(i.d,h,1,B.X,h,h,A.J().$3$color$fontSize$fontWeight(f?B.t:B.u,12,B.U),h,h)],p),B.v,h,B.f,B.h),1),A.f2(h,h,h,h,h,B.Z2,h,h,new A.b1s(a),h,h,h,h,r.$1("common.close"))],p),B.l,h,B.f,B.h,0,h)
+q=A.I(A.b([s,B.af,A.a9(A.a5(A.b([q,A.k(i.d,h,1,B.X,h,h,A.J().$3$color$fontSize$fontWeight(f?B.t:B.u,12,B.U),h,h)],p),B.v,h,B.f,B.h),1),A.f2(h,h,h,h,h,B.Z2,h,h,new A.b1s(a),h,h,h,h,r.$1("common.close"))],p),B.l,h,B.f,B.h,0,h)
 s=A.iF(f?B.y:B.k,h,1,h,h,0.8)
 o=i.e
 n=i.a
@@ -124625,7 +124625,7 @@ j=A.n(12)
 l=A.dt(h,h,l,h,h,h,0,h,h,h,k,h,h,B.kc,h,new A.aN(j,new A.al(f?B.y:B.k,1,B.z,-1)),h,h,h,h,h)
 f=A.Z(m?B.Yv:B.mT,h,h,h,h,18)
 r=m?r.$1("checklists.markAsPending"):r.$1("checklists.markAsVerified")
-return A.C(h,A.a6(A.b([B.au,c,B.aA,new A.av(B.VT,q,h),B.au,s,new A.eE(1,B.bt,o,h),new A.av(B.VX,new A.aZ(1/0,h,A.j4(f,A.k(r,h,h,h,h,h,A.ez().$1$fontWeight(B.r),h,h),new A.b1u(n,a,i.r,m),l),h),h)],p),B.l,h,B.f,B.C),B.i,h,new A.aq(0,1/0,0,g.a.b*0.88),new A.E(e,h,d,B.O8,h,h,h,B.n),h,h,h,h,h,h,h)},
+return A.C(h,A.a5(A.b([B.au,c,B.aA,new A.av(B.VT,q,h),B.au,s,new A.eE(1,B.bt,o,h),new A.av(B.VX,new A.aZ(1/0,h,A.j4(f,A.k(r,h,h,h,h,h,A.ez().$1$fontWeight(B.r),h,h),new A.b1u(n,a,i.r,m),l),h),h)],p),B.l,h,B.f,B.C),B.i,h,new A.aq(0,1/0,0,g.a.b*0.88),new A.E(e,h,d,B.O8,h,h,h,B.n),h,h,h,h,h,h,h)},
 $S:254}
 A.b1s.prototype={
 $0(){A.aG(this.a,!1).bY(null)
@@ -124665,7 +124665,7 @@ e=A.Z(r?B.bG:B.ck,i,a2,a2,a2,13)
 d=r?"HIGH RISK":"CAUTION"
 c=t.p
 f=A.C(a2,A.I(A.b([e,B.d2,A.k(d,a2,a2,a2,a2,a2,A.J().$4$color$fontSize$fontWeight$letterSpacing(i,10,B.Q,0.5),a2,a2)],c),B.l,a2,B.f,B.C,0,a2),B.i,a2,a2,new A.E(g,a2,a2,f,a2,a2,a2,B.n),a2,a2,a2,B.ee,a2,a2,a2)
-g=A.I(A.b([f,B.M,A.aa(A.k(a6,a2,1,B.X,a2,a2,A.J().$3$color$fontSize$fontWeight(a4?B.t:B.u,12,B.r),a2,a2),1)],c),B.l,a2,B.f,B.h,0,a2)
+g=A.I(A.b([f,B.M,A.a9(A.k(a6,a2,1,B.X,a2,a2,A.J().$3$color$fontSize$fontWeight(a4?B.t:B.u,12,B.r),a2,a2),1)],c),B.l,a2,B.f,B.h,0,a2)
 f=a1.d
 e=f.$1("checklists.whyFlaggedTitle")
 e=A.k(e,a2,a2,a2,a2,a2,A.ez().$3$color$fontSize$fontWeight(a4?B.j:B.m,13,B.Q),a2,a2)
@@ -124675,10 +124675,10 @@ d=a4?B.ad:B.aD
 b=A.n(10)
 a=A.ag(a4?B.y:B.k,1)
 a0=A.Z(B.rw,a4?B.k:B.o,a2,a2,a2,15)
-a0=A.b([A.I(A.b([a0,B.aZ,A.aa(A.k(s,a2,a2,a2,a2,a2,A.ez().$3$color$fontSize$fontWeight(a4?B.j:B.m,13,B.r),a2,a2),1)],c),B.l,a2,B.f,B.h,0,a2)],c)
+a0=A.b([A.I(A.b([a0,B.aZ,A.a9(A.k(s,a2,a2,a2,a2,a2,A.ez().$3$color$fontSize$fontWeight(a4?B.j:B.m,13,B.r),a2,a2),1)],c),B.l,a2,B.f,B.h,0,a2)],c)
 if(q.length!==0)B.b.N(a0,A.b([B.b_,A.k(q,a2,a2,a2,a2,a2,A.J().$3$color$fontSize$fontWeight(a4?B.aC:B.aB,11,B.D),a2,a2)],c))
 if(p.length!==0)B.b.N(a0,A.b([B.aS,A.k(p,a2,a2,a2,a2,a2,A.J().$3$color$fontSize$height(a4?B.j:B.m,12,1.45),a2,a2)],c))
-l=A.b([g,B.au,e,B.b_,l,B.au,A.C(a2,A.a6(a0,B.v,a2,B.f,B.h),B.i,a2,a2,new A.E(d,a2,a,b,a2,a2,a2,B.n),a2,a2,a2,B.c5,a2,a2,a2)],c)
+l=A.b([g,B.au,e,B.b_,l,B.au,A.C(a2,A.a5(a0,B.v,a2,B.f,B.h),B.i,a2,a2,new A.E(d,a2,a,b,a2,a2,a2,B.n),a2,a2,a2,B.c5,a2,a2,a2)],c)
 if(k.length!==0||j.length!==0){g=f.$1("checklists.statutoryCitationsTitle")
 g=A.k(g,a2,a2,a2,a2,a2,A.ez().$3$color$fontSize$fontWeight(a4?B.j:B.m,12,B.r),a2,a2)
 e=a1.a
@@ -124692,7 +124692,7 @@ d=A.ag((a4?B.L:B.K).E(0.3),1)
 b=A.Z(B.rE,a4?B.L:B.K,a2,a2,a2,16)
 f=f.$1("checklists.recommendationTitle")
 f=A.k(f,a2,a2,a2,a2,a2,A.ez().$3$color$fontSize$fontWeight(a4?B.L:B.K,11,B.Q),a2,a2)
-B.b.N(l,A.b([B.au,A.C(a2,A.I(A.b([b,B.M,A.aa(A.a6(A.b([f,B.bT,A.k(n,a2,a2,a2,a2,a2,A.J().$3$color$fontSize$height(a4?B.j:B.m,12,1.4),a2,a2)],c),B.v,a2,B.f,B.h),1)],c),B.v,a2,B.f,B.h,0,a2),B.i,a2,a2,new A.E(g,a2,d,e,a2,a2,a2,B.n),a2,a2,a2,B.c5,a2,a2,a2)],c))}return A.C(a2,A.a6(l,B.v,a2,B.f,B.h),B.i,a2,a2,new A.E(a5,a2,h,m,a2,a2,a2,B.n),a2,a2,B.mo,B.bP,a2,a2,a2)},
+B.b.N(l,A.b([B.au,A.C(a2,A.I(A.b([b,B.M,A.a9(A.a5(A.b([f,B.bT,A.k(n,a2,a2,a2,a2,a2,A.J().$3$color$fontSize$height(a4?B.j:B.m,12,1.4),a2,a2)],c),B.v,a2,B.f,B.h),1)],c),B.v,a2,B.f,B.h,0,a2),B.i,a2,a2,new A.E(g,a2,d,e,a2,a2,a2,B.n),a2,a2,a2,B.c5,a2,a2,a2)],c))}return A.C(a2,A.a5(l,B.v,a2,B.f,B.h),B.i,a2,a2,new A.E(a5,a2,h,m,a2,a2,a2,B.n),a2,a2,B.mo,B.bP,a2,a2,a2)},
 $S:265}
 A.b1o.prototype={
 $1(a){return J.a8(a)},
@@ -124781,7 +124781,7 @@ i=a3?B.U:B.D
 h=a3?B.vc:a0
 if(a3)g=p?B.t:B.u
 else g=a.c.k3
-i=A.aa(new A.av(B.Vu,A.k(a5,a0,a0,a0,a0,a0,A.a3(a0,a0,g,a0,h,a0,a0,a0,a0,a0,a0,14,a0,a0,i,a0,a0,!0,a0,a0,a0,a0,a0,a0,a0,a0),a0,a0),a0),1)
+i=A.a9(new A.av(B.Vu,A.k(a5,a0,a0,a0,a0,a0,A.a3(a0,a0,g,a0,h,a0,a0,a0,a0,a0,a0,14,a0,a0,i,a0,a0,!0,a0,a0,a0,a0,a0,a0,a0,a0),a0,a0),a0),1)
 h=p?B.t:B.u
 g=a.d
 f=t.p
@@ -124797,7 +124797,7 @@ c=c===1?g.$2("checklists.triggeredBy",A.c(["doc",B.b.gY(q)],a1,a1)):g.$2("checkl
 c=A.k(c,a0,1,B.X,a0,a0,A.J().$3$color$fontSize$fontWeight(p?B.t:B.u,11,B.U),a0,a0)
 b=A.n(6)
 a1=a4.gA(a6)===1?A.p(g.$1("checklists.viewRelatedIssue"))+" \u2192":A.p(g.$2("checklists.viewRelatedIssues",A.c(["count",B.e.l(a4.gA(a6))],a1,a1)))+" \u2192"
-B.b.N(h,A.b([B.aI,A.C(a0,A.a6(A.b([d,B.b_,c,B.aI,A.d8(!1,b,!0,new A.av(B.yc,A.I(A.b([A.k(a1,a0,a0,a0,a0,a0,A.J().$3$color$fontSize$fontWeight(p?B.k:B.o,12,B.r),a0,a0)],f),B.l,a0,B.f,B.C,0,a0),a0),a0,!0,a0,a0,a0,a0,a0,a0,a0,a0,a0,new A.b1G(j,a.e,a7,a2),a0,a0,a0,a0,a0,a0,a0,a0)],f),B.v,a0,B.f,B.h),B.i,a0,a0,new A.E(k,a0,e,i,a0,a0,a0,B.n),a0,a0,B.Wg,B.hp,a0,a0,a0)],f))}return A.C(a0,A.fh(!1,B.a6,!0,l,new A.av(B.c5,A.a6(h,B.v,a0,B.f,B.h),a0),B.bm,B.E,0,a0,a0,a0,a0,a0,B.bR),B.i,a0,a0,new A.E(r,a0,m,n,a0,a0,a0,B.n),a0,a0,B.qu,a0,a0,a0,a0)},
+B.b.N(h,A.b([B.aI,A.C(a0,A.a5(A.b([d,B.b_,c,B.aI,A.d8(!1,b,!0,new A.av(B.yc,A.I(A.b([A.k(a1,a0,a0,a0,a0,a0,A.J().$3$color$fontSize$fontWeight(p?B.k:B.o,12,B.r),a0,a0)],f),B.l,a0,B.f,B.C,0,a0),a0),a0,!0,a0,a0,a0,a0,a0,a0,a0,a0,a0,new A.b1G(j,a.e,a7,a2),a0,a0,a0,a0,a0,a0,a0,a0)],f),B.v,a0,B.f,B.h),B.i,a0,a0,new A.E(k,a0,e,i,a0,a0,a0,B.n),a0,a0,B.Wg,B.hp,a0,a0,a0)],f))}return A.C(a0,A.fh(!1,B.a6,!0,l,new A.av(B.c5,A.a5(h,B.v,a0,B.f,B.h),a0),B.bm,B.E,0,a0,a0,a0,a0,a0,B.bR),B.i,a0,a0,new A.E(r,a0,m,n,a0,a0,a0,B.n),a0,a0,B.qu,a0,a0,a0,a0)},
 $S:702}
 A.b1D.prototype={
 $1(a){var s=J.Y(a,"documentTitle")
@@ -124879,7 +124879,7 @@ if(c==null)n=s?B.y:B.k
 else n=c
 j=A.n(14)
 m=t.p
-l=A.b([A.aa(d,1)],m)
+l=A.b([A.a9(d,1)],m)
 if(a!=null)B.b.N(l,A.b([B.af,a],m))
 r.Dd(A.RE(k,k,k,o,B.i7,B.O,k,A.I(l,B.l,k,B.f,B.h,0,k),k,e,8,k,k,k,k,B.ed,k,new A.aN(j,new A.al(n,1.2,B.z,-1)),k,p))},
 aHa(a,b,c){return this.UN(a,null,null,b,c)},
@@ -124911,7 +124911,7 @@ g=(m?B.L:B.K).E(0.16)
 j=A.n(8)
 g=A.C(null,A.Z(B.rC,m?B.L:B.K,null,null,null,18),B.i,null,null,new A.E(g,null,null,j,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 j=f.$1("checklists.deletedSuccess")
-g=A.I(A.b([g,B.af,A.aa(A.k(j,null,null,null,null,null,A.a3(null,null,m?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null)
+g=A.I(A.b([g,B.af,A.a9(A.k(j,null,null,null,null,null,A.a3(null,null,m?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null)
 j=B.o.E(0.18)
 i=m?B.j:B.m
 i=A.fR(null,null,j,null,null,null,null,null,null,null,i,null,B.W,B.cj,null,new A.aN(A.n(20),B.w),null,null,B.dX,null,null)
@@ -124925,7 +124925,7 @@ A.cV().$1("Error deleting checklist: "+A.p(k))
 if(n.c!=null){g=m?B.dd:B.df
 j=m?B.dc.E(0.5):B.de
 i=A.Z(B.bG,m?B.J:B.H,null,null,null,18)
-n.UM(g,j,A.I(A.b([i,B.ah,A.aa(A.k(u.h,null,null,null,null,null,A.a3(null,null,m?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}s=7
+n.UM(g,j,A.I(A.b([i,B.ah,A.a9(A.k(u.h,null,null,null,null,null,A.a3(null,null,m?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}s=7
 break
 case 4:s=2
 break
@@ -125014,9 +125014,9 @@ e=A.k(e,a0,a0,a0,a0,a0,A.J().$2$color$fontSize(p?B.t:B.u,13),B.an,a0)
 d=A.k(q.$1("common.retry"),a0,a0,a0,a0,a0,A.J().$1$fontWeight(B.r),a0,a0)
 c=p?B.k:B.o
 b=p?B.ad:B.x
-i=A.bH(A.C(a0,A.a6(A.b([g,B.ai,f,B.aS,e,B.bg,A.j4(B.zF,d,a.gaU3(),A.dt(a0,a0,c,a0,a0,a0,0,a0,a0,a0,b,a0,a0,B.yj,a0,new A.aN(A.n(10),B.w),a0,a0,a0,a0,a0))],t.p),B.l,a0,B.f,B.C),B.i,a0,a0,new A.E(j,a0,h,i,a0,a0,a0,B.n),a0,a0,B.di,B.qC,a0,a0,a0),a0,a0,a0)
+i=A.bH(A.C(a0,A.a5(A.b([g,B.ai,f,B.aS,e,B.bg,A.j4(B.zF,d,a.gaU3(),A.dt(a0,a0,c,a0,a0,a0,0,a0,a0,a0,b,a0,a0,B.yj,a0,new A.aN(A.n(10),B.w),a0,a0,a0,a0,a0))],t.p),B.l,a0,B.f,B.C),B.i,a0,a0,new A.E(j,a0,h,i,a0,a0,a0,B.n),a0,a0,B.di,B.qC,a0,a0,a0),a0,a0,a0)
 j=i}else j=J.eS(a.w)?a.aH6(q,p,o):a.aFd(q,p,o)
-return A.ip(a0,s,A.C(a0,A.hh(!0,A.a6(A.b([B.aS,m,B.b_,A.aa(new A.ct(l,!1,A.jT(A.bH(new A.cj(B.OD,j,a0),a0,a0,a0),k,a0,!0),a0),1)],t.p),B.l,a0,B.f,B.h),B.V,!0),B.i,r,a0,a0,a0,a0,a0,a0,a0,a0,a0),a0,a0,n,a0)},
+return A.ip(a0,s,A.C(a0,A.hh(!0,A.a5(A.b([B.aS,m,B.b_,A.a9(new A.ct(l,!1,A.jT(A.bH(new A.cj(B.OD,j,a0),a0,a0,a0),k,a0,!0),a0),1)],t.p),B.l,a0,B.f,B.h),B.V,!0),B.i,r,a0,a0,a0,a0,a0,a0,a0,a0,a0),a0,a0,n,a0)},
 aH7(a,b,c){var s,r,q=null,p=A.bk(a,q,t.w).w,o=A.Z(B.dD,b?B.j:B.m,q,q,q,18),n=c.$1("common.back"),m=t.p
 n=A.b([new A.d3(B.bX,q,q,new A.V8(A.I(A.b([o,B.M,A.k(n,q,q,q,q,q,A.J().$3$color$fontSize$fontWeight(b?B.j:B.m,13,B.r),q,q)],m),B.l,q,B.f,B.C,0,q),new A.b1Z(a),b,q),q)],m)
 if(p.a.a>=700){p=B.o.E(0.12)
@@ -125035,7 +125035,7 @@ k=A.I(A.b([A.C(q,A.k(s,q,q,q,q,q,A.J().$4$color$fontSize$fontWeight$letterSpacin
 l=a.$1("checklists.heroHeadline")
 l=A.k(l,q,q,q,q,q,A.ez().$4$color$fontSize$fontWeight$letterSpacing(b?B.j:B.m,17,B.Q,-0.3),q,q)
 s=a.$1("checklists.heroSub")
-return A.C(q,A.I(A.b([m,B.oq,A.aa(A.a6(A.b([k,B.aS,l,B.fi,A.k(s,q,q,q,q,q,A.J().$3$color$fontSize$height(b?B.t:B.u,13,1.4),q,q)],r),B.v,q,B.f,B.C),1)],r),B.l,q,B.f,B.h,0,q),B.i,q,q,new A.E(p,q,n,o,q,q,q,B.n),q,q,B.y8,B.kg,q,q,q)},
+return A.C(q,A.I(A.b([m,B.oq,A.a9(A.a5(A.b([k,B.aS,l,B.fi,A.k(s,q,q,q,q,q,A.J().$3$color$fontSize$height(b?B.t:B.u,13,1.4),q,q)],r),B.v,q,B.f,B.C),1)],r),B.l,q,B.f,B.h,0,q),B.i,q,q,new A.E(p,q,n,o,q,q,q,B.n),q,q,B.y8,B.kg,q,q,q)},
 aFd(a,b,c){var s,r,q,p,o,n=this,m=null,l=c?32:16,k=n.a9A(a,b),j=a.$1("checklists.casesHeading")
 j=A.k(j,m,m,m,m,m,A.ez().$4$color$fontSize$fontWeight$letterSpacing(b?B.j:B.m,16,B.Q,-0.2),m,m)
 s=B.o.E(0.12)
@@ -125065,7 +125065,7 @@ r=A.j4(B.Zw,i,new A.b1T(p),A.dt(o,o,s,o,o,o,0,o,o,o,r,o,o,B.yl,o,new A.aN(A.n(10
 s=a.$1("checklists.starterTitle")
 i=A.k(s,o,o,o,o,o,A.ez().$4$color$fontSize$fontWeight$letterSpacing(b?B.j:B.m,15,B.Q,-0.2),o,o)
 s=a.$1("checklists.quickStartSub")
-return A.dW(A.a6(A.b([m,B.au,k,B.LL,l,B.aI,new A.cj(B.jK,j,o),B.aU,r,B.ou,new A.d3(B.bX,o,o,A.a6(A.b([i,B.fi,A.k(s,o,o,o,o,o,A.J().$2$color$fontSize(b?B.t:B.u,12),o,o)],q),B.v,o,B.f,B.h),o),B.aA,new A.xd(a.$1("checklists.template1"),"Title deed chain, society NOC, Khata extract & encumbrance check",B.zg,b,new A.b1U(p),o),B.b8,new A.xd(a.$1("checklists.template2"),"RERA registration, builder-buyer agreement, milestone approvals & CC",B.Y5,b,new A.b1V(p),o),B.b8,new A.xd(a.$1("checklists.template3"),"Lock-in period, security deposit, stamp duty, sub-letting & usage clauses",B.YD,b,new A.b1W(p),o),B.b8,new A.xd(a.$1("checklists.template4"),"Title clearance, 7/12 extract, zoning & mutation entries",B.Yd,b,new A.b1X(p),o),B.lh],q),B.l,o,B.f,B.h),o,B.I,new A.X(n,16,n,16),B.dL,B.aj)},
+return A.dW(A.a5(A.b([m,B.au,k,B.LL,l,B.aI,new A.cj(B.jK,j,o),B.aU,r,B.ou,new A.d3(B.bX,o,o,A.a5(A.b([i,B.fi,A.k(s,o,o,o,o,o,A.J().$2$color$fontSize(b?B.t:B.u,12),o,o)],q),B.v,o,B.f,B.h),o),B.aA,new A.xd(a.$1("checklists.template1"),"Title deed chain, society NOC, Khata extract & encumbrance check",B.zg,b,new A.b1U(p),o),B.b8,new A.xd(a.$1("checklists.template2"),"RERA registration, builder-buyer agreement, milestone approvals & CC",B.Y5,b,new A.b1V(p),o),B.b8,new A.xd(a.$1("checklists.template3"),"Lock-in period, security deposit, stamp duty, sub-letting & usage clauses",B.YD,b,new A.b1W(p),o),B.b8,new A.xd(a.$1("checklists.template4"),"Title clearance, 7/12 extract, zoning & mutation entries",B.Yd,b,new A.b1X(p),o),B.lh],q),B.l,o,B.f,B.h),o,B.I,new A.X(n,16,n,16),B.dL,B.aj)},
 aFH(a){var s,r,q,p=null,o=a?B.Y:B.j,n=A.n(16),m=t.p
 n=A.b([A.C(p,p,B.i,p,p,new A.E(o,p,A.ag(a?B.y:B.k,1),n,p,p,p,B.n),p,90,p,p,p,p,p),B.ai],m)
 for(s=0;s<3;++s){o=a?B.Y:B.j
@@ -125194,7 +125194,7 @@ g=(i?B.L:B.K).E(0.16)
 f=A.n(8)
 g=A.C(null,A.Z(B.fF,i?B.L:B.K,null,null,null,18),B.i,null,null,new A.E(g,null,null,f,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 f=n.x.$1("checklists.renamedSuccess")
-h.aH9(A.I(A.b([g,B.af,A.aa(A.k(f,null,null,null,null,null,A.a3(null,null,i?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}p=2
+h.aH9(A.I(A.b([g,B.af,A.a9(A.k(f,null,null,null,null,null,A.a3(null,null,i?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}p=2
 s=6
 break
 case 4:p=3
@@ -125206,7 +125206,7 @@ if(n.e.e!=null){k=n.w
 j=k?B.dd:B.df
 i=k?B.dc.E(0.5):B.de
 h=A.Z(B.bG,k?B.J:B.H,null,null,null,18)
-n.b.UM(j,i,A.I(A.b([h,B.ah,A.aa(A.k(u.u,null,null,null,null,null,A.a3(null,null,k?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}s=6
+n.b.UM(j,i,A.I(A.b([h,B.ah,A.a9(A.k(u.u,null,null,null,null,null,A.a3(null,null,k?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}s=6
 break
 case 3:s=2
 break
@@ -125236,7 +125236,7 @@ d=A.C(j,B.YT,B.i,j,j,new A.E(e,j,A.ag(B.q_.E(0.3),1),d,j,j,j,B.n),j,j,j,B.aW,j,j
 e=k.b
 s=e.$1("checklists.alreadyExistsTitle")
 r=t.p
-s=A.I(A.b([d,B.af,A.aa(A.k(s,j,j,j,j,j,A.ez().$3$color$fontSize$fontWeight(i?B.j:B.m,17,B.r),j,j),1)],r),B.l,j,B.f,B.h,0,j)
+s=A.I(A.b([d,B.af,A.a9(A.k(s,j,j,j,j,j,A.ez().$3$color$fontSize$fontWeight(i?B.j:B.m,17,B.r),j,j),1)],r),B.l,j,B.f,B.h,0,j)
 d=k.c
 q=t.N
 q=e.$2("checklists.alreadyExistsDesc",A.c(["title",d],q,q))
@@ -125250,9 +125250,9 @@ m=A.C(j,A.Z(B.fG,i?B.k:B.o,j,j,j,18),B.i,j,j,new A.E(m,j,j,l,j,j,j,B.n),j,j,j,B.
 d=A.k(d,j,1,B.X,j,j,A.ez().$3$color$fontSize$fontWeight(i?B.j:B.m,13.5,B.r),j,j)
 l=k.d
 l=l>0?""+k.e+" of "+l+" items completed":"Active case"
-d=A.C(j,A.I(A.b([m,B.af,A.aa(A.a6(A.b([d,B.bT,A.k(l,j,j,j,j,j,A.J().$2$color$fontSize(i?B.t:B.u,11.5),j,j)],r),B.v,j,B.f,B.h),1)],r),B.l,j,B.f,B.h,0,j),B.i,j,j,new A.E(p,j,n,o,j,j,j,B.n),j,j,j,B.c5,j,j,j)
+d=A.C(j,A.I(A.b([m,B.af,A.a9(A.a5(A.b([d,B.bT,A.k(l,j,j,j,j,j,A.J().$2$color$fontSize(i?B.t:B.u,11.5),j,j)],r),B.v,j,B.f,B.h),1)],r),B.l,j,B.f,B.h,0,j),B.i,j,j,new A.E(p,j,n,o,j,j,j,B.n),j,j,j,B.c5,j,j,j)
 p=e.$1("checklists.alreadyExistsPrompt")
-d=A.a6(A.b([q,B.au,d,B.aA,A.k(p,j,j,j,j,j,A.J().$2$color$fontSize(i?B.t:B.u,12.5),j,j)],r),B.v,j,B.f,B.C)
+d=A.a5(A.b([q,B.au,d,B.aA,A.k(p,j,j,j,j,j,A.J().$2$color$fontSize(i?B.t:B.u,12.5),j,j)],r),B.v,j,B.f,B.C)
 q=e.$1("common.cancel")
 q=A.dr(A.k(q,j,j,j,j,j,A.J().$2$color$fontWeight(i?B.t:B.u,B.D),j,j),new A.b2j(a),j)
 p=i?B.y:B.k
@@ -125286,7 +125286,7 @@ c=A.C(h,A.Z(B.mS,B.k,h,h,h,20),B.i,h,h,new A.E(c,h,a,b,h,h,h,B.n),h,h,h,B.aW,h,h
 b=i.d
 a=b.$1("checklists.createTitle")
 s=t.p
-a=A.I(A.b([c,B.af,A.aa(A.k(a,h,h,h,h,h,A.ez().$3$color$fontSize$fontWeight(g?B.j:B.m,17,B.r),h,h),1)],s),B.l,h,B.f,B.h,0,h)
+a=A.I(A.b([c,B.af,A.a9(A.k(a,h,h,h,h,h,A.ez().$3$color$fontSize$fontWeight(g?B.j:B.m,17,B.r),h,h),1)],s),B.l,h,B.f,B.h,0,h)
 c=b.$1("checklists.createPromptDesc")
 c=A.k(c,h,h,h,h,h,A.J().$3$color$fontSize$height(g?B.t:B.u,13,1.4),h,h)
 r=i.e
@@ -125301,7 +125301,7 @@ j=g?B.k:B.o
 q=A.ns(h,B.cz,!0,h,!0,B.O,h,A.pf(),r,h,h,h,h,h,2,A.hJ(h,h,h,h,h,h,h,h,!0,new A.cl(4,m,new A.al(l,1,B.z,-1)),h,h,h,h,h,n,!0,h,h,h,h,new A.cl(4,k,new A.al(j,1.5,B.z,-1)),h,h,h,h,h,h,h,h,o,p,h,h,h,h,h,h,h,h,h,!0,!0,!1,h,h,h,h,h,h,h,h,h,h,h,h,h,h),B.I,!0,h,!0,h,!1,h,B.ca,h,h,h,h,h,h,h,h,3,h,h,!1,"\u2022",h,h,h,h,h,!1,h,h,!1,h,!0,h,B.b6,h,h,h,h,h,h,h,h,h,h,h,q,!0,B.aG,h,B.bK,h,h,h,h)
 p=b.$1("checklists.quickPresets")
 o=i.b
-p=A.a6(A.b([c,B.aA,q,B.aA,A.k(p,h,h,h,h,h,A.J().$3$color$fontSize$fontWeight(g?B.t:B.u,11,B.r),h,h),B.aI,A.fS(B.ay,A.b([o.Kf("Resale Apartment",r,g),o.Kf("RERA Builder Flat",r,g),o.Kf("Commercial Lease",r,g),o.Kf("Open Plot Purchase",r,g)],s),B.cr,6,6)],s),B.v,h,B.f,B.C)
+p=A.a5(A.b([c,B.aA,q,B.aA,A.k(p,h,h,h,h,h,A.J().$3$color$fontSize$fontWeight(g?B.t:B.u,11,B.r),h,h),B.aI,A.fS(B.ay,A.b([o.Kf("Resale Apartment",r,g),o.Kf("RERA Builder Flat",r,g),o.Kf("Commercial Lease",r,g),o.Kf("Open Plot Purchase",r,g)],s),B.cr,6,6)],s),B.v,h,B.f,B.C)
 q=i.f
 c=b.$1("common.cancel")
 c=A.dr(A.k(c,h,h,h,h,h,A.J().$2$color$fontWeight(g?B.t:B.u,B.D),h,h),new A.b2f(q),h)
@@ -125362,7 +125362,7 @@ if(n.d.e!=null){i=n.f
 g=i?B.dd:B.df
 f=i?B.dc.E(0.5):B.de
 e=A.Z(B.bG,i?B.J:B.H,null,null,null,18)
-k.UM(g,f,A.I(A.b([e,B.ah,A.aa(A.k("Unable to generate checklist. Please try again.",null,null,null,null,null,A.a3(null,null,i?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}s=9
+k.UM(g,f,A.I(A.b([e,B.ah,A.a9(A.k("Unable to generate checklist. Please try again.",null,null,null,null,null,A.a3(null,null,i?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}s=9
 break
 case 6:s=2
 break
@@ -125476,7 +125476,7 @@ b=A.Z(B.ck,c.d?B.aC:B.aB,a4,a4,a4,11)
 a=t.N
 a=c.a4q("checklists.flaggedCountBadge",A.c(["count",B.e.l(l)],a,a))
 B.b.N(f,A.b([B.M,A.C(a4,A.I(A.b([b,B.bS,A.k(a,a4,a4,a4,a4,a4,A.J().$3$color$fontSize$fontWeight(a3.a.d?B.aC:B.aB,9,B.Q),a4,a4)],g),B.l,a4,B.f,B.C,0,a4),B.i,a4,a4,new A.E(e,a4,a4,d,a4,a4,a4,B.n),a4,a4,a4,B.fD,a4,a4,a4)],g))}f=A.I(f,B.l,a4,B.f,B.h,0,a4)
-f=A.aa(A.a6(A.b([f,B.fi,A.k(a6,a4,2,B.X,a4,a4,A.ez().$4$color$fontSize$fontWeight$letterSpacing(a3.a.d?B.j:B.m,15,B.r,-0.2),a4,a4)],g),B.v,a4,B.f,B.h),1)
+f=A.a9(A.a5(A.b([f,B.fi,A.k(a6,a4,2,B.X,a4,a4,A.ez().$4$color$fontSize$fontWeight$letterSpacing(a3.a.d?B.j:B.m,15,B.r,-0.2),a4,a4)],g),B.v,a4,B.f,B.h),1)
 e=a3.a.d
 d=A.Z(B.rF,e?B.t:B.u,a4,a4,a4,20)
 c=e?B.Y:B.j
@@ -125498,7 +125498,7 @@ a0=A.ag(m.E(0.3),1)
 a1=A.Z(n?B.zj:B.XN,m,a4,a4,a4,12)
 a2=a3.a
 a2=n?a2.lW("checklists.completed"):a2.lW("checklists.inProgress")
-return A.dy(A.dH(a4,A.fx(a4,new A.av(B.dh,A.a6(A.b([e,B.aA,f,B.au,h,B.aI,b,B.au,A.I(A.b([d,A.C(a4,A.I(A.b([a1,B.d2,A.k(a2,a4,a4,a4,a4,a4,A.J().$3$color$fontSize$fontWeight(m,10,B.Q),a4,a4)],g),B.l,a4,B.f,B.C,0,a4),B.i,a4,a4,new A.E(c,a4,a0,a,a4,a4,a4,B.n),a4,a4,a4,B.eb,a4,a4,a4)],g),B.l,a4,B.av,B.h,0,a4)],g),B.v,a4,B.f,B.h),a4),a4,B.a1,new A.E(j,a4,k,i,a4,a4,a4,B.n),B.bN,a4,a4,B.hn,a4,q,a4),B.I,!1,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a5,a4,a4,a4,a4,a4,a4,!1,B.aL),B.bw,a4,a4,new A.b59(a3),new A.b5a(a3),a4)}}
+return A.dy(A.dH(a4,A.fx(a4,new A.av(B.dh,A.a5(A.b([e,B.aA,f,B.au,h,B.aI,b,B.au,A.I(A.b([d,A.C(a4,A.I(A.b([a1,B.d2,A.k(a2,a4,a4,a4,a4,a4,A.J().$3$color$fontSize$fontWeight(m,10,B.Q),a4,a4)],g),B.l,a4,B.f,B.C,0,a4),B.i,a4,a4,new A.E(c,a4,a0,a,a4,a4,a4,B.n),a4,a4,a4,B.eb,a4,a4,a4)],g),B.l,a4,B.av,B.h,0,a4)],g),B.v,a4,B.f,B.h),a4),a4,B.a1,new A.E(j,a4,k,i,a4,a4,a4,B.n),B.bN,a4,a4,B.hn,a4,q,a4),B.I,!1,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a4,a5,a4,a4,a4,a4,a4,a4,!1,B.aL),B.bw,a4,a4,new A.b59(a3),new A.b5a(a3),a4)}}
 A.b55.prototype={
 $1(a){return J.e(J.Y(a,"isCompleted"),!0)},
 $S:17}
@@ -125557,7 +125557,7 @@ r=A.k(p,l,l,l,l,l,A.ez().$3$color$fontSize$fontWeight(n?B.j:B.m,14,B.r),l,l)
 q=m.a
 p=q.d
 o=t.p
-p=A.aa(A.a6(A.b([r,B.bT,A.k(p,l,l,l,l,l,A.J().$2$color$fontSize(q.f?B.t:B.u,12),l,l)],o),B.v,l,B.f,B.h),1)
+p=A.a9(A.a5(A.b([r,B.bT,A.k(p,l,l,l,l,l,A.J().$2$color$fontSize(q.f?B.t:B.u,12),l,l)],o),B.v,l,B.f,B.h),1)
 if(m.d)r=m.a.f?B.k:B.o
 else r=m.a.f?B.t:B.u
 return A.dy(A.dH(l,A.fx(l,A.I(A.b([i,B.cG,p,B.M,A.Z(B.f6,r,l,l,l,16)],o),B.l,l,B.f,B.h,0,l),l,B.a1,new A.E(h,l,s,g,l,l,l,B.n),B.bN,l,l,l,B.fB,j,l),B.I,!1,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,k,l,l,l,l,l,l,!1,B.aL),B.bw,l,l,new A.b7M(m),new A.b7N(m),l)}}
@@ -125632,18 +125632,18 @@ m=A.n(16)
 l=A.ag(b?B.y:B.k,1)
 k=A.Z(B.Xj,B.o,d,d,d,24)
 j=t.p
-k=A.I(A.b([k,B.M,A.aa(A.k("Agreement Version Differential",d,d,d,d,d,A.a3(d,d,b?B.j:B.m,d,d,d,d,d,d,d,d,16,d,d,B.r,d,d,!0,d,d,d,d,d,d,d,d),d,d),1)],j),B.l,d,B.f,B.h,0,d)
+k=A.I(A.b([k,B.M,A.a9(A.k("Agreement Version Differential",d,d,d,d,d,A.a3(d,d,b?B.j:B.m,d,d,d,d,d,d,d,d,16,d,d,B.r,d,d,!0,d,d,d,d,d,d,d,d),d,d),1)],j),B.l,d,B.f,B.h,0,d)
 i=B.kN.E(0.08)
 h=A.n(10)
 g=A.ag(B.kN.E(0.3),1)
-h=A.aa(A.C(d,A.a6(A.b([B.aip,B.b_,A.k(a1,d,1,B.X,d,d,B.ia,d,d)],j),B.v,d,B.f,B.h),B.i,d,d,new A.E(i,d,g,h,d,d,d,B.n),d,d,d,B.bO,d,d,d),1)
+h=A.a9(A.C(d,A.a5(A.b([B.aip,B.b_,A.k(a1,d,1,B.X,d,d,B.ia,d,d)],j),B.v,d,B.f,B.h),B.i,d,d,new A.E(i,d,g,h,d,d,d,B.n),d,d,d,B.bO,d,d,d),1)
 i=(b?B.L:B.K).E(0.1)
 g=A.n(10)
 f=A.ag((b?B.L:B.K).E(0.35),1)
-k=A.b([k,B.au,A.I(A.b([h,B.ah,A.aa(A.C(d,A.a6(A.b([A.k("VERSION B",d,d,d,d,d,A.a3(d,d,b?B.L:B.K,d,d,d,d,d,d,d,d,11,d,d,B.r,d,d,!0,d,d,d,d,d,d,d,d),d,d),B.b_,A.k(s,d,1,B.X,d,d,B.ia,d,d)],j),B.v,d,B.f,B.h),B.i,d,d,new A.E(i,d,f,g,d,d,d,B.n),d,d,d,B.bO,d,d,d),1)],j),B.l,d,B.f,B.h,0,d)],j)
+k=A.b([k,B.au,A.I(A.b([h,B.ah,A.a9(A.C(d,A.a5(A.b([A.k("VERSION B",d,d,d,d,d,A.a3(d,d,b?B.L:B.K,d,d,d,d,d,d,d,d,11,d,d,B.r,d,d,!0,d,d,d,d,d,d,d,d),d,d),B.b_,A.k(s,d,1,B.X,d,d,B.ia,d,d)],j),B.v,d,B.f,B.h),B.i,d,d,new A.E(i,d,f,g,d,d,d,B.n),d,d,d,B.bO,d,d,d),1)],j),B.l,d,B.f,B.h,0,d)],j)
 i=a0.i(a,c)
 if(J.a8(i==null?"":i).length!==0){i=a0.i(a,c)
-B.b.N(k,A.b([B.au,A.k(i,d,d,d,d,d,A.a3(d,d,b?B.t:B.u,d,d,d,d,d,d,d,d,13,d,d,d,d,1.4,!0,d,d,d,d,d,d,d,d),d,d)],j))}n=A.C(d,A.a6(k,B.v,d,B.f,B.h),B.i,d,d,new A.E(n,d,l,m,d,d,d,B.n),d,d,d,B.bP,d,d,d)
+B.b.N(k,A.b([B.au,A.k(i,d,d,d,d,d,A.a3(d,d,b?B.t:B.u,d,d,d,d,d,d,d,d,13,d,d,d,d,1.4,!0,d,d,d,d,d,d,d,d),d,d)],j))}n=A.C(d,A.a5(k,B.v,d,B.f,B.h),B.i,d,d,new A.E(n,d,l,m,d,d,d,B.n),d,d,d,B.bP,d,d,d)
 m=a0.i(a,"modifiedCount")
 if(m==null)m=0
 m=e.DH("Modified",m,b?B.aC:B.aB)
@@ -125661,8 +125661,8 @@ if(a0==null)a0=0
 a0=A.b([n,B.ai,A.dW(A.I(A.b([m,B.M,l,B.M,k,B.M,i,B.M,e.DH("Risk Escalations",a0,b?B.J:B.H)],j),B.l,d,B.f,B.h,0,d),d,B.I,d,d,B.bd),B.bg,e.aFv(b),B.ai],j)
 n=p.length
 if(n===0){n=e.w
-a0.push(A.bH(new A.av(B.kh,A.a6(A.b([B.Zm,B.au,A.k('No clauses matching "'+n+'"',d,d,d,d,d,A.a3(d,d,b?B.t:B.u,d,d,d,d,d,d,d,d,14,d,d,d,d,d,!0,d,d,d,d,d,d,d,d),d,d)],j),B.l,d,B.f,B.h),d),d,d,d))}else a0.push(A.a50(new A.b2Q(e,p,b),n,d,B.hN,new A.b2R(),!0))
-return A.ip(o,q,A.hh(!0,A.dW(A.a6(a0,B.v,d,B.f,B.h),d,B.I,B.bP,d,B.aj),B.V,!0),d,d,d,d)},
+a0.push(A.bH(new A.av(B.kh,A.a5(A.b([B.Zm,B.au,A.k('No clauses matching "'+n+'"',d,d,d,d,d,A.a3(d,d,b?B.t:B.u,d,d,d,d,d,d,d,d,14,d,d,d,d,d,!0,d,d,d,d,d,d,d,d),d,d)],j),B.l,d,B.f,B.h),d),d,d,d))}else a0.push(A.a50(new A.b2Q(e,p,b),n,d,B.hN,new A.b2R(),!0))
+return A.ip(o,q,A.hh(!0,A.dW(A.a5(a0,B.v,d,B.f,B.h),d,B.I,B.bP,d,B.aj),B.V,!0),d,d,d,d)},
 DH(a,b,c){var s=null,r=c.E(0.12),q=A.n(10),p=A.ag(c.E(0.35),1)
 return A.C(s,A.I(A.b([A.k(a+": ",s,s,s,s,s,A.a3(s,s,c,s,s,s,s,s,s,s,s,12,s,s,B.U,s,s,!0,s,s,s,s,s,s,s,s),s,s),A.k(A.p(b),s,s,s,s,s,A.a3(s,s,c,s,s,s,s,s,s,s,s,13,s,s,B.r,s,s,!0,s,s,s,s,s,s,s,s),s,s)],t.p),B.l,s,B.f,B.h,0,s),B.i,s,s,new A.E(r,s,p,q,s,s,s,B.n),s,s,s,B.cj,s,s,s)},
 aFv(a){var s=null,r=t.Jm
@@ -125710,14 +125710,14 @@ if(r.length!==0&&r!=="UNCHANGED_RISK")e.push(a0.Uo(A.aJ(r,"_"," "),B.a5a))
 e=A.fS(B.ay,e,B.cr,4,6)
 if(J.e2(p))d=p
 else d=J.e2(q)?q:"Clause Modification"
-e=A.a6(A.b([e,B.aI,A.k(d,a1,a1,a1,a1,a1,A.a3(a1,a1,a6?B.j:B.m,a1,a1,a1,a1,a1,a1,a1,a1,14,a1,a1,B.r,a1,a1,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1,a1)],g),B.v,a1,B.f,B.h)
+e=A.a5(A.b([e,B.aI,A.k(d,a1,a1,a1,a1,a1,A.a3(a1,a1,a6?B.j:B.m,a1,a1,a1,a1,a1,a1,a1,a1,14,a1,a1,B.r,a1,a1,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1,a1)],g),B.v,a1,B.f,B.h)
 d=A.b([A.iF(a6?B.y:B.k,a1,a1,a1,a1,a1)],g)
 c=J.a7(m)
 if(c.gbS(m)){b=A.b([A.k("Detected Material Differences:",a1,a1,a1,a1,a1,A.a3(a1,a1,a6?B.j:B.m,a1,a1,a1,a1,a1,a1,a1,a1,12,a1,a1,B.r,a1,a1,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1,a1),B.aS],g)
 B.b.N(b,c.hu(m,new A.b2K(a6),t.l7))
 b.push(B.b8)
 B.b.N(d,b)}c=o.length!==0
-if(c&&n.length!==0)B.b.N(d,A.b([A.I(A.b([A.aa(a0.Km(a6,"Version A",o,B.kN),1),B.M,A.aa(a0.Km(a6,"Version B",n,B.FL),1)],g),B.v,a1,B.f,B.h,0,a1),B.au],g))
+if(c&&n.length!==0)B.b.N(d,A.b([A.I(A.b([A.a9(a0.Km(a6,"Version A",o,B.kN),1),B.M,A.a9(a0.Km(a6,"Version B",n,B.FL),1)],g),B.v,a1,B.f,B.h,0,a1),B.au],g))
 else if(c)B.b.N(d,A.b([a0.Km(a6,"Removed Clause (From Version A)",o,B.nu),B.au],g))
 else if(n.length!==0)B.b.N(d,A.b([a0.Km(a6,"Added Clause (In Version B)",n,B.FK),B.au],g))
 if(k.length!==0){c=a6?B.ad:B.aD
@@ -125726,12 +125726,12 @@ a=A.Z(B.kp,B.o,a1,a1,a1,16)
 a=A.I(A.b([a,B.aZ,A.k("Buyer Impact",a1,a1,a1,a1,a1,A.a3(a1,a1,B.o,a1,a1,a1,a1,a1,a1,a1,a1,12,a1,a1,B.r,a1,a1,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1,a1)],g),B.l,a1,B.f,B.h,0,a1)
 a=A.b([a,B.b_,A.k(k,a1,a1,a1,a1,a1,A.a3(a1,a1,a6?B.t:B.u,a1,a1,a1,a1,a1,a1,a1,a1,12,a1,a1,a1,a1,1.35,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1,a1)],g)
 if(j.length!==0)B.b.N(a,A.b([B.aS,A.k("Consideration: "+j,a1,a1,a1,a1,a1,A.a3(a1,a1,a6?B.j:B.m,a1,a1,a1,a1,a1,a1,a1,a1,12,B.cL,a1,a1,a1,a1,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1,a1)],g))
-B.b.N(d,A.b([A.C(a1,A.a6(a,B.v,a1,B.f,B.h),B.i,a1,a1,new A.E(c,a1,a1,b,a1,a1,a1,B.n),a1,a1,a1,B.bO,a1,a1,a1),B.b8],g))}c=J.a7(i)
+B.b.N(d,A.b([A.C(a1,A.a5(a,B.v,a1,B.f,B.h),B.i,a1,a1,new A.E(c,a1,a1,b,a1,a1,a1,B.n),a1,a1,a1,B.bO,a1,a1,a1),B.b8],g))}c=J.a7(i)
 if(c.gbS(i)){b=A.b([A.k("Authoritative Statutory Citations:",a1,a1,a1,a1,a1,A.a3(a1,a1,a6?B.t:B.u,a1,a1,a1,a1,a1,a1,a1,a1,11,a1,a1,B.r,a1,a1,!0,a1,a1,a1,a1,a1,a1,a1,a1),a1,a1),B.b_],g)
 B.b.N(b,c.hu(i,new A.b2L(a6),t.l7))
-B.b.N(d,b)}return A.C(a1,new A.Mx(e,A.b([new A.av(B.VN,A.a6(d,B.v,a1,B.f,B.h),a1)],g),a2,B.kf,a1),B.i,a1,a1,new A.E(a3,a1,f,l,a1,a1,a1,B.n),a1,a1,a1,a1,a1,a1,a1)},
+B.b.N(d,b)}return A.C(a1,new A.Mx(e,A.b([new A.av(B.VN,A.a5(d,B.v,a1,B.f,B.h),a1)],g),a2,B.kf,a1),B.i,a1,a1,new A.E(a3,a1,f,l,a1,a1,a1,B.n),a1,a1,a1,a1,a1,a1,a1)},
 Km(a,b,c,d){var s=null,r=a?B.ad:B.aD,q=A.n(8),p=A.ag(d.E(0.3),1),o=A.k(b,s,s,s,s,s,A.a3(s,s,d,s,s,s,s,s,s,s,s,10,s,s,B.r,s,s,!0,s,s,s,s,s,s,s,s),s,s)
-return A.C(s,A.a6(A.b([o,B.b_,A.k(c,s,s,s,s,s,A.a3(s,s,a?B.j:B.m,s,s,s,s,s,s,s,s,12,s,s,s,s,1.3,!0,s,s,s,s,s,s,s,s),s,s)],t.p),B.v,s,B.f,B.h),B.i,s,s,new A.E(r,s,p,q,s,s,s,B.n),s,s,s,B.bO,s,s,s)},
+return A.C(s,A.a5(A.b([o,B.b_,A.k(c,s,s,s,s,s,A.a3(s,s,a?B.j:B.m,s,s,s,s,s,s,s,s,12,s,s,s,s,1.3,!0,s,s,s,s,s,s,s,s),s,s)],t.p),B.v,s,B.f,B.h),B.i,s,s,new A.E(r,s,p,q,s,s,s,B.n),s,s,s,B.bO,s,s,s)},
 Uo(a,b){var s=null,r=b.E(0.15),q=A.n(6)
 return A.C(s,A.k(a,s,s,s,s,s,A.a3(s,s,b,s,s,s,s,s,s,s,s,11,s,s,B.r,s,s,!0,s,s,s,s,s,s,s,s),s,s),B.i,s,s,new A.E(r,s,s,q,s,s,s,B.n),s,s,s,B.f4,s,s,s)}}
 A.b2P.prototype={
@@ -125775,7 +125775,7 @@ A.b2L.prototype={
 $1(a){var s=null,r=A.Z(B.Xo,B.o,s,s,s,14),q=J.a7(a),p=A.p(q.i(a,"actName")),o=A.p(q.i(a,"sectionOrRule"))
 q=q.i(a,"provisionTitle")
 q=A.p(q==null?"":q)
-return new A.av(B.y9,A.I(A.b([r,B.aZ,A.aa(A.k(p+" \u2014 "+o+" ("+q+")",s,s,s,s,s,A.a3(s,s,B.o,s,s,s,s,s,s,s,s,11,s,s,B.D,s,s,!0,s,s,s,s,s,s,s,s),s,s),1)],t.p),B.l,s,B.f,B.h,0,s),s)},
+return new A.av(B.y9,A.I(A.b([r,B.aZ,A.a9(A.k(p+" \u2014 "+o+" ("+q+")",s,s,s,s,s,A.a3(s,s,B.o,s,s,s,s,s,s,s,s,11,s,s,B.D,s,s,!0,s,s,s,s,s,s,s,s),s,s),1)],t.p),B.l,s,B.f,B.h,0,s),s)},
 $S:706}
 A.yK.prototype={
 a1(){return new A.Ut([])}}
@@ -125870,20 +125870,20 @@ q=s.I(0,"docComparison.headerTitle")
 q=A.k(q,f,f,f,f,f,A.a3(f,f,r?B.j:B.m,f,f,f,f,f,f,f,f,22,f,f,B.r,f,f,!0,f,f,f,f,f,f,f,f),f,f)
 p=s.I(0,"docComparison.headerSubtitle")
 o=t.p
-p=A.b([A.a6(A.b([q,B.aS,A.k(p,f,f,f,f,f,A.a3(f,f,r?B.t:B.u,f,f,f,f,f,f,f,f,14,f,f,f,f,1.4,!0,f,f,f,f,f,f,f,f),f,f)],o),B.v,f,B.f,B.h),B.bg],o)
+p=A.b([A.a5(A.b([q,B.aS,A.k(p,f,f,f,f,f,A.a3(f,f,r?B.t:B.u,f,f,f,f,f,f,f,f,14,f,f,f,f,1.4,!0,f,f,f,f,f,f,f,f),f,f)],o),B.v,f,B.f,B.h),B.bg],o)
 if(g.ch!=null){q=B.iV.E(0.12)
 n=A.n(12)
 m=A.ag(B.nu.E(0.4),1)
 l=g.ch
 l.toString
-p.push(A.C(f,A.I(A.b([B.Zt,B.af,A.aa(A.k(l,f,f,f,f,f,B.agg,f,f),1)],o),B.l,f,B.f,B.h,0,f),B.i,f,f,new A.E(q,f,m,n,f,f,f,B.n),f,f,B.mo,B.fA,f,f,f))}if(g.ax){q=r?B.m:B.j
+p.push(A.C(f,A.I(A.b([B.Zt,B.af,A.a9(A.k(l,f,f,f,f,f,B.agg,f,f),1)],o),B.l,f,B.f,B.h,0,f),B.i,f,f,new A.E(q,f,m,n,f,f,f,B.n),f,f,B.mo,B.fA,f,f,f))}if(g.ax){q=r?B.m:B.j
 n=A.n(16)
 m=A.ag(B.o.E(0.3),1)
 l=A.jv(f,B.o,f,f,f,f,f,f,f,f)
 k=g.ay
 k=A.k(k,f,f,f,f,f,A.a3(f,f,r?B.j:B.m,f,f,f,f,f,f,f,f,16,f,f,B.r,f,f,!0,f,f,f,f,f,f,f,f),B.an,f)
 j=s.I(0,"docComparison.processingSubtitle")
-p.push(A.C(f,A.a6(A.b([l,B.bg,k,B.aI,A.k(j,f,f,f,f,f,A.a3(f,f,r?B.t:B.u,f,f,f,f,f,f,f,f,13,f,f,f,f,f,!0,f,f,f,f,f,f,f,f),B.an,f)],o),B.l,f,B.f,B.h),B.i,f,f,new A.E(q,f,m,n,f,f,f,B.n),f,f,f,B.di,f,f,1/0))}if(!g.ax){q=s.I(0,"docComparison.versionALabel")
+p.push(A.C(f,A.a5(A.b([l,B.bg,k,B.aI,A.k(j,f,f,f,f,f,A.a3(f,f,r?B.t:B.u,f,f,f,f,f,f,f,f,13,f,f,f,f,f,!0,f,f,f,f,f,f,f,f),B.an,f)],o),B.l,f,B.f,B.h),B.i,f,f,new A.E(q,f,m,n,f,f,f,B.n),f,f,f,B.di,f,f,1/0))}if(!g.ax){q=s.I(0,"docComparison.versionALabel")
 q=g.a9S(B.kN,B.Xp,r,s,new A.b4C(g),g.z,g.as,q)
 n=r?B.m:B.j
 m=A.ag(r?B.y:B.k,1)
@@ -125899,23 +125899,23 @@ k=A.dt(f,f,B.o,k,f,f,2,f,f,f,f,f,f,f,f,new A.aN(A.n(14),B.w),f,f,f,f,f)
 j=s.I(0,"docComparison.runAnalysis")
 if(i)h=r?B.j:B.m
 else h=r?B.t:B.u
-B.b.N(p,A.b([q,B.ai,n,B.ai,m,B.dJ,new A.aZ(1/0,52,A.fY(A.k(j,f,f,f,f,f,A.a3(f,f,h,f,f,f,f,f,f,f,f,16,f,f,B.r,f,f,!0,f,f,f,f,f,f,f,f),f,f),l,k),f)],o))}return A.ip(d,e,A.hh(!0,A.dW(A.a6(p,B.v,f,B.f,B.h),f,B.I,B.b6,f,B.aj),B.V,!0),f,f,f,f)},
+B.b.N(p,A.b([q,B.ai,n,B.ai,m,B.dJ,new A.aZ(1/0,52,A.fY(A.k(j,f,f,f,f,f,A.a3(f,f,h,f,f,f,f,f,f,f,f,16,f,f,B.r,f,f,!0,f,f,f,f,f,f,f,f),f,f),l,k),f)],o))}return A.ip(d,e,A.hh(!0,A.dW(A.a5(p,B.v,f,B.f,B.h),f,B.I,B.b6,f,B.aj),B.V,!0),f,f,f,f)},
 a9S(a,b,c,d,e,f,g,h){var s,r,q,p,o=this,n=null,m=c?B.m:B.j,l=A.n(16),k=f!=null
 if(k)s=a.E(0.6)
 else s=c?B.y:B.k
 s=A.ag(s,k?1.5:1)
 r=A.Z(b,a,n,n,n,22)
 k=t.p
-r=A.b([A.I(A.b([r,B.M,A.aa(A.k(h,n,n,n,n,n,A.a3(n,n,c?B.j:B.m,n,n,n,n,n,n,n,n,14,n,n,B.r,n,n,!0,n,n,n,n,n,n,n,n),n,n),1)],k),B.l,n,B.f,B.h,0,n),B.au],k)
+r=A.b([A.I(A.b([r,B.M,A.a9(A.k(h,n,n,n,n,n,A.a3(n,n,c?B.j:B.m,n,n,n,n,n,n,n,n,14,n,n,B.r,n,n,!0,n,n,n,n,n,n,n,n),n,n),1)],k),B.l,n,B.f,B.h,0,n),B.au],k)
 if(o.x)r.push(B.R7)
 else if(o.y){q=d.I(0,"docComparison.loadFailed")
-r.push(A.I(A.b([A.aa(A.k(q,n,n,n,n,n,A.a3(n,n,c?B.t:B.u,n,n,n,n,n,n,n,n,13,n,n,n,n,n,!0,n,n,n,n,n,n,n,n),n,n),1),A.dr(A.k(d.I(0,"common.retry"),n,n,n,n,n,n,n,n),o.gaU7(),n)],k),B.l,n,B.f,B.h,0,n))}else if(J.eS(o.w)){q=d.I(0,"docComparison.noScannedDocs")
+r.push(A.I(A.b([A.a9(A.k(q,n,n,n,n,n,A.a3(n,n,c?B.t:B.u,n,n,n,n,n,n,n,n,13,n,n,n,n,n,!0,n,n,n,n,n,n,n,n),n,n),1),A.dr(A.k(d.I(0,"common.retry"),n,n,n,n,n,n,n,n),o.gaU7(),n)],k),B.l,n,B.f,B.h,0,n))}else if(J.eS(o.w)){q=d.I(0,"docComparison.noScannedDocs")
 q=A.k(q,n,n,n,n,n,A.a3(n,n,c?B.t:B.u,n,n,n,n,n,n,n,n,13,n,n,n,n,n,!0,n,n,n,n,n,n,n,n),n,n)
 p=A.k(d.I(0,"docComparison.scanNewAgreement"),n,n,n,n,n,n,n,n)
-r.push(A.a6(A.b([q,B.b8,A.j4(B.YW,p,new A.b4j(o),A.dt(n,n,B.o,n,n,n,n,n,n,n,c?B.j:B.m,n,n,B.cj,n,n,n,n,n,B.ahH,n))],k),B.v,n,B.f,B.h))}else{k=d.I(0,"docComparison.chooseVersion")
+r.push(A.a5(A.b([q,B.b8,A.j4(B.YW,p,new A.b4j(o),A.dt(n,n,B.o,n,n,n,n,n,n,n,c?B.j:B.m,n,n,B.cj,n,n,n,n,n,B.ahH,n))],k),B.v,n,B.f,B.h))}else{k=d.I(0,"docComparison.chooseVersion")
 k=A.k(k,n,n,n,n,n,A.a3(n,n,c?B.t:B.u,n,n,n,n,n,n,n,n,14,n,n,n,n,n,!0,n,n,n,n,n,n,n,n),n,n)
 q=c?B.ad:B.aD
-r.push(A.bLd(A.hJ(n,new A.cl(4,A.n(10),B.w),n,B.ms,n,n,n,n,!0,n,n,n,n,n,n,q,!0,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,!0,!0,!1,n,n,n,n,n,n,n,n,n,n,n,n,n,n),k,f,!0,J.eB(o.w,new A.b4k(d,c),t.b7).dV(0),new A.b4l(o,e,d),t.N))}return A.C(n,A.a6(r,B.v,n,B.f,B.h),B.i,n,n,new A.E(m,n,s,l,n,n,n,B.n),n,n,n,B.bP,n,n,n)}}
+r.push(A.bLd(A.hJ(n,new A.cl(4,A.n(10),B.w),n,B.ms,n,n,n,n,!0,n,n,n,n,n,n,q,!0,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,!0,!0,!1,n,n,n,n,n,n,n,n,n,n,n,n,n,n),k,f,!0,J.eB(o.w,new A.b4k(d,c),t.b7).dV(0),new A.b4l(o,e,d),t.N))}return A.C(n,A.a5(r,B.v,n,B.f,B.h),B.i,n,n,new A.E(m,n,s,l,n,n,n,B.n),n,n,n,B.bP,n,n,n)}}
 A.b4q.prototype={
 $0(){var s=this.a
 s.x=!0
@@ -126071,7 +126071,7 @@ r=J.a8(n==null?"":n)
 n=this.b
 if(B.c.n(r.toLowerCase(),"high"))q=n?B.J:B.H
 else q=n?B.L:B.K
-n=A.b([A.aa(A.k(s,o,o,B.X,o,o,B.agq,o,o),1)],t.p)
+n=A.b([A.a9(A.k(s,o,o,B.X,o,o,B.agq,o,o),1)],t.p)
 if(r.length!==0){m=q.E(0.15)
 p=A.n(4)
 n.push(A.C(o,A.k(r,o,o,o,o,o,A.a3(o,o,q,o,o,o,o,o,o,o,o,11,o,o,B.r,o,o,!0,o,o,o,o,o,o,o,o),o,o),B.i,o,o,new A.E(m,o,o,p,o,o,o,B.n),o,o,o,B.qF,o,o,o))}return A.bpz(B.et,A.I(n,B.l,o,B.av,B.h,0,o),l,t.N)},
@@ -126113,7 +126113,7 @@ e=A.C(a6,A.Z(B.fG,B.o,a6,a6,a6,17),B.i,a6,a6,new A.E(e,a6,a6,d,a6,a6,a6,B.n),a6,
 d=s.I(0,"home.dueDiligenceSection")
 d=A.k(d,a6,1,B.X,a6,a6,A.J().$3$color$fontSize$fontWeight(p?B.j:B.m,15,B.r),a6,a6)
 c=t.p
-d=A.aa(A.I(A.b([e,B.ah,A.aa(A.a6(A.b([d,A.k(r,a6,1,B.X,a6,a6,A.J().$2$color$fontSize(p?B.t:B.u,11),a6,a6)],c),B.v,a6,B.f,B.h),1)],c),B.l,a6,B.f,B.h,0,a6),1)
+d=A.a9(A.I(A.b([e,B.ah,A.a9(A.a5(A.b([d,A.k(r,a6,1,B.X,a6,a6,A.J().$2$color$fontSize(p?B.t:B.u,11),a6,a6)],c),B.v,a6,B.f,B.h),1)],c),B.l,a6,B.f,B.h,0,a6),1)
 e=B.d.a6(i*100)
 e=A.I(A.b([d,B.M,A.k(""+e+"%",a6,a6,a6,a6,a6,A.J().$3$color$fontSize$fontWeight(p?B.k:B.o,16,B.Q),a6,a6)],c),B.l,a6,B.f,B.h,0,a6)
 d=A.n(3)
@@ -126134,7 +126134,7 @@ a7.push(A.C(a6,A.I(A.b([a2,B.ah,new A.j5(1,B.dQ,A.k(a3,a6,1,B.X,a6,a6,A.J().$3$c
 B.b.N(e,A.b([A.k(a7,a6,a6,a6,a6,a6,A.J().$2$color$fontSize(p?B.t:B.u,12),a6,a6)],c))}e.push(B.aI)
 a7=A.k(s.I(0,"home.openChecklist"),a6,a6,a6,a6,a6,A.J().$2$fontSize$fontWeight(12,B.r),a6,a6)
 e.push(new A.d3(B.dy,a6,a6,A.aUV(B.Zx,a7,new A.aAA(this),A.fR(a6,a6,a6,a6,a6,a6,a6,a6,a6,a6,p?B.k:B.o,a6,a6,B.eb,a6,a6,a6,a6,a6,a6,a6)),a6))
-return A.C(a6,A.a6(e,B.v,a6,B.f,B.h),B.i,a6,a6,new A.E(l,a6,g,h,f,a6,a6,B.n),a6,a6,a6,B.b6,a6,a6,a6)}}
+return A.C(a6,A.a5(e,B.v,a6,B.f,B.h),B.i,a6,a6,new A.E(l,a6,g,h,f,a6,a6,B.n),a6,a6,a6,B.b6,a6,a6,a6)}}
 A.aAA.prototype={
 $0(){return this.a.r.$1(B.wV)},
 $S:0}
@@ -126175,7 +126175,7 @@ p=r?24:19
 p=A.k(n,s,s,s,s,s,A.J().$4$color$fontSize$fontWeight$letterSpacing(q?B.j:B.m,p,B.Q,-0.4),s,s)
 l=l.I(0,"home.heroSub")
 r=r?13:12
-r=A.b([A.aa(A.a6(A.b([o,B.b8,p,B.b_,A.k(l,s,s,s,s,s,A.J().$3$color$fontSize$height(q?B.t:B.u,r,1.4),s,s)],j),B.v,s,B.f,B.C),1)],j)
+r=A.b([A.a9(A.a5(A.b([o,B.b8,p,B.b_,A.k(l,s,s,s,s,s,A.J().$3$color$fontSize$height(q?B.t:B.u,r,1.4),s,s)],j),B.v,s,B.f,B.C),1)],j)
 if(b.b>=720)B.b.N(r,A.b([B.uY,new A.aZ(190,80,A.iD(s,s,s,new A.a4Q(B.o,B.k,q,s),B.W),s)],j))
 return A.I(r,B.l,s,B.av,B.h,0,s)},
 $S:712}
@@ -126199,7 +126199,7 @@ j=s.I(0,"home.latestAnalysisReview")
 j=A.k(j,e,1,B.X,e,e,A.J().$4$color$fontSize$fontWeight$letterSpacing(p?B.j:B.m,16,B.Q,-0.3),e,e)
 i=s.I(0,"home.latestAnalysisSub")
 h=t.p
-i=A.b([A.aa(A.I(A.b([k,B.ah,A.aa(A.a6(A.b([j,A.k(i,e,1,B.X,e,e,A.J().$2$color$fontSize(p?B.t:B.u,11),e,e)],h),B.v,e,B.f,B.h),1)],h),B.l,e,B.f,B.h,0,e),1)],h)
+i=A.b([A.a9(A.I(A.b([k,B.ah,A.a9(A.a5(A.b([j,A.k(i,e,1,B.X,e,e,A.J().$2$color$fontSize(p?B.t:B.u,11),e,e)],h),B.v,e,B.f,B.h),1)],h),B.l,e,B.f,B.h,0,e),1)],h)
 if(r){k=A.fR(e,e,e,e,e,e,e,e,e,e,p?B.k:B.o,e,B.W,B.iE,e,e,e,e,e,e,e)
 j=t.N
 j=s.d3(0,"home.viewAll",A.c(["count",B.e.l(d.length)],j,j))
@@ -126214,10 +126214,10 @@ i=s.I(0,"home.uploadOrScanAgreement")
 i=A.k(i,e,e,e,e,e,A.J().$2$color$fontSize(p?B.t:B.u,12),B.an,e)
 g=A.k(s.I(0,"home.scanNewDocument"),e,e,e,e,e,A.J().$2$fontSize$fontWeight(12.5,B.r),e,e)
 p=p?B.j:B.m
-k.push(new A.av(B.VJ,A.bH(A.a6(A.b([d,B.au,j,B.b_,i,B.aA,A.j4(B.Z5,g,new A.aAD(f),A.dt(e,e,B.o,e,e,e,e,e,e,e,p,e,e,B.ke,e,new A.aN(A.n(10),B.w),e,e,e,e,e))],h),B.l,e,B.f,B.C),e,e,e),e))}else{d=p?B.Y:B.j
+k.push(new A.av(B.VJ,A.bH(A.a5(A.b([d,B.au,j,B.b_,i,B.aA,A.j4(B.Z5,g,new A.aAD(f),A.dt(e,e,B.o,e,e,e,e,e,e,e,p,e,e,B.ke,e,new A.aN(A.n(10),B.w),e,e,e,e,e))],h),B.l,e,B.f,B.C),e,e,e),e))}else{d=p?B.Y:B.j
 j=A.n(14)
 i=A.ag(p?B.y:B.k,1)
-k.push(A.C(e,A.jD(new A.aAE(f,q,s)),B.i,e,e,new A.E(d,e,i,j,e,e,e,B.n),e,e,e,B.bP,e,e,e))}return A.C(e,A.a6(k,B.v,e,B.f,B.h),B.i,e,e,new A.E(o,e,m,n,l,e,e,B.n),e,e,e,B.kg,e,e,e)}}
+k.push(A.C(e,A.jD(new A.aAE(f,q,s)),B.i,e,e,new A.E(d,e,i,j,e,e,e,B.n),e,e,e,B.bP,e,e,e))}return A.C(e,A.a5(k,B.v,e,B.f,B.h),B.i,e,e,new A.E(o,e,m,n,l,e,e,B.n),e,e,e,B.kg,e,e,e)}}
 A.aAC.prototype={
 $0(){return this.a.x.$1(B.uk)},
 $S:0}
@@ -126229,7 +126229,7 @@ $2(a,b){var s,r,q,p,o,n,m=null,l=this.b,k=l.f,j=k.E(0.12),i=A.n(20),h=A.ag(k.E(0
 i=A.C(m,A.I(A.b([A.Z(l.e,k,m,m,m,12),B.bS,A.k(l.d,m,m,m,m,m,A.J().$3$color$fontSize$fontWeight(k,10.5,B.r),m,m)],g),B.l,m,B.f,B.C,0,m),B.i,m,m,new A.E(j,m,h,i,m,m,m,B.n),m,m,m,B.mu,m,m,m)
 k=this.a
 j=k.r
-i=A.I(A.b([i,B.ah,A.aa(A.k(l.y+" \u2022 "+l.c,m,1,B.X,m,m,A.J().$2$color$fontSize(j?B.t:B.u,11.5),m,m),1)],g),B.l,m,B.f,B.h,0,m)
+i=A.I(A.b([i,B.ah,A.a9(A.k(l.y+" \u2022 "+l.c,m,1,B.X,m,m,A.J().$2$color$fontSize(j?B.t:B.u,11.5),m,m),1)],g),B.l,m,B.f,B.h,0,m)
 h=A.k(l.b,m,1,B.X,m,m,A.J().$3$color$fontSize$fontWeight(j?B.j:B.m,16,B.r),m,m)
 s=l.x
 r=J.a7(s)
@@ -126237,12 +126237,12 @@ q=this.c
 if(r.gbS(s)){p=t.N
 p=q.d3(0,"home.clausesEvaluated",A.c(["count",B.e.l(r.gA(s))],p,p))
 s=p}else s=q.I(0,"home.assessmentComplete")
-o=A.a6(A.b([i,B.b8,h,B.b_,A.k(s,m,m,m,m,m,A.J().$2$color$fontSize(j?B.t:B.u,12),m,m)],g),B.v,m,B.f,B.h)
+o=A.a5(A.b([i,B.b8,h,B.b_,A.k(s,m,m,m,m,m,A.J().$2$color$fontSize(j?B.t:B.u,12),m,m)],g),B.v,m,B.f,B.h)
 i=A.k(q.I(0,"home.viewFullAnalysis"),m,m,m,m,m,A.J().$2$fontSize$fontWeight(12.5,B.r),m,m)
 j=j?B.j:B.m
 n=A.j4(B.Zi,i,new A.aAB(k,l),A.dt(m,m,B.o,m,m,m,m,m,m,m,j,m,m,B.ed,m,new A.aN(A.n(10),B.w),m,m,m,m,m))
-if(b.b<600)return A.a6(A.b([o,B.aA,n],g),B.v,m,B.f,B.h)
-return A.I(A.b([A.aa(o,1),B.dI,n],g),B.l,m,B.av,B.h,0,m)},
+if(b.b<600)return A.a5(A.b([o,B.aA,n],g),B.v,m,B.f,B.h)
+return A.I(A.b([A.a9(o,1),B.dI,n],g),B.l,m,B.av,B.h,0,m)},
 $S:79}
 A.aAB.prototype={
 $0(){var s=this.b,r=s.x,q=J.e2(r)&&s.w.length!==0,p=this.a.x
@@ -126298,7 +126298,7 @@ l=s.I(0,"home.legalIntelligence")
 l=A.k(l,a1,1,B.X,a1,a1,A.J().$3$color$fontSize$fontWeight(a2?B.j:B.m,15,B.r),a1,a1)
 k=s.I(0,"home.legalIntelligenceSub")
 j=t.p
-k=A.aa(A.I(A.b([m,B.ah,A.aa(A.a6(A.b([l,A.k(k,a1,1,B.X,a1,a1,A.J().$2$color$fontSize(a2?B.t:B.u,11),a1,a1)],j),B.v,a1,B.f,B.h),1)],j),B.l,a1,B.f,B.h,0,a1),1)
+k=A.a9(A.I(A.b([m,B.ah,A.a9(A.a5(A.b([l,A.k(k,a1,1,B.X,a1,a1,A.J().$2$color$fontSize(a2?B.t:B.u,11),a1,a1)],j),B.v,a1,B.f,B.h),1)],j),B.l,a1,B.f,B.h,0,a1),1)
 m=(a2?B.L:B.K).E(0.15)
 l=A.n(10)
 i=s.I(0,"common.live")
@@ -126319,8 +126319,8 @@ c=A.k(c,a1,1,B.X,a1,a1,A.J().$3$color$fontSize$fontWeight(a2?B.j:B.m,12.5,B.D),a
 b=J.Y(l.i(r,h),"source")
 b=A.p(b==null?"Legal News":b)
 a=A.bDz(J.Y(l.i(r,h),"pubDate"))
-c=A.a6(A.b([c,B.bT,A.k(b+" \u2022 "+a,a1,a1,a1,a1,a1,A.J().$2$color$fontSize(a2?B.t:B.u,11),a1,a1)],j),B.v,a1,B.f,B.h)
-B.b.N(k,A.b([A.C(a1,new A.om(A.d8(!1,new A.d7(d,d,d,d),!0,new A.av(B.hp,A.I(A.b([new A.j5(1,B.dQ,c,a1),B.M,A.Z(B.zs,a2?B.k:B.o,a1,a1,a1,14)],j),B.l,a1,B.f,B.h,0,a1),a1),a1,!0,a1,a1,a1,a1,a1,a1,a1,a1,a1,new A.aAF(a0,a3,a4,r,h),a1,a1,a1,a1,a1,a1,a1,a1),B.bR,!1,0,B.E,a1,a1,a1,a1,!0,B.i,B.a6,a1,a1),B.i,a1,a1,new A.E(g,a1,new A.dl(e,e,e,e),new A.d7(f,f,f,f),a1,a1,a1,B.n),a1,a1,new A.X(0,0,0,i),a1,a1,a1,a1)],j))}B.b.N(m,k)}}return A.C(a1,A.a6(m,B.v,a1,B.f,B.h),B.i,a1,a1,new A.E(q,a1,o,p,n,a1,a1,B.n),a1,a1,a1,B.b6,a1,a1,a1)}}
+c=A.a5(A.b([c,B.bT,A.k(b+" \u2022 "+a,a1,a1,a1,a1,a1,A.J().$2$color$fontSize(a2?B.t:B.u,11),a1,a1)],j),B.v,a1,B.f,B.h)
+B.b.N(k,A.b([A.C(a1,new A.om(A.d8(!1,new A.d7(d,d,d,d),!0,new A.av(B.hp,A.I(A.b([new A.j5(1,B.dQ,c,a1),B.M,A.Z(B.zs,a2?B.k:B.o,a1,a1,a1,14)],j),B.l,a1,B.f,B.h,0,a1),a1),a1,!0,a1,a1,a1,a1,a1,a1,a1,a1,a1,new A.aAF(a0,a3,a4,r,h),a1,a1,a1,a1,a1,a1,a1,a1),B.bR,!1,0,B.E,a1,a1,a1,a1,!0,B.i,B.a6,a1,a1),B.i,a1,a1,new A.E(g,a1,new A.dl(e,e,e,e),new A.d7(f,f,f,f),a1,a1,a1,B.n),a1,a1,new A.X(0,0,0,i),a1,a1,a1,a1)],j))}B.b.N(m,k)}}return A.C(a1,A.a5(m,B.v,a1,B.f,B.h),B.i,a1,a1,new A.E(q,a1,o,p,n,a1,a1,B.n),a1,a1,a1,B.b6,a1,a1,a1)}}
 A.aAF.prototype={
 $0(){var s=this,r=J.Y(J.Y(s.d,s.e),"link")
 r=r==null?null:J.a8(r)
@@ -126389,9 +126389,9 @@ B.b.N(s,o)}return A.I(s,B.l,m,B.f,B.h,0,m)}else{s=n.b
 r=n.a
 if(l>=520){l=r.r
 r=t.p
-return A.a6(A.b([A.I(A.b([A.aa(new A.tZ(s[0],l,m),1),B.cG,A.aa(new A.tZ(s[1],l,m),1)],r),B.l,m,B.f,B.h,0,m),B.aA,A.I(A.b([A.aa(new A.tZ(s[2],l,m),1),B.cG,A.aa(new A.tZ(s[3],l,m),1)],r),B.l,m,B.f,B.h,0,m)],r),B.l,m,B.f,B.h)}else{l=A.ab(s).j("af<1,av>")
+return A.a5(A.b([A.I(A.b([A.a9(new A.tZ(s[0],l,m),1),B.cG,A.a9(new A.tZ(s[1],l,m),1)],r),B.l,m,B.f,B.h,0,m),B.aA,A.I(A.b([A.a9(new A.tZ(s[2],l,m),1),B.cG,A.a9(new A.tZ(s[3],l,m),1)],r),B.l,m,B.f,B.h,0,m)],r),B.l,m,B.f,B.h)}else{l=A.ab(s).j("af<1,av>")
 l=A.aj(new A.af(s,new A.aAG(r),l),l.j("aY.E"))
-return A.a6(l,B.l,m,B.f,B.h)}}},
+return A.a5(l,B.l,m,B.f,B.h)}}},
 $S:79}
 A.aAG.prototype={
 $1(a){return new A.av(B.qu,new A.tZ(a,this.a.r,null),null)},
@@ -126419,7 +126419,7 @@ l=s.I(0,"home.recentActivity")
 l=A.k(l,a,1,B.X,a,a,A.J().$3$color$fontSize$fontWeight(a0?B.j:B.m,15,B.r),a,a)
 k=s.I(0,"home.recentActivitySub")
 j=t.p
-k=A.b([A.I(A.b([m,B.ah,A.aa(A.a6(A.b([l,A.k(k,a,1,B.X,a,a,A.J().$2$color$fontSize(a0?B.t:B.u,11),a,a)],j),B.v,a,B.f,B.h),1)],j),B.l,a,B.f,B.h,0,a),B.ai],j)
+k=A.b([A.I(A.b([m,B.ah,A.a9(A.a5(A.b([l,A.k(k,a,1,B.X,a,a,A.J().$2$color$fontSize(a0?B.t:B.u,11),a,a)],j),B.v,a,B.f,B.h),1)],j),B.l,a,B.f,B.h,0,a),B.ai],j)
 for(m=t.tk,l=t.n8,i=0;h=r.length,i<h;++i){h=i<h-1?8:0
 g=a0?B.Y:B.j
 f=new A.bq(12,12)
@@ -126431,7 +126431,7 @@ c=A.C(a,A.Z(m.a(r[i].i(0,"icon")),l.a(r[i].i(0,"color")),a,a,a,16),B.i,a,a,new A
 d=A.bK(r[i].i(0,"title"))
 d=A.k(d,a,1,B.X,a,a,A.J().$3$color$fontSize$fontWeight(a0?B.j:B.m,12.5,B.D),a,a)
 b=A.bK(r[i].i(0,"time"))
-B.b.N(k,A.b([A.C(a,A.I(A.b([c,B.af,new A.j5(1,B.dQ,A.a6(A.b([d,B.bT,A.k(b,a,a,a,a,a,A.J().$2$color$fontSize(a0?B.t:B.u,11),a,a)],j),B.v,a,B.f,B.h),a)],j),B.l,a,B.f,B.h,0,a),B.i,a,a,new A.E(g,a,new A.dl(e,e,e,e),new A.d7(f,f,f,f),a,a,a,B.n),a,a,new A.X(0,0,0,h),B.hp,a,a,a)],j))}return A.C(a,A.a6(k,B.v,a,B.f,B.h),B.i,a,a,new A.E(q,a,o,p,n,a,a,B.n),a,a,a,B.b6,a,a,a)}}
+B.b.N(k,A.b([A.C(a,A.I(A.b([c,B.af,new A.j5(1,B.dQ,A.a5(A.b([d,B.bT,A.k(b,a,a,a,a,a,A.J().$2$color$fontSize(a0?B.t:B.u,11),a,a)],j),B.v,a,B.f,B.h),a)],j),B.l,a,B.f,B.h,0,a),B.i,a,a,new A.E(g,a,new A.dl(e,e,e,e),new A.d7(f,f,f,f),a,a,a,B.n),a,a,new A.X(0,0,0,h),B.hp,a,a,a)],j))}return A.C(a,A.a5(k,B.v,a,B.f,B.h),B.i,a,a,new A.E(q,a,o,p,n,a,a,B.n),a,a,a,B.b6,a,a,a)}}
 A.a3J.prototype={
 ex(a,b){var s,r,q,p,o,n,m,l,k,j,i=this,h=null,g="RERA: Promoter Escrow & Statutory Handover Compliance Under Section 18",f=$.bt()
 b.cM(f,t.A)
@@ -126482,7 +126482,7 @@ l=A.k(m,j,3,B.X,j,j,A.J().$3$color$fontSize$height(s?B.t:B.u,12,1.35),j,j)
 s=A.hM(j,j,j,j,j,j,j,j,j,B.o,j,j,B.ec,j,new A.aN(A.n(8),B.w),new A.al(B.o,1,B.z,-1),j,j,j,j)
 p=p.I(0,h)
 p=A.k(p,j,j,j,j,j,A.J().$3$color$fontSize$fontWeight(B.o,12,B.r),j,j)
-return A.a6(A.b([q,B.b8,o,B.b_,l,B.au,new A.d3(B.bX,j,j,A.rT(A.I(A.b([p,B.bS,A.Z(B.f6,B.o,j,j,j,13)],n),B.l,j,B.f,B.C,0,j),new A.aAK(a,k.e,k.f,r,m),s),j)],n),B.v,j,B.f,B.h)}s=B.o.E(0.12)
+return A.a5(A.b([q,B.b8,o,B.b_,l,B.au,new A.d3(B.bX,j,j,A.rT(A.I(A.b([p,B.bS,A.Z(B.f6,B.o,j,j,j,13)],n),B.l,j,B.f,B.C,0,j),new A.aAK(a,k.e,k.f,r,m),s),j)],n),B.v,j,B.f,B.h)}s=B.o.E(0.12)
 r=A.n(10)
 q=A.ag(B.o.E(0.25),1)
 s=A.C(j,A.Z(B.cy,B.o,j,j,j,22),B.i,j,j,new A.E(s,j,q,r,j,j,j,B.n),j,j,j,B.bO,j,j,j)
@@ -126496,7 +126496,7 @@ r=k.c
 o=k.a.f
 m=A.k(r,j,1,B.X,j,j,A.J().$3$color$fontSize$fontWeight(o?B.j:B.m,14,B.r),j,j)
 l=k.d
-q=A.aa(A.a6(A.b([q,B.aS,m,B.fi,A.k(l,j,2,B.X,j,j,A.J().$3$color$fontSize$height(o?B.t:B.u,12,1.35),j,j)],n),B.v,j,B.f,B.C),1)
+q=A.a9(A.a5(A.b([q,B.aS,m,B.fi,A.k(l,j,2,B.X,j,j,A.J().$3$color$fontSize$height(o?B.t:B.u,12,1.35),j,j)],n),B.v,j,B.f,B.C),1)
 o=A.hM(j,j,j,j,j,j,j,j,j,B.o,j,j,B.ec,j,new A.aN(A.n(8),B.w),new A.al(B.o,1,B.z,-1),j,j,j,j)
 p=p.I(0,h)
 p=A.k(p,j,j,j,j,j,A.J().$3$color$fontSize$fontWeight(B.o,12,B.r),j,j)
@@ -126543,7 +126543,7 @@ c=s.I(0,"home.riskDistribution")
 c=A.k(c,a7,1,B.X,a7,a7,A.J().$3$color$fontSize$fontWeight(q?B.j:B.m,15,B.r),a7,a7)
 a=s.I(0,"home.riskDistributionSub")
 a0=t.p
-a=A.I(A.b([b,B.ah,A.aa(A.a6(A.b([c,A.k(a,a7,1,B.X,a7,a7,A.J().$2$color$fontSize(q?B.t:B.u,11),a7,a7)],a0),B.v,a7,B.f,B.h),1)],a0),B.l,a7,B.f,B.h,0,a7)
+a=A.I(A.b([b,B.ah,A.a9(A.a5(A.b([c,A.k(a,a7,1,B.X,a7,a7,A.J().$2$color$fontSize(q?B.t:B.u,11),a7,a7)],a0),B.v,a7,B.f,B.h),1)],a0),B.l,a7,B.f,B.h,0,a7)
 c=s.I(0,a8)
 b=""+p
 a1=s.I(0,a9)
@@ -126566,7 +126566,7 @@ a4=A.ag(b1?j.E(0.25):h.E(0.25),1)
 a5=b1?B.ck:B.iP
 a5=A.Z(a5,b1?j:h,a7,a7,a7,15)
 b1=b1?b+" high-risk clauses flagged across analyzed documents":"All analyzed documents within normal legal risk parameters"
-return A.C(a7,A.a6(A.b([a,B.c9,c,B.ai,a1,B.aA,A.C(a7,A.I(A.b([a5,B.M,A.aa(A.k(b1,a7,a7,a7,a7,a7,A.J().$3$color$fontSize$fontWeight(q?B.j:B.m,11.5,B.D),a7,a7),1)],a0),B.l,a7,B.f,B.h,0,a7),B.i,a7,a7,new A.E(a2,a7,a4,a3,a7,a7,a7,B.n),a7,a7,a7,B.ec,a7,a7,a7)],a0),B.v,a7,B.f,B.h),B.i,a7,a7,new A.E(g,a7,e,f,d,a7,a7,B.n),a7,a7,a7,B.b6,a7,a7,a7)}}
+return A.C(a7,A.a5(A.b([a,B.c9,c,B.ai,a1,B.aA,A.C(a7,A.I(A.b([a5,B.M,A.a9(A.k(b1,a7,a7,a7,a7,a7,A.J().$3$color$fontSize$fontWeight(q?B.j:B.m,11.5,B.D),a7,a7),1)],a0),B.l,a7,B.f,B.h,0,a7),B.i,a7,a7,new A.E(a2,a7,a4,a3,a7,a7,a7,B.n),a7,a7,a7,B.ec,a7,a7,a7)],a0),B.v,a7,B.f,B.h),B.i,a7,a7,new A.E(g,a7,e,f,d,a7,a7,B.n),a7,a7,a7,B.b6,a7,a7,a7)}}
 A.aAP.prototype={
 $1(a){return B.c.n(a.d.toLowerCase(),"high")},
 $S:180}
@@ -126656,7 +126656,7 @@ if(i)o=j?B.k:B.o
 else o=B.E
 n=A.Z(k.c,s,l,l,l,18)
 k=k.d
-return new A.av(B.yc,A.dy(A.dH(l,A.fx(l,A.I(A.b([n,B.af,A.aa(A.k(k,l,1,B.X,l,l,A.J().$3$color$fontSize$fontWeight(s,13,i?B.r:B.U),l,l),1)],t.p),B.l,l,B.f,B.h,0,l),l,B.a1,new A.E(r,l,new A.dl(B.w,B.w,B.w,new A.al(o,3,B.z,-1)),p,l,l,l,B.n),B.bN,l,l,l,B.yf,l,l),B.I,!1,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,q,l,l,l,l,l,l,!1,B.aL),B.bw,l,l,new A.aSO(m),new A.aSP(m),l),l)}}
+return new A.av(B.yc,A.dy(A.dH(l,A.fx(l,A.I(A.b([n,B.af,A.a9(A.k(k,l,1,B.X,l,l,A.J().$3$color$fontSize$fontWeight(s,13,i?B.r:B.U),l,l),1)],t.p),B.l,l,B.f,B.h,0,l),l,B.a1,new A.E(r,l,new A.dl(B.w,B.w,B.w,new A.al(o,3,B.z,-1)),p,l,l,l,B.n),B.bN,l,l,l,B.yf,l,l),B.I,!1,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,l,q,l,l,l,l,l,l,!1,B.aL),B.bw,l,l,new A.aSO(m),new A.aSP(m),l),l)}}
 A.aSO.prototype={
 $1(a){var s=this.a
 return s.K(new A.aSN(s))},
@@ -126678,7 +126678,7 @@ j=A.C(B.a8,A.Z(r.a,l,s,s,s,16),B.i,s,s,new A.E(k,s,s,j,s,s,s,B.n),s,32,s,s,s,s,3
 l=t.p
 j=A.I(A.b([j,B.M,A.k(r.c,s,s,s,s,s,A.J().$5$color$fontSize$fontWeight$height$letterSpacing(q?B.j:B.m,20,B.Q,1,-0.5),s,s)],l),B.l,s,B.av,B.h,0,s)
 k=A.k(r.b,s,1,B.X,s,s,A.J().$4$color$fontSize$fontWeight$height(q?B.j:B.m,12,B.r,1.2),s,s)
-return A.C(s,A.a6(A.b([j,B.b8,A.a6(A.b([k,B.fi,A.k(r.d,s,1,B.X,s,s,A.J().$4$color$fontSize$fontWeight$height(q?B.t:B.u,10.5,B.U,1.2),s,s)],l),B.v,s,B.f,B.C)],l),B.v,s,B.av,B.h),B.i,s,B.Os,new A.E(p,s,n,o,m,s,s,B.n),s,s,s,B.fB,s,s,s)}}
+return A.C(s,A.a5(A.b([j,B.b8,A.a5(A.b([k,B.fi,A.k(r.d,s,1,B.X,s,s,A.J().$4$color$fontSize$fontWeight$height(q?B.t:B.u,10.5,B.U,1.2),s,s)],l),B.v,s,B.f,B.C)],l),B.v,s,B.av,B.h),B.i,s,B.Os,new A.E(p,s,n,o,m,s,s,B.n),s,s,s,B.fB,s,s,s)}}
 A.tp.prototype={}
 A.a4Q.prototype={
 b5(a,b){var s,r,q,p,o,n,m,l,k,j,i,h,g,f=null
@@ -126747,7 +126747,7 @@ a.jt(B.a66,5.5,p)},
 hH(a){return!a.b.k(0,this.b)||!a.c.k(0,this.c)||a.d!==this.d}}
 A.bmA.prototype={
 $1(a){var s,r=this,q=null,p=r.a.b6(0,$.bt().gbc(),t.O),o=r.b,n=o?B.m:B.j,m=A.n(18),l=o?B.y:B.k,k=A.Z(B.cy,B.o,q,q,q,q),j=p.I(0,"home.reraAdvisoryDetails"),i=t.p
-j=A.I(A.b([k,B.ah,A.aa(A.k(j,q,q,q,q,q,A.J().$3$color$fontSize$fontWeight(o?B.j:B.m,17,B.Q),q,q),1)],i),B.l,q,B.f,B.h,0,q)
+j=A.I(A.b([k,B.ah,A.a9(A.k(j,q,q,q,q,q,A.J().$3$color$fontSize$fontWeight(o?B.j:B.m,17,B.Q),q,q),1)],i),B.l,q,B.f,B.h,0,q)
 k=p.I(0,"home.reraStatutoryNote")
 k=A.k(r.c+"\n\n"+r.d+"\n\n"+k,q,q,q,q,q,A.J().$3$color$fontSize$height(o?B.t:B.u,13.5,1.5),q,q)
 s=A.dt(q,q,B.o,q,q,q,q,q,q,q,o?B.j:B.m,q,q,q,q,q,q,q,q,q,q)
@@ -126877,8 +126877,8 @@ h=e.z
 h===$&&A.a()
 g=p?32:18
 f=e.Q
-i.push(A.aa(new A.ct(b,!1,A.jT(A.dW(A.bH(new A.cj(B.ir,A.a6(A.b([new A.a3z(q,p,o,d),B.aU,new A.a3H(f,e.as,q,d),B.fY,new A.a3F(f,e.ax,q,e.gM9(),d),B.fY,A.jD(new A.b7h(e,q)),B.fY,new A.a3J(e.at,q,p,d),B.ou],l),B.dg,d,B.f,B.h),d),d,d,d),d,B.I,new A.X(g,24,g,24),B.jV,B.aj),h,d,!0),d),1))
-k.push(A.aa(A.C(d,A.hh(!0,A.a6(i,B.l,d,B.f,B.h),B.V,!0),B.i,j,d,d,d,d,d,d,d,d,d),1))
+i.push(A.a9(new A.ct(b,!1,A.jT(A.dW(A.bH(new A.cj(B.ir,A.a5(A.b([new A.a3z(q,p,o,d),B.aU,new A.a3H(f,e.as,q,d),B.fY,new A.a3F(f,e.ax,q,e.gM9(),d),B.fY,A.jD(new A.b7h(e,q)),B.fY,new A.a3J(e.at,q,p,d),B.ou],l),B.dg,d,B.f,B.h),d),d,d,d),d,B.I,new A.X(g,24,g,24),B.jV,B.aj),h,d,!0),d),1))
+k.push(A.a9(A.C(d,A.hh(!0,A.a5(i,B.l,d,B.f,B.h),B.V,!0),B.i,j,d,d,d,d,d,d,d,d,d),1))
 return A.ip(d,m,A.I(k,B.dg,d,B.f,B.h,0,d),n,d,d,c)}}
 A.b7b.prototype={
 $0(){return this.a.ax=!0},
@@ -126949,14 +126949,14 @@ if(s.c!=null)s.LN()},
 $S:56}
 A.b7h.prototype={
 $2(a,b){var s,r=null,q=this.a,p=this.b,o=t.p,n=q.gM9(),m=q.Q,l=q.as
-if(b.b>=900){n=A.aa(A.a6(A.b([A.bx_(p,m),B.aU,A.bwX(l,p,n)],o),B.v,r,B.f,B.h),6)
+if(b.b>=900){n=A.a9(A.a5(A.b([A.bx_(p,m),B.aU,A.bwX(l,p,n)],o),B.v,r,B.f,B.h),6)
 m=A.bwZ(p,q.Q)
 l=q.at
-return A.I(A.b([n,B.uY,A.aa(A.a6(A.b([m,B.aU,A.bwY(p,q.ay,l)],o),B.v,r,B.f,B.h),5)],o),B.v,r,B.f,B.h,0,r)}else{s=A.bx_(p,m)
+return A.I(A.b([n,B.uY,A.a9(A.a5(A.b([m,B.aU,A.bwY(p,q.ay,l)],o),B.v,r,B.f,B.h),5)],o),B.v,r,B.f,B.h,0,r)}else{s=A.bx_(p,m)
 n=A.bwX(l,p,n)
 m=A.bwZ(p,m)
 l=q.at
-return A.a6(A.b([s,B.aU,n,B.aU,m,B.aU,A.bwY(p,q.ay,l)],o),B.l,r,B.f,B.h)}},
+return A.a5(A.b([s,B.aU,n,B.aU,m,B.aU,A.bwY(p,q.ay,l)],o),B.l,r,B.f,B.h)}},
 $S:79}
 A.Z8.prototype={
 c0(){this.cH()
@@ -127029,7 +127029,7 @@ h=a6.ax
 h===$&&A.a()
 g=q?1040:460
 f=t.p
-if(q){e=A.I(A.b([A.C(a7,B.zE,B.i,a7,a7,new A.E(B.o,a7,a7,A.n(10),a7,a7,a7,B.n),a7,40,a7,a7,a7,a7,40),B.af,A.a6(A.b([A.k(s.$1(a8),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(m,20,B.Q,-0.5),a7,a7),A.k(s.$1("common.appSubtitle"),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(l,11,B.U,0.2),a7,a7)],f),B.v,a7,B.f,B.C)],f),B.l,a7,B.f,B.C,0,a7)
+if(q){e=A.I(A.b([A.C(a7,B.zE,B.i,a7,a7,new A.E(B.o,a7,a7,A.n(10),a7,a7,a7,B.n),a7,40,a7,a7,a7,a7,40),B.af,A.a5(A.b([A.k(s.$1(a8),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(m,20,B.Q,-0.5),a7,a7),A.k(s.$1("common.appSubtitle"),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(l,11,B.U,0.2),a7,a7)],f),B.v,a7,B.f,B.C)],f),B.l,a7,B.f,B.C,0,a7)
 d=A.k(s.$1("auth.intelligentProtection"),a7,a7,a7,a7,a7,A.J().$5$color$fontSize$fontWeight$height$letterSpacing(m,32,B.Q,1.15,-0.8),a7,a7)
 c=A.k(s.$1("auth.loginHeroSub"),a7,a7,a7,a7,a7,A.J().$3$color$fontSize$height(l,15,1.5),a7,a7)
 b=s.$1("auth.pillarRera")
@@ -127043,17 +127043,17 @@ a2=A.n(10)
 a3=A.ag((r?B.L:B.K).E(0.3),1)
 a4=A.Z(B.iP,r?B.L:B.K,a7,a7,a7,15)
 a5=s.$1("auth.bankGradeSecurity")
-e=A.I(A.b([A.aa(A.a6(A.b([e,B.dJ,d,B.aA,c,B.dJ,b,B.ai,a,B.ai,a0,B.fY,A.C(a7,A.I(A.b([a4,B.M,new A.eE(1,B.bt,A.k(a5,a7,a7,a7,a7,a7,A.J().$3$color$fontSize$fontWeight(r?B.L:B.K,12,B.D),a7,a7),a7)],f),B.l,a7,B.f,B.C,0,a7),B.i,a7,a7,new A.E(a1,a7,a3,a2,a7,a7,a7,B.n),a7,a7,a7,B.cj,a7,a7,a7)],f),B.v,a7,B.f,B.C),11),B.LK,A.aa(a6.a9p(b1,o,n,m,l,B.o,B.k,k,r,!0,s),10)],f),B.l,a7,B.f,B.h,0,a7)}else e=A.a6(A.b([A.a6(A.b([A.C(a7,B.zI,B.i,a7,a7,new A.E(B.o,a7,a7,A.n(12),a7,a7,a7,B.n),a7,44,a7,a7,a7,a7,44),B.au,A.k(s.$1(a8),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(m,22,B.Q,-0.5),a7,a7),B.b_,A.k(s.$1("auth.mobileSubtitle"),a7,a7,a7,a7,a7,A.J().$2$color$fontSize(l,13),B.an,a7)],f),B.l,a7,B.f,B.h),B.aU,a6.a9p(b1,o,n,m,l,B.o,B.k,k,r,!1,s)],f),B.l,a7,B.f,B.h)
-return A.dH(B.bx,A.ip(a7,p,A.hh(!0,A.a6(A.b([B.aS,a9,B.b_,A.aa(A.bH(A.dW(new A.ct(i,!1,A.jT(new A.cj(new A.aq(0,g,0,1/0),e,a7),h,a7,!0),a7),a7,B.I,new A.X(b0,j,b0,j),a7,B.aj),a7,a7,a7),1)],f),B.l,a7,B.f,B.h),B.V,!0),a7,a7,a7,a7),B.I,!0,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,new A.b9h(b1),a7,a7,a7,a7,a7,a7,!1,B.aL)},
+e=A.I(A.b([A.a9(A.a5(A.b([e,B.dJ,d,B.aA,c,B.dJ,b,B.ai,a,B.ai,a0,B.fY,A.C(a7,A.I(A.b([a4,B.M,new A.eE(1,B.bt,A.k(a5,a7,a7,a7,a7,a7,A.J().$3$color$fontSize$fontWeight(r?B.L:B.K,12,B.D),a7,a7),a7)],f),B.l,a7,B.f,B.C,0,a7),B.i,a7,a7,new A.E(a1,a7,a3,a2,a7,a7,a7,B.n),a7,a7,a7,B.cj,a7,a7,a7)],f),B.v,a7,B.f,B.C),11),B.LK,A.a9(a6.a9p(b1,o,n,m,l,B.o,B.k,k,r,!0,s),10)],f),B.l,a7,B.f,B.h,0,a7)}else e=A.a5(A.b([A.a5(A.b([A.C(a7,B.zI,B.i,a7,a7,new A.E(B.o,a7,a7,A.n(12),a7,a7,a7,B.n),a7,44,a7,a7,a7,a7,44),B.au,A.k(s.$1(a8),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(m,22,B.Q,-0.5),a7,a7),B.b_,A.k(s.$1("auth.mobileSubtitle"),a7,a7,a7,a7,a7,A.J().$2$color$fontSize(l,13),B.an,a7)],f),B.l,a7,B.f,B.h),B.aU,a6.a9p(b1,o,n,m,l,B.o,B.k,k,r,!1,s)],f),B.l,a7,B.f,B.h)
+return A.dH(B.bx,A.ip(a7,p,A.hh(!0,A.a5(A.b([B.aS,a9,B.b_,A.a9(A.bH(A.dW(new A.ct(i,!1,A.jT(new A.cj(new A.aq(0,g,0,1/0),e,a7),h,a7,!0),a7),a7,B.I,new A.X(b0,j,b0,j),a7,B.aj),a7,a7,a7),1)],f),B.l,a7,B.f,B.h),B.V,!0),a7,a7,a7,a7),B.I,!0,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,new A.b9h(b1),a7,a7,a7,a7,a7,a7,!1,B.aL)},
 aUg(a,b,c,d,e){var s=null,r=c.E(0.6),q=t.p
 return A.C(s,A.bH(new A.cj(B.wl,A.I(A.b([A.d8(!1,A.n(10),!0,new A.av(B.iE,A.I(A.b([A.Z(B.dD,b,s,s,s,18),B.aZ,A.k(e.$1("common.back"),s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(b,13,B.D),s,s)],q),B.l,s,B.f,B.C,0,s),s),s,!0,s,s,s,s,s,s,s,s,s,new A.b9e(a),s,s,s,s,s,s,s,s)],q),B.l,s,B.av,B.h,0,s),s),s,s,s),B.i,s,s,new A.E(B.E,s,new A.dl(B.w,B.w,new A.al(r,1,B.z,-1),B.w),s,s,s,s,B.n),s,s,s,B.f3,s,s,s)},
 Xs(a,b,c,d,e,f,g){var s=null,r=B.o.E(0.1),q=A.n(8),p=t.p
-return A.I(A.b([A.C(s,A.Z(c,B.o,s,s,s,18),B.i,s,s,new A.E(r,s,s,q,s,s,s,B.n),s,s,s,B.aW,s,s,s),B.cG,A.aa(A.a6(A.b([A.k(g,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(d,13.5,B.r),s,s),B.bT,A.k(f,s,s,s,s,s,A.J().$3$color$fontSize$height(e,12,1.35),s,s)],p),B.v,s,B.f,B.h),1)],p),B.v,s,B.f,B.h,0,s)},
+return A.I(A.b([A.C(s,A.Z(c,B.o,s,s,s,18),B.i,s,s,new A.E(r,s,s,q,s,s,s,B.n),s,s,s,B.aW,s,s,s),B.cG,A.a9(A.a5(A.b([A.k(g,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(d,13.5,B.r),s,s),B.bT,A.k(f,s,s,s,s,s,A.J().$3$color$fontSize$height(e,12,1.35),s,s)],p),B.v,s,B.f,B.h),1)],p),B.v,s,B.f,B.h,0,s)},
 a9p(a3,a4,a5,a6,a7,a8,a9,b0,b1,b2,b3){var s,r,q,p=this,o=null,n="auth.email",m="auth.mobileNumber",l=p.gbB().cM($.kT(),t.FB).a===B.hc,k=b2?32:24,j=A.n(20),i=A.ag(a5,1),h=A.k(b3.$1("auth.welcomeBack"),o,o,o,o,o,A.J().$4$color$fontSize$fontWeight$letterSpacing(a6,20,B.Q,-0.3),o,o),g=A.k(b3.$1("auth.loginToAccount"),o,o,o,o,o,A.J().$3$color$fontSize$height(a7,13,1.4),o,o),f=A.n(12),e=A.ag(a5,1),d=A.n(9),c=p.z,b=c?a4:B.E,a=A.n(9),a0=c?A.ag(a5,1):o,a1=A.Z(B.za,c?a8:a7,o,o,o,16),a2=b3.$1(n)
 c=p.z
 s=c?B.r:B.U
 r=t.p
-a=A.aa(A.d8(!1,d,!0,A.C(B.a8,A.I(A.b([a1,B.aZ,A.k(a2,o,o,o,o,o,A.J().$3$color$fontSize$fontWeight(c?a6:a7,13,s),o,o)],r),B.l,o,B.bn,B.h,0,o),B.i,o,o,new A.E(b,o,a0,a,o,o,o,B.n),o,o,o,B.f1,o,o,o),o,!0,o,o,o,o,o,o,o,o,o,new A.b97(p),o,o,o,o,o,o,o,o),1)
+a=A.a9(A.d8(!1,d,!0,A.C(B.a8,A.I(A.b([a1,B.aZ,A.k(a2,o,o,o,o,o,A.J().$3$color$fontSize$fontWeight(c?a6:a7,13,s),o,o)],r),B.l,o,B.bn,B.h,0,o),B.i,o,o,new A.E(b,o,a0,a,o,o,o,B.n),o,o,o,B.f1,o,o,o),o,!0,o,o,o,o,o,o,o,o,o,new A.b97(p),o,o,o,o,o,o,o,o),1)
 a0=A.n(9)
 d=!p.z
 c=d?a4:B.E
@@ -127063,7 +127063,7 @@ a2=A.Z(B.zu,d?a8:a7,o,o,o,16)
 s=b3.$1(m)
 d=!p.z
 q=d?B.r:B.U
-f=A.C(o,A.I(A.b([a,A.aa(A.d8(!1,a0,!0,A.C(B.a8,A.I(A.b([a2,B.aZ,A.k(s,o,o,o,o,o,A.J().$3$color$fontSize$fontWeight(d?a6:a7,13,q),o,o)],r),B.l,o,B.bn,B.h,0,o),B.i,o,o,new A.E(c,o,a1,b,o,o,o,B.n),o,o,o,B.f1,o,o,o),o,!0,o,o,o,o,o,o,o,o,o,new A.b98(p),o,o,o,o,o,o,o,o),1)],r),B.l,o,B.f,B.h,0,o),B.i,o,o,new A.E(b0,o,e,f,o,o,o,B.n),o,o,o,B.d_,o,o,o)
+f=A.C(o,A.I(A.b([a,A.a9(A.d8(!1,a0,!0,A.C(B.a8,A.I(A.b([a2,B.aZ,A.k(s,o,o,o,o,o,A.J().$3$color$fontSize$fontWeight(d?a6:a7,13,q),o,o)],r),B.l,o,B.bn,B.h,0,o),B.i,o,o,new A.E(c,o,a1,b,o,o,o,B.n),o,o,o,B.f1,o,o,o),o,!0,o,o,o,o,o,o,o,o,o,new A.b98(p),o,o,o,o,o,o,o,o),1)],r),B.l,o,B.f,B.h,0,o),B.i,o,o,new A.E(b0,o,e,f,o,o,o,B.n),o,o,o,B.d_,o,o,o)
 e=A.b([],r)
 d=p.x
 c=p.y
@@ -127072,7 +127072,7 @@ a=A.a3(o,o,a6,o,o,o,o,o,o,o,o,14,o,o,o,o,o,!0,o,o,o,o,o,o,o,o)
 B.b.N(e,A.b([b,B.aS,A.tP(!1,d,o,2,A.hJ(o,o,o,o,o,o,o,o,!0,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,"name@example.com",o,o,o,o,o,o,o,o,o,!0,!0,!1,o,A.Z(B.zp,a7,o,o,o,19),o,o,o,o,o,o,o,o,o,o,o,o),o,!1,c,o,B.oA,1,!1,"\u2022",o,o,o,o,!1,o,a,B.aG,o,B.bK,o,new A.b99(b3))],r))}else{b=A.k(b3.$1(m),o,o,o,o,o,A.J().$3$color$fontSize$fontWeight(a6,12.5,B.D),o,o)
 a=A.a3(o,o,a6,o,o,o,o,o,o,o,o,14,o,o,o,o,o,!0,o,o,o,o,o,o,o,o)
 B.b.N(e,A.b([b,B.aS,A.tP(!1,d,o,2,A.hJ(o,o,o,o,o,o,o,o,!0,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,o,"9876543210",o,o,o,o,o,o,o,o,o,!0,!0,!1,o,A.C(o,A.I(A.b([A.k("\ud83c\uddee\ud83c\uddf3 +91",o,o,o,o,o,A.a3(o,o,a6,o,o,o,o,o,o,o,o,13,o,o,B.D,o,o,!0,o,o,o,o,o,o,o,o),o,o)],r),B.l,o,B.f,B.C,0,o),B.i,o,o,new A.E(o,o,new A.dl(B.w,new A.al(a5,1,B.z,-1),B.w,B.w),o,o,o,o,B.n),o,o,B.kb,B.ye,o,o,o),o,o,o,o,o,o,o,o,o,o,o,o),o,!1,c,o,B.e1,1,!1,"\u2022",o,o,o,o,!1,o,a,B.aG,o,B.bK,o,new A.b9a(b3))],r))}e.push(B.aI)
-e.push(A.I(A.b([A.Z(B.mZ,a7,o,o,o,13),B.d2,A.aa(A.k(b3.$1("auth.sendVerificationCode"),o,o,o,o,o,A.J().$2$color$fontSize(a7,11.5),o,o),1)],r),B.l,o,B.f,B.h,0,o))
+e.push(A.I(A.b([A.Z(B.mZ,a7,o,o,o,13),B.d2,A.a9(A.k(b3.$1("auth.sendVerificationCode"),o,o,o,o,o,A.J().$2$color$fontSize(a7,11.5),o,o),1)],r),B.l,o,B.f,B.h,0,o))
 e.push(B.aU)
 d=l?o:p.gaUh()
 c=a8.E(p.Q?0.92:1)
@@ -127082,7 +127082,7 @@ b=A.dt(o,o,c,o,o,o,a,o,o,o,B.m,o,B.LG,o,o,new A.aN(b,B.w),o,o,o,o,o)
 if(l)c=new A.aZ(20,20,A.jv(o,o,o,o,o,o,o,2,o,new A.h8(B.m,t.ZU)),o)
 else c=A.I(A.b([A.k(b3.$1("auth.sendOtp"),o,o,o,o,o,A.J().$3$fontSize$fontWeight$letterSpacing(14.5,B.r,0.2),o,o),B.M,B.rI],r),B.l,o,B.bn,B.h,0,o)
 e.push(A.dy(A.fY(c,d,b),B.b2,o,o,new A.b9b(p),new A.b9c(p),o))
-return A.C(o,A.a6(A.b([h,B.aS,g,B.aU,f,B.bg,A.MP(A.a6(e,B.v,o,B.f,B.h),p.w),B.aU,A.iF(a5,o,1,o,o,o),B.bg,A.fS(B.h5,A.b([A.k(b3.$1("auth.noAccount"),o,o,o,o,o,A.J().$2$color$fontSize(a7,13),o,o),A.d8(!1,A.n(4),!0,new A.av(B.yp,A.k(b3.$1("auth.signUp"),o,o,o,o,o,A.J().$5$color$decoration$decorationColor$fontSize$fontWeight(a6,B.e0,a6.E(0.4),13,B.r),o,o),o),o,!0,o,o,o,o,o,o,o,o,o,new A.b9d(a3),o,o,o,o,o,o,o,o)],r),B.eO,0,0)],r),B.v,o,B.f,B.C),B.i,o,o,new A.E(a4,o,i,j,o,o,o,B.n),o,o,o,new A.X(k,k,k,k),o,o,1/0)}}
+return A.C(o,A.a5(A.b([h,B.aS,g,B.aU,f,B.bg,A.MP(A.a5(e,B.v,o,B.f,B.h),p.w),B.aU,A.iF(a5,o,1,o,o,o),B.bg,A.fS(B.h5,A.b([A.k(b3.$1("auth.noAccount"),o,o,o,o,o,A.J().$2$color$fontSize(a7,13),o,o),A.d8(!1,A.n(4),!0,new A.av(B.yp,A.k(b3.$1("auth.signUp"),o,o,o,o,o,A.J().$5$color$decoration$decorationColor$fontSize$fontWeight(a6,B.e0,a6.E(0.4),13,B.r),o,o),o),o,!0,o,o,o,o,o,o,o,o,o,new A.b9d(a3),o,o,o,o,o,o,o,o)],r),B.eO,0,0)],r),B.v,o,B.f,B.C),B.i,o,o,new A.E(a4,o,i,j,o,o,o,B.n),o,o,o,new A.X(k,k,k,k),o,o,1/0)}}
 A.b9f.prototype={
 $3(a,b,c){return new A.vL(this.a,"login",null,null)},
 $C:"$3",
@@ -127307,7 +127307,7 @@ p=a5?s.$1("auth.resend"):s.$2("auth.waitCooldown",A.c(["seconds",""+a7.ay],p,p))
 if(a7.ax)a9=B.k
 else a9=(a?a9:b).E(0.5)
 b=t.p
-return A.ip(n,o,A.hh(!0,A.bH(new A.cj(B.jK,A.dW(new A.ct(k,!1,A.jT(A.C(a8,A.a6(A.b([d,B.aU,l,B.b8,c,B.fY,a0,B.aU,a4,B.aU,b0,B.aU,A.I(A.b([a1,B.bS,A.dH(a8,A.k(p,a8,a8,a8,a8,a8,A.a3(a8,a8,a9,a8,a8,a8,a8,a8,a8,a8,a8,13,a8,a8,B.r,a8,a8,!0,a8,a8,a8,a8,a8,a8,a8,a8),a8,a8),B.I,!1,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a6,a8,a8,a8,a8,a8,a8,!1,B.aL)],b),B.l,a8,B.bn,B.h,0,a8)],b),B.dg,a8,B.f,B.h),B.i,a8,a8,new A.E(f,a8,m,e,a8,a8,a8,B.n),a8,a8,a8,B.kh,a8,a8,a8),g,a8,!0),a8),a8,B.I,B.ym,a8,B.aj),a8),a8,a8,a8),B.V,!0),a8,a8,a8,a8)}}
+return A.ip(n,o,A.hh(!0,A.bH(new A.cj(B.jK,A.dW(new A.ct(k,!1,A.jT(A.C(a8,A.a5(A.b([d,B.aU,l,B.b8,c,B.fY,a0,B.aU,a4,B.aU,b0,B.aU,A.I(A.b([a1,B.bS,A.dH(a8,A.k(p,a8,a8,a8,a8,a8,A.a3(a8,a8,a9,a8,a8,a8,a8,a8,a8,a8,a8,13,a8,a8,B.r,a8,a8,!0,a8,a8,a8,a8,a8,a8,a8,a8),a8,a8),B.I,!1,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a8,a6,a8,a8,a8,a8,a8,a8,!1,B.aL)],b),B.l,a8,B.bn,B.h,0,a8)],b),B.dg,a8,B.f,B.h),B.i,a8,a8,new A.E(f,a8,m,e,a8,a8,a8,B.n),a8,a8,a8,B.kh,a8,a8,a8),g,a8,!0),a8),a8,B.I,B.ym,a8,B.aj),a8),a8,a8,a8),B.V,!0),a8,a8,a8,a8)}}
 A.ba0.prototype={
 $1(a){var s=this.a
 if(s.at===0)s.K(new A.b9Z(a))
@@ -127377,7 +127377,7 @@ m=A.Z(B.XO,b4,a4,a4,a4,22)
 l=a8?"\u0906\u092a\u0915\u0940 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0914\u0930 \u0921\u0947\u091f\u093e \u092a\u093e\u0930\u0926\u0930\u094d\u0936\u093f\u0924\u093e":"Privacy & Data Handling Overview"
 l=A.k(l,a4,a4,a4,a4,a4,A.J().$3$color$fontSize$fontWeight(b1,14,B.r),a4,a4)
 k=a8?"LawBuddy \u0906\u092a\u0915\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u094b\u0902 \u0914\u0930 \u0935\u094d\u092f\u0915\u094d\u0924\u093f\u0917\u0924 \u0921\u0947\u091f\u093e \u0915\u0947 \u092a\u094d\u0930\u0938\u0902\u0938\u094d\u0915\u0930\u0923 \u0915\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902 \u092a\u093e\u0930\u0926\u0930\u094d\u0936\u0940 \u0930\u0939\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u092a\u094d\u0930\u0924\u093f\u092c\u0926\u094d\u0927 \u0939\u0948\u0964 \u092f\u0939 \u0928\u0940\u0924\u093f \u092c\u0924\u093e\u0924\u0940 \u0939\u0948 \u0915\u093f \u0921\u0947\u091f\u093e \u0915\u0948\u0938\u0947 \u090f\u0915\u0924\u094d\u0930, \u0938\u0902\u0917\u094d\u0930\u0939\u0940\u0924 \u0914\u0930 \u0938\u0902\u0938\u093e\u0927\u093f\u0924 \u0915\u093f\u092f\u093e \u091c\u093e\u0924\u093e \u0939\u0948\u0964":"LawBuddy is committed to transparency regarding how your property documents and account data are processed, stored, and analyzed by our AI and OCR technology."
-o=A.C(a4,A.I(A.b([m,B.cG,A.aa(A.a6(A.b([l,B.b_,A.k(k,a4,a4,a4,a4,a4,A.J().$3$color$fontSize$height(b2,12.5,1.5),a4,a4)],r),B.v,a4,B.f,B.h),1)],r),B.v,a4,B.f,B.h,0,a4),B.i,a4,a4,new A.E(b0,a4,n,o,a4,a4,a4,B.n),a4,a4,a4,B.dh,a4,a4,a4)
+o=A.C(a4,A.I(A.b([m,B.cG,A.a9(A.a5(A.b([l,B.b_,A.k(k,a4,a4,a4,a4,a4,A.J().$3$color$fontSize$height(b2,12.5,1.5),a4,a4)],r),B.v,a4,B.f,B.h),1)],r),B.v,a4,B.f,B.h,0,a4),B.i,a4,a4,new A.E(b0,a4,n,o,a4,a4,a4,B.n),a4,a4,a4,B.dh,a4,a4,a4)
 n=a8?"\u092a\u0930\u093f\u091a\u092f (Introduction)":"Introduction"
 n=a3.mb(b4,a8?'LawBuddy ("\u0939\u092e", "\u0939\u092e\u093e\u0930\u093e" \u092f\u093e "\u0939\u092e\u0947\u0902") \u092e\u0947\u0902 \u0906\u092a\u0915\u093e \u0938\u094d\u0935\u093e\u0917\u0924 \u0939\u0948\u0964 LawBuddy \u090f\u0915 \u092d\u093e\u0930\u0924\u0940\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0914\u0930 \u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u094d\u0930\u094c\u0926\u094d\u092f\u094b\u0917\u093f\u0915\u0940 \u0938\u0939\u093e\u092f\u0915 \u0939\u0948 \u091c\u093f\u0938\u0947 \u0909\u092a\u092f\u094b\u0917\u0915\u0930\u094d\u0924\u093e\u0913\u0902 \u0915\u094b \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0928\u0947, \u0916\u0902\u0921-\u0938\u094d\u0924\u0930\u0940\u092f \u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0915\u094b \u0938\u092e\u091d\u0928\u0947, RERA \u0914\u0930 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0909\u0926\u094d\u0927\u0930\u0923\u094b\u0902 \u0915\u0940 \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0928\u0947, \u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0915\u093e \u0905\u0928\u0941\u092e\u093e\u0928 \u0932\u0917\u093e\u0928\u0947 \u0914\u0930 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 (due diligence) \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u094b \u091f\u094d\u0930\u0948\u0915 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0938\u0939\u093e\u092f\u0924\u093e \u0915\u0947 \u0932\u093f\u090f \u0921\u093f\u091c\u093c\u093e\u0907\u0928 \u0915\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948\u0964\n\n\u092f\u0939 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f \u092c\u0924\u093e\u0924\u0940 \u0939\u0948 \u0915\u093f \u0915\u094c\u0928 \u0938\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u090f\u0915\u0924\u094d\u0930 \u0915\u0940 \u091c\u093e\u0924\u0940 \u0939\u0948, \u0907\u0938\u0947 \u0915\u0948\u0938\u0947 \u0938\u0902\u0917\u094d\u0930\u0939\u0940\u0924 \u0914\u0930 \u0938\u0902\u0938\u093e\u0927\u093f\u0924 \u0915\u093f\u092f\u093e \u091c\u093e\u0924\u093e \u0939\u0948, AI \u0914\u0930 OCR \u092a\u094d\u0930\u094c\u0926\u094d\u092f\u094b\u0917\u093f\u0915\u093f\u092f\u094b\u0902 \u0915\u093e \u0909\u092a\u092f\u094b\u0917 \u0915\u0948\u0938\u0947 \u0915\u093f\u092f\u093e \u091c\u093e\u0924\u093e \u0939\u0948, \u0914\u0930 \u0906\u092a\u0915\u0947 \u092a\u093e\u0938 \u0905\u092a\u0928\u0947 \u0921\u0947\u091f\u093e \u092a\u0930 \u0915\u094d\u092f\u093e \u0928\u093f\u092f\u0902\u0924\u094d\u0930\u0923 \u0939\u0948\u0902\u0964':'Welcome to LawBuddy ("we", "our", or "us"). LawBuddy is an Indian property and legal technology assistant designed to assist users in analyzing property agreements, understanding clause-level risks, reviewing RERA and statutory citations, estimating stamp duty, and tracking due diligence checklists.\n\nThis Privacy Policy explains what information is collected, how it is stored and processed, how AI and OCR technologies are utilized, and what controls you have over your data.',"1",b1,b2,n)
 m=a8?"\u0939\u092e \u0915\u094c\u0928 \u0938\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u090f\u0915\u0924\u094d\u0930 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902 (Information We Collect)":"Information We Collect"
@@ -127402,7 +127402,7 @@ d=A.n(12)
 c=A.ag(b3,1)
 b=A.Z(B.n_,b4,a4,a4,a4,18)
 a=a8?"\u0905\u092a\u0928\u0940 \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0938\u0902\u0917\u094d\u0930\u0939\u0923 \u0914\u0930 \u0915\u0941\u0915\u0940 \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902 \u092a\u094d\u0930\u092c\u0902\u0927\u093f\u0924 \u0915\u0930\u0947\u0902":"Manage your local storage and cookie preferences"
-a=A.aa(A.k(a,a4,a4,a4,a4,a4,A.J().$3$color$fontSize$fontWeight(b1,12.5,B.D),a4,a4),1)
+a=A.a9(A.k(a,a4,a4,a4,a4,a4,A.J().$3$color$fontSize$fontWeight(b1,12.5,B.D),a4,a4),1)
 a0=A.hM(a4,a4,a4,a4,a4,a4,a4,a4,a4,b1,a4,a4,B.ec,a4,new A.aN(A.n(8),B.w),new A.al(b3,1,B.z,-1),a4,a4,a4,a4)
 a1=a8?"\u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902 \u092a\u094d\u0930\u092c\u0902\u0927\u093f\u0924 \u0915\u0930\u0947\u0902":"Manage Preferences"
 d=A.C(a4,A.I(A.b([b,B.ah,a,B.M,A.rT(A.k(a1,a4,a4,a4,a4,a4,A.J().$2$fontSize$fontWeight(11.5,B.r),a4,a4),new A.aLQ(b7),a0)],r),B.l,a4,B.f,B.h,0,a4),B.i,a4,a4,new A.E(b0,a4,c,d,a4,a4,a4,B.n),a4,a4,B.We,B.fA,a4,a4,a4)
@@ -127416,9 +127416,9 @@ a0=a8?"\u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u0947\u0902 (Contact Us
 a0=a3.mb(b4,a8?"\u092f\u0926\u093f \u0906\u092a\u0915\u0947 \u092a\u093e\u0938 \u0907\u0938 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f \u0915\u0947 \u0938\u0902\u092c\u0902\u0927 \u092e\u0947\u0902 \u0915\u094b\u0908 \u092a\u094d\u0930\u0936\u094d\u0928, \u092a\u094d\u0930\u0924\u093f\u0915\u094d\u0930\u093f\u092f\u093e \u092f\u093e \u0921\u0947\u091f\u093e \u0905\u0928\u0941\u0930\u094b\u0927 \u0939\u0948\u0902, \u0924\u094b \u0915\u0943\u092a\u092f\u093e \u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u0947\u0902:\n\n\u2022 \u092a\u094d\u0932\u0947\u091f\u092b\u093c\u0949\u0930\u094d\u092e: LawBuddy Legal Technology Assistant\n\u2022 \u0938\u0902\u092a\u0930\u094d\u0915 \u0908\u092e\u0947\u0932: finalyearproject2513@gmail.com\n\u2022 \u092a\u0930\u093f\u092f\u094b\u091c\u0928\u093e \u0915\u094d\u0937\u0947\u0924\u094d\u0930\u093e\u0927\u093f\u0915\u093e\u0930: \u092d\u093e\u0930\u0924 (India)":"If you have questions, feedback, or data requests regarding this Privacy Policy, please contact:\n\n\u2022 Platform: LawBuddy Legal Technology Assistant\n\u2022 Contact Email: finalyearproject2513@gmail.com\n\u2022 Project Jurisdiction: India","14",b1,b2,a0)
 a1=A.iF(b3,a4,a4,a4,a4,a4)
 a2=a8?a5:"Back to LawBuddy"
-return A.ip(s,a9,A.dW(A.bH(new A.cj(B.pI,A.a6(A.b([q,B.au,b6,B.aS,p,B.aU,o,B.dJ,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,B.aU,a1,B.bg,A.bH(A.rU(B.zH,A.k(a2,a4,a4,a4,a4,a4,A.J().$1$fontWeight(B.D),a4,a4),new A.aLR(b7),A.hM(a4,a4,a4,a4,a4,a4,a4,a4,a4,b1,a4,a4,B.W_,a4,new A.aN(A.n(10),B.w),new A.al(b3,1,B.z,-1),a4,a4,a4,a4)),a4,a4,a4),B.dJ],r),B.v,a4,B.f,B.h),a4),a4,a4,a4),a4,B.I,new A.X(b5,36,b5,36),a4,B.aj),a4,a4,a4,a4)},
+return A.ip(s,a9,A.dW(A.bH(new A.cj(B.pI,A.a5(A.b([q,B.au,b6,B.aS,p,B.aU,o,B.dJ,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,B.aU,a1,B.bg,A.bH(A.rU(B.zH,A.k(a2,a4,a4,a4,a4,a4,A.J().$1$fontWeight(B.D),a4,a4),new A.aLR(b7),A.hM(a4,a4,a4,a4,a4,a4,a4,a4,a4,b1,a4,a4,B.W_,a4,new A.aN(A.n(10),B.w),new A.al(b3,1,B.z,-1),a4,a4,a4,a4)),a4,a4,a4),B.dJ],r),B.v,a4,B.f,B.h),a4),a4,a4,a4),a4,B.I,new A.X(b5,36,b5,36),a4,B.aj),a4,a4,a4,a4)},
 mb(a,b,c,d,e,f){var s=null,r=a.E(0.15),q=A.n(8),p=t.p
-return new A.av(B.y8,A.a6(A.b([A.I(A.b([A.C(B.a8,A.k(c,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(a,13,B.Q),s,s),B.i,s,s,new A.E(r,s,s,q,s,s,s,B.n),s,28,s,s,s,s,28),B.af,A.aa(A.k(f,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(d,16,B.r),s,s),1)],p),B.l,s,B.f,B.h,0,s),B.b8,new A.av(B.Wd,A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$height(e,13.5,1.55),s,s),s)],p),B.v,s,B.f,B.h),s)}}
+return new A.av(B.y8,A.a5(A.b([A.I(A.b([A.C(B.a8,A.k(c,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(a,13,B.Q),s,s),B.i,s,s,new A.E(r,s,s,q,s,s,s,B.n),s,28,s,s,s,s,28),B.af,A.a9(A.k(f,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(d,16,B.r),s,s),1)],p),B.l,s,B.f,B.h,0,s),B.b8,new A.av(B.Wd,A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$height(e,13.5,1.55),s,s),s)],p),B.v,s,B.f,B.h),s)}}
 A.aLP.prototype={
 $0(){return A.aG(this.a,!1).d2()},
 $S:0}
@@ -127511,7 +127511,7 @@ if(c==null)n=s?B.y:B.k
 else n=c
 j=A.n(14)
 m=t.p
-l=A.b([A.aa(d,1)],m)
+l=A.b([A.a9(d,1)],m)
 if(a!=null)B.b.N(l,A.b([B.af,a],m))
 r.Dd(A.RE(k,k,k,o,B.i7,B.O,k,A.I(l,B.l,k,B.f,B.h,0,k),k,e,8,k,k,k,k,B.ed,k,new A.aN(j,new A.al(n,1.2,B.z,-1)),k,p))},
 b1E(a,b,c){return this.N_(a,null,null,b,c)},
@@ -127539,14 +127539,14 @@ i=A.cd(b.i(a1,"fileData"))
 b=A.jv(null,n?B.k:B.o,null,null,null,null,null,2,null,null)
 g=a.$1("recentDocs.downloadingReport")
 d=t.p
-o.ajP(A.I(A.b([new A.aZ(16,16,b,null),B.af,A.aa(A.k(g,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.U,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null),B.ea)
+o.ajP(A.I(A.b([new A.aZ(16,16,b,null),B.af,A.a9(A.k(g,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.U,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null),B.ea)
 q=3
 s=6
 return A.m(A.P_(k,m,i,l,j),$async$KI)
 case 6:if(o.c!=null){b=(n?B.L:B.K).E(0.16)
 b=A.C(null,A.Z(B.fF,n?B.L:B.K,null,null,null,15),B.i,null,null,new A.E(b,null,null,null,null,null,null,B.aM),null,null,null,B.d_,null,null,null)
 g=a.$1("recentDocs.reportDownloaded")
-o.Aq(A.I(A.b([b,B.ah,A.aa(A.k(g,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null))}q=1
+o.Aq(A.I(A.b([b,B.ah,A.a9(A.k(g,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null))}q=1
 s=5
 break
 case 3:q=2
@@ -127554,7 +127554,7 @@ a0=p.pop()
 h=A.an(a0)
 A.cV().$1("Error downloading risk report: "+A.p(h))
 if(o.c!=null){b=A.Z(B.bG,n?B.J:B.H,null,null,null,18)
-o.Aq(A.I(A.b([b,B.ah,A.aa(A.k("Failed to download PDF report. Please try again.",null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,null,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null))}s=5
+o.Aq(A.I(A.b([b,B.ah,A.a9(A.k("Failed to download PDF report. Please try again.",null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,null,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null))}s=5
 break
 case 2:s=1
 break
@@ -127591,7 +127591,7 @@ i=A.cd(b.i(a1,"mimeType"))
 b=A.jv(null,n?B.k:B.o,null,null,null,null,null,2,null,null)
 f=a.$1("recentDocs.reanalyzing")
 d=t.p
-o.ajP(A.I(A.b([new A.aZ(16,16,b,null),B.af,A.aa(A.k(f,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.U,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null),B.aN)
+o.ajP(A.I(A.b([new A.aZ(16,16,b,null),B.af,A.a9(A.k(f,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.U,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null),B.aN)
 q=3
 s=6
 return A.m(A.aqZ(l,j,i,k,m),$async$Mv)
@@ -127600,7 +127600,7 @@ if(o.c!=null&&J.e2(h)){o.K(new A.bdj(h,a1))
 b=(n?B.L:B.K).E(0.16)
 b=A.C(null,A.Z(B.hx,n?B.L:B.K,null,null,null,15),B.i,null,null,new A.E(b,null,null,null,null,null,null,B.aM),null,null,null,B.d_,null,null,null)
 f=a.$1("recentDocs.reanalyzeSuccess")
-o.Aq(A.I(A.b([b,B.ah,A.aa(A.k(f,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null))}q=1
+o.Aq(A.I(A.b([b,B.ah,A.a9(A.k(f,null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null))}q=1
 s=5
 break
 case 3:q=2
@@ -127609,7 +127609,7 @@ g=A.an(a0)
 A.cV().$1("Error re-analyzing document: "+A.p(g))
 if(o.c!=null){b=A.Z(B.bG,n?B.J:B.H,null,null,null,18)
 f=A.p(a.$1("recentDocs.reanalyzeFailed"))
-o.Aq(A.I(A.b([b,B.ah,A.aa(A.k(f+". Please try again.",null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,null,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null))}s=5
+o.Aq(A.I(A.b([b,B.ah,A.a9(A.k(f+". Please try again.",null,null,null,null,null,A.a3(null,null,n?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,null,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],d),B.l,null,B.f,B.h,0,null))}s=5
 break
 case 2:s=1
 break
@@ -127681,11 +127681,11 @@ i=a.$1("recentDocs.secureVault")
 h=t.p
 k=A.fS(B.ay,A.b([m,A.C(r,A.k(i,r,r,r,r,r,A.a3(r,r,B.k,r,r,r,r,r,r,r,r,9,r,r,B.Q,r,r,!0,r,0.6,r,r,r,r,r,r),r,r),B.i,r,r,new A.E(l,r,j,k,r,r,r,B.n),r,r,r,B.ki,r,r,r)],h),B.eO,4,8)
 j=a.$1("recentDocs.vaultSubtitle")
-n=A.I(A.b([n,B.cG,A.aa(A.a6(A.b([k,B.b_,A.k(j,r,r,r,r,r,A.a3(r,r,b?B.t:B.u,r,r,r,r,r,r,r,r,13,r,r,B.U,r,r,!0,r,r,r,r,r,r,r,r),r,r)],h),B.v,r,B.f,B.h),1)],h),B.v,r,B.f,B.h,0,r)
+n=A.I(A.b([n,B.cG,A.a9(A.a5(A.b([k,B.b_,A.k(j,r,r,r,r,r,A.a3(r,r,b?B.t:B.u,r,r,r,r,r,r,r,r,13,r,r,B.U,r,r,!0,r,r,r,r,r,r,r,r),r,r)],h),B.v,r,B.f,B.h),1)],h),B.v,r,B.f,B.h,0,r)
 m=b?B.Y:B.j
 l=A.n(12)
 k=A.ag(b?B.y:B.k,1)
-return A.C(r,new A.av(B.b6,A.a6(A.b([n,B.c9,A.C(r,A.jD(new A.bd_(s,d,b)),B.i,r,r,new A.E(m,r,k,l,r,r,r,B.n),r,r,r,B.aW,r,r,r)],h),B.v,r,B.f,B.h),r),B.i,r,r,new A.E(q,r,o,p,r,r,r,B.n),r,r,r,r,r,r,r)},
+return A.C(r,new A.av(B.b6,A.a5(A.b([n,B.c9,A.C(r,A.jD(new A.bd_(s,d,b)),B.i,r,r,new A.E(m,r,k,l,r,r,r,B.n),r,r,r,B.aW,r,r,r)],h),B.v,r,B.f,B.h),r),B.i,r,r,new A.E(q,r,o,p,r,r,r,B.n),r,r,r,r,r,r,r)},
 a9u(a,b){var s,r,q,p,o,n,m=null,l=a.e,k=this.Q===l,j=A.n(8)
 if(k){s=b?0.16:0.1
 s=a.d.E(s)}else s=B.E
@@ -127698,7 +127698,7 @@ n=t.p
 p=A.I(A.b([A.k(a.a,m,m,m,m,m,A.a3(m,m,p,m,m,m,m,m,m,m,m,10,m,m,B.Q,m,m,!0,m,0.5,m,m,m,m,m,m),m,m),A.C(m,m,B.i,m,m,new A.E(o,m,m,m,m,m,m,B.aM),m,6,m,m,m,m,6)],n),B.l,m,B.av,B.h,0,m)
 o=A.b([A.k(a.c,m,m,m,m,m,A.a3(m,m,o,m,m,m,m,m,m,m,m,18,m,m,B.hv,m,m,!0,m,-0.5,m,m,m,m,m,m),m,m)],n)
 if(l==="All")B.b.N(o,A.b([B.bS,A.k(a.b,m,m,m,m,m,A.a3(m,m,b?B.t:B.u,m,m,m,m,m,m,m,m,9,m,m,B.r,m,m,!0,m,0.4,m,m,m,m,m,m),m,m)],n))
-return A.fh(!1,B.a6,!0,m,A.d8(!1,j,!0,A.fx(m,A.a6(A.b([p,B.fi,A.I(o,B.fw,m,B.f,B.h,0,B.a4)],n),B.v,m,B.bn,B.h),m,B.a1,new A.E(s,m,q,r,m,m,m,B.n),B.bN,m,m,m,B.VH,m,m),m,!0,m,m,m,m,m,m,m,m,m,new A.bcR(this,a),m,m,m,m,m,m,m,m),B.i,B.E,0,m,m,m,m,m,B.bR)},
+return A.fh(!1,B.a6,!0,m,A.d8(!1,j,!0,A.fx(m,A.a5(A.b([p,B.fi,A.I(o,B.fw,m,B.f,B.h,0,B.a4)],n),B.v,m,B.bn,B.h),m,B.a1,new A.E(s,m,q,r,m,m,m,B.n),B.bN,m,m,m,B.VH,m,m),m,!0,m,m,m,m,m,m,m,m,m,new A.bcR(this,a),m,m,m,m,m,m,m,m),B.i,B.E,0,m,m,m,m,m,B.bR)},
 aFX(a,b){var s,r,q=this,p=null,o=b?B.m:B.j,n=A.n(12),m=A.ag(b?B.y:B.k,1),l=A.a3(p,p,b?B.j:B.m,p,p,p,p,p,p,p,p,14,p,p,B.U,p,p,!0,p,p,p,p,p,p,p,p),k=a.$1("recentDocs.searchHint"),j=A.a3(p,p,b?B.t:B.u,p,p,p,p,p,p,p,p,13,p,p,p,p,p,!0,p,p,p,p,p,p,p,p),i=A.Z(B.zx,b?B.t:B.u,p,p,p,20)
 if(q.z.length!==0){s=b?B.t:B.u
 s=A.f2(s,p,p,p,p,B.Zu,p,p,new A.bd2(q),p,p,p,p,a.$1("common.clear"))}else s=p
@@ -127752,7 +127752,7 @@ l=b?B.k:B.o
 B.b.N(n,A.b([B.c9,A.rU(B.n1,i,new A.bcV(k),A.hM(j,j,j,j,j,j,j,j,j,o,j,j,j,j,new A.aN(A.n(8),B.w),new A.al(l,1,B.z,-1),j,j,j,j))],m))}else{i=A.k(a.$1("recentDocs.scanNew"),j,j,j,j,j,j,j,j)
 o=b?B.k:B.o
 l=b?B.ad:B.x
-B.b.N(n,A.b([B.bg,A.j4(B.Z6,i,new A.bcW(k),A.dt(j,j,o,j,j,j,j,j,j,j,l,j,j,B.f3,j,new A.aN(A.n(8),B.w),j,j,j,j,j))],m))}return A.C(j,A.a6(n,B.l,j,B.f,B.C),B.i,j,j,new A.E(r,j,p,q,j,j,j,B.n),j,j,B.qy,B.yn,j,j,j)}}
+B.b.N(n,A.b([B.bg,A.j4(B.Z6,i,new A.bcW(k),A.dt(j,j,o,j,j,j,j,j,j,j,l,j,j,B.f3,j,new A.aN(A.n(8),B.w),j,j,j,j,j))],m))}return A.C(j,A.a5(n,B.l,j,B.f,B.C),B.i,j,j,new A.E(r,j,p,q,j,j,j,B.n),j,j,B.qy,B.yn,j,j,j)}}
 A.bdc.prototype={
 $0(){return this.a.x=!0},
 $S:0}
@@ -127830,7 +127830,7 @@ h=d.a
 g=d.b
 f=d.f
 e=d.r
-q=A.a6(A.b([A.ns(c,B.cz,!0,c,!0,B.O,c,A.pf(),a2,c,c,c,c,c,2,A.hJ(c,new A.cl(4,n,new A.al(m,1,B.z,-1)),c,c,c,c,c,c,!0,new A.cl(4,l,new A.al(k,1,B.z,-1)),c,c,c,c,c,o,!0,c,c,c,c,new A.cl(4,j,new A.al(i,1.5,B.z,-1)),c,c,c,c,c,c,c,c,c,p,c,c,c,c,c,c,c,c,c,!0,!0,!1,c,c,c,c,c,c,c,c,c,c,c,c,c,c),B.I,!0,c,!0,c,!1,c,B.ca,c,c,c,c,c,c,c,c,1,c,c,!1,"\u2022",c,c,c,new A.bdp(h,g,a5,f,e,b,a3),c,!1,c,c,!1,c,!0,c,B.b6,c,c,c,c,c,c,c,c,c,c,c,q,!0,B.aG,c,B.bK,c,B.oz,c,c)],r),B.v,c,B.f,B.C)
+q=A.a5(A.b([A.ns(c,B.cz,!0,c,!0,B.O,c,A.pf(),a2,c,c,c,c,c,2,A.hJ(c,new A.cl(4,n,new A.al(m,1,B.z,-1)),c,c,c,c,c,c,!0,new A.cl(4,l,new A.al(k,1,B.z,-1)),c,c,c,c,c,o,!0,c,c,c,c,new A.cl(4,j,new A.al(i,1.5,B.z,-1)),c,c,c,c,c,c,c,c,c,p,c,c,c,c,c,c,c,c,c,!0,!0,!1,c,c,c,c,c,c,c,c,c,c,c,c,c,c),B.I,!0,c,!0,c,!1,c,B.ca,c,c,c,c,c,c,c,c,1,c,c,!1,"\u2022",c,c,c,new A.bdp(h,g,a5,f,e,b,a3),c,!1,c,c,!1,c,!0,c,B.b6,c,c,c,c,c,c,c,c,c,c,c,q,!0,B.aG,c,B.bK,c,B.oz,c,c)],r),B.v,c,B.f,B.C)
 p=h.a?c:new A.bdq(e)
 o=a3.$1("recentDocs.cancel")
 p=A.dr(A.k(o,c,c,c,c,c,A.a3(c,c,b?B.t:B.u,c,c,c,c,c,c,c,c,c,c,c,c,c,c,!0,c,c,c,c,c,c,c,c),c,c),p,c)
@@ -127863,7 +127863,7 @@ p=q.f
 o=(p?B.k:B.o).E(0.16)
 o=A.C(null,A.Z(B.rD,p?B.k:B.o,null,null,null,14),B.i,null,null,new A.E(o,null,null,null,null,null,null,B.aM),null,null,null,B.d_,null,null,null)
 n=q.r.$1("recentDocs.renamedSuccess")
-l.Aq(A.I(A.b([o,B.ah,A.aa(A.k(n,null,null,null,null,null,A.a3(null,null,p?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}case 3:return A.x(null,r)}})
+l.Aq(A.I(A.b([o,B.ah,A.a9(A.k(n,null,null,null,null,null,A.a3(null,null,p?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}case 3:return A.x(null,r)}})
 return A.y($async$$1,r)},
 $S:143}
 A.bdn.prototype={
@@ -127896,7 +127896,7 @@ o=p.r
 m=(o?B.k:B.o).E(0.16)
 m=A.C(null,A.Z(B.rD,o?B.k:B.o,null,null,null,14),B.i,null,null,new A.E(m,null,null,null,null,null,null,B.aM),null,null,null,B.d_,null,null,null)
 k=p.w.$1("recentDocs.renamedSuccess")
-n.Aq(A.I(A.b([m,B.ah,A.aa(A.k(k,null,null,null,null,null,A.a3(null,null,o?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}case 1:return A.x(q,r)}})
+n.Aq(A.I(A.b([m,B.ah,A.a9(A.k(k,null,null,null,null,null,A.a3(null,null,o?B.j:B.m,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}case 1:return A.x(q,r)}})
 return A.y($async$$0,r)},
 $S:10}
 A.bdl.prototype={
@@ -127948,7 +127948,7 @@ m=(p?B.L:B.K).E(0.16)
 l=A.n(8)
 m=A.C(null,A.Z(B.rC,p?B.L:B.K,null,null,null,18),B.i,null,null,new A.E(m,null,null,l,null,null,null,B.n),null,null,null,B.c6,null,null,null)
 l=q.e.$1("recentDocs.deletedSuccess")
-m=A.I(A.b([m,B.af,A.aa(A.k(l,null,null,null,null,null,A.a3(null,null,p?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null)
+m=A.I(A.b([m,B.af,A.a9(A.k(l,null,null,null,null,null,A.a3(null,null,p?B.j:B.m,null,null,null,null,null,null,null,null,13.5,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null)
 l=B.o.E(0.18)
 k=p?B.j:B.m
 k=A.fR(null,null,l,null,null,null,null,null,null,null,k,null,B.W,B.cj,null,new A.aN(A.n(20),B.w),null,null,B.dX,null,null)
@@ -127956,7 +127956,7 @@ n.b1E(A.dr(A.k("View Bin",null,null,null,null,null,A.a3(null,null,p?B.j:B.m,null
 m=p?B.dd:B.df
 l=p?B.dc.E(0.5):B.de
 k=A.Z(B.bG,p?B.J:B.H,null,null,null,18)
-n.b1F(m,l,A.I(A.b([k,B.ah,A.aa(A.k("Failed to delete document. Please try again.",null,null,null,null,null,A.a3(null,null,p?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}return A.x(null,r)}})
+n.b1F(m,l,A.I(A.b([k,B.ah,A.a9(A.k("Failed to delete document. Please try again.",null,null,null,null,null,A.a3(null,null,p?B.ez:B.eA,null,null,null,null,null,null,null,null,13,null,null,B.D,null,null,!0,null,null,null,null,null,null,null,null),null,null),1)],t.p),B.l,null,B.f,B.h,0,null))}return A.x(null,r)}})
 return A.y($async$$0,r)},
 $S:10}
 A.bd7.prototype={
@@ -128177,7 +128177,7 @@ a0=A.k("\u2022",a8,a8,a8,a8,a8,A.a3(a8,a8,a7.a.d?B.t:B.u,a8,a8,a8,a8,a8,a8,a8,a8
 a2=A.k(n,a8,a8,a8,a8,a8,A.a3(a8,a8,a7.a.d?B.t:B.u,a8,a8,a8,a8,a8,a8,a8,a8,12,a8,a8,a8,a8,a8,!0,a8,a8,a8,a8,a8,a8,a8,a8),a8,a8)
 a3=A.k("\u2022",a8,a8,a8,a8,a8,A.a3(a8,a8,a7.a.d?B.t:B.u,a8,a8,a8,a8,a8,a8,a8,a8,10,a8,a8,a8,a8,a8,!0,a8,a8,a8,a8,a8,a8,a8,a8),a8,a8)
 a4=t.p
-a3=A.aa(A.a6(A.b([a,B.aco,A.fS(B.ay,A.b([a1,a0,a2,a3,A.k(p,a8,a8,a8,a8,a8,A.a3(a8,a8,a7.a.d?B.t:B.u,a8,a8,a8,a8,a8,a8,a8,a8,12,a8,a8,a8,a8,a8,!0,a8,a8,a8,a8,a8,a8,a8,a8),a8,a8)],a4),B.eO,4,6)],a4),B.v,a8,B.f,B.C),1)
+a3=A.a9(A.a5(A.b([a,B.aco,A.fS(B.ay,A.b([a1,a0,a2,a3,A.k(p,a8,a8,a8,a8,a8,A.a3(a8,a8,a7.a.d?B.t:B.u,a8,a8,a8,a8,a8,a8,a8,a8,12,a8,a8,a8,a8,a8,!0,a8,a8,a8,a8,a8,a8,a8,a8),a8,a8)],a4),B.eO,4,6)],a4),B.v,a8,B.f,B.C),1)
 a=k.E(a7.a.d?0.15:0.1)
 a0=A.n(16)
 a1=A.ag(k.E(0.35),1)
@@ -128224,27 +128224,27 @@ $1(a){var s,r,q,p,o,n,m,l=null,k=this.a,j=k.a,i=A.Z(B.mR,j.d?B.t:B.u,l,l,l,18)
 j=j.lW("recentDocs.viewDocument")
 s=t.p
 r=t.N
-j=A.jN(A.I(A.b([i,B.ah,A.aa(A.k(j,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"view_document",r)
+j=A.jN(A.I(A.b([i,B.ah,A.a9(A.k(j,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"view_document",r)
 i=k.a
 q=A.Z(B.mP,i.d?B.k:B.o,l,l,l,18)
 i=i.lW("recentDocs.viewAnalysis")
-i=A.jN(A.I(A.b([q,B.ah,A.aa(A.k(i,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"view_analysis",r)
+i=A.jN(A.I(A.b([q,B.ah,A.a9(A.k(i,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"view_analysis",r)
 q=k.a
 p=A.Z(B.Y7,q.d?B.k:B.o,l,l,l,18)
 q=q.lW("recentDocs.downloadReport")
-q=A.jN(A.I(A.b([p,B.ah,A.aa(A.k(q,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"download_report",r)
+q=A.jN(A.I(A.b([p,B.ah,A.a9(A.k(q,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"download_report",r)
 p=k.a
 o=A.Z(B.kq,p.d?B.t:B.u,l,l,l,18)
 p=p.lW("recentDocs.rename")
-p=A.jN(A.I(A.b([o,B.ah,A.aa(A.k(p,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"rename",r)
+p=A.jN(A.I(A.b([o,B.ah,A.a9(A.k(p,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"rename",r)
 o=k.a
 n=A.Z(B.hx,o.d?B.k:B.o,l,l,l,18)
 o=o.lW("recentDocs.reanalyze")
-o=A.jN(A.I(A.b([n,B.ah,A.aa(A.k(o,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"reanalyze",r)
+o=A.jN(A.I(A.b([n,B.ah,A.a9(A.k(o,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.j:B.m,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"reanalyze",r)
 n=k.a
 m=A.Z(B.eG,n.d?B.J:B.H,l,l,l,18)
 n=n.lW("recentDocs.delete")
-return A.b([j,i,q,p,o,B.a9f,A.jN(A.I(A.b([m,B.ah,A.aa(A.k(n,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.J:B.H,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"delete",r)],t.Do)},
+return A.b([j,i,q,p,o,B.a9f,A.jN(A.I(A.b([m,B.ah,A.a9(A.k(n,l,l,B.X,l,l,A.a3(l,l,k.a.d?B.J:B.H,l,l,l,l,l,l,l,l,13,l,l,B.D,l,l,!0,l,l,l,l,l,l,l,l),l,l),1)],s),B.l,l,B.f,B.C,0,l),!0,48,l,l,l,l,l,l,"delete",r)],t.Do)},
 $S:126}
 A.tw.prototype={
 a1(){return new A.X2(new A.aBk(),new A.fD(B.cR,$.aB()),null,null)}}
@@ -128639,24 +128639,24 @@ h=A.k(h,b,b,b,b,b,A.J().$3$color$fontSize$height(p?B.t:B.u,g,1.45),B.an,b)
 g=c.Kb("Physical Deed Photos",B.Xy,p?B.k:B.o,p)
 e=c.Kb("Gallery Scans & PNGs",B.XH,p?B.t:B.u,p)
 d=c.Kb("PDF Agreements",B.mQ,p?B.k:B.o,p)
-j=A.b([A.a6(A.b([i,B.aA,j,B.aI,new A.cj(B.pH,h,b),B.c9,A.fS(B.h5,A.b([g,e,d,c.Kb("Direct Clause Paste",B.XM,p?B.L:B.K,p)],f),B.cr,8,8)],f),B.l,b,B.f,B.h),B.bg],f)
+j=A.b([A.a5(A.b([i,B.aA,j,B.aI,new A.cj(B.pH,h,b),B.c9,A.fS(B.h5,A.b([g,e,d,c.Kb("Direct Clause Paste",B.XM,p?B.L:B.K,p)],f),B.cr,8,8)],f),B.l,b,B.f,B.h),B.bg],f)
 if(c.Q!=null)B.b.N(j,A.b([c.aF7(p,q),B.aU],f))
 j.push(c.aG7(p,q,o))
 j.push(B.ot)
-i=A.aa(A.C(b,b,B.i,p?B.y:B.k,b,b,b,1,b,b,b,b,b),1)
+i=A.a9(A.C(b,b,B.i,p?B.y:B.k,b,b,b,1,b,b,b,b,b),1)
 h=p?B.m:B.j
 g=A.n(16)
 e=A.ag(p?B.y:B.k,1)
 d=q.I(0,"scan.orPasteClauses")
 h=A.C(b,A.k(d,b,b,b,b,b,A.J().$4$color$fontSize$fontWeight$letterSpacing(B.k,10.5,B.Q,1),b,b),B.i,b,b,new A.E(h,b,e,g,b,b,b,B.n),b,b,b,B.kd,b,b,b)
-j.push(A.I(A.b([i,new A.av(B.f2,h,b),A.aa(A.C(b,b,B.i,p?B.y:B.k,b,b,b,1,b,b,b,b,b),1)],f),B.l,b,B.f,B.h,0,b))
+j.push(A.I(A.b([i,new A.av(B.f2,h,b),A.a9(A.C(b,b,B.i,p?B.y:B.k,b,b,b,1,b,b,b,b,b),1)],f),B.l,b,B.f,B.h,0,b))
 j.push(B.dJ)
 j.push(c.aFl(p,q,o))
 j.push(B.LM)
 i=A.Z(B.mZ,p?B.t:B.u,b,b,b,14)
 j.push(A.I(A.b([i,B.aZ,new A.eE(1,B.bt,A.k("End-to-End Encrypted \u2022 Legal Documents Are Processed Confidentially Under Indian Privacy Norms",b,b,b,b,b,A.J().$3$color$fontSize$fontWeight(p?B.t:B.u,11,B.U),B.an,b),b)],f),B.l,b,B.bn,B.h,0,b))
 j.push(B.dJ)
-m=new A.ct(m,!1,A.jT(A.dW(A.bH(new A.cj(B.we,A.a6(j,B.dg,b,B.f,B.h),b),b,b,b),b,B.I,new A.X(k,16,k,16),B.dL,B.aj),l,b,!0),b)}return A.ip(b,s,A.C(b,A.hh(!0,A.a6(A.b([B.aS,n,B.b_,A.aa(A.CP(m,B.fz,A.JB(),B.a1,B.a1,A.apu()),1)],t.p),B.l,b,B.f,B.h),B.V,!0),B.i,r,b,b,b,b,b,b,b,b,b),b,b,b,b)},
+m=new A.ct(m,!1,A.jT(A.dW(A.bH(new A.cj(B.we,A.a5(j,B.dg,b,B.f,B.h),b),b,b,b),b,B.I,new A.X(k,16,k,16),B.dL,B.aj),l,b,!0),b)}return A.ip(b,s,A.C(b,A.hh(!0,A.a5(A.b([B.aS,n,B.b_,A.a9(A.CP(m,B.fz,A.JB(),B.a1,B.a1,A.apu()),1)],t.p),B.l,b,B.f,B.h),B.V,!0),B.i,r,b,b,b,b,b,b,b,b,b),b,b,b,b)},
 aF7(a,b){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e=this,d=null,c=e.Q
 c.toString
 s=J.a7(c)
@@ -128687,7 +128687,7 @@ h=A.n(4)
 g=t.p
 h=A.I(A.b([j,B.M,A.C(d,A.k(p,d,d,d,d,d,A.J().$3$color$fontSize$fontWeight(n?B.nv:B.hL,10,B.r),d,d),B.i,d,d,new A.E(i,d,d,h,d,d,d,B.n),d,d,d,B.fD,d,d,d)],g),B.l,d,B.f,B.h,0,d)
 i=A.p(q)
-j=A.aa(A.a6(A.b([h,B.b_,A.k(i+" \u2022 "+o,d,1,B.X,d,d,A.J().$2$color$fontSize(a?B.t:B.u,12),d,d)],g),B.v,d,B.f,B.h),1)
+j=A.a9(A.a5(A.b([h,B.b_,A.k(i+" \u2022 "+o,d,1,B.X,d,d,A.J().$2$color$fontSize(a?B.t:B.u,12),d,d)],g),B.v,d,B.f,B.h),1)
 i=A.dt(d,d,B.o,d,d,d,0,d,d,d,B.x,d,d,B.hq,d,new A.aN(A.n(10),B.w),d,d,d,d,d)
 h=A.Z(n?B.hx:B.Yr,d,d,d,d,16)
 f=n?"Retry":"Resume"
@@ -128708,14 +128708,14 @@ if(c){r=t.EZ
 r=A.aj(new A.af(e,new A.bfv(a),r),r.j("aY.E"))
 return A.I(r,B.v,null,B.f,B.h,0,null)}else{r=t.J7
 r=A.aj(new A.af(e,new A.bfw(a),r),r.j("aY.E"))
-return A.a6(r,B.l,null,B.f,B.h)}},
+return A.a5(r,B.l,null,B.f,B.h)}},
 aFl(a,b,c){var s,r,q,p=this,o=null,n=a?B.m:B.j,m=A.n(16),l=A.ag(a?B.y:B.k,1),k=c?24:18,j=B.k.E(0.12),i=A.n(8),h=A.ag(B.k.E(0.25),1)
 j=A.C(o,A.Z(B.zB,B.k,o,o,o,20),B.i,o,o,new A.E(j,o,h,i,o,o,o,B.n),o,o,o,B.aW,o,o,o)
 i=b.I(0,"scan.documentContent")
 i=A.k(i,o,o,o,o,o,A.J().$3$color$fontSize$fontWeight(a?B.j:B.m,16,B.Q),o,o)
 h=b.I(0,"scan.pastePrompt")
 s=t.p
-h=A.aa(A.I(A.b([j,B.af,new A.eE(1,B.bt,A.a6(A.b([i,A.k(h,o,o,o,o,o,A.J().$2$color$fontSize(a?B.t:B.u,12),o,o)],s),B.v,o,B.f,B.h),o)],s),B.l,o,B.f,B.h,0,o),1)
+h=A.a9(A.I(A.b([j,B.af,new A.eE(1,B.bt,A.a5(A.b([i,A.k(h,o,o,o,o,o,A.J().$2$color$fontSize(a?B.t:B.u,12),o,o)],s),B.v,o,B.f,B.h),o)],s),B.l,o,B.f,B.h,0,o),1)
 j=A.Z(B.mS,a?B.k:B.o,o,o,o,14)
 i=A.k("Load Sample Agreement",o,o,o,o,o,A.J().$3$color$fontSize$fontWeight(a?B.k:B.o,11.5,B.r),o,o)
 r=(a?B.k:B.o).E(0.1)
@@ -128727,7 +128727,7 @@ r=A.b([],s)
 if(i.a.a.length!==0){q=A.Z(B.zk,a?B.J:B.H,o,o,o,14)
 r.push(A.aUV(q,A.k("Clear",o,o,o,o,o,A.J().$3$color$fontSize$fontWeight(a?B.J:B.H,12,B.D),o,o),new A.bfo(p),o))}else r.push(B.aH)
 r.push(new A.Tv(b.I(0,"scan.analyzeBtn"),new A.bfp(p,b),a,o))
-return A.C(o,A.a6(A.b([j,B.ai,new A.XL(i,h,a,o),B.au,B.WS,B.aA,A.I(r,B.l,o,B.av,B.h,0,o)],s),B.v,o,B.f,B.h),B.i,o,o,new A.E(n,o,l,m,o,o,o,B.n),o,o,o,new A.X(k,k,k,k),o,o,o)},
+return A.C(o,A.a5(A.b([j,B.ai,new A.XL(i,h,a,o),B.au,B.WS,B.aA,A.I(r,B.l,o,B.av,B.h,0,o)],s),B.v,o,B.f,B.h),B.i,o,o,new A.E(n,o,l,m,o,o,o,B.n),o,o,o,new A.X(k,k,k,k),o,o,o)},
 aFS(a,b){var s,r,q,p,o,n,m=this,l=null,k="scan.pleaseWait",j=a?B.k:B.o,i=a?B.aC:B.aB,h=m.as,g=A.cd(h==null?l:J.Y(h,"status"))
 if(g==null)g="OCR_PROCESSING"
 h=m.at
@@ -128752,7 +128752,7 @@ o=A.Z(B.YE,i,l,l,l,18)
 n=m.as
 n=n==null?l:J.Y(n,"currentStep")
 if(n==null)n=b.I(0,"scan.retryingStatus")
-B.b.N(q,A.b([B.bg,new A.cj(B.Ou,A.C(l,A.I(A.b([o,B.ah,A.aa(A.k(n,l,l,l,l,l,A.J().$3$color$fontSize$fontWeight(i,12,B.D),l,l),1)],p),B.l,l,B.f,B.h,0,l),B.i,l,l,new A.E(h,l,r,s,l,l,l,B.n),l,l,l,B.hq,l,l,l),l)],p))}return A.bH(A.dW(A.a6(q,B.l,l,B.bn,B.h),l,B.I,B.W5,B.dL,B.aj),l,B.ajW,l)}}
+B.b.N(q,A.b([B.bg,new A.cj(B.Ou,A.C(l,A.I(A.b([o,B.ah,A.a9(A.k(n,l,l,l,l,l,A.J().$3$color$fontSize$fontWeight(i,12,B.D),l,l),1)],p),B.l,l,B.f,B.h,0,l),B.i,l,l,new A.E(h,l,r,s,l,l,l,B.n),l,l,l,B.hq,l,l,l),l)],p))}return A.bH(A.dW(A.a5(q,B.l,l,B.bn,B.h),l,B.I,B.W5,B.dL,B.aj),l,B.ajW,l)}}
 A.bfx.prototype={
 $0(){this.a.Q=this.b},
 $S:0}
@@ -128897,7 +128897,7 @@ A.bfu.prototype={
 $0(){return this.a.rK(B.ZN)},
 $S:0}
 A.bfv.prototype={
-$1(a){return A.aa(new A.av(B.iG,new A.Jn(a,this.a,null),null),1)},
+$1(a){return A.a9(new A.av(B.iG,new A.Jn(a,this.a,null),null),1)},
 $S:730}
 A.bfw.prototype={
 $1(a){return new A.av(B.hn,new A.Jn(a,this.a,null),null)},
@@ -128960,9 +128960,9 @@ m=A.ag(B.k.E(0.25),1)
 l=t.p
 o=A.I(A.b([n,A.C(j,A.k(h.e,j,j,j,j,j,A.J().$4$color$fontSize$fontWeight$letterSpacing(B.k,9.5,B.Q,0.6),j,j),B.i,j,j,new A.E(p,j,m,o,j,j,j,B.n),j,j,j,B.mu,j,j,j)],l),B.l,j,B.av,B.h,0,j)
 p=A.k(h.a,j,j,j,j,j,A.J().$4$color$fontSize$fontWeight$letterSpacing(g?B.j:B.m,15,B.Q,-0.3),j,j)
-p=A.a6(A.b([o,B.ai,p,B.aS,A.k(h.b,j,j,j,j,j,A.J().$3$color$fontSize$height(g?B.t:B.u,12,1.4),j,j)],l),B.v,j,B.f,B.h)
+p=A.a5(A.b([o,B.ai,p,B.aS,A.k(h.b,j,j,j,j,j,A.J().$3$color$fontSize$height(g?B.t:B.u,12,1.4),j,j)],l),B.v,j,B.f,B.h)
 o=A.k(h.f,j,j,j,j,j,A.J().$3$color$fontSize$fontWeight(g?B.k:B.o,12,B.r),j,j)
-return A.dy(A.dH(j,A.fx(j,A.a6(A.b([p,B.c9,A.I(A.b([o,B.d2,A.Z(B.f6,g?B.k:B.o,j,j,j,14)],l),B.l,j,B.f,B.C,0,j)],l),B.v,j,B.av,B.h),j,B.a1,new A.E(s,j,q,r,j,j,j,B.n),B.bN,j,j,j,B.b6,i,j),B.I,!1,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,h.r,j,j,j,j,j,j,!1,B.aL),B.bw,j,j,new A.bjp(k),new A.bjq(k),j)}}
+return A.dy(A.dH(j,A.fx(j,A.a5(A.b([p,B.c9,A.I(A.b([o,B.d2,A.Z(B.f6,g?B.k:B.o,j,j,j,14)],l),B.l,j,B.f,B.C,0,j)],l),B.v,j,B.av,B.h),j,B.a1,new A.E(s,j,q,r,j,j,j,B.n),B.bN,j,j,j,B.b6,i,j),B.I,!1,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,j,h.r,j,j,j,j,j,j,!1,B.aL),B.bw,j,j,new A.bjp(k),new A.bjq(k),j)}}
 A.bjp.prototype={
 $1(a){var s=this.a
 return s.K(new A.bjo(s))},
@@ -129124,7 +129124,7 @@ return A.ip(A.pj(A.b([A.f2(k,k,k,k,k,A.Z(r,j?B.j:B.m,k,k,k,k),k,k,new A.bgv(this
 b1e(a4,a5,a6){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2=this,a3=null
 if(a2.w){s=A.jv(a3,B.o,a3,a3,a3,a3,a3,a3,a3,a3)
 r=a6.$1("analysis.shareGenerating")
-return A.bH(A.a6(A.b([s,B.ai,A.k(r,a3,a3,a3,a3,a3,A.a3(a3,a3,a5?B.t:B.u,a3,a3,a3,a3,a3,a3,a3,a3,14,a3,a3,a3,a3,a3,!0,a3,a3,a3,a3,a3,a3,a3,a3),a3,a3)],t.p),B.l,a3,B.f,B.C),a3,a3,a3)}if(a2.x!=null||a2.y==null){s=a5?B.m:B.j
+return A.bH(A.a5(A.b([s,B.ai,A.k(r,a3,a3,a3,a3,a3,A.a3(a3,a3,a5?B.t:B.u,a3,a3,a3,a3,a3,a3,a3,a3,14,a3,a3,a3,a3,a3,!0,a3,a3,a3,a3,a3,a3,a3,a3),a3,a3)],t.p),B.l,a3,B.f,B.C),a3,a3,a3)}if(a2.x!=null||a2.y==null){s=a5?B.m:B.j
 r=A.n(16)
 q=A.ag(a5?B.y:B.k,1)
 p=(a5?B.J:B.H).E(0.1)
@@ -129134,7 +129134,7 @@ o=A.k(o,a3,a3,a3,a3,a3,A.a3(a3,a3,a5?B.j:B.m,a3,a3,a3,a3,a3,a3,a3,a3,20,a3,a3,B.
 n=a6.$1("analysis.sharedNotFoundDesc")
 n=A.k(n,a3,a3,a3,a3,a3,A.a3(a3,a3,a5?B.t:B.u,a3,a3,a3,a3,a3,a3,a3,a3,14,a3,a3,a3,a3,a3,!0,a3,a3,a3,a3,a3,a3,a3,a3),B.an,a3)
 m=A.k(a6.$1("common.backToHome"),a3,a3,a3,a3,a3,a3,a3,a3)
-return A.bH(A.C(a3,A.a6(A.b([p,B.bg,o,B.b8,n,B.aU,A.j4(B.Zs,m,new A.bge(a4),A.dt(a3,a3,B.o,a3,a3,a3,a3,a3,a3,a3,B.m,a3,a3,B.f3,a3,new A.aN(A.n(10),B.w),a3,a3,a3,a3,a3))],t.p),B.l,a3,B.f,B.C),B.i,a3,B.jK,new A.E(s,a3,q,r,a3,a3,a3,B.n),a3,a3,B.di,B.qC,a3,a3,a3),a3,a3,a3)}s=a2.y
+return A.bH(A.C(a3,A.a5(A.b([p,B.bg,o,B.b8,n,B.aU,A.j4(B.Zs,m,new A.bge(a4),A.dt(a3,a3,B.o,a3,a3,a3,a3,a3,a3,a3,B.m,a3,a3,B.f3,a3,new A.aN(A.n(10),B.w),a3,a3,a3,a3,a3))],t.p),B.l,a3,B.f,B.C),B.i,a3,B.jK,new A.E(s,a3,q,r,a3,a3,a3,B.n),a3,a3,B.di,B.qC,a3,a3,a3),a3,a3,a3)}s=a2.y
 s.toString
 r=J.a7(s)
 q=r.i(s,"title")
@@ -129165,7 +129165,7 @@ b=t.p
 c=A.I(A.b([m,B.aZ,A.k(c,a3,a3,a3,a3,a3,A.a3(a3,a3,B.o,a3,a3,a3,a3,a3,a3,a3,a3,12,a3,a3,B.D,a3,a3,!0,a3,0.5,a3,a3,a3,a3,a3,a3),a3,a3)],b),B.l,a3,B.f,B.h,0,a3)
 m=A.b([c,B.aS,A.k(l,a3,a3,a3,a3,a3,A.a3(a3,a3,a5?B.j:B.m,a3,a3,a3,a3,a3,a3,a3,a3,22,a3,a3,B.r,a3,a3,!0,a3,a3,a3,a3,a3,a3,a3,a3),a3,a3)],b)
 if(j!=null){c=a2.b1g(j)
-B.b.N(m,A.b([B.b_,A.k("Analyzed on "+c,a3,a3,a3,a3,a3,A.a3(a3,a3,a5?B.t:B.u,a3,a3,a3,a3,a3,a3,a3,a3,13,a3,a3,a3,a3,a3,!0,a3,a3,a3,a3,a3,a3,a3,a3),a3,a3)],b))}m=A.aa(A.a6(m,B.v,a3,B.f,B.h),1)
+B.b.N(m,A.b([B.b_,A.k("Analyzed on "+c,a3,a3,a3,a3,a3,A.a3(a3,a3,a5?B.t:B.u,a3,a3,a3,a3,a3,a3,a3,a3,13,a3,a3,a3,a3,a3,!0,a3,a3,a3,a3,a3,a3,a3,a3),a3,a3)],b))}m=A.a9(A.a5(m,B.v,a3,B.f,B.h),1)
 c=a2.Lf(k,a5)
 c=c.E(a5?0.15:0.08)
 a=A.n(10)
@@ -129182,7 +129182,7 @@ c=a2.Kj("Caution: "+h,c,a5)
 a0=a5?B.L:B.K
 a0=a2.Kj("Compliant: "+g,a0,a5)
 a1=a5?B.t:B.u
-s=A.b([A.C(a3,A.a6(A.b([a,B.c9,B.qp,B.ai,A.fS(B.ay,A.b([m,c,a0,a2.Kj("Total Clauses: "+r,a1,a5)],b),B.cr,8,10)],b),B.v,a3,B.f,B.h),B.i,a3,a3,new A.E(q,a3,o,p,n,a3,a3,B.n),a3,a3,a3,B.kg,a3,a3,1/0),B.bg,a2.b1f(a5,a6,i,h,g,s.gA(f)),B.ai],b)
+s=A.b([A.C(a3,A.a5(A.b([a,B.c9,B.qp,B.ai,A.fS(B.ay,A.b([m,c,a0,a2.Kj("Total Clauses: "+r,a1,a5)],b),B.cr,8,10)],b),B.v,a3,B.f,B.h),B.i,a3,a3,new A.E(q,a3,o,p,n,a3,a3,B.n),a3,a3,a3,B.kg,a3,a3,1/0),B.bg,a2.b1f(a5,a6,i,h,g,s.gA(f)),B.ai],b)
 r=e.length
 if(r===0){r=a5?B.m:B.j
 q=A.n(12)
@@ -129194,11 +129194,11 @@ q=A.n(12)
 p=A.ag(a5?B.y:B.k,1)
 o=A.Z(B.n0,a5?B.L:B.K,a3,a3,a3,20)
 n=a6.$1("analysis.sharedDisclaimer")
-s.push(A.C(a3,A.I(A.b([o,B.af,A.aa(A.k(n,a3,a3,a3,a3,a3,A.a3(a3,a3,a5?B.t:B.u,a3,a3,a3,a3,a3,a3,a3,a3,12,a3,a3,a3,a3,1.4,!0,a3,a3,a3,a3,a3,a3,a3,a3),a3,a3),1)],b),B.v,a3,B.f,B.h,0,a3),B.i,a3,a3,new A.E(r,a3,p,q,a3,a3,a3,B.n),a3,a3,a3,B.bP,a3,a3,1/0))
+s.push(A.C(a3,A.I(A.b([o,B.af,A.a9(A.k(n,a3,a3,a3,a3,a3,A.a3(a3,a3,a5?B.t:B.u,a3,a3,a3,a3,a3,a3,a3,a3,12,a3,a3,a3,a3,1.4,!0,a3,a3,a3,a3,a3,a3,a3,a3),a3,a3),1)],b),B.v,a3,B.f,B.h,0,a3),B.i,a3,a3,new A.E(r,a3,p,q,a3,a3,a3,B.n),a3,a3,a3,B.bP,a3,a3,1/0))
 s.push(B.aU)
 s.push(a2.aFW(a4,a5,a6))
 s.push(B.ou)
-return A.dW(A.bH(A.C(a3,A.a6(s,B.v,a3,B.f,B.h),B.i,a3,B.pI,a3,a3,a3,a3,a3,a3,a3,a3),a3,a3,a3),a3,B.I,B.yg,a3,B.aj)},
+return A.dW(A.bH(A.C(a3,A.a5(s,B.v,a3,B.f,B.h),B.i,a3,B.pI,a3,a3,a3,a3,a3,a3,a3,a3),a3,a3,a3),a3,B.I,B.yg,a3,B.aj)},
 Kj(a,b,c){var s=null,r=b.E(c?0.15:0.08),q=A.n(8),p=A.ag(b.E(0.3),1)
 return A.C(s,A.k(a,s,s,s,s,s,A.a3(s,s,b,s,s,s,s,s,s,s,s,12,s,s,B.D,s,s,!0,s,s,s,s,s,s,s,s),s,s),B.i,s,s,new A.E(r,s,p,q,s,s,s,B.n),s,s,s,B.mq,s,s,s)},
 b1f(a,b,c,d,e,f){var s=null,r=t.N,q=t.jZ
@@ -129240,21 +129240,21 @@ d=t.p
 f=A.b([A.C(a,A.k(A.aJ(s.toUpperCase(),"_"," "),a,a,a,a,a,A.a3(a,a,r,a,a,a,a,a,a,a,a,11,a,a,B.r,a,a,!0,a,a,a,a,a,a,a,a),a,a),B.i,a,a,new A.E(g,a,e,f,a,a,a,B.n),a,a,a,B.ys,a,a,a)],d)
 if(n.length!==0&&n!=="No material issue identified"){g=(a3?B.y:B.k).E(0.4)
 e=A.n(6)
-B.b.N(f,A.b([B.M,A.aa(A.C(a,A.k(n,a,a,B.X,a,a,A.a3(a,a,a3?B.t:B.u,a,a,a,a,a,a,a,a,11,a,a,B.U,a,a,!0,a,a,a,a,a,a,a,a),a,a),B.i,a,a,new A.E(g,a,a,e,a,a,a,B.n),a,a,a,B.ee,a,a,a),1)],d))}g=A.b([A.I(f,B.v,a,B.f,B.h,0,a)],d)
+B.b.N(f,A.b([B.M,A.a9(A.C(a,A.k(n,a,a,B.X,a,a,A.a3(a,a,a3?B.t:B.u,a,a,a,a,a,a,a,a,11,a,a,B.U,a,a,!0,a,a,a,a,a,a,a,a),a,a),B.i,a,a,new A.E(g,a,a,e,a,a,a,B.n),a,a,a,B.ee,a,a,a),1)],d))}g=A.b([A.I(f,B.v,a,B.f,B.h,0,a)],d)
 if(q.length!==0)B.b.N(g,A.b([B.b8,A.k(q,a,a,a,a,a,A.a3(a,a,a3?B.j:B.m,a,a,a,a,a,a,a,a,15,a,a,B.r,a,a,!0,a,a,a,a,a,a,a,a),a,a)],d))
 if(p.length!==0){f=(a3?B.ad:B.aD).E(0.6)
 e=A.n(8)
 c=A.ag((a3?B.y:B.k).E(0.6),1)
 B.b.N(g,A.b([B.b8,A.C(a,A.k(p,a,a,a,a,a,A.a3(a,a,a3?B.t:B.u,a,a,a,a,a,a,a,a,13,B.cL,a,a,a,1.4,!0,a,a,a,a,a,a,a,a),a,a),B.i,a,a,new A.E(f,a,c,e,a,a,a,B.n),a,a,a,B.c5,a,a,1/0)],d))}if(o.length!==0){f=A.Z(B.cy,r,a,a,a,16)
-B.b.N(g,A.b([B.au,A.I(A.b([f,B.M,A.aa(A.k(o,a,a,a,a,a,A.a3(a,a,a3?B.j:B.m,a,a,a,a,a,a,a,a,13,a,a,B.U,a,1.4,!0,a,a,a,a,a,a,a,a),a,a),1)],d),B.v,a,B.f,B.h,0,a)],d))}if(j.length!==0||i.length!==0){f=A.aj(new A.af(j,new A.bgk(b,a3),A.ab(j).j("af<1,h>")),t.l7)
+B.b.N(g,A.b([B.au,A.I(A.b([f,B.M,A.a9(A.k(o,a,a,a,a,a,A.a3(a,a,a3?B.j:B.m,a,a,a,a,a,a,a,a,13,a,a,B.U,a,1.4,!0,a,a,a,a,a,a,a,a),a,a),1)],d),B.v,a,B.f,B.h,0,a)],d))}if(j.length!==0||i.length!==0){f=A.aj(new A.af(j,new A.bgk(b,a3),A.ab(j).j("af<1,h>")),t.l7)
 B.b.N(f,new A.af(i,new A.bgl(b,a3),A.ab(i).j("af<1,h>")))
 B.b.N(g,A.b([B.au,A.fS(B.ay,f,B.cr,6,6)],d))}if(m.length!==0){f=(a3?B.aC:B.aB).E(0.08)
 e=A.n(8)
 c=A.Z(B.kp,a3?B.aC:B.aB,a,a,a,15)
-B.b.N(g,A.b([B.b8,A.C(a,A.I(A.b([c,B.M,A.aa(A.k("Buyer Impact: "+m,a,a,a,a,a,A.a3(a,a,a3?B.j:B.m,a,a,a,a,a,a,a,a,12,a,a,a,a,1.3,!0,a,a,a,a,a,a,a,a),a,a),1)],d),B.v,a,B.f,B.h,0,a),B.i,a,a,new A.E(f,a,a,e,a,a,a,B.n),a,a,a,B.bO,a,a,a)],d))}if(l.length!==0){f=(a3?B.L:B.K).E(0.08)
+B.b.N(g,A.b([B.b8,A.C(a,A.I(A.b([c,B.M,A.a9(A.k("Buyer Impact: "+m,a,a,a,a,a,A.a3(a,a,a3?B.j:B.m,a,a,a,a,a,a,a,a,12,a,a,a,a,1.3,!0,a,a,a,a,a,a,a,a),a,a),1)],d),B.v,a,B.f,B.h,0,a),B.i,a,a,new A.E(f,a,a,e,a,a,a,B.n),a,a,a,B.bO,a,a,a)],d))}if(l.length!==0){f=(a3?B.L:B.K).E(0.08)
 e=A.n(8)
 c=A.Z(B.ru,a3?B.L:B.K,a,a,a,15)
-B.b.N(g,A.b([B.aI,A.C(a,A.I(A.b([c,B.M,A.aa(A.k("Recommendation: "+l,a,a,a,a,a,A.a3(a,a,a3?B.j:B.m,a,a,a,a,a,a,a,a,12,a,a,B.U,a,1.3,!0,a,a,a,a,a,a,a,a),a,a),1)],d),B.v,a,B.f,B.h,0,a),B.i,a,a,new A.E(f,a,a,e,a,a,a,B.n),a,a,a,B.bO,a,a,a)],d))}return A.C(a,A.a6(g,B.v,a,B.f,B.h),B.i,a,a,new A.E(a0,a,k,a1,h,a,a,B.n),a,a,a,B.dh,a,a,1/0)},
+B.b.N(g,A.b([B.aI,A.C(a,A.I(A.b([c,B.M,A.a9(A.k("Recommendation: "+l,a,a,a,a,a,A.a3(a,a,a3?B.j:B.m,a,a,a,a,a,a,a,a,12,a,a,B.U,a,1.3,!0,a,a,a,a,a,a,a,a),a,a),1)],d),B.v,a,B.f,B.h,0,a),B.i,a,a,new A.E(f,a,a,e,a,a,a,B.n),a,a,a,B.bO,a,a,a)],d))}return A.C(a,A.a5(g,B.v,a,B.f,B.h),B.i,a,a,new A.E(a0,a,k,a1,h,a,a,B.n),a,a,a,B.dh,a,a,1/0)},
 ajF(a,b,c){var s=null,r=B.o.E(0.12),q=A.n(6),p=A.ag(B.o.E(0.3),1),o=A.Z(b,B.o,s,s,s,12)
 return A.C(s,A.I(A.b([o,B.d2,A.k(a,s,s,s,s,s,A.a3(s,s,c?B.j:B.m,s,s,s,s,s,s,s,s,11,s,s,B.D,s,s,!0,s,s,s,s,s,s,s,s),s,s)],t.p),B.l,s,B.f,B.C,0,s),B.i,s,s,new A.E(r,s,p,q,s,s,s,B.n),s,s,s,B.ee,s,s,s)},
 aFW(a,b,c){var s,r,q,p,o,n=null,m=t.t_
@@ -129263,7 +129263,7 @@ s=A.n(16)
 r=A.ag(B.o.E(0.3),1)
 q=A.k("Want to scan your own real estate agreement?",n,n,n,n,n,A.a3(n,n,b?B.j:B.m,n,n,n,n,n,n,n,n,16,n,n,B.r,n,n,!0,n,n,n,n,n,n,n,n),n,n)
 p=t.p
-q=A.aa(A.a6(A.b([q,B.b_,A.k("Get comprehensive AI risk assessments, RERA checks, and plain-English guidance.",n,n,n,n,n,A.a3(n,n,b?B.t:B.u,n,n,n,n,n,n,n,n,13,n,n,n,n,n,!0,n,n,n,n,n,n,n,n),n,n)],p),B.v,n,B.f,B.h),1)
+q=A.a9(A.a5(A.b([q,B.b_,A.k("Get comprehensive AI risk assessments, RERA checks, and plain-English guidance.",n,n,n,n,n,A.a3(n,n,b?B.t:B.u,n,n,n,n,n,n,n,n,13,n,n,n,n,n,!0,n,n,n,n,n,n,n,n),n,n)],p),B.v,n,B.f,B.h),1)
 o=A.dt(n,n,B.o,n,n,n,n,n,n,n,B.m,n,n,B.ed,n,new A.aN(A.n(10),B.w),n,n,n,n,n)
 return A.C(n,A.I(A.b([q,B.dI,A.fY(A.k(c.$1("analysis.scanYourOwnCta"),n,n,n,n,n,B.aeM,n,n),new A.bgq(a),o)],p),B.l,n,B.f,B.h,0,n),B.i,n,n,new A.E(n,n,r,s,n,new A.oj(B.fp,B.NG,B.eq,m,n,n),n,B.n),n,n,n,B.kg,n,n,1/0)}}
 A.bgr.prototype={
@@ -129432,7 +129432,7 @@ h=a6.cx
 h===$&&A.a()
 g=q?1040:460
 f=t.p
-if(q){e=A.I(A.b([A.C(a7,B.zE,B.i,a7,a7,new A.E(B.o,a7,a7,A.n(10),a7,a7,a7,B.n),a7,40,a7,a7,a7,a7,40),B.af,A.a6(A.b([A.k(s.$1(a8),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(m,20,B.Q,-0.5),a7,a7),A.k(s.$1("common.appSubtitle"),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(l,11,B.U,0.2),a7,a7)],f),B.v,a7,B.f,B.C)],f),B.l,a7,B.f,B.C,0,a7)
+if(q){e=A.I(A.b([A.C(a7,B.zE,B.i,a7,a7,new A.E(B.o,a7,a7,A.n(10),a7,a7,a7,B.n),a7,40,a7,a7,a7,a7,40),B.af,A.a5(A.b([A.k(s.$1(a8),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(m,20,B.Q,-0.5),a7,a7),A.k(s.$1("common.appSubtitle"),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(l,11,B.U,0.2),a7,a7)],f),B.v,a7,B.f,B.C)],f),B.l,a7,B.f,B.C,0,a7)
 d=A.k(s.$1("auth.signupHeroTitle"),a7,a7,a7,a7,a7,A.J().$5$color$fontSize$fontWeight$height$letterSpacing(m,32,B.Q,1.15,-0.8),a7,a7)
 c=A.k(s.$1("auth.signupHeroSub"),a7,a7,a7,a7,a7,A.J().$3$color$fontSize$height(l,15,1.5),a7,a7)
 b=s.$1("auth.signupFeatureInstantAudit")
@@ -129446,17 +129446,17 @@ a2=A.n(10)
 a3=A.ag((r?B.L:B.K).E(0.3),1)
 a4=A.Z(B.iP,r?B.L:B.K,a7,a7,a7,15)
 a5=s.$1("auth.bankGradeSecurity")
-e=A.I(A.b([A.aa(A.a6(A.b([e,B.dJ,d,B.aA,c,B.dJ,b,B.ai,a,B.ai,a0,B.fY,A.C(a7,A.I(A.b([a4,B.M,new A.eE(1,B.bt,A.k(a5,a7,a7,a7,a7,a7,A.J().$3$color$fontSize$fontWeight(r?B.L:B.K,12,B.D),a7,a7),a7)],f),B.l,a7,B.f,B.C,0,a7),B.i,a7,a7,new A.E(a1,a7,a3,a2,a7,a7,a7,B.n),a7,a7,a7,B.cj,a7,a7,a7)],f),B.v,a7,B.f,B.C),11),B.LK,A.aa(a6.a9O(b1,m,l,o,n,B.o,B.k,k,r,!0,s),10)],f),B.l,a7,B.f,B.h,0,a7)}else e=A.a6(A.b([A.a6(A.b([A.C(a7,B.zI,B.i,a7,a7,new A.E(B.o,a7,a7,A.n(12),a7,a7,a7,B.n),a7,44,a7,a7,a7,a7,44),B.au,A.k(s.$1(a8),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(m,22,B.Q,-0.5),a7,a7),B.b_,A.k(s.$1("auth.mobileSubtitle"),a7,a7,a7,a7,a7,A.J().$2$color$fontSize(l,13),B.an,a7)],f),B.l,a7,B.f,B.h),B.aU,a6.a9O(b1,m,l,o,n,B.o,B.k,k,r,!1,s)],f),B.l,a7,B.f,B.h)
-return A.dH(B.bx,A.ip(a7,p,A.hh(!0,A.a6(A.b([B.aS,a9,B.b_,A.aa(A.bH(A.dW(new A.ct(i,!1,A.jT(new A.cj(new A.aq(0,g,0,1/0),e,a7),h,a7,!0),a7),a7,B.I,new A.X(b0,j,b0,j),a7,B.aj),a7,a7,a7),1)],f),B.l,a7,B.f,B.h),B.V,!0),a7,a7,a7,a7),B.I,!0,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,new A.bgQ(b1),a7,a7,a7,a7,a7,a7,!1,B.aL)},
+e=A.I(A.b([A.a9(A.a5(A.b([e,B.dJ,d,B.aA,c,B.dJ,b,B.ai,a,B.ai,a0,B.fY,A.C(a7,A.I(A.b([a4,B.M,new A.eE(1,B.bt,A.k(a5,a7,a7,a7,a7,a7,A.J().$3$color$fontSize$fontWeight(r?B.L:B.K,12,B.D),a7,a7),a7)],f),B.l,a7,B.f,B.C,0,a7),B.i,a7,a7,new A.E(a1,a7,a3,a2,a7,a7,a7,B.n),a7,a7,a7,B.cj,a7,a7,a7)],f),B.v,a7,B.f,B.C),11),B.LK,A.a9(a6.a9O(b1,m,l,o,n,B.o,B.k,k,r,!0,s),10)],f),B.l,a7,B.f,B.h,0,a7)}else e=A.a5(A.b([A.a5(A.b([A.C(a7,B.zI,B.i,a7,a7,new A.E(B.o,a7,a7,A.n(12),a7,a7,a7,B.n),a7,44,a7,a7,a7,a7,44),B.au,A.k(s.$1(a8),a7,a7,a7,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(m,22,B.Q,-0.5),a7,a7),B.b_,A.k(s.$1("auth.mobileSubtitle"),a7,a7,a7,a7,a7,A.J().$2$color$fontSize(l,13),B.an,a7)],f),B.l,a7,B.f,B.h),B.aU,a6.a9O(b1,m,l,o,n,B.o,B.k,k,r,!1,s)],f),B.l,a7,B.f,B.h)
+return A.dH(B.bx,A.ip(a7,p,A.hh(!0,A.a5(A.b([B.aS,a9,B.b_,A.a9(A.bH(A.dW(new A.ct(i,!1,A.jT(new A.cj(new A.aq(0,g,0,1/0),e,a7),h,a7,!0),a7),a7,B.I,new A.X(b0,j,b0,j),a7,B.aj),a7,a7,a7),1)],f),B.l,a7,B.f,B.h),B.V,!0),a7,a7,a7,a7),B.I,!0,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,a7,new A.bgQ(b1),a7,a7,a7,a7,a7,a7,!1,B.aL)},
 b1P(a,b,c,d,e){var s=null,r=c.E(0.6),q=t.p
 return A.C(s,A.bH(new A.cj(B.wl,A.I(A.b([A.d8(!1,A.n(10),!0,new A.av(B.iE,A.I(A.b([A.Z(B.dD,b,s,s,s,18),B.aZ,A.k(e.$1("common.back"),s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(b,13,B.D),s,s)],q),B.l,s,B.f,B.C,0,s),s),s,!0,s,s,s,s,s,s,s,s,s,new A.bgM(a),s,s,s,s,s,s,s,s)],q),B.l,s,B.av,B.h,0,s),s),s,s,s),B.i,s,s,new A.E(B.E,s,new A.dl(B.w,B.w,new A.al(r,1,B.z,-1),B.w),s,s,s,s,B.n),s,s,s,B.f3,s,s,s)},
 Uh(a,b,c,d,e,f,g){var s=null,r=B.o.E(0.1),q=A.n(8),p=t.p
-return A.I(A.b([A.C(s,A.Z(c,B.o,s,s,s,18),B.i,s,s,new A.E(r,s,s,q,s,s,s,B.n),s,s,s,B.aW,s,s,s),B.cG,A.aa(A.a6(A.b([A.k(g,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(d,13.5,B.r),s,s),B.bT,A.k(f,s,s,s,s,s,A.J().$3$color$fontSize$height(e,12,1.35),s,s)],p),B.v,s,B.f,B.h),1)],p),B.v,s,B.f,B.h,0,s)},
+return A.I(A.b([A.C(s,A.Z(c,B.o,s,s,s,18),B.i,s,s,new A.E(r,s,s,q,s,s,s,B.n),s,s,s,B.aW,s,s,s),B.cG,A.a9(A.a5(A.b([A.k(g,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(d,13.5,B.r),s,s),B.bT,A.k(f,s,s,s,s,s,A.J().$3$color$fontSize$height(e,12,1.35),s,s)],p),B.v,s,B.f,B.h),1)],p),B.v,s,B.f,B.h,0,s)},
 a9O(a6,a7,a8,a9,b0,b1,b2,b3,b4,b5,b6){var s,r,q,p,o,n,m=this,l=null,k="auth.createAccount",j="auth.mobileNumber",i=m.gbB().cM($.kT(),t.FB).a===B.hc,h=b5?32:24,g=A.n(20),f=A.ag(b0,1),e=A.k(b6.$1(k),l,l,l,l,l,A.J().$4$color$fontSize$fontWeight$letterSpacing(a7,20,B.Q,-0.3),l,l),d=A.k(b6.$1("auth.createAccountSub"),l,l,l,l,l,A.J().$3$color$fontSize$height(a8,13,1.4),l,l),c=A.n(12),b=A.ag(b0,1),a=A.n(9),a0=m.as,a1=a0?a9:B.E,a2=A.n(9),a3=a0?A.ag(b0,1):l,a4=A.Z(B.za,a0?b1:a8,l,l,l,16),a5=b6.$1("auth.email")
 a0=m.as
 s=a0?B.r:B.U
 r=t.p
-a2=A.aa(A.d8(!1,a,!0,A.C(B.a8,A.I(A.b([a4,B.aZ,A.k(a5,l,l,l,l,l,A.J().$3$color$fontSize$fontWeight(a0?a7:a8,13,s),l,l)],r),B.l,l,B.bn,B.h,0,l),B.i,l,l,new A.E(a1,l,a3,a2,l,l,l,B.n),l,l,l,B.f1,l,l,l),l,!0,l,l,l,l,l,l,l,l,l,new A.bgD(m),l,l,l,l,l,l,l,l),1)
+a2=A.a9(A.d8(!1,a,!0,A.C(B.a8,A.I(A.b([a4,B.aZ,A.k(a5,l,l,l,l,l,A.J().$3$color$fontSize$fontWeight(a0?a7:a8,13,s),l,l)],r),B.l,l,B.bn,B.h,0,l),B.i,l,l,new A.E(a1,l,a3,a2,l,l,l,B.n),l,l,l,B.f1,l,l,l),l,!0,l,l,l,l,l,l,l,l,l,new A.bgD(m),l,l,l,l,l,l,l,l),1)
 a3=A.n(9)
 a=!m.as
 a0=a?a9:B.E
@@ -129466,7 +129466,7 @@ a5=A.Z(B.zu,a?b1:a8,l,l,l,16)
 s=b6.$1(j)
 a=!m.as
 q=a?B.r:B.U
-c=A.C(l,A.I(A.b([a2,A.aa(A.d8(!1,a3,!0,A.C(B.a8,A.I(A.b([a5,B.aZ,A.k(s,l,l,l,l,l,A.J().$3$color$fontSize$fontWeight(a?a7:a8,13,q),l,l)],r),B.l,l,B.bn,B.h,0,l),B.i,l,l,new A.E(a0,l,a4,a1,l,l,l,B.n),l,l,l,B.f1,l,l,l),l,!0,l,l,l,l,l,l,l,l,l,new A.bgE(m),l,l,l,l,l,l,l,l),1)],r),B.l,l,B.f,B.h,0,l),B.i,l,l,new A.E(b3,l,b,c,l,l,l,B.n),l,l,l,B.d_,l,l,l)
+c=A.C(l,A.I(A.b([a2,A.a9(A.d8(!1,a3,!0,A.C(B.a8,A.I(A.b([a5,B.aZ,A.k(s,l,l,l,l,l,A.J().$3$color$fontSize$fontWeight(a?a7:a8,13,q),l,l)],r),B.l,l,B.bn,B.h,0,l),B.i,l,l,new A.E(a0,l,a4,a1,l,l,l,B.n),l,l,l,B.f1,l,l,l),l,!0,l,l,l,l,l,l,l,l,l,new A.bgE(m),l,l,l,l,l,l,l,l),1)],r),B.l,l,B.f,B.h,0,l),B.i,l,l,new A.E(b3,l,b,c,l,l,l,B.n),l,l,l,B.d_,l,l,l)
 b=A.k(b6.$1("auth.fullName"),l,l,l,l,l,A.J().$3$color$fontSize$fontWeight(a7,12.5,B.D),l,l)
 a0=A.J().$3$color$fontSize$fontWeight(a7,14,B.U)
 a1=b6.$1("auth.nameHint")
@@ -129500,7 +129500,7 @@ q=m.at?2:0
 s=A.dt(l,l,a4,l,l,l,q,l,l,l,B.m,l,B.LG,l,l,new A.aN(s,B.w),l,l,l,l,l)
 if(i)a4=new A.aZ(20,20,A.jv(l,l,l,l,l,l,l,2,l,new A.h8(B.m,t.ZU)),l)
 else a4=A.I(A.b([A.k(b6.$1(k),l,l,l,l,l,A.J().$3$fontSize$fontWeight$letterSpacing(14.5,B.r,0.2),l,l),B.M,B.rI],r),B.l,l,B.bn,B.h,0,l)
-return A.C(l,A.a6(A.b([e,B.aS,d,B.aU,c,B.bg,A.MP(A.a6(A.b([b,B.aS,a0,B.c9,a,B.aS,a2,B.c9,new A.a3b(a1,new A.bgI(m),a5,"Please accept the Terms of Use and Privacy Policy.",l),B.bg,A.dy(A.fY(a4,a3,s),B.b2,l,l,new A.bgJ(m),new A.bgK(m),l)],r),B.v,l,B.f,B.h),m.w),B.aU,A.iF(b0,l,1,l,l,l),B.bg,A.fS(B.h5,A.b([A.k(b6.$1("auth.alreadyHaveAccount"),l,l,l,l,l,A.J().$2$color$fontSize(a8,13),l,l),A.d8(!1,A.n(4),!0,new A.av(B.yp,A.k(b6.$1("auth.logIn"),l,l,l,l,l,A.J().$5$color$decoration$decorationColor$fontSize$fontWeight(a7,B.e0,a7.E(0.4),13,B.r),l,l),l),l,!0,l,l,l,l,l,l,l,l,l,new A.bgL(a6),l,l,l,l,l,l,l,l)],r),B.eO,0,0)],r),B.v,l,B.f,B.C),B.i,l,l,new A.E(a9,l,f,g,l,l,l,B.n),l,l,l,new A.X(h,h,h,h),l,l,1/0)}}
+return A.C(l,A.a5(A.b([e,B.aS,d,B.aU,c,B.bg,A.MP(A.a5(A.b([b,B.aS,a0,B.c9,a,B.aS,a2,B.c9,new A.a3b(a1,new A.bgI(m),a5,"Please accept the Terms of Use and Privacy Policy.",l),B.bg,A.dy(A.fY(a4,a3,s),B.b2,l,l,new A.bgJ(m),new A.bgK(m),l)],r),B.v,l,B.f,B.h),m.w),B.aU,A.iF(b0,l,1,l,l,l),B.bg,A.fS(B.h5,A.b([A.k(b6.$1("auth.alreadyHaveAccount"),l,l,l,l,l,A.J().$2$color$fontSize(a8,13),l,l),A.d8(!1,A.n(4),!0,new A.av(B.yp,A.k(b6.$1("auth.logIn"),l,l,l,l,l,A.J().$5$color$decoration$decorationColor$fontSize$fontWeight(a7,B.e0,a7.E(0.4),13,B.r),l,l),l),l,!0,l,l,l,l,l,l,l,l,l,new A.bgL(a6),l,l,l,l,l,l,l,l)],r),B.eO,0,0)],r),B.v,l,B.f,B.C),B.i,l,l,new A.E(a9,l,f,g,l,l,l,B.n),l,l,l,new A.X(h,h,h,h),l,l,1/0)}}
 A.bgN.prototype={
 $0(){return this.a.ay=!0},
 $S:0}
@@ -129723,16 +129723,16 @@ m=q?30:24
 m=A.k(k,g,g,g,g,g,A.ez().$4$color$fontSize$fontWeight$letterSpacing(r?B.j:B.m,m,B.Q,-0.8),B.an,g)
 k=s.I(0,"calc.screenSubtitle")
 j=q?14:13
-m=A.b([A.a6(A.b([l,B.aA,m,B.aI,new A.cj(B.pH,A.k(k,g,g,g,g,g,A.J().$3$color$fontSize$height(r?B.t:B.u,j,1.5),B.an,g),g)],i),B.l,g,B.f,B.h),B.dJ],i)
-if(q){l=A.aa(h.a9r(a,r,s,!0),6)
+m=A.b([A.a5(A.b([l,B.aA,m,B.aI,new A.cj(B.pH,A.k(k,g,g,g,g,g,A.J().$3$color$fontSize$height(r?B.t:B.u,j,1.5),B.an,g),g)],i),B.l,g,B.f,B.h),B.dJ],i)
+if(q){l=A.a9(h.a9r(a,r,s,!0),6)
 k=A.b([],i)
 if(h.ax)B.b.N(k,A.b([h.a9J(a,r,s),B.bg],i))
 k.push(h.a9v(a,r,s))
-m.push(A.I(A.b([l,B.acf,A.aa(A.a6(k,B.l,g,B.f,B.h),5)],i),B.v,g,B.f,B.h,0,g))}else{l=A.b([h.a9r(a,r,s,!1),B.aU],i)
+m.push(A.I(A.b([l,B.acf,A.a9(A.a5(k,B.l,g,B.f,B.h),5)],i),B.v,g,B.f,B.h,0,g))}else{l=A.b([h.a9r(a,r,s,!1),B.aU],i)
 if(h.ax)B.b.N(l,A.b([h.a9J(a,r,s),B.bg],i))
 l.push(h.a9v(a,r,s))
 B.b.N(m,l)}m.push(B.LM)
-return A.dH(B.bx,A.ip(g,f,A.hh(!0,A.a6(A.b([B.aS,e,B.b_,A.aa(new A.ct(p,!1,A.jT(A.dW(A.bH(new A.cj(B.OG,A.a6(m,B.dg,g,B.f,B.h),g),g,g,g),g,B.I,new A.X(n,24,n,24),B.dL,B.aj),o,g,!0),g),1)],i),B.l,g,B.f,B.h),B.V,!0),g,g,g,g),B.I,!0,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,new A.bhn(a),g,g,g,g,g,g,!1,B.aL)},
+return A.dH(B.bx,A.ip(g,f,A.hh(!0,A.a5(A.b([B.aS,e,B.b_,A.a9(new A.ct(p,!1,A.jT(A.dW(A.bH(new A.cj(B.OG,A.a5(m,B.dg,g,B.f,B.h),g),g,g,g),g,B.I,new A.X(n,24,n,24),B.dL,B.aj),o,g,!0),g),1)],i),B.l,g,B.f,B.h),B.V,!0),g,g,g,g),B.I,!0,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,g,new A.bhn(a),g,g,g,g,g,g,!1,B.aL)},
 b2e(a,b,c){var s,r,q=null,p=A.bk(a,q,t.w).w,o=A.Z(B.dD,b?B.t:B.m,q,q,q,18),n=c.I(0,"common.back"),m=t.p
 n=A.b([new A.d3(B.bX,q,q,new A.V7(A.I(A.b([o,B.M,A.k(n,q,q,q,q,q,A.J().$3$color$fontSize$fontWeight(b?B.t:B.m,13,B.r),q,q)],m),B.l,q,B.f,B.C,0,q),new A.bhi(a),b,q),q)],m)
 if(p.a.a>=700){p=B.o.E(b?0.2:0.08)
@@ -129744,9 +129744,9 @@ return A.C(q,A.e0(B.a8,n,B.O,B.aO,q),B.i,q,q,q,q,50,q,B.f2,q,q,q)},
 a9r(a3,a4,a5,a6){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e=this,d=null,c=a4?B.m:B.j,b=A.n(22),a=A.ag(a4?B.y:B.k,1),a0=a6?32:20,a1=A.C(d,B.YV,B.i,d,d,new A.E(B.o.E(0.1),d,d,A.n(14),d,d,d,B.n),d,d,d,B.c5,d,d,d),a2=a5.I(0,"calc.cardTitle")
 a2=A.k(a2,d,d,d,d,d,A.ez().$4$color$fontSize$fontWeight$letterSpacing(a4?B.j:B.m,18,B.Q,-0.3),d,d)
 s=t.p
-a2=A.I(A.b([a1,B.cG,A.aa(A.a6(A.b([a2,B.bT,A.k("Input deed consideration, circle valuation & concessions",d,d,d,d,d,A.J().$2$color$fontSize(a4?B.t:B.u,12),d,d)],s),B.v,d,B.f,B.h),1)],s),B.l,d,B.f,B.h,0,d)
+a2=A.I(A.b([a1,B.cG,A.a9(A.a5(A.b([a2,B.bT,A.k("Input deed consideration, circle valuation & concessions",d,d,d,d,d,A.J().$2$color$fontSize(a4?B.t:B.u,12),d,d)],s),B.v,d,B.f,B.h),1)],s),B.l,d,B.f,B.h,0,d)
 a1=A.jD(new A.bhg(e,a5,a4))
-r=A.I(A.b([A.aa(new A.V5(e.gaGq(),a5.I(0,"calc.calcButton"),a4,d),3),B.cG,A.aa(new A.V9(e.gb_4(),a5.I(0,"calc.resetButton"),a4,d),2)],s),B.l,d,B.f,B.h,0,d)
+r=A.I(A.b([A.a9(new A.V5(e.gaGq(),a5.I(0,"calc.calcButton"),a4,d),3),B.cG,A.a9(new A.V9(e.gb_4(),a5.I(0,"calc.resetButton"),a4,d),2)],s),B.l,d,B.f,B.h,0,d)
 a5=e.gbB().b6(0,$.bt().gbc(),t.O)
 q=e.cx.a5k(e.Q)
 p=q.r
@@ -129775,21 +129775,21 @@ B.b.N(n,A.b([B.aZ,A.C(d,A.k(f,d,d,d,d,d,A.J().$4$color$fontSize$fontWeight$lette
 m=o?a5.I(0,"calc.ratesWarning"):a5.d3(0,"calc.sourceLabel",A.c(["source",q.w],i,i))
 if(o)i=a4?B.xF:B.TD
 else i=a4?B.t:B.u
-return A.C(d,A.MP(A.a6(A.b([a2,B.acl,a1,B.acm,r,B.ai,A.fx(d,A.I(A.b([h,B.ah,A.aa(A.a6(A.b([n,B.bT,A.k(m,d,d,d,d,d,A.J().$3$color$fontSize$height(i,11,1.35),d,d)],s),B.v,d,B.f,B.h),1)],s),B.v,d,B.f,B.h,0,d),d,B.a1,new A.E(l,d,j,k,d,d,d,B.n),B.fz,d,d,d,B.hq,d,d)],s),B.v,d,B.f,B.h),e.w),B.i,d,d,new A.E(c,d,a,b,d,d,d,B.n),d,d,d,new A.X(a0,a0,a0,a0),d,d,d)},
+return A.C(d,A.MP(A.a5(A.b([a2,B.acl,a1,B.acm,r,B.ai,A.fx(d,A.I(A.b([h,B.ah,A.a9(A.a5(A.b([n,B.bT,A.k(m,d,d,d,d,d,A.J().$3$color$fontSize$height(i,11,1.35),d,d)],s),B.v,d,B.f,B.h),1)],s),B.v,d,B.f,B.h,0,d),d,B.a1,new A.E(l,d,j,k,d,d,d,B.n),B.fz,d,d,d,B.hq,d,d)],s),B.v,d,B.f,B.h),e.w),B.i,d,d,new A.E(c,d,a,b,d,d,d,B.n),d,d,d,new A.X(a0,a0,a0,a0),d,d,d)},
 K9(a,b,c,d,e,f,g,h){var s,r,q,p=null,o=A.k(f,p,p,p,p,p,A.J().$3$color$fontSize$fontWeight(c?B.j:B.m,13,B.r),p,p),n=c?B.Y:B.j,m=A.n(14),l=A.ag(c?B.y:B.k,1),k=A.Z(b,c?B.t:B.u,p,p,p,18),j=t.p
 k=A.I(A.b([k,B.ah,A.k(a,p,p,p,p,p,A.J().$3$color$fontSize$fontWeight(c?B.t:B.u,13,B.U),p,p)],j),B.l,p,B.f,B.h,0,p)
 s=c?B.Y:B.j
 r=A.Z(B.zo,c?B.t:B.u,p,p,p,p)
 q=A.ab(e).j("af<1,l1<j>>")
 q=A.aj(new A.af(e,new A.bhh(d,b,c),q),q.j("aY.E"))
-return A.a6(A.b([o,B.aI,A.C(p,new A.DS(A.bwi(B.et,s,k,r,!0,q,p,g,p,p,p,h,t.N),p),B.i,p,p,new A.E(n,p,l,m,p,p,p,B.n),p,50,p,B.mr,p,p,p)],j),B.v,p,B.f,B.h)},
+return A.a5(A.b([o,B.aI,A.C(p,new A.DS(A.bwi(B.et,s,k,r,!0,q,p,g,p,p,p,h,t.N),p),B.i,p,p,new A.E(n,p,l,m,p,p,p,B.n),p,50,p,B.mr,p,p,p)],j),B.v,p,B.f,B.h)},
 aFm(a,b,c,d,e,f,g){return this.K9(a,b,c,null,d,e,f,g)},
 a9R(a,b,c,d,e,f){var s=null,r=A.k(e,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(d?B.j:B.m,13,B.r),s,s),q=A.b([$.bEQ()],t.VS),p=A.J().$3$color$fontSize$fontWeight(d?B.j:B.m,14,B.D),o=A.J().$2$color$fontSize(d?B.t:B.u,13),n=d?B.Y:B.j,m=A.Z(c,B.o,s,s,s,18),l=A.n(14),k=d?B.y:B.k,j=A.n(14),i=d?B.y:B.k
-return A.a6(A.b([r,B.aI,A.tP(!1,a,s,2,A.hJ(s,new A.cl(4,l,new A.al(k,1,B.z,-1)),s,s,s,s,s,s,!0,new A.cl(4,j,new A.al(i,1,B.z,-1)),s,s,s,s,s,n,!0,s,s,s,s,new A.cl(4,A.n(14),B.pF),s,s,s,s,s,s,s,s,o,b,s,s,s,s,s,!0,s,s,s,!0,!0,!1,s,m,s,s,s,s,s,s,s,s,s,s,s,s),s,!1,s,q,B.fj,1,!1,"\u2022",s,s,s,s,!1,s,p,B.aG,s,B.bK,s,f)],t.p),B.v,s,B.f,B.h)},
+return A.a5(A.b([r,B.aI,A.tP(!1,a,s,2,A.hJ(s,new A.cl(4,l,new A.al(k,1,B.z,-1)),s,s,s,s,s,s,!0,new A.cl(4,j,new A.al(i,1,B.z,-1)),s,s,s,s,s,n,!0,s,s,s,s,new A.cl(4,A.n(14),B.pF),s,s,s,s,s,s,s,s,o,b,s,s,s,s,s,!0,s,s,s,!0,!0,!1,s,m,s,s,s,s,s,s,s,s,s,s,s,s),s,!1,s,q,B.fj,1,!1,"\u2022",s,s,s,s,!1,s,p,B.aG,s,B.bK,s,f)],t.p),B.v,s,B.f,B.h)},
 a9J(a2,a3,a4){var s,r,q,p,o,n,m,l,k,j,i,h,g=this,f=null,e=A.bk(a2,f,t.w).w.a.a>=960,d=a3?B.m:B.j,c=A.n(22),b=A.ag(a3?B.y:B.k,1),a=e?24:18,a0=(a3?B.L:B.K).E(0.15),a1=A.n(12)
 a0=A.C(f,A.Z(B.Yu,a3?B.L:B.K,f,f,f,22),B.i,f,f,new A.E(a0,f,f,a1,f,f,f,B.n),f,f,f,B.bO,f,f,f)
 a1=a4.I(0,"calc.summaryTitle")
-a1=A.aa(A.k(a1,f,2,B.X,f,f,A.ez().$4$color$fontSize$fontWeight$letterSpacing(a3?B.j:B.m,18,B.Q,-0.3),f,f),1)
+a1=A.a9(A.k(a1,f,2,B.X,f,f,A.ez().$4$color$fontSize$fontWeight$letterSpacing(a3?B.j:B.m,18,B.Q,-0.3),f,f),1)
 s=e?180:140
 r=B.o.E(0.1)
 q=A.n(20)
@@ -129813,20 +129813,20 @@ k=A.ag(a3?B.y:B.k,1)
 j=a4.I(0,"calc.totalPayable")
 j=A.k(j,f,1,B.X,f,f,A.J().$4$color$fontSize$fontWeight$letterSpacing(a3?B.k:B.o,11,B.Q,0.9),f,f)
 i=a4.I(0,"calc.stampPlusReg")
-j=A.aa(A.a6(A.b([j,B.fi,A.k(i,f,1,B.X,f,f,A.J().$2$color$fontSize(a3?B.t:B.u,12),f,f)],n),B.v,f,B.f,B.C),1)
+j=A.a9(A.a5(A.b([j,B.fi,A.k(i,f,1,B.X,f,f,A.J().$2$color$fontSize(a3?B.t:B.u,12),f,f)],n),B.v,f,B.f,B.C),1)
 i=e?220:160
 h=g.zK(g.go)
-return A.C(f,A.a6(A.b([q,B.bg,p,B.au,r,B.au,a0,B.ai,a1,B.ai,o,B.au,s,B.bg,A.C(f,A.I(A.b([j,B.af,new A.cj(new A.aq(0,i,0,1/0),A.bwA(B.dy,A.k(h,f,f,f,f,f,A.ez().$4$color$fontSize$fontWeight$letterSpacing(a3?B.j:B.m,24,B.Q,-0.6),f,f),B.jM),f)],n),B.l,f,B.f,B.h,0,f),B.i,f,f,new A.E(m,f,k,l,f,f,f,B.n),f,f,f,B.qB,f,f,f)],n),B.v,f,B.f,B.h),B.i,f,f,new A.E(d,f,b,c,f,f,f,B.n),f,f,f,new A.X(a,a,a,a),f,f,f)},
+return A.C(f,A.a5(A.b([q,B.bg,p,B.au,r,B.au,a0,B.ai,a1,B.ai,o,B.au,s,B.bg,A.C(f,A.I(A.b([j,B.af,new A.cj(new A.aq(0,i,0,1/0),A.bwA(B.dy,A.k(h,f,f,f,f,f,A.ez().$4$color$fontSize$fontWeight$letterSpacing(a3?B.j:B.m,24,B.Q,-0.6),f,f),B.jM),f)],n),B.l,f,B.f,B.h,0,f),B.i,f,f,new A.E(m,f,k,l,f,f,f,B.n),f,f,f,B.qB,f,f,f)],n),B.v,f,B.f,B.h),B.i,f,f,new A.E(d,f,b,c,f,f,f,B.n),f,f,f,new A.X(a,a,a,a),f,f,f)},
 a9I(a,b,c,d,e){var s,r,q=null
 if(e)s=c?B.j:B.m
 else s=c?B.t:B.u
-s=A.aa(A.k(a,q,2,B.X,q,q,A.J().$3$color$fontSize$fontWeight(s,14,e?B.r:B.U),q,q),1)
+s=A.a9(A.k(a,q,2,B.X,q,q,A.J().$3$color$fontSize$fontWeight(s,14,e?B.r:B.U),q,q),1)
 if(d==null)r=c?B.j:B.m
 else r=d
 return A.I(A.b([s,B.af,new A.cj(B.OF,A.bwA(B.dy,A.k(b,q,q,q,q,q,A.ez().$3$color$fontSize$fontWeight(r,15,e?B.Q:B.r),q,q),B.jM),q)],t.p),B.l,q,B.f,B.h,0,q)},
 Kg(a,b,c){return this.a9I(a,b,c,null,!1)},
 a9v(a,b,c){var s=null,r=b?B.m:B.j,q=A.n(16),p=A.ag(b?B.y:B.k,1),o=A.Z(B.ks,b?B.k:B.o,s,s,s,19),n=c.I(0,"calc.disclaimer")
-return A.C(s,A.I(A.b([o,B.af,A.aa(A.k(n,s,s,s,s,s,A.J().$3$color$fontSize$height(b?B.t:B.u,12,1.45),s,s),1)],t.p),B.v,s,B.f,B.h,0,s),B.i,s,s,new A.E(r,s,p,q,s,s,s,B.n),s,s,s,B.bP,s,s,s)},
+return A.C(s,A.I(A.b([o,B.af,A.a9(A.k(n,s,s,s,s,s,A.J().$3$color$fontSize$height(b?B.t:B.u,12,1.45),s,s),1)],t.p),B.v,s,B.f,B.h,0,s),B.i,s,s,new A.E(r,s,p,q,s,s,s,B.n),s,s,s,B.bP,s,s,s)},
 aUP(a){if(a>=1&&a<=12)return B.nf[a-1]
 return""}}
 A.bhl.prototype={
@@ -129875,8 +129875,8 @@ j=l.I(0,"calc.firstTimeLabel")
 k=m.at
 o=m.K9(l.I(0,"calc.selectOptionHint"),B.YK,i,new A.bhe(l),m.k3,j,new A.bhf(m),k)
 m=t.p
-if(b.b>560)return A.a6(A.b([A.I(A.b([A.aa(h,1),B.oq,A.aa(s,1)],m),B.v,n,B.f,B.h,0,n),B.c9,A.I(A.b([A.aa(r,1),B.oq,A.aa(q,1)],m),B.v,n,B.f,B.h,0,n),B.c9,A.I(A.b([A.aa(p,1),B.oq,A.aa(o,1)],m),B.v,n,B.f,B.h,0,n)],m),B.l,n,B.f,B.h)
-else return A.a6(A.b([h,B.ai,s,B.ai,r,B.ai,q,B.ai,p,B.ai,o],m),B.l,n,B.f,B.h)},
+if(b.b>560)return A.a5(A.b([A.I(A.b([A.a9(h,1),B.oq,A.a9(s,1)],m),B.v,n,B.f,B.h,0,n),B.c9,A.I(A.b([A.a9(r,1),B.oq,A.a9(q,1)],m),B.v,n,B.f,B.h,0,n),B.c9,A.I(A.b([A.a9(p,1),B.oq,A.a9(o,1)],m),B.v,n,B.f,B.h,0,n)],m),B.l,n,B.f,B.h)
+else return A.a5(A.b([h,B.ai,s,B.ai,r,B.ai,q,B.ai,p,B.ai,o],m),B.l,n,B.f,B.h)},
 $S:249}
 A.bh7.prototype={
 $1(a){return this.a.I(0,"calc.propertyType"+a)},
@@ -130045,7 +130045,7 @@ l=A.Z(B.eg,a5,f,f,f,22)
 k=a?"\u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0938\u0942\u091a\u0928\u093e: \u0935\u093f\u0927\u093f\u0915 \u0938\u0932\u093e\u0939 \u0905\u0938\u094d\u0935\u0940\u0915\u0930\u0923":"Important Notice: No Legal Advice"
 k=A.k(k,f,f,f,f,f,A.J().$3$color$fontSize$fontWeight(a2,13.5,B.r),f,f)
 j=a?"LawBuddy \u0915\u0947\u0935\u0932 \u0938\u0942\u091a\u0928\u093e\u0924\u094d\u092e\u0915 \u0914\u0930 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0938\u0939\u093e\u092f\u0924\u093e \u0915\u0947 \u0909\u0926\u094d\u0926\u0947\u0936\u094d\u092f \u0938\u0947 AI-\u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u092a\u094d\u0930\u0926\u093e\u0928 \u0915\u0930\u0924\u093e \u0939\u0948\u0964 \u092f\u0939 \u0915\u093f\u0938\u0940 \u0905\u0927\u093f\u0915\u0943\u0924 \u0935\u0915\u0940\u0932 \u092f\u093e \u0935\u093f\u0927\u093f\u0915 \u092a\u0947\u0936\u0947\u0935\u0930 \u0915\u0940 \u0938\u0932\u093e\u0939 \u0915\u093e \u0935\u093f\u0915\u0932\u094d\u092a \u0928\u0939\u0940\u0902 \u0939\u0948\u0964":"LawBuddy provides AI-powered document analysis and assistive legal information for informational and educational purposes only. It does not constitute legal advice and does not establish an attorney-client relationship."
-n=A.C(f,A.I(A.b([l,B.af,A.aa(A.a6(A.b([k,B.aS,A.k(j,f,f,f,f,f,A.J().$3$color$fontSize$height(a3,12.5,1.5),f,f)],r),B.v,f,B.f,B.h),1)],r),B.v,f,B.f,B.h,0,f),B.i,f,f,new A.E(o,f,m,n,f,f,f,B.n),f,f,f,B.dh,f,f,f)
+n=A.C(f,A.I(A.b([l,B.af,A.a9(A.a5(A.b([k,B.aS,A.k(j,f,f,f,f,f,A.J().$3$color$fontSize$height(a3,12.5,1.5),f,f)],r),B.v,f,B.f,B.h),1)],r),B.v,f,B.f,B.h,0,f),B.i,f,f,new A.E(o,f,m,n,f,f,f,B.n),f,f,f,B.dh,f,f,f)
 o=a?"\u0938\u094d\u0935\u0940\u0915\u0943\u0924\u093f":"Acceptance of Terms"
 o=g.zt(a5,a4,a1,a?"LawBuddy \u0915\u093e \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0915\u0947, \u0906\u092a \u0907\u0928 \u0928\u093f\u092f\u092e\u094b\u0902 \u0914\u0930 \u0936\u0930\u094d\u0924\u094b\u0902 \u0938\u0947 \u092c\u0902\u0927\u0947 \u0939\u094b\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u0939\u092e\u0924 \u0939\u094b\u0924\u0947 \u0939\u0948\u0902\u0964":"By accessing and using LawBuddy, you agree to comply with and be bound by these Terms of Use. If you do not agree, please do not use the application.",c,"1",a2,a3,o)
 m=a?"\u0938\u0947\u0935\u093e \u0915\u093e \u0935\u093f\u0935\u0930\u0923":"Description of Service"
@@ -130059,9 +130059,9 @@ j=g.zt(a5,a4,a1,a?"LawBuddy \u0914\u0930 \u0907\u0938\u0915\u0947 \u0921\u0947\u
 i=a?"\u0938\u0902\u092a\u0930\u094d\u0915":"Contact Information"
 i=g.zt(a5,a4,a1,a?"\u0909\u092a\u092f\u094b\u0917 \u0915\u0940 \u0936\u0930\u094d\u0924\u094b\u0902 \u0915\u0947 \u0938\u0902\u092c\u0902\u0927 \u092e\u0947\u0902 \u0915\u093f\u0938\u0940 \u092d\u0940 \u092a\u094d\u0930\u0936\u094d\u0928 \u0915\u0947 \u0932\u093f\u090f finalyearproject2513@gmail.com \u092a\u0930 \u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u0947\u0902\u0964":"For inquiries regarding these Terms of Use, please reach out to finalyearproject2513@gmail.com.",c,"6",a2,a3,i)
 h=a?e:"Return to App"
-return A.ip(s,a0,A.dW(A.bH(new A.cj(B.pI,A.a6(A.b([q,B.au,a7,B.aS,p,B.aU,n,B.dJ,o,m,l,k,j,i,B.ou,A.bH(A.rU(B.Zy,A.k(h,f,f,f,f,f,A.J().$1$fontWeight(B.D),f,f),new A.aUT(a8),A.hM(f,f,f,f,f,f,f,f,f,a2,f,f,B.yl,f,new A.aN(A.n(10),B.w),new A.al(a4,1,B.z,-1),f,f,f,f)),f,f,f),B.bg],r),B.v,f,B.f,B.h),f),f,f,f),f,B.I,new A.X(a6,36,a6,36),f,B.aj),f,f,f,f)},
+return A.ip(s,a0,A.dW(A.bH(new A.cj(B.pI,A.a5(A.b([q,B.au,a7,B.aS,p,B.aU,n,B.dJ,o,m,l,k,j,i,B.ou,A.bH(A.rU(B.Zy,A.k(h,f,f,f,f,f,A.J().$1$fontWeight(B.D),f,f),new A.aUT(a8),A.hM(f,f,f,f,f,f,f,f,f,a2,f,f,B.yl,f,new A.aN(A.n(10),B.w),new A.al(a4,1,B.z,-1),f,f,f,f)),f,f,f),B.bg],r),B.v,f,B.f,B.h),f),f,f,f),f,B.I,new A.X(a6,36,a6,36),f,B.aj),f,f,f,f)},
 zt(a,b,c,d,e,f,g,h,i){var s=null,r=A.n(12),q=A.ag(b,1),p=a.E(0.2),o=A.n(6),n=t.p
-return A.C(s,A.a6(A.b([A.I(A.b([A.C(B.a8,A.k(f,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(a,13,B.Q),s,s),B.i,s,s,new A.E(p,s,s,o,s,s,s,B.n),s,28,s,s,s,s,28),B.af,A.aa(A.k(i,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(g,16,B.r),s,s),1)],n),B.l,s,B.f,B.h,0,s),B.au,A.k(d,s,s,s,s,s,A.J().$3$color$fontSize$height(h,13.5,1.6),s,s)],n),B.v,s,B.f,B.h),B.i,s,s,new A.E(c,s,q,r,s,s,s,B.n),s,s,B.qv,B.b6,s,s,s)}}
+return A.C(s,A.a5(A.b([A.I(A.b([A.C(B.a8,A.k(f,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(a,13,B.Q),s,s),B.i,s,s,new A.E(p,s,s,o,s,s,s,B.n),s,28,s,s,s,s,28),B.af,A.a9(A.k(i,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(g,16,B.r),s,s),1)],n),B.l,s,B.f,B.h,0,s),B.au,A.k(d,s,s,s,s,s,A.J().$3$color$fontSize$height(h,13.5,1.6),s,s)],n),B.v,s,B.f,B.h),B.i,s,s,new A.E(c,s,q,r,s,s,s,B.n),s,s,B.qv,B.b6,s,s,s)}}
 A.aUS.prototype={
 $0(){return A.aG(this.a,!1).d2()},
 $S:0}
@@ -130087,7 +130087,7 @@ h=A.ag(k?B.y:B.k,1)
 g=A.b([new A.c0(0,B.ac,k?B.B.E(0.25):B.m.E(0.06),B.kO,20)],t.E)
 if(a){a=A.k(r,b,b,b,b,b,A.J().$5$color$fontSize$fontWeight$height$letterSpacing(k?B.j:B.m,28,B.Q,1.2,-0.5),b,b)
 f=t.p
-a=A.aa(A.a6(A.b([a,B.b8,A.k(q,b,b,b,b,b,A.J().$3$color$fontSize$height(k?B.t:B.u,14.5,1.45),b,b)],f),B.v,b,B.f,B.h),1)
+a=A.a9(A.a5(A.b([a,B.b8,A.k(q,b,b,b,b,b,A.J().$3$color$fontSize$height(k?B.t:B.u,14.5,1.45),b,b)],f),B.v,b,B.f,B.h),1)
 e=k?B.y:B.k
 d=k?B.j:B.m
 e=A.hM(b,b,b,b,b,b,b,b,b,d,b,b,B.qB,b,new A.aN(A.n(12),B.w),new A.al(e,1.2,B.z,-1),b,b,b,b)
@@ -130105,7 +130105,7 @@ d=A.fY(A.k(o,b,b,b,b,b,A.J().$2$fontSize$fontWeight(14.5,B.r),b,b),c.w,d)
 e=k?B.y:B.k
 k=k?B.j:B.m
 e=A.hM(b,b,b,b,b,b,b,b,b,k,b,b,B.kc,b,new A.aN(A.n(12),B.w),new A.al(e,1.2,B.z,-1),b,b,b,b)
-e=A.a6(A.b([a,B.aI,f,B.LL,d,B.b8,A.rT(A.k(p,b,b,b,b,b,A.J().$2$fontSize$fontWeight(14.5,B.D),b,b),c.r,e)],t.p),B.dg,b,B.f,B.h)
+e=A.a5(A.b([a,B.aI,f,B.LL,d,B.b8,A.rT(A.k(p,b,b,b,b,b,A.J().$2$fontSize$fontWeight(14.5,B.D),b,b),c.r,e)],t.p),B.dg,b,B.f,B.h)
 a=e}return A.C(b,A.bH(new A.cj(B.ir,A.C(b,a,B.i,b,b,new A.E(j,b,h,i,g,b,b,B.n),b,b,b,new A.X(m,l,m,l),b,b,b),b),b,b,b),B.i,b,b,b,b,b,new A.X(n,0,n,0),b,b,b,b)}}
 A.pF.prototype={
 a1(){return new A.af5()}}
@@ -130133,7 +130133,7 @@ q=A.I(p,B.l,j,B.av,B.h,0,j)
 p=k.a.e
 p=A.k(p,j,j,j,j,j,A.J().$3$color$fontSize$fontWeight(i?B.j:B.m,17,B.r),j,j)
 o=k.a.f
-return A.dy(A.fx(j,A.a6(A.b([q,B.ai,p,B.aS,A.k(o,j,j,j,j,j,A.J().$3$color$fontSize$height(i?B.t:B.u,13.5,1.5),j,j)],n),B.v,j,B.f,B.h),B.Ox,B.a1,new A.E(h,j,s,g,r,j,j,B.n),B.fz,j,j,j,B.kg,j,j),B.b2,j,j,new A.b5z(k),new A.b5A(k),j)}}
+return A.dy(A.fx(j,A.a5(A.b([q,B.ai,p,B.aS,A.k(o,j,j,j,j,j,A.J().$3$color$fontSize$height(i?B.t:B.u,13.5,1.5),j,j)],n),B.v,j,B.f,B.h),B.Ox,B.a1,new A.E(h,j,s,g,r,j,j,B.n),B.fz,j,j,j,B.kg,j,j),B.b2,j,j,new A.b5z(k),new A.b5A(k),j)}}
 A.b5z.prototype={
 $1(a){var s=this.a
 return s.K(new A.b5y(s))},
@@ -130181,13 +130181,13 @@ n=s.I(0,"welcome.featuresSubtitle")
 m=a0?15:13.5
 l=t.p
 m=A.b([q,B.aI,o,B.b8,A.k(n,a,a,a,a,a,A.J().$2$color$fontSize(p?B.t:B.u,m),B.an,a),B.ot],l)
-if(a0)m.push(A.a6(A.b([A.I(A.b([A.aa(c[0],1),B.or,A.aa(c[1],1),B.or,A.aa(c[2],1)],l),B.v,a,B.f,B.h,0,a),B.bg,A.I(A.b([A.aa(c[3],1),B.or,A.aa(c[4],1),B.or,A.aa(c[5],1)],l),B.v,a,B.f,B.h,0,a)],l),B.l,a,B.f,B.h))
-else if(this.r)m.push(A.a6(A.b([A.I(A.b([A.aa(c[0],1),B.dI,A.aa(c[1],1)],l),B.v,a,B.f,B.h,0,a),B.ai,A.I(A.b([A.aa(c[2],1),B.dI,A.aa(c[3],1)],l),B.v,a,B.f,B.h,0,a),B.ai,A.I(A.b([A.aa(c[4],1),B.dI,A.aa(c[5],1)],l),B.v,a,B.f,B.h,0,a)],l),B.l,a,B.f,B.h))
+if(a0)m.push(A.a5(A.b([A.I(A.b([A.a9(c[0],1),B.or,A.a9(c[1],1),B.or,A.a9(c[2],1)],l),B.v,a,B.f,B.h,0,a),B.bg,A.I(A.b([A.a9(c[3],1),B.or,A.a9(c[4],1),B.or,A.a9(c[5],1)],l),B.v,a,B.f,B.h,0,a)],l),B.l,a,B.f,B.h))
+else if(this.r)m.push(A.a5(A.b([A.I(A.b([A.a9(c[0],1),B.dI,A.a9(c[1],1)],l),B.v,a,B.f,B.h,0,a),B.ai,A.I(A.b([A.a9(c[2],1),B.dI,A.a9(c[3],1)],l),B.v,a,B.f,B.h,0,a),B.ai,A.I(A.b([A.a9(c[4],1),B.dI,A.a9(c[5],1)],l),B.v,a,B.f,B.h,0,a)],l),B.l,a,B.f,B.h))
 else{a0=A.b([],l)
 for(b=0;b<6;++b){q=A.b([],l)
 if(b>0)q.push(B.aA)
 q.push(c[b])
-B.b.N(a0,q)}m.push(A.a6(a0,B.l,a,B.f,B.h))}return A.C(a,A.bH(new A.cj(B.ir,A.a6(m,B.l,a,B.f,B.h),a),a,a,a),B.i,a,a,a,a,a,a,new A.X(r,0,r,0),a,a,a)}}
+B.b.N(a0,q)}m.push(A.a5(a0,B.l,a,B.f,B.h))}return A.C(a,A.bH(new A.cj(B.ir,A.a5(m,B.l,a,B.f,B.h),a),a,a,a),B.i,a,a,a,a,a,a,new A.X(r,0,r,0),a,a,a)}}
 A.bnu.prototype={
 $2(a,b){var s=this.a.b6(0,$.bt().gbc(),t.O).d3(0,a,b)
 return s},
@@ -130214,7 +130214,7 @@ o=A.rU(B.Ze,o,new A.bnq(a,q),A.hM(k,k,k,k,k,k,k,k,k,m,k,k,k,k,k,new A.al(j?B.y:B
 n=A.k(e.$1("welcome.storagePreferences"),k,k,k,k,k,k,k,k)
 m=A.J().$2$fontSize$fontWeight(12,B.D)
 l=j?B.j:B.m
-f=A.a6(A.b([f,B.c9,A.fS(B.ay,A.b([p,o,A.rU(B.Z8,n,new A.bnr(a,q),A.hM(k,k,k,k,k,k,k,k,k,l,k,k,k,k,k,new A.al(j?B.y:B.k,1,B.z,-1),k,k,m,k))],r),B.cr,10,10)],r),B.v,k,B.f,B.C)
+f=A.a5(A.b([f,B.c9,A.fS(B.ay,A.b([p,o,A.rU(B.Z8,n,new A.bnr(a,q),A.hM(k,k,k,k,k,k,k,k,k,l,k,k,k,k,k,new A.al(j?B.y:B.k,1,B.z,-1),k,k,m,k))],r),B.cr,10,10)],r),B.v,k,B.f,B.C)
 j=j?B.j:B.m
 j=A.ay_(B.o,j,k,k,new A.aN(A.n(8),B.w),k,k)
 return A.hp(A.b([A.axZ(A.k(e.$1("common.understood"),k,k,k,k,k,A.J().$1$fontWeight(B.D),k,k),new A.bns(a),j)],r),k,i,k,new A.cj(B.jK,f,k),k,k,!1,new A.aN(h,new A.al(g,1,B.z,-1)),s,k)},
@@ -130256,7 +130256,7 @@ l=A.k(l,g,1,B.X,g,g,A.J().$4$color$fontSize$fontWeight$letterSpacing(q?B.j:B.m,1
 k=A.C(g,g,B.i,g,g,new A.E(B.k.E(0.65),g,g,A.n(1),g,g,g,B.n),g,1.5,g,g,g,g,20)
 j=s.I(0,"welcome.headerTagline")
 i=t.p
-j=A.b([A.aa(A.d8(!1,n,!0,A.I(A.b([m,B.M,A.aa(A.a6(A.b([l,B.bT,k,B.bT,A.k(j,g,1,B.X,g,g,A.J().$4$color$fontSize$fontWeight$letterSpacing(q?B.k:B.o,8,B.r,1),g,g)],i),B.v,g,B.f,B.C),1)],i),B.l,g,B.f,B.C,0,g),g,!0,g,g,g,g,g,g,g,g,g,h.r,g,g,g,g,g,g,g,g),1),B.M],i)
+j=A.b([A.a9(A.d8(!1,n,!0,A.I(A.b([m,B.M,A.a9(A.a5(A.b([l,B.bT,k,B.bT,A.k(j,g,1,B.X,g,g,A.J().$4$color$fontSize$fontWeight$letterSpacing(q?B.k:B.o,8,B.r,1),g,g)],i),B.v,g,B.f,B.C),1)],i),B.l,g,B.f,B.C,0,g),g,!0,g,g,g,g,g,g,g,g,g,h.r,g,g,g,g,g,g,g,g),1),B.M],i)
 if(f)j.push(new A.eE(1,B.bt,A.dW(A.I(A.b([h.zr(s.I(0,"welcome.navFeatures"),h.w,q),h.zr(s.I(0,"welcome.navHowItWorks"),h.x,q),h.zr(s.I(0,"welcome.navRiskSystem"),h.y,q),h.zr(s.I(0,"welcome.privacyPolicy"),new A.aWY(a),q),h.zr(s.I(0,"welcome.termsOfUse"),new A.aWZ(a),q),h.zr(s.I(0,"welcome.navDisclaimer"),new A.aX_(h,a,b),q)],i),B.l,g,B.f,B.C,0,g),g,B.I,g,g,B.bd),g))
 n=q?B.y:B.k
 m=A.n(10)
@@ -130330,10 +130330,10 @@ n=new A.aX2(o,r+b,A.J().$4$fontSize$fontWeight$height$letterSpacing(s,B.hv,1.05,
 q=n.$2(a.I(0,"welcome.headlineLine1"),o.x)
 r=a.I(0,"welcome.headlineLine2Full")
 p=a.I(0,"welcome.headlineLine2Prefix")
-return A.a6(A.b([q,n.$4$accentWord$prefix(r,o.y,a.I(0,"welcome.headlineLine2Accent"),p),n.$2(a.I(0,"welcome.headlineLine3"),o.z)],t.p),B.l,null,B.f,B.C)},
+return A.a5(A.b([q,n.$4$accentWord$prefix(r,o.y,a.I(0,"welcome.headlineLine2Accent"),p),n.$2(a.I(0,"welcome.headlineLine3"),o.z)],t.p),B.l,null,B.f,B.C)},
 a9N(a,b){var s=A.ab(a).j("af<1,av>")
 s=A.aj(new A.af(a,new A.aX4(this),s),s.j("aY.E"))
-return A.a6(s,b,null,B.f,B.C)}}
+return A.a5(s,b,null,B.f,B.C)}}
 A.aX7.prototype={
 $2(a2,a3){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a=null,a0=this.a,a1=a0.w.f
 if(a1.length!==0){a1=B.b.gbr(a1).at
@@ -130367,7 +130367,7 @@ e=A.fR(a,a,a,a,a,a,a,a,a,a,n?B.t:B.u,a,a,B.ms,a,a,a,a,a,a,a)
 d=A.J().$2$color$fontSize(n?B.t:B.u,13.5)
 c=A.dv(a,a,a,a,a,a,a,a,a,a,i.I(0,"welcome.alreadyHaveAccount"))
 b=i.I(0,"welcome.signInAction")
-l=A.b([A.a6(A.b([l,B.bg,k,B.aU,h,B.aU,new A.cj(B.OI,j,a),B.aU,A.fS(B.h5,A.b([f,A.dr(A.a8J(a,a,a,B.cS,a,a,!0,a,A.dv(A.b([c,A.dv(a,a,a,a,a,a,a,a,a,A.a3(a,a,n?B.k:B.o,a,B.e0,a,a,a,a,a,a,a,a,a,B.r,a,a,!0,a,a,a,a,a,a,a,a),b)],t.VO),a,a,a,a,a,a,a,a,d,a),B.aG,a,a,B.bi,B.bq),a0.at,e)],g),B.eO,12,16)],g),B.l,a,B.f,B.h)],g)
+l=A.b([A.a5(A.b([l,B.bg,k,B.aU,h,B.aU,new A.cj(B.OI,j,a),B.aU,A.fS(B.h5,A.b([f,A.dr(A.a8J(a,a,a,B.cS,a,a,!0,a,A.dv(A.b([c,A.dv(a,a,a,a,a,a,a,a,a,A.a3(a,a,n?B.k:B.o,a,B.e0,a,a,a,a,a,a,a,a,a,B.r,a,a,!0,a,a,a,a,a,a,a,a),b)],t.VO),a,a,a,a,a,a,a,a,d,a),B.aG,a,a,B.bi,B.bq),a0.at,e)],g),B.eO,12,16)],g),B.l,a,B.f,B.h)],g)
 if(a1||m){n=a1?16:8
 m=a1?390:310
 k=a0.Q
@@ -130444,7 +130444,7 @@ g=A.n(8)
 h=A.C(a7,A.Z(B.eF,r?B.k:B.o,a7,a7,a7,16),B.i,a7,a7,new A.E(h,a7,a7,g,a7,a7,a7,B.n),a7,a7,a7,B.c6,a7,a7,a7)
 g=s.I(0,"welcome.heroDocTitle")
 f=t.p
-g=A.aa(A.I(A.b([h,B.M,A.aa(A.k(g,a7,1,B.X,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(r?B.j:B.m,11.5,B.r,0.5),a7,a7),1)],f),B.l,a7,B.f,B.C,0,a7),1)
+g=A.a9(A.I(A.b([h,B.M,A.a9(A.k(g,a7,1,B.X,a7,a7,A.J().$4$color$fontSize$fontWeight$letterSpacing(r?B.j:B.m,11.5,B.r,0.5),a7,a7),1)],f),B.l,a7,B.f,B.C,0,a7),1)
 h=a6.w
 h===$&&A.a()
 h=A.I(A.b([g,B.M,A.fw(h,new A.b6W(a6,r,s),a7)],f),B.l,a7,B.av,B.h,0,a7)
@@ -130489,7 +130489,7 @@ a3=r?B.J:B.H
 a3=a3.E(r?0.2:0.15)
 c=A.jw(a2,A.ED(a3,6,0.68,new A.h8(r?B.J:B.H,c)),B.bm)
 a2=s.I(0,"welcome.heroPlainEnglish")
-return A.bH(A.dy(A.fx(a7,A.C(a7,A.jw(m,A.e0(B.bv,A.b([A.C(a7,A.a6(A.b([h,B.au,d,B.aA,g,B.aI,e,B.aA,A.C(a7,A.a6(A.b([a1,B.aI,c,B.aI,A.k(a2,a7,a7,a7,a7,a7,A.J().$3$color$fontSize$height(r?B.t:B.u,11,1.4),a7,a7)],f),B.v,a7,B.f,B.h),B.i,a7,a7,new A.E(b,a7,a0,a,a7,a7,a7,B.n),a7,a7,a7,B.c5,a7,a7,a7)],f),B.v,a7,B.f,B.C),B.i,a7,a7,new A.E(k,a7,i,j,a7,a7,a7,B.n),a7,a7,a7,new A.X(l,l,l,l),a7,a7,a7)],f),B.O,B.aO,a7),B.bm),B.i,a7,a7,new A.E(a7,a7,a7,o,n,a7,a7,B.n),a7,a7,a7,a7,a7,a7,a7),new A.aq(0,a9,0,1/0),B.a1,a7,B.aK,a7,a7,a7,a7,a8,a7),B.b2,a7,a7,new A.b6X(a6),new A.b6Y(a6),a7),a7,a7,a7)}}
+return A.bH(A.dy(A.fx(a7,A.C(a7,A.jw(m,A.e0(B.bv,A.b([A.C(a7,A.a5(A.b([h,B.au,d,B.aA,g,B.aI,e,B.aA,A.C(a7,A.a5(A.b([a1,B.aI,c,B.aI,A.k(a2,a7,a7,a7,a7,a7,A.J().$3$color$fontSize$height(r?B.t:B.u,11,1.4),a7,a7)],f),B.v,a7,B.f,B.h),B.i,a7,a7,new A.E(b,a7,a0,a,a7,a7,a7,B.n),a7,a7,a7,B.c5,a7,a7,a7)],f),B.v,a7,B.f,B.C),B.i,a7,a7,new A.E(k,a7,i,j,a7,a7,a7,B.n),a7,a7,a7,new A.X(l,l,l,l),a7,a7,a7)],f),B.O,B.aO,a7),B.bm),B.i,a7,a7,new A.E(a7,a7,a7,o,n,a7,a7,B.n),a7,a7,a7,a7,a7,a7,a7),new A.aq(0,a9,0,1/0),B.a1,a7,B.aK,a7,a7,a7,a7,a8,a7),B.b2,a7,a7,new A.b6X(a6),new A.b6Y(a6),a7),a7,a7,a7)}}
 A.b6X.prototype={
 $1(a){var s=this.a
 return s.K(new A.b6V(s))},
@@ -130544,7 +130544,7 @@ i=A.fx(n,A.k(p,n,n,n,n,n,A.J().$3$color$fontSize$fontWeight(m?B.k:B.o,12,B.Q),n,
 q=o.a.d
 q=A.k(q,n,n,n,n,n,A.J().$3$color$fontSize$fontWeight(m?B.j:B.m,16,B.r),n,n)
 p=o.a.e
-return A.dy(A.fx(n,A.a6(A.b([i,B.au,q,B.aS,A.k(p,n,n,n,n,n,A.J().$3$color$fontSize$height(m?B.t:B.u,13,1.45),n,n)],t.p),B.v,n,B.f,B.h),B.Ot,B.bM,new A.E(k,n,s,j,r,n,n,B.n),B.fz,n,n,n,B.dh,l,1/0),B.b2,n,n,new A.bhs(o),new A.bht(o),n)}}
+return A.dy(A.fx(n,A.a5(A.b([i,B.au,q,B.aS,A.k(p,n,n,n,n,n,A.J().$3$color$fontSize$height(m?B.t:B.u,13,1.45),n,n)],t.p),B.v,n,B.f,B.h),B.Ot,B.bM,new A.E(k,n,s,j,r,n,n,B.n),B.fz,n,n,n,B.dh,l,1/0),B.b2,n,n,new A.bhs(o),new A.bht(o),n)}}
 A.bhs.prototype={
 $1(a){var s=this.a
 return s.K(new A.bhr(s))},
@@ -130579,13 +130579,13 @@ i=A.k(i,b,b,b,b,b,A.J().$4$color$fontSize$fontWeight$letterSpacing(h?B.k:B.o,11.
 g=s.I(0,"welcome.howItWorksTitle")
 f=a?30:22
 g=A.k(g,b,b,b,b,b,A.J().$3$color$fontSize$fontWeight(h?B.j:B.m,f,B.Q),b,b)
-if(a){a=A.aa(new A.nn("01",r,q,h,b),1)
+if(a){a=A.a9(new A.nn("01",r,q,h,b),1)
 f=A.Z(B.mU,h?B.y:B.k,b,b,b,22)
-e=A.aa(new A.nn("02",p,o,h,b),1)
+e=A.a9(new A.nn("02",p,o,h,b),1)
 d=A.Z(B.mU,h?B.y:B.k,b,b,b,22)
-c=A.aa(new A.nn("03",n,m,h,b),1)
-a=A.I(A.b([a,new A.av(B.qD,f,b),e,new A.av(B.qD,d,b),c,new A.av(B.qD,A.Z(B.mU,h?B.y:B.k,b,b,b,22),b),A.aa(new A.nn("04",l,k,h,b),1)],t.p),B.v,b,B.f,B.h,0,b)}else a=A.a6(A.b([new A.nn("01",r,q,h,b),B.aA,new A.nn("02",p,o,h,b),B.aA,new A.nn("03",n,m,h,b),B.aA,new A.nn("04",l,k,h,b)],t.p),B.l,b,B.f,B.h)
-return A.C(b,A.bH(new A.cj(B.ir,A.a6(A.b([i,B.aI,g,B.ot,a],t.p),B.l,b,B.f,B.h),b),b,b,b),B.i,b,b,b,b,b,b,new A.X(j,0,j,0),b,b,b)}}
+c=A.a9(new A.nn("03",n,m,h,b),1)
+a=A.I(A.b([a,new A.av(B.qD,f,b),e,new A.av(B.qD,d,b),c,new A.av(B.qD,A.Z(B.mU,h?B.y:B.k,b,b,b,22),b),A.a9(new A.nn("04",l,k,h,b),1)],t.p),B.v,b,B.f,B.h,0,b)}else a=A.a5(A.b([new A.nn("01",r,q,h,b),B.aA,new A.nn("02",p,o,h,b),B.aA,new A.nn("03",n,m,h,b),B.aA,new A.nn("04",l,k,h,b)],t.p),B.l,b,B.f,B.h)
+return A.C(b,A.bH(new A.cj(B.ir,A.a5(A.b([i,B.aI,g,B.ot,a],t.p),B.l,b,B.f,B.h),b),b,b,b),B.i,b,b,b,b,b,b,new A.X(j,0,j,0),b,b,b)}}
 A.Mg.prototype={
 a1(){return new A.aeM(null,null)}}
 A.aeM.prototype={
@@ -130608,7 +130608,7 @@ p=s.I(0,"welcome.marqueeTrack2")
 l=r?B.m:B.j
 k=new A.al(r?B.y:B.k,1,B.z,-1)
 o=n.a9D(r?B.t:B.u,r,!0,q)
-return A.C(m,A.a6(A.b([o,B.b8,n.a9D(r?B.t:B.u,r,!1,p)],t.p),B.l,m,B.f,B.C),B.i,m,m,new A.E(l,m,new A.dl(k,B.w,k,B.w),m,m,m,m,B.n),m,m,m,B.kc,m,m,1/0)},
+return A.C(m,A.a5(A.b([o,B.b8,n.a9D(r?B.t:B.u,r,!1,p)],t.p),B.l,m,B.f,B.C),B.i,m,m,new A.E(l,m,new A.dl(k,B.w,k,B.w),m,m,m,m,B.n),m,m,m,B.kc,m,m,1/0)},
 a9D(a,b,c,d){var s=null,r=this.w
 r===$&&A.a()
 return new A.aZ(s,24,A.uM(A.fw(r,new A.b52(this,c,d,a),s),B.O,s),s)}}
@@ -130665,7 +130665,7 @@ p=A.n(20)
 o=A.ag(r?B.y:B.k,1)
 n=A.b([new A.c0(0,B.ac,B.B.E(r?0.35:0.06),B.a5S,24)],t.E)
 m=t.p
-m=q?A.I(A.b([A.aa(l.a9F(r,s),11),B.uY,A.aa(l.a9L(r,s),9)],m),B.v,k,B.f,B.h,0,k):A.a6(A.b([l.a9F(r,s),B.bg,l.a9L(r,s)],m),B.l,k,B.f,B.h)
+m=q?A.I(A.b([A.a9(l.a9F(r,s),11),B.uY,A.a9(l.a9L(r,s),9)],m),B.v,k,B.f,B.h,0,k):A.a5(A.b([l.a9F(r,s),B.bg,l.a9L(r,s)],m),B.l,k,B.f,B.h)
 return A.C(k,m,B.i,k,k,new A.E(i,k,o,p,n,k,k,B.n),k,k,k,new A.X(j,j,j,j),k,k,k)},
 a9F(a,b){var s,r,q,p=null,o=a?B.J:B.H,n=a?B.Y:B.j,m=A.n(14),l=A.ag(a?B.y:B.k,1),k=A.Z(B.rw,a?B.k:B.o,p,p,p,16),j=b.I(0,"welcome.riskExtractTitle"),i=t.p
 j=A.I(A.b([k,B.M,new A.eE(1,B.bt,A.k(j,p,p,B.X,p,p,A.J().$4$color$fontSize$fontWeight$letterSpacing(a?B.t:B.u,11,B.r,0.8),p,p),p)],i),B.l,p,B.f,B.C,0,p)
@@ -130681,7 +130681,7 @@ q=A.ag(o.E(0.4),1.2)
 r=A.C(p,A.k(b.I(0,"welcome.riskClauseBody"),p,p,p,p,p,A.J().$4$color$fontSize$fontStyle$height(o,12.5,B.cL,1.5),p,p),B.i,p,p,new A.E(j,p,q,r,p,p,p,B.n),p,p,p,B.c5,p,p,p)
 q=A.Z(B.ck,o,p,p,p,16)
 j=b.I(0,"welcome.riskClauseNote")
-return A.C(p,A.a6(A.b([s,B.ai,k,B.b8,r,B.aA,A.I(A.b([q,B.M,A.aa(A.k(j,p,p,p,p,p,A.J().$3$color$fontSize$height(a?B.t:B.u,12,1.45),p,p),1)],i),B.v,p,B.f,B.h,0,p)],i),B.v,p,B.f,B.h),B.i,p,p,new A.E(n,p,l,m,p,p,p,B.n),p,p,p,B.b6,p,p,p)},
+return A.C(p,A.a5(A.b([s,B.ai,k,B.b8,r,B.aA,A.I(A.b([q,B.M,A.a9(A.k(j,p,p,p,p,p,A.J().$3$color$fontSize$height(a?B.t:B.u,12,1.45),p,p),1)],i),B.v,p,B.f,B.h,0,p)],i),B.v,p,B.f,B.h),B.i,p,p,new A.E(n,p,l,m,p,p,p,B.n),p,p,p,B.b6,p,p,p)},
 a9L(a0,a1){var s,r,q,p,o,n,m,l,k,j,i=this,h=null,g=a0?B.J:B.H,f=a0?B.aC:B.aB,e=a0?B.L:B.K,d=a0?B.Y:B.j,c=A.n(14),b=A.ag(a0?B.y:B.k,1),a=a1.I(0,"welcome.riskAssessmentTitle")
 a=A.k(a,h,h,h,h,h,A.J().$3$color$fontSize$fontWeight(a0?B.j:B.m,14,B.r),h,h)
 s=i.x
@@ -130699,9 +130699,9 @@ l=a0?B.k:B.o
 l=A.ag(l.E(a0?0.3:0.2),1)
 k=A.Z(B.rE,a0?B.k:B.o,h,h,h,16)
 j=a1.I(0,"welcome.riskRecommendation")
-return A.C(h,A.a6(A.b([a,B.au,s,B.ai,q,B.aI,p,B.aI,o,B.aA,A.C(h,A.I(A.b([k,B.M,A.aa(A.k(j,h,h,h,h,h,A.J().$3$color$fontSize$height(a0?B.j:B.m,11.5,1.4),h,h),1)],r),B.v,h,B.f,B.h,0,h),B.i,h,h,new A.E(n,h,l,m,h,h,h,B.n),h,h,h,B.bO,h,h,h)],r),B.v,h,B.f,B.h),B.i,h,h,new A.E(d,h,b,c,h,h,h,B.n),h,h,h,B.b6,h,h,h)},
+return A.C(h,A.a5(A.b([a,B.au,s,B.ai,q,B.aI,p,B.aI,o,B.aA,A.C(h,A.I(A.b([k,B.M,A.a9(A.k(j,h,h,h,h,h,A.J().$3$color$fontSize$height(a0?B.j:B.m,11.5,1.4),h,h),1)],r),B.v,h,B.f,B.h,0,h),B.i,h,h,new A.E(n,h,l,m,h,h,h,B.n),h,h,h,B.bO,h,h,h)],r),B.v,h,B.f,B.h),B.i,h,h,new A.E(d,h,b,c,h,h,h,B.n),h,h,h,B.b6,h,h,h)},
 Uk(a,b,c,d){var s=null,r=A.k(a,s,s,s,s,s,A.J().$3$color$fontSize$fontWeight(c,11.5,B.r),s,s)
-return A.I(A.b([new A.aZ(80,s,r,s),A.aa(A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$height(d?B.j:B.m,12,1.35),s,s),1)],t.p),B.v,s,B.f,B.h,0,s)}}
+return A.I(A.b([new A.aZ(80,s,r,s),A.a9(A.k(b,s,s,s,s,s,A.J().$3$color$fontSize$height(d?B.j:B.m,12,1.35),s,s),1)],t.p),B.v,s,B.f,B.h,0,s)}}
 A.beQ.prototype={
 $2(a,b){var s,r,q,p,o=this,n=null,m=o.a.x
 m===$&&A.a()
@@ -130734,7 +130734,7 @@ o=s.I(0,"welcome.riskSectionTitle")
 n=l?30:22
 o=A.k(o,m,m,m,m,m,A.J().$4$color$fontSize$fontWeight$letterSpacing(p?B.j:B.m,n,B.Q,-0.5),B.an,m)
 n=s.I(0,"welcome.riskSectionSubtitle")
-return A.C(m,A.bH(new A.cj(B.ir,A.a6(A.b([q,B.aI,o,B.b8,A.k(n,m,m,m,m,m,A.J().$2$color$fontSize(p?B.t:B.u,14.5),B.an,m),B.ot,new A.QD(p,l,m)],t.p),B.l,m,B.f,B.h),m),m,m,m),B.i,m,m,m,m,m,m,new A.X(r,0,r,0),m,m,m)}}
+return A.C(m,A.bH(new A.cj(B.ir,A.a5(A.b([q,B.aI,o,B.b8,A.k(n,m,m,m,m,m,A.J().$2$color$fontSize(p?B.t:B.u,14.5),B.an,m),B.ot,new A.QD(p,l,m)],t.p),B.l,m,B.f,B.h),m),m,m,m),B.i,m,m,m,m,m,m,new A.X(r,0,r,0),m,m,m)}}
 A.Zt.prototype={
 m(){var s=this,r=s.bx$
 if(r!=null)r.U(0,s.gh7())
@@ -130783,26 +130783,27 @@ aV1(){var s,r=this.c
 r.toString
 s=A.m9(new A.bjP(),B.aK,null,B.aK,new A.bjQ(),t.z)
 A.aG(r,!1).dU(s)},
-O(a){var s,r,q,p,o,n,m,l,k,j,i,h,g=this,f=null
-g.gbB().cM($.bt(),t.A)
+O(a){var s,r,q,p,o,n,m,l,k,j,i,h,g,f=this,e=null
+f.gbB().cM($.bt(),t.A)
 s=A.B(a).ax.a===B.N
-r=A.bk(a,f,t.w).w.a.a
+r=A.bk(a,e,t.w).w.a.a
 q=r>=1024
 p=r>=700&&r<1024
 r=s?B.ad:B.aD
 o=s?B.ad:B.aD
-n=g.w
-m=g.gaV0()
-l=g.as
+n=f.gaV0()
+m=f.w
+l=f.as
 l===$&&A.a()
-k=g.at
+k=f.at
 k===$&&A.a()
-j=g.ax
+j=f.ax
 j===$&&A.a()
-i=g.ay
+i=f.ay
 i===$&&A.a()
-h=g.gaV2()
-return A.ip(f,r,A.hh(!1,A.dy(A.C(f,A.dW(A.a6(A.b([new A.abF(s,q,new A.bjT(g),new A.bjU(g),new A.bjV(g),new A.bjW(g),m,f),new A.abG(s,q,p,n,l,k,j,i,h,m,f),B.aU,new A.Mg(s,f),B.acp,new A.abE(s,q,p,g.x),B.lh,new A.abH(s,q,g.y),B.lh,new A.abI(s,q,g.z),B.lh,new A.abD(s,q,new A.bjX(g),h,f),B.acn],t.p),B.l,f,B.f,B.h),n,B.I,f,B.jV,B.aj),B.i,o,f,f,f,f,f,f,f,f,f),B.b2,f,f,f,f,new A.bjY(g,q)),B.V,!0),f,f,f,f)}}
+h=f.gaV2()
+g=t.p
+return A.ip(e,r,A.hh(!1,A.dy(A.C(e,A.a5(A.b([new A.abF(s,q,new A.bjT(f),new A.bjU(f),new A.bjV(f),new A.bjW(f),n,e),A.a9(A.dW(A.a5(A.b([new A.abG(s,q,p,m,l,k,j,i,h,n,e),B.aU,new A.Mg(s,e),B.acp,new A.abE(s,q,p,f.x),B.lh,new A.abH(s,q,f.y),B.lh,new A.abI(s,q,f.z),B.lh,new A.abD(s,q,new A.bjX(f),h,e),B.acn],g),B.l,e,B.f,B.h),m,B.I,e,B.jV,B.aj),1)],g),B.l,e,B.f,B.h),B.i,o,e,e,e,e,e,e,e,e,e),B.b2,e,e,e,e,new A.bjY(f,q)),B.V,!0),e,e,e,e)}}
 A.bjR.prototype={
 $3(a,b,c){return B.Lb},
 $C:"$3",
@@ -130900,7 +130901,7 @@ return A.iM(0,A.hh(!0,new A.av(new A.X(j,0,i,l),new A.d3(B.ha,a1,a1,new A.cj(new
 aFj(a,b,c,d,e,f,g,h){var s,r,q,p,o=null,n=h.E(0.12),m=A.n(6)
 m=A.C(o,A.Z(B.cy,h,o,o,o,16),B.i,o,o,new A.E(n,o,o,m,o,o,o,B.n),o,o,o,B.c6,o,o,o)
 n=t.p
-s=A.aa(A.a6(A.b([A.k(c.I(0,"consent.privacyPreferences"),o,o,o,o,o,A.J().$4$color$fontSize$fontWeight$letterSpacing(e,13,B.r,-0.2),o,o),B.bT,A.k(c.I(0,"consent.bannerDescription"),o,2,B.X,o,o,A.J().$3$color$fontSize$height(f,11.5,1.3),o,o)],n),B.v,o,B.f,B.C),1)
+s=A.a9(A.a5(A.b([A.k(c.I(0,"consent.privacyPreferences"),o,o,o,o,o,A.J().$4$color$fontSize$fontWeight$letterSpacing(e,13,B.r,-0.2),o,o),B.bT,A.k(c.I(0,"consent.bannerDescription"),o,2,B.X,o,o,A.J().$3$color$fontSize$height(f,11.5,1.3),o,o)],n),B.v,o,B.f,B.C),1)
 r=A.fR(o,o,o,o,o,o,o,o,o,o,f,o,B.Lx,B.iE,o,o,o,o,B.dX,o,o)
 r=A.dr(A.k(c.I(0,"consent.customize"),o,o,o,o,o,A.J().$2$fontSize$fontWeight(12,B.D),o,o),new A.b2X(a),r)
 q=A.hM(o,o,o,o,o,o,o,o,o,e,o,B.Lx,B.mq,o,new A.aN(A.n(6),B.w),new A.al(g,1,B.z,-1),o,B.dX,o,o)
@@ -130916,10 +130917,10 @@ r=t.p
 s=A.I(A.b([n,B.M,o,B.ov,A.dr(A.k(c.I(0,"consent.customize"),p,p,p,p,p,A.J().$3$decoration$fontSize$fontWeight(B.e0,11.5,B.D),p,p),new A.b3_(a),s)],r),B.l,p,B.f,B.h,0,p)
 o=A.k(c.I(0,"consent.bannerDescription"),p,p,p,p,p,A.J().$3$color$fontSize$height(f,11.5,1.35),p,p)
 n=A.hM(p,p,p,p,p,p,p,p,p,e,p,B.Lz,B.qx,p,new A.aN(A.n(8),B.w),new A.al(g,1,B.z,-1),p,p,p,p)
-n=A.aa(A.rT(A.k(c.I(0,"consent.necessaryOnly"),p,p,p,p,p,A.J().$2$fontSize$fontWeight(12,B.D),p,p),new A.b30(b),n),1)
+n=A.a9(A.rT(A.k(c.I(0,"consent.necessaryOnly"),p,p,p,p,p,A.J().$2$fontSize$fontWeight(12,B.D),p,p),new A.b30(b),n),1)
 q=d?B.j:B.m
 q=A.ay_(h,q,B.Lz,B.qx,new A.aN(A.n(8),B.w),p,p)
-return A.a6(A.b([s,B.b_,o,B.b8,A.I(A.b([n,B.M,A.aa(A.axZ(A.k(c.I(0,"consent.acceptPreferences"),p,p,p,p,p,A.J().$2$fontSize$fontWeight(12,B.D),p,p),new A.b31(b),q),1)],r),B.l,p,B.f,B.h,0,p)],r),B.v,p,B.f,B.C)}}
+return A.a5(A.b([s,B.b_,o,B.b8,A.I(A.b([n,B.M,A.a9(A.axZ(A.k(c.I(0,"consent.acceptPreferences"),p,p,p,p,p,A.J().$2$fontSize$fontWeight(12,B.D),p,p),new A.b31(b),q),1)],r),B.l,p,B.f,B.h,0,p)],r),B.v,p,B.f,B.C)}}
 A.b33.prototype={
 $1(a){var s=this.a
 if(s.c!=null)s.K(new A.b32(s))},
@@ -130965,7 +130966,7 @@ a=A.n(20)
 a0=B.o.E(0.15)
 m=A.n(10)
 l=t.p
-m=A.I(A.b([A.C(c,A.Z(B.n_,B.o,c,c,c,20),B.i,c,c,new A.E(a0,c,c,m,c,c,c,B.n),c,c,c,B.aW,c,c,c),B.af,A.aa(A.k(s.I(0,"consent.privacyStoragePrefTitle"),c,c,c,c,c,A.J().$4$color$fontSize$fontWeight$letterSpacing(p,17,B.Q,-0.3),c,c),1)],l),B.l,c,B.f,B.h,0,c)
+m=A.I(A.b([A.C(c,A.Z(B.n_,B.o,c,c,c,20),B.i,c,c,new A.E(a0,c,c,m,c,c,c,B.n),c,c,c,B.aW,c,c,c),B.af,A.a9(A.k(s.I(0,"consent.privacyStoragePrefTitle"),c,c,c,c,c,A.J().$4$color$fontSize$fontWeight$letterSpacing(p,17,B.Q,-0.3),c,c),1)],l),B.l,c,B.f,B.h,0,c)
 a0=A.k(s.I(0,"consent.privacyStoragePrefIntro"),c,c,c,c,c,A.J().$3$color$fontSize$height(o,12.5,1.5),c,c)
 k=s.I(0,"consent.strictlyNecessaryTitle")
 j=s.I(0,"consent.alwaysOnBadge")
@@ -130977,13 +130978,13 @@ h===$&&A.a()
 g=r?B.m:B.aD
 f=A.n(12)
 e=A.ag(n,1)
-f=A.C(c,A.a6(A.b([A.I(A.b([A.k(j,c,c,c,c,c,A.J().$4$color$fontSize$fontWeight$letterSpacing(p,11.5,B.Q,0.6),c,c),new A.aax(h,new A.bbM(d),B.o,c)],l),B.l,c,B.av,B.h,0,c),B.bT,A.k(i,c,c,c,c,c,A.J().$3$color$fontSize$height(o,12,1.4),c,c)],l),B.v,c,B.f,B.h),B.i,c,c,new A.E(g,c,e,f,c,c,c,B.n),c,c,c,B.fA,c,c,c)
+f=A.C(c,A.a5(A.b([A.I(A.b([A.k(j,c,c,c,c,c,A.J().$4$color$fontSize$fontWeight$letterSpacing(p,11.5,B.Q,0.6),c,c),new A.aax(h,new A.bbM(d),B.o,c)],l),B.l,c,B.av,B.h,0,c),B.bT,A.k(i,c,c,c,c,c,A.J().$3$color$fontSize$height(o,12,1.4),c,c)],l),B.v,c,B.f,B.h),B.i,c,c,new A.E(g,c,e,f,c,c,c,B.n),c,c,c,B.fA,c,c,c)
 e=s.I(0,"consent.analyticsTitle")
 g=s.I(0,b)
 e=d.Ue(B.o,n,s.I(0,"consent.analyticsDesc"),r,!1,p,o,g,e)
 g=s.I(0,"consent.marketingTitle")
 i=s.I(0,b)
-g=A.dW(A.a6(A.b([a0,B.ai,k,B.au,f,B.au,e,B.au,d.Ue(B.o,n,s.I(0,"consent.marketingDesc"),r,!1,p,o,i,g),B.ai,A.bH(A.aUV(A.Z(B.YP,B.o,c,c,c,14),A.k(s.I(0,"consent.readFullPrivacyPolicy"),c,c,c,c,c,A.J().$3$color$fontSize$fontWeight(B.o,12,B.D),c,c),new A.bbN(a1),c),c,c,c)],l),B.v,c,B.f,B.C),c,B.I,c,c,B.aj)
+g=A.dW(A.a5(A.b([a0,B.ai,k,B.au,f,B.au,e,B.au,d.Ue(B.o,n,s.I(0,"consent.marketingDesc"),r,!1,p,o,i,g),B.ai,A.bH(A.aUV(A.Z(B.YP,B.o,c,c,c,14),A.k(s.I(0,"consent.readFullPrivacyPolicy"),c,c,c,c,c,A.J().$3$color$fontSize$fontWeight(B.o,12,B.D),c,c),new A.bbN(a1),c),c,c,c)],l),B.v,c,B.f,B.C),c,B.I,c,c,B.aj)
 i=A.dr(A.k(s.I(0,"common.cancel"),c,c,c,c,c,A.J().$2$color$fontWeight(o,B.D),c,c),new A.bbO(a1),c)
 e=A.hM(c,c,c,c,c,c,c,c,c,p,c,c,c,c,new A.aN(A.n(8),B.w),new A.al(n,1,B.z,-1),c,c,c,c)
 e=A.rT(A.k(s.I(0,"consent.acceptAll"),c,c,c,c,c,A.J().$2$fontSize$fontWeight(12.5,B.D),c,c),new A.bbP(d,a1),e)
@@ -130995,7 +130996,7 @@ if(e)s=a.E(0.15)
 else s=d?B.lZ:B.B.E(0.05)
 r=A.n(6)
 q=t.p
-return A.C(p,A.a6(A.b([A.I(A.b([l,A.C(p,A.k(h,p,p,p,p,p,A.J().$3$color$fontSize$fontWeight(e?a:g,10.5,B.r),p,p),B.i,p,p,new A.E(s,p,p,r,p,p,p,B.n),p,p,p,B.f4,p,p,p)],q),B.l,p,B.av,B.h,0,p),B.aS,A.k(c,p,p,p,p,p,A.J().$3$color$fontSize$height(g,12,1.4),p,p)],q),B.v,p,B.f,B.h),B.i,p,p,new A.E(o,p,m,n,p,p,p,B.n),p,p,p,B.fA,p,p,p)}}
+return A.C(p,A.a5(A.b([A.I(A.b([l,A.C(p,A.k(h,p,p,p,p,p,A.J().$3$color$fontSize$fontWeight(e?a:g,10.5,B.r),p,p),B.i,p,p,new A.E(s,p,p,r,p,p,p,B.n),p,p,p,B.f4,p,p,p)],q),B.l,p,B.av,B.h,0,p),B.aS,A.k(c,p,p,p,p,p,A.J().$3$color$fontSize$height(g,12,1.4),p,p)],q),B.v,p,B.f,B.h),B.i,p,p,new A.E(o,p,m,n,p,p,p,B.n),p,p,p,B.fA,p,p,p)}}
 A.bbM.prototype={
 $1(a){var s=this.a
 return s.K(new A.bbL(s,a))},
@@ -131043,9 +131044,9 @@ r=A.J().$5$color$decoration$decorationColor$fontSize$fontWeight(l,B.e0,l.E(0.5),
 q=A.nr(n,-1,n)
 q.W=new A.ayT(o,a)
 p=t.p
-g=A.b([A.d8(!1,h,!0,new A.av(B.VC,A.I(A.b([new A.aZ(24,24,e,n),B.ah,A.aa(new A.av(B.qz,A.brl(A.dv(A.b([B.adK,s,B.adJ,A.dv(n,n,n,n,n,q,n,n,n,r,"Privacy Policy"),B.adH],t.VO),n,n,n,n,n,n,n,n,g,n),n,n,n,n),n),1)],p),B.v,n,B.f,B.h,0,n),n),n,!0,n,n,n,n,n,n,n,n,n,new A.ayU(o),n,n,n,n,n,n,n,n)],p)
+g=A.b([A.d8(!1,h,!0,new A.av(B.VC,A.I(A.b([new A.aZ(24,24,e,n),B.ah,A.a9(new A.av(B.qz,A.brl(A.dv(A.b([B.adK,s,B.adJ,A.dv(n,n,n,n,n,q,n,n,n,r,"Privacy Policy"),B.adH],t.VO),n,n,n,n,n,n,n,n,g,n),n,n,n,n),n),1)],p),B.v,n,B.f,B.h,0,n),n),n,!0,n,n,n,n,n,n,n,n,n,new A.ayU(o),n,n,n,n,n,n,n,n)],p)
 if(f){h=A.Z(B.bG,j,n,n,n,12)
-B.b.N(g,A.b([B.b_,new A.av(B.Wa,A.I(A.b([h,B.bS,A.aa(A.k(o.f,n,n,n,n,n,A.J().$3$color$fontSize$fontWeight(j,11.5,B.U),n,n),1)],p),B.l,n,B.f,B.h,0,n),n)],p))}return A.a6(g,B.v,n,B.f,B.C)}}
+B.b.N(g,A.b([B.b_,new A.av(B.Wa,A.I(A.b([h,B.bS,A.a9(A.k(o.f,n,n,n,n,n,A.J().$3$color$fontSize$fontWeight(j,11.5,B.U),n,n),1)],p),B.l,n,B.f,B.h,0,n),n)],p))}return A.a5(g,B.v,n,B.f,B.C)}}
 A.ayR.prototype={
 $1(a){return B.js},
 $S:76}
@@ -131089,7 +131090,7 @@ if(d)m.push(B.adI)
 if(d){d=A.J().$5$color$decoration$decorationColor$fontSize$fontWeight(h,B.e0,h.E(0.4),11.5,B.D)
 l=A.nr(j,-1,j)
 l.W=new A.ayP(k,a)
-B.b.N(m,A.b([A.dv(j,j,j,j,j,l,j,j,j,d,"Terms of Use")],n))}return A.C(j,A.I(A.b([new A.av(B.qz,p,j),B.M,A.aa(A.brl(A.dv(m,j,j,j,j,j,j,j,j,o,j),j,j,j,j),1)],t.p),B.v,j,B.f,B.h,0,j),B.i,j,j,new A.E(e,j,q,r,j,j,j,B.n),j,j,s,B.ec,j,j,j)}}
+B.b.N(m,A.b([A.dv(j,j,j,j,j,l,j,j,j,d,"Terms of Use")],n))}return A.C(j,A.I(A.b([new A.av(B.qz,p,j),B.M,A.a9(A.brl(A.dv(m,j,j,j,j,j,j,j,j,o,j),j,j,j,j),1)],t.p),B.v,j,B.f,B.h,0,j),B.i,j,j,new A.E(e,j,q,r,j,j,j,B.n),j,j,s,B.ec,j,j,j)}}
 A.ayN.prototype={
 $1(a){return B.js},
 $S:76}
@@ -131175,19 +131176,19 @@ e=f?r:B.E
 d=A.Z(B.Ye,f?a6.c:n,a5,a5,a5,15)
 c=q?"\u0932\u093e\u0907\u091f":"Light"
 b=f?a6.c:n
-e=A.aa(A.d8(!1,B.w2,!0,A.C(B.a8,A.I(A.b([d,B.d2,A.k(c,a5,a5,a5,a5,a5,A.a3(a5,a5,b,a5,a5,a5,a5,a5,a5,a5,a5,12,a5,a5,f?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)],m),B.l,a5,B.bn,B.h,0,a5),B.i,a5,a5,new A.E(e,a5,a5,B.w7,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnA(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)
+e=A.a9(A.d8(!1,B.w2,!0,A.C(B.a8,A.I(A.b([d,B.d2,A.k(c,a5,a5,a5,a5,a5,A.a3(a5,a5,b,a5,a5,a5,a5,a5,a5,a5,a5,12,a5,a5,f?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)],m),B.l,a5,B.bn,B.h,0,a5),B.i,a5,a5,new A.E(e,a5,a5,B.w7,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnA(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)
 f=a9===B.fl
 d=f?r:B.E
 c=A.Z(B.Y3,f?a6.c:n,a5,a5,a5,15)
 b=q?"\u0921\u093e\u0930\u094d\u0915":"Dark"
 a=f?a6.c:n
-d=A.aa(A.d8(!1,a5,!0,A.C(B.a8,A.I(A.b([c,B.d2,A.k(b,a5,a5,a5,a5,a5,A.a3(a5,a5,a,a5,a5,a5,a5,a5,a5,a5,a5,12,a5,a5,f?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)],m),B.l,a5,B.bn,B.h,0,a5),B.i,a5,a5,new A.E(d,a5,a5,a5,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnB(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)
+d=A.a9(A.d8(!1,a5,!0,A.C(B.a8,A.I(A.b([c,B.d2,A.k(b,a5,a5,a5,a5,a5,A.a3(a5,a5,a,a5,a5,a5,a5,a5,a5,a5,a5,12,a5,a5,f?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)],m),B.l,a5,B.bn,B.h,0,a5),B.i,a5,a5,new A.E(d,a5,a5,a5,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnB(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)
 f=a9===B.jv
 c=f?r:B.E
 b=A.Z(B.Y0,f?a6.c:n,a5,a5,a5,15)
 a=q?"\u0938\u093f\u0938\u094d\u091f\u092e":"System"
 a0=f?a6.c:n
-i=A.C(a5,A.I(A.b([e,d,A.aa(A.d8(!1,B.w1,!0,A.C(B.a8,A.I(A.b([b,B.d2,A.k(a,a5,a5,a5,a5,a5,A.a3(a5,a5,a0,a5,a5,a5,a5,a5,a5,a5,a5,12,a5,a5,f?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)],m),B.l,a5,B.bn,B.h,0,a5),B.i,a5,a5,new A.E(c,a5,a5,B.w3,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnC(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)],m),B.l,a5,B.f,B.h,0,a5),B.i,a5,a5,new A.E(i,a5,g,h,a5,a5,a5,B.n),a5,a5,a5,a5,a5,a5,a5)
+i=A.C(a5,A.I(A.b([e,d,A.a9(A.d8(!1,B.w1,!0,A.C(B.a8,A.I(A.b([b,B.d2,A.k(a,a5,a5,a5,a5,a5,A.a3(a5,a5,a0,a5,a5,a5,a5,a5,a5,a5,a5,12,a5,a5,f?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)],m),B.l,a5,B.bn,B.h,0,a5),B.i,a5,a5,new A.E(c,a5,a5,B.w3,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnC(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)],m),B.l,a5,B.f,B.h,0,a5),B.i,a5,a5,new A.E(i,a5,g,h,a5,a5,a5,B.n),a5,a5,a5,a5,a5,a5,a5)
 h=q?"\u092d\u093e\u0937\u093e":"Language"
 h=A.k(h,a5,a5,a5,a5,a5,A.a3(a5,a5,n,a5,a5,a5,a5,a5,a5,a5,a5,13,a5,a5,B.D,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)
 g=q?"\u090f\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928 \u0907\u0902\u091f\u0930\u092b\u093c\u0947\u0938 \u092d\u093e\u0937\u093e":"Application interface language"
@@ -131199,10 +131200,10 @@ if(b1==null)b1=n}b1=A.ag(b1,1)
 b2=a8===B.jH
 d=b2?r:B.E
 c=b2?a6.c:n
-d=A.aa(A.d8(!1,B.w2,!0,A.C(B.a8,A.k("English",a5,a5,a5,a5,a5,A.a3(a5,a5,c,a5,a5,a5,a5,a5,a5,a5,a5,13,a5,a5,b2?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5),B.i,a5,a5,new A.E(d,a5,a5,B.w7,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnD(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)
+d=A.a9(A.d8(!1,B.w2,!0,A.C(B.a8,A.k("English",a5,a5,a5,a5,a5,A.a3(a5,a5,c,a5,a5,a5,a5,a5,a5,a5,a5,13,a5,a5,b2?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5),B.i,a5,a5,new A.E(d,a5,a5,B.w7,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnD(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)
 b2=q?r:B.E
 c=q?a6.c:n
-b1=A.C(a5,A.I(A.b([d,A.aa(A.d8(!1,B.w1,!0,A.C(B.a8,A.k("\u0939\u093f\u0902\u0926\u0940",a5,a5,a5,a5,a5,A.a3(a5,a5,c,a5,a5,a5,a5,a5,a5,a5,a5,13,a5,a5,q?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5),B.i,a5,a5,new A.E(b2,a5,a5,B.w3,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnE(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)],m),B.l,a5,B.f,B.h,0,a5),B.i,a5,a5,new A.E(f,a5,b1,e,a5,a5,a5,B.n),a5,a5,a5,a5,a5,a5,a5)
+b1=A.C(a5,A.I(A.b([d,A.a9(A.d8(!1,B.w1,!0,A.C(B.a8,A.k("\u0939\u093f\u0902\u0926\u0940",a5,a5,a5,a5,a5,A.a3(a5,a5,c,a5,a5,a5,a5,a5,a5,a5,a5,13,a5,a5,q?B.r:B.U,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5),B.i,a5,a5,new A.E(b2,a5,a5,B.w3,a5,a5,a5,B.n),a5,a5,a5,B.f1,a5,a5,a5),a5,!0,a5,a5,a5,a5,a5,a5,a5,a5,a5,new A.bnE(b4),a5,a5,a5,a5,a5,a5,a5,a5),1)],m),B.l,a5,B.f,B.h,0,a5),B.i,a5,a5,new A.E(f,a5,b1,e,a5,a5,a5,B.n),a5,a5,a5,a5,a5,a5,a5)
 b2=q?"\u0915\u093e\u0928\u0942\u0928\u0940 \u0914\u0930 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e":"Legal & Privacy"
 b2=A.k(b2,a5,a5,a5,a5,a5,A.a3(a5,a5,n,a5,a5,a5,a5,a5,a5,a5,a5,12.5,a5,a5,B.r,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)
 f=a7?B.m:B.aD
@@ -131223,12 +131224,12 @@ a2=A.iF(a7?B.y:B.k,a5,1,a5,a5,a5)
 a3=A.Z(B.eF,r,a5,a5,a5,19)
 a4=q?"\u0909\u092a\u092f\u094b\u0917 \u0915\u0940 \u0936\u0930\u094d\u0924\u0947\u0902":"Terms of Use"
 a4=A.k(a4,a5,a5,a5,a5,a5,A.a3(a5,a5,n,a5,a5,a5,a5,a5,a5,a5,a5,13,a5,a5,B.D,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)
-f=A.C(a5,A.fh(!1,B.a6,!0,c,A.a6(A.b([a,b,a1,a2,A.NP(!1,B.mr,!0,a5,!0,a5,a5,!0,a5,a3,a5,a5,a5,a5,new A.bnH(b3,a0),!1,a5,a5,a5,a5,a5,a5,a5,a4,a5,A.Z(B.rx,j?n:k,a5,a5,a5,13),a5)],m),B.l,a5,B.f,B.h),B.bm,B.E,0,a5,a5,a5,a5,a5,B.bR),B.i,a5,a5,new A.E(f,a5,d,e,a5,a5,a5,B.n),a5,a5,a5,a5,a5,a5,a5)
+f=A.C(a5,A.fh(!1,B.a6,!0,c,A.a5(A.b([a,b,a1,a2,A.NP(!1,B.mr,!0,a5,!0,a5,a5,!0,a5,a3,a5,a5,a5,a5,new A.bnH(b3,a0),!1,a5,a5,a5,a5,a5,a5,a5,a4,a5,A.Z(B.rx,j?n:k,a5,a5,a5,13),a5)],m),B.l,a5,B.f,B.h),B.bm,B.E,0,a5,a5,a5,a5,a5,B.bR),B.i,a5,a5,new A.E(f,a5,d,e,a5,a5,a5,B.n),a5,a5,a5,a5,a5,a5,a5)
 e=a7?B.m:B.aD
 d=A.n(10)
 c=A.Z(B.ks,r,a5,a5,a5,16)
 b=A.k("LawBuddy Core Engine v1.0",a5,a5,a5,a5,a5,A.a3(a5,a5,n,a5,a5,a5,a5,a5,a5,a5,a5,12,a5,a5,B.D,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)
-b1=A.dW(A.a6(A.b([p,B.bT,l,B.aI,i,B.ai,h,B.bT,g,B.aI,b1,B.ai,new A.d3(B.bX,a5,a5,b2,a5),B.aI,f,B.ai,A.C(a5,A.I(A.b([c,B.M,A.aa(A.a6(A.b([b,B.bT,A.k("RERA Real Estate Analysis Module",a5,a5,a5,a5,a5,A.a3(a5,a5,j?n:k,a5,a5,a5,a5,a5,a5,a5,a5,11,a5,a5,a5,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)],m),B.v,a5,B.f,B.h),1)],m),B.l,a5,B.f,B.h,0,a5),B.i,a5,a5,new A.E(e,a5,a5,d,a5,a5,a5,B.n),a5,a5,a5,B.c5,a5,a5,a5)],m),B.v,a5,B.f,B.C),a5,B.I,a5,a5,B.aj)
+b1=A.dW(A.a5(A.b([p,B.bT,l,B.aI,i,B.ai,h,B.bT,g,B.aI,b1,B.ai,new A.d3(B.bX,a5,a5,b2,a5),B.aI,f,B.ai,A.C(a5,A.I(A.b([c,B.M,A.a9(A.a5(A.b([b,B.bT,A.k("RERA Real Estate Analysis Module",a5,a5,a5,a5,a5,A.a3(a5,a5,j?n:k,a5,a5,a5,a5,a5,a5,a5,a5,11,a5,a5,a5,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5)],m),B.v,a5,B.f,B.h),1)],m),B.l,a5,B.f,B.h,0,a5),B.i,a5,a5,new A.E(e,a5,a5,d,a5,a5,a5,B.n),a5,a5,a5,B.c5,a5,a5,a5)],m),B.v,a5,B.f,B.C),a5,B.I,a5,a5,B.aj)
 b2=q?"\u092c\u0902\u0926 \u0915\u0930\u0947\u0902":"Close"
 return A.hp(A.b([A.dr(A.k(b2,a5,a5,a5,a5,a5,A.a3(a5,a5,r,a5,a5,a5,a5,a5,a5,a5,a5,a5,a5,a5,B.D,a5,a5,!0,a5,a5,a5,a5,a5,a5,a5,a5),a5,a5),new A.bnI(b3),a5)],m),a5,a6.k2,a5,new A.cj(B.wk,b1,a5),a5,a5,!1,new A.aN(b0,new A.al(s,1,B.z,-1)),o,a5)},
 $C:"$3",
@@ -131309,7 +131310,7 @@ k=A.atj(m.E(0.2),A.k(r,a2,a2,a2,a2,a2,A.a3(a2,a2,m,a2,a2,a2,a2,a2,a2,a2,a2,24,a2
 g=(a5?B.L:B.K).E(0.15)
 f=A.n(20)
 e=A.Z(B.zz,a5?B.L:B.K,a2,a2,a2,13)
-k=A.bH(A.a6(A.b([k,B.b8,A.C(a2,A.I(A.b([e,B.bS,A.k("Active Account",a2,a2,a2,a2,a2,A.a3(a2,a2,a5?B.L:B.K,a2,a2,a2,a2,a2,a2,a2,a2,10.5,a2,a2,B.r,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2)],h),B.l,a2,B.f,B.C,0,a2),B.i,a2,a2,new A.E(g,a2,a2,f,a2,a2,a2,B.n),a2,a2,a2,B.qE,a2,a2,a2)],h),B.l,a2,B.f,B.h),a2,a2,a2)
+k=A.bH(A.a5(A.b([k,B.b8,A.C(a2,A.I(A.b([e,B.bS,A.k("Active Account",a2,a2,a2,a2,a2,A.a3(a2,a2,a5?B.L:B.K,a2,a2,a2,a2,a2,a2,a2,a2,10.5,a2,a2,B.r,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2)],h),B.l,a2,B.f,B.C,0,a2),B.i,a2,a2,new A.E(g,a2,a2,f,a2,a2,a2,B.n),a2,a2,a2,B.qE,a2,a2,a2)],h),B.l,a2,B.f,B.h),a2,a2,a2)
 g=l?a3:"Full Name"
 f=a4.rx
 e=f==null
@@ -131345,7 +131346,7 @@ if(p==null)p=i}p=A.ag(p,1)
 if((a6?a2:a8.c)!=null&&a8.c.length!==0){o=a8.c
 o.toString}else o="user@lawbuddy.in"
 k.push(A.C(a2,A.k(o,a2,a2,a2,a2,a2,A.a3(a2,a2,i,a2,a2,a2,a2,a2,a2,a2,a2,13,a2,a2,a2,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2),B.i,a2,a2,new A.E(m,a2,p,g,a2,a2,a2,B.n),a2,a2,a2,B.hp,a2,a2,1/0))
-k=A.dW(A.a6(k,B.v,a2,B.f,B.C),a2,B.I,a2,a2,B.aj)
+k=A.dW(A.a5(k,B.v,a2,B.f,B.C),a2,B.I,a2,a2,B.aj)
 p=l?"\u092c\u0902\u0926 \u0915\u0930\u0947\u0902":"Close"
 p=A.b([A.dr(A.k(p,a2,a2,a2,a2,a2,A.a3(a2,a2,e?i:f,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,a2,!0,a2,a2,a2,a2,a2,a2,a2,a2),a2,a2),new A.bc_(b0),a2)],h)
 if(!a6||a7.a===B.pz){a6=A.dt(a2,a2,a4.fy,a2,a2,a2,a2,a2,a2,a2,B.x,a2,a2,a2,a2,new A.aN(A.n(10),B.w),a2,a2,a2,a2,a2)
@@ -133534,7 +133535,7 @@ l(a){var s=this
 return A.O(s).l(0)+"["+A.brt(s.b,s.c)+"]: "+A.p(s.a)},
 k(a,b){if(b==null)return!1
 return b instanceof A.tS&&J.e(this.a,b.a)&&this.c===b.c&&this.d===b.d},
-gG(a){return J.a5(this.a)+B.e.gG(this.c)+B.e.gG(this.d)}}
+gG(a){return J.a6(this.a)+B.e.gG(this.c)+B.e.gG(this.d)}}
 A.bL.prototype={
 cs(a){return A.bVV()},
 k(a,b){var s
@@ -133543,7 +133544,7 @@ if(b instanceof A.bL){s=J.e(this.a,b.a)
 if(!s)return!1
 while(!1)return!1
 return!0}return!1},
-gG(a){return J.a5(this.a)},
+gG(a){return J.a6(this.a)},
 $iaOc:1}
 A.NZ.prototype={
 gau(a){var s=this
@@ -136334,7 +136335,7 @@ s=t.J.a(s).a
 s.toString
 p.as=s}return p.as},
 sbA(a,b){var s,r
-if(b<0||b>1)throw A.d(A.a9("Valid value should be between 0 to 1.",null,null))
+if(b<0||b>1)throw A.d(A.aa("Valid value should be between 0 to 1.",null,null))
 if(this.as!==b){this.as=b
 s=this.CW
 r=new A.a1()
@@ -139123,7 +139124,7 @@ q=o.ahS()
 if(q!==(o.ahS()^65535)>>>0)throw A.d(B.WW)
 n=o.y
 n===$&&A.a()
-if(q>n)throw A.d(A.a9(q,"Uncompressed block length can not be more than 65535.",null))
+if(q>n)throw A.d(A.aa(q,"Uncompressed block length can not be more than 65535.",null))
 o.at=q
 o.dx=o.db=null
 break
@@ -139141,9 +139142,9 @@ n=t.KQ
 o.db=n.a(p.i(0,"lengthTree"))
 o.dx=n.a(p.i(0,"distanceTree"))
 break
-default:throw A.d(A.a9(r,"Wrong block type",null))}return!0},
+default:throw A.d(A.aa(r,"Wrong block type",null))}return!0},
 aIM(a3,a4){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c=this,b=null,a="Wrong dynamic huffman codes.",a0=c.kb(5),a1=c.kb(5),a2=c.kb(4)
-if(a0<0||a1<0||a2<0)throw A.d(A.a9(a0,a,b))
+if(a0<0||a1<0||a2<0)throw A.d(A.aa(a0,a,b))
 a0+=257;++a1
 s=a0+a1
 r=t.S
@@ -139151,7 +139152,7 @@ q=A.ao(s,0,!0,r)
 p=A.ao(19,0,!0,r)
 a2+=4
 for(o=0;o<a2;o=m){n=c.kb(3)
-if(n<0)throw A.d(A.a9(n,a,b))
+if(n<0)throw A.d(A.aa(n,a,b))
 m=o+1
 p[B.kB[o]]=n&255}l=A.a1U(p)
 for(k=0,o=0;;){for(;;){i=l.a4u(c)
@@ -139162,14 +139163,14 @@ q[o]=k
 if(m===s){o=m
 j=!0
 break}o=m}if(j)break
-if(i<0)throw A.d(A.a9(i,a,b))
+if(i<0)throw A.d(A.aa(i,a,b))
 if(i>=17)k=0
-else if(o===0)throw A.d(A.a9(o,a,b))
+else if(o===0)throw A.d(A.aa(o,a,b))
 h=i-16
 g=c.kb(B.a_W[h])
-if(g<0)throw A.d(A.a9(g,a,b))
+if(g<0)throw A.d(A.aa(g,a,b))
 g+=B.a0_[h]
-if(o+g>s)throw A.d(A.a9(o,a,b))
+if(o+g>s)throw A.d(A.aa(o,a,b))
 for(;f=g-1,g>0;g=f,o=m){m=o+1
 q[o]=k}if(o===s)break}e=A.ao(a0,0,!0,r)
 A.jG(e,0,q,0,a0)
@@ -139187,7 +139188,7 @@ s===$&&A.a()
 r.d=B.e.uO(s,a)
 return q},
 HY(a){var s,r,q=this
-if(a<0||a>32)throw A.d(A.a9(a,"count",null))
+if(a<0||a>32)throw A.d(A.aa(a,"count",null))
 s=q.dy
 s===$&&A.a()
 if(s<a)q.ab0()
@@ -139251,8 +139252,8 @@ s=r.d
 s===$&&A.a()
 r.d=B.e.uO(s,a)}},
 lR(a,b,c,d){var s,r,q,p,o,n,m,l,k,j=this,i=b.length
-if(c>i-1)throw A.d(A.a9(c,"Offset does not belong to specified buffer.",null))
-if(d>i-c)throw A.d(A.a9(d,"Length is illegal.",null))
+if(c>i-1)throw A.d(A.aa(c,"Offset does not belong to specified buffer.",null))
+if(d>i-c)throw A.d(A.aa(d,"Length is illegal.",null))
 for(s=d;s>0;){i=j.ax
 i===$&&A.a()
 r=j.ay
@@ -139279,7 +139280,7 @@ n=Math.min(i,q-p)
 q=j.cy
 q.toString
 m=j.aZf(q,p,n)
-if(n!==m)throw A.d(A.a9(n,"Not enough data in stream.",null))
+if(n!==m)throw A.d(A.aa(n,"Not enough data in stream.",null))
 j.at=j.at-m
 j.ay+=m}}i=j.ay
 if(r<i){q=j.y
@@ -139298,12 +139299,12 @@ i=!i}if(i){j.ajV()
 if((j.kb(8)<<24|j.kb(8)<<16|j.kb(8)<<8|j.kb(8)>>>0)>>>0!==j.cx)throw A.d(B.WY)
 j.CW=!0}return A.c(["length",d-s,"buffer",b],t.N,t.z)},
 aZf(a,b,c){var s,r,q,p,o=this,n=null,m=a.length
-if(b>m-1)throw A.d(A.a9(b,"Offset cannot be less than zero or greater than buffer length - 1.",n))
-if(c<0)throw A.d(A.a9(c,"Length can not be less than zero.",n))
-if(c>m-b)throw A.d(A.a9(c,"Length is too large.",n))
+if(b>m-1)throw A.d(A.aa(b,"Offset cannot be less than zero or greater than buffer length - 1.",n))
+if(c<0)throw A.d(A.aa(c,"Length can not be less than zero.",n))
+if(c>m-b)throw A.d(A.aa(c,"Length is too large.",n))
 m=o.dy
 m===$&&A.a()
-if((m&7)!==0)throw A.d(A.a9(a,"Reading of unalligned data is not supported.",n))
+if((m&7)!==0)throw A.d(A.aa(a,"Reading of unalligned data is not supported.",n))
 if(c===0)return 0
 s=0
 for(;;){if(!(m>0&&c>0))break
@@ -139326,21 +139327,21 @@ q=f-(s-r)
 for(p=!1;q>=258;p=!0){for(;o=i.db.a4u(i),(o&4294967040)>>>0===0;p=!0){f=i.cy
 f.toString
 f[B.e.b7(i.ay++,i.y)]=o&255;--q
-if(q<258)return!0}if(o<257){if(o<256)throw A.d(A.a9(o,"Illegal code.",h))
+if(q<258)return!0}if(o<257){if(o<256)throw A.d(A.aa(o,"Illegal code.",h))
 f=i.Vl()
 i.ch=f
-return B.b9.hm(p,f)}if(o>285)throw A.d(A.a9(o,"Illegal repeat code length.",h))
+return B.b9.hm(p,f)}if(o>285)throw A.d(A.aa(o,"Illegal repeat code length.",h))
 f=o-257
 n=B.AD[f]
 m=B.Af[f]
 if(m>0){l=i.kb(m)
-if(l<0)throw A.d(A.a9(l,g,h))
+if(l<0)throw A.d(A.aa(l,g,h))
 n+=l}o=i.dx.a4u(i)
-if(o<0||o>30)throw A.d(A.a9(o,"Wrong distance code.",h))
+if(o<0||o>30)throw A.d(A.aa(o,"Wrong distance code.",h))
 k=B.a2H[o]
 m=B.a1d[o]
 if(m>0){l=i.kb(m)
-if(l<0)throw A.d(A.a9(l,g,h))
+if(l<0)throw A.d(A.aa(l,g,h))
 k+=l}for(j=0;j<n;++j){f=i.cy
 f.toString
 s=i.ay
@@ -140180,7 +140181,7 @@ q=B.e.r0(a3,16)
 for(p=a.a,o=a.b,n=a.c,m=0;m<a3;++m){l=s[m]
 if(l>0){k=a2[m]
 if(l<=p){j=B.e.cu(1,l)
-if(k>=j)throw A.d(A.a9(a1,a0,a0))
+if(k>=j)throw A.d(A.aa(a1,a0,a0))
 i=B.e.cu(1,p-l)
 for(h=(m&32767)-(m&32768),g=0;g<i;++g){o[k]=h
 k+=j}}else{f=l-p
@@ -140191,7 +140192,7 @@ do{h=c[d]
 b=(h&32767)-(h&32768)
 if(b===0){h=-q
 b=(h&32767)-(h&32768)
-c[d]=b;++q}if(b>0)throw A.d(A.a9(a1,a0,a0))
+c[d]=b;++q}if(b>0)throw A.d(A.aa(a1,a0,a0))
 c=(k&e)>>>0===0?n:r
 d=-b
 e=e<<1;--f}while(f!==0)
@@ -140247,7 +140248,7 @@ n=q[n]}else{r===$&&A.a()
 n=r[n]}m=m<<1}while(n<0)}r=k.e
 r===$&&A.a()
 l=r[n]
-if(l<=0)throw A.d(A.a9("Invalid Data.",null,null))
+if(l<=0)throw A.d(A.aa("Invalid Data.",null,null))
 if(l>j)return-1
 a.d=B.e.p8(s,l)
 a.e=a.e-l
@@ -140416,7 +140417,7 @@ r===$&&A.a()
 o[p.Ei(r)-p.Ei(B.rJ)]=s&255
 if(r===B.zU){q=o[0]+o[1]*256
 p.x=q
-if((q&65535)!==(~(o[2]+o[3]*256)&65535))throw A.d(A.a9("Ivalid block length.",null,null))}p.e=p.aN4(p.Ei(r)+1)
+if((q&65535)!==(~(o[2]+o[3]*256)&65535))throw A.d(A.aa("Ivalid block length.",null,null))}p.e=p.aN4(p.Ei(r)+1)
 return!0},
 abE(a){var s,r,q,p,o,n,m,l,k=this,j="fb",i="value",h=k.a
 h===$&&A.a()
@@ -140439,7 +140440,7 @@ h.b=o&32767;++h.c;--s}else if(q===256){k.e=B.ku
 return A.c(["result",!0,"eob",!0,"output",k.a],t.N,t.z)}else{q-=257
 if(q<8){q+=3
 k.Q=0}else if(q===28){k.Q=0
-q=258}else{if(q>=29)throw A.d(A.a9("Invalid data.",null,null))
+q=258}else{if(q>=29)throw A.d(A.aa("Invalid data.",null,null))
 k.Q=B.Af[q]}k.y=q
 n=k.afl(s)
 s=A.d5(n.i(0,j))
@@ -140466,7 +140467,7 @@ r=s.mH(o)
 if(r<0)return A.c(["value",!1,"fb",a],t.N,t.z)
 o=p.y
 o===$&&A.a()
-if(o<0||o>=29)throw A.d(A.a9("Invalid data.",null,null))
+if(o<0||o>=29)throw A.d(A.aa("Invalid data.",null,null))
 p.y=B.AD[o]+r}p.e=B.zR
 q=p.acM(a)
 a=A.d5(q.i(0,"fb"))
@@ -140608,27 +140609,27 @@ s===$&&A.a()
 if(!s.O4(7)){m.e=B.zZ
 return!1}s=m.CW
 if(s===16){s=m.as
-if(s===0)throw A.d(A.a9(k,l,l))
+if(s===0)throw A.d(A.aa(k,l,l))
 r=m.cx
 r===$&&A.a()
 p=r[s-1]&255
 o=m.b.mH(2)+3
 s=m.as
-if(s+o>m.ch)throw A.d(A.a9(k,l,l))
+if(s+o>m.ch)throw A.d(A.aa(k,l,l))
 for(n=0;n<o;++n,s=q){r=m.cx
 q=s+1
 m.as=q
 r[s]=p}}else{r=m.b
 if(s===17){o=r.mH(3)+3
 s=m.as
-if(s+o>m.ch)throw A.d(A.a9(k,l,l))
+if(s+o>m.ch)throw A.d(A.aa(k,l,l))
 for(n=0;n<o;++n,s=q){r=m.cx
 r===$&&A.a()
 q=s+1
 m.as=q
 r[s]=0}}else{o=r.mH(7)+11
 s=m.as
-if(s+o>m.ch)throw A.d(A.a9(k,l,l))
+if(s+o>m.ch)throw A.d(A.aa(k,l,l))
 for(n=0;n<o;++n,s=q){r=m.cx
 r===$&&A.a()
 q=s+1
@@ -140699,7 +140700,7 @@ else if(q===1)s=B.amb
 else if(q===2)s=B.amc
 else if(q===3)s=B.amd
 else if(q===4)s=B.ame
-else{A.l(A.a9(q,"Invalid type",null))
+else{A.l(A.aa(q,"Invalid type",null))
 s=null}switch(s.a){case 0:d=r.aIT(a,b+1,c,d,e,f)
 break
 case 1:d=r.aJa(a,b+1,c,d,e,f)
@@ -140758,13 +140759,13 @@ a.z=32
 a.ax=0
 a.cy=A.ao(65535,0,!0,c)
 j=(a.kb(8)<<8|a.kb(8))>>>0
-if(j===-1)A.l(A.a9(j,"Header of the stream can not be read.",f))
-if(B.e.b7(j,31)!==0)A.l(A.a9(j,"Header checksum illegal",f))
-if((j&a.r)!==2048)A.l(A.a9(j,"Unsupported compression method.",f))
+if(j===-1)A.l(A.aa(j,"Header of the stream can not be read.",f))
+if(B.e.b7(j,31)!==0)A.l(A.aa(j,"Header checksum illegal",f))
+if((j&a.r)!==2048)A.l(A.aa(j,"Unsupported compression method.",f))
 i=A.d5(Math.pow(2,((j&a.x)>>>12)+8))
 a.w=i
-if(i>a.y)A.l(A.a9(j,"Unsupported window size for deflate compression method.",f))
-if((j&a.z)>>>5===1)A.l(A.a9(j,"Custom dictionary is not supported at the moment.",f))
+if(i>a.y)A.l(A.aa(j,"Unsupported window size for deflate compression method.",f))
+if((j&a.z)>>>5===1)A.l(A.aa(j,"Custom dictionary is not supported at the moment.",f))
 a.Vl()
 s=a
 r=0
@@ -140799,7 +140800,7 @@ a0M(a){var s,r,q,p,o,n,m,l,k,j,i=this,h=A.b([],t.t)
 for(s=J.bs(a),r=t.S,q=0;s.F();){p=s.gZ(s)
 o=A.aP(p)
 n=!1
-switch(o){case"z":if(q!==0)throw A.d(A.a9(o,"c",'The character "z" is invalid inside an ASCII85 block.'))
+switch(o){case"z":if(q!==0)throw A.d(A.aa(o,"c",'The character "z" is invalid inside an ASCII85 block.'))
 i.b=A.ao(4,0,!0,r)
 for(m=0;l=i.b,m<4;++m)h.push(l[m])
 break
@@ -141682,7 +141683,7 @@ case"Symbol":s=B.ja
 break
 case"ZapfDingbats":s=B.fR
 break
-default:throw A.d(A.a9(a,"fontName","invalid font name"))}return s},
+default:throw A.d(A.aa(a,"fontName","invalid font name"))}return s},
 aMi(a){var s
 if(B.c.n(a,","))a=a.split(",")[0]
 switch(a){case"HYGoThic-Medium":s=B.Gk
@@ -141699,7 +141700,7 @@ case"HeiseiKakuGo-W5":s=B.tH
 break
 case"HYSMyeongJo-Medium":s=B.Gl
 break
-default:throw A.d(A.a9(a,"fontName","invalid font name"))}return s},
+default:throw A.d(A.aa(a,"fontName","invalid font name"))}return s},
 r6(){var s,r,q,p,o=this,n="Encoding"
 A.ak(null)
 s=o.d
@@ -149413,7 +149414,7 @@ else if(a===1)return B.ny
 else if(a===2)return B.tj
 else if(a===3)return B.a5d
 else if(a===4)return B.ag
-else throw A.d(A.a9(a,"typeIndex","Invalid Type"))},
+else throw A.d(A.aa(a,"typeIndex","Invalid Type"))},
 zO(a){switch(a.a){case 0:return 0
 case 1:return 1
 case 2:return 2
@@ -149898,7 +149899,7 @@ aam(a){var s
 if(a>=0){s=this.a
 s===$&&A.a()
 s=a>=s.cO().gcY(0)}else s=!0
-if(s)throw A.d(A.a9(a,"pageNumber","Index out of range"))},
+if(s)throw A.d(A.aa(a,"pageNumber","Index out of range"))},
 VS(a,b){var s,r=this
 if(a==null){s=r.a
 s===$&&A.a()
@@ -158881,7 +158882,7 @@ o=new A.a7j()
 o.a=s
 o.b=n
 o.c=m
-break}}return o}else throw A.d(A.a9(b2.gcd(),"text element cannot be null",b3))}}
+break}}return o}else throw A.d(A.aa(b2.gcd(),"text element cannot be null",b3))}}
 A.a7j.prototype={}
 A.P4.prototype={}
 A.alY.prototype={}
@@ -159292,7 +159293,7 @@ CD(a){return this.a*0.001*this.iZ(a)},
 adM(a){return this.x*0.001*this.iZ(a)}}
 A.aXe.prototype={}
 A.is.prototype={
-i(a,b){if(b<0||b>=this.a.length)A.l(A.a9(b,"The character is not supported by the font.",null))
+i(a,b){if(b<0||b>=this.a.length)A.l(A.aa(b,"The character is not supported by the font.",null))
 return this.a[b]},
 yF(){var s=this.a,r=new A.ah(A.b([],t.b))
 r.b3(s)
@@ -160974,7 +160975,7 @@ for(l=0,k=0,j=!1,q=0;s=r.length,q<s;){o=r[q]
 if(!j){l=o.a
 k=l-1
 j=!0}if((k+1!==o.a||q+1===s)&&s>1){s=new A.a1()
-if(isNaN(l))A.l(A.a9(l,h,i))
+if(isNaN(l))A.l(A.aa(l,h,i))
 else s.a=l
 f.push(s)
 if(q!==0)f.push(m)
@@ -160982,11 +160983,11 @@ l=o.a
 m=new A.ah(A.b([],g))
 m.b3(i)}s=o.b
 n=new A.a1()
-if(isNaN(s))A.l(A.a9(s,h,i))
+if(isNaN(s))A.l(A.aa(s,h,i))
 else n.a=s
 m.a.push(n);++q
 if(q===r.length){s=new A.a1()
-if(isNaN(l))A.l(A.a9(l,h,i))
+if(isNaN(l))A.l(A.aa(l,h,i))
 else s.a=l
 f.push(s)
 f.push(m)}k=o.a}}return e},
@@ -161381,7 +161382,7 @@ o=h.w
 o===$&&A.a()
 o=o/3-1
 m=new A.a1()
-if(isNaN(o))A.l(A.a9(o,"is not a number",g))
+if(isNaN(o))A.l(A.aa(o,"is not a number",g))
 else m.a=o
 n.a.push(m)
 o=h.dy
@@ -161967,7 +161968,7 @@ r=new A.a1()
 r.ag(s/255)
 p.push(r)
 break
-default:throw A.d(A.a9("Unsupported colour space.",null,null))}return o}}
+default:throw A.d(A.aa("Unsupported colour space.",null,null))}return o}}
 A.Fk.prototype={
 a5U(a,b,c){var s,r,q,p,o,n,m,l,k,j,i=this,h=i.a
 h===$&&A.a()
@@ -162081,7 +162082,7 @@ if(b==null){s=r.r
 s===$&&A.a()
 if(s.length!==0)r.ac7()}else{s=b.a
 s===$&&A.a()
-if(s!==r)throw A.d(A.a9(r,"The graphics state belongs to another graphics object",null))
+if(s!==r)throw A.d(A.aa(r,"The graphics state belongs to another graphics object",null))
 s=r.r
 s===$&&A.a()
 if(B.b.n(s,b))for(;;){if(r.r.length===0)break
@@ -162596,8 +162597,8 @@ r=new A.w8(q)
 q=new A.a0()
 q.bk(null)
 r.a=q
-if(a<0)A.l(A.a9(a,"stroke",j))
-if(b<0)A.l(A.a9(b,"fill",j))
+if(a<0)A.l(A.aa(a,"stroke",j))
+if(b<0)A.l(A.aa(b,"fill",j))
 if(i){if(c!==B.tD)c=B.tD
 p=1
 o=1}else{o=b
@@ -162615,7 +162616,7 @@ i===$&&A.a()
 i.D8(n)}i=k.c
 i.toString
 q=m.b
-if(q.length===0)A.l(A.a9(m,"name","dictionary name cannot be empty"))
+if(q.length===0)A.l(A.aa(m,"name","dictionary name cannot be empty"))
 l=i.a
 l.toString
 l.X(0,"/"+m.wJ(q))
@@ -163665,7 +163666,7 @@ p===$&&A.a()
 p.sap(0,m)
 try{r=s.a3y(b2.e,b2)
 b2.y=t.W.a(J.Y(r,b7))
-b2.e=t.bl.a(J.Y(r,b6))}catch(b){q=A.a9(b2.y,"Invalid cross reference table.",b3)
+b2.e=t.bl.a(J.Y(r,b6))}catch(b){q=A.aa(b2.y,"Invalid cross reference table.",b3)
 throw A.d(q)}p=b2.y
 p.toString
 for(i=t.U,a=t.bl,a0=t.J,a1=t.bo,a2=t.cS,a3=p;a3.p(0,b8);){if(b2.Q!==0){p=a3.t(0,a3.q(b8))
@@ -163684,7 +163685,7 @@ p===$&&A.a()
 a5=A.t4(p.a)
 p=a5.a
 p===$&&A.a()
-if(m<0)A.l(A.a9(m,"position","Invalid position"))
+if(m<0)A.l(A.aa(m,"position","Invalid position"))
 p.b=m
 if(a5.jF()!=="xref"){k=a5.jF()
 k.toString
@@ -163755,7 +163756,7 @@ a.toString
 s=s.i(0,a)}else s=null
 return s},
 am(a,b){var s,r,q,p,o,n
-if(b==null)throw A.d(A.a9(b,"pointer",null))
+if(b==null)throw A.d(A.aa(b,"pointer",null))
 if(b instanceof A.iK){s=this.Vi(b.a)
 if(s==null)return new A.i5()
 r=s.gym()
@@ -163769,7 +163770,7 @@ if(this.cx!=null)if(p instanceof A.a0){p.z=!0
 for(o=p.a,o=new A.bS(o,o.r,o.e,A.q(o).j("bS<2>"));o.F();){n=o.d
 if(n instanceof A.ca)n.Q=!0}}}return s.e=p}else return b},
 asD(a,b){var s,r,q,p,o
-if(a==null)throw A.d(A.a9(a,"Invalid format",null))
+if(a==null)throw A.d(A.aa(a,"Invalid format",null))
 a.pm()
 s=this.aNL(a)
 for(r=t.j1,q=0,p=0;p<s.length;++p){o=this.aXe(a,s[p],b,q)
@@ -163836,12 +163837,12 @@ aNL(a){var s,r,q,p,o,n,m,l="Invalid Format",k=A.b([],t.ln),j=0
 if(a.p(0,"Size")){s=a.t(0,a.q("Size"))
 if(s instanceof A.a1){r=s.a
 r.toString
-j=B.d.a6(r)}}if(j===0)throw A.d(A.a9(j,l,null))
+j=B.d.a6(r)}}if(j===0)throw A.d(A.aa(j,l,null))
 q=a.t(0,a.q("Index"))
 if(q==null)k.push(A.bT9(j,null))
 else{s=this.am(0,q)
 if(s!=null&&s instanceof A.ah){r=s.a
-if((r.length&1)!==0)throw A.d(A.a9(j,l,null))
+if((r.length&1)!==0)throw A.d(A.aa(j,l,null))
 for(p=t.J,o=0;o<r.length;++o){n=r[o]
 n.toString
 n=p.a(n).a
@@ -163963,7 +163964,7 @@ n[m*2+1]=B.d.a6(r)}}r=k.a
 q=r.b
 q===$&&A.a()
 q*=2
-if(q>=n.length)throw A.d(A.a9(r.gaEG(),"Missing indexes in archive",null))
+if(q>=n.length)throw A.d(A.aa(r.gaEG(),"Missing indexes in archive",null))
 k.c=n[q+1]
 r=r.ga_x()
 r=r.t(0,r.q("First"))
@@ -164066,7 +164067,7 @@ T5(a){return this.awR(a)},
 awR(a){var s=0,r=A.z(t.H),q=this,p
 var $async$T5=A.u(function(b,c){if(b===1)return A.w(c,r)
 for(;;)switch(s){case 0:p=q.b
-if(p!=null)throw A.d(A.a9(p,"The object has the reference bound to it.",null))
+if(p!=null)throw A.d(A.aa(p,"The object has the reference bound to it.",null))
 q.b=a
 return A.x(null,r)}})
 return A.y($async$T5,r)},
@@ -164145,7 +164146,7 @@ if(p==null&&q.r!=null){p=q.r
 if(p.CW==null){s=p.y
 r=s.t(0,s.q("Root"))
 if(r instanceof A.aF)p.CW=r
-else A.l(A.a9(r,"Invalid format",null))}p=q.x=t.W.a(A.ap(p.CW))}return p},
+else A.l(A.aa(r,"Invalid format",null))}p=q.x=t.W.a(A.ap(p.CW))}return p},
 geC(){var s=this,r=s.d
 if(r==null){r=s.r
 r=s.d=r==null?A.i8(null,null):r.y}if(r.p(0,"XRefStm"))s.d.H(0,"XRefStm")
@@ -164241,7 +164242,7 @@ s===$&&A.a()
 s=s.c
 m=s.length
 if(!(j<m))break
-if(j>m)A.l(A.a9(j,"index","index out of range"))
+if(j>m)A.l(A.aa(j,"index","index out of range"))
 s[j].a.shP(!1);++j}},
 ll(a){return this.aw8(a)},
 aw8(a){var s=0,r=A.z(t.H),q=this,p,o,n,m,l,k
@@ -164302,7 +164303,7 @@ p===$&&A.a()
 p=p.c
 l=p.length
 if(!(k<l))break
-if(k>l)A.l(A.a9(k,"index","index out of range"))
+if(k>l)A.l(A.aa(k,"index","index out of range"))
 p[k].a.shP(!1);++k}return A.x(null,r)}})
 return A.y($async$ll,r)},
 MN(a){return this.b_I(a)},
@@ -164371,7 +164372,7 @@ a6.toString
 if(!a6){if(a3.geC().p(0,a5))a3.geC().H(0,a5)
 a6=a3.geC().p(0,a4)
 if(a6)A.byg(a3.a.gi9())
-if(a6)a3.geC().H(0,a4)}}for(a6=t.C5,q=t.b,p=t.Q,o=t.O4,n=0;m=a7.c,l=m.length,n<l;++n){if(n>l)A.l(A.a9(n,"index","index out of range"))
+if(a6)a3.geC().H(0,a4)}}for(a6=t.C5,q=t.b,p=t.Q,o=t.O4,n=0;m=a7.c,l=m.length,n<l;++n){if(n>l)A.l(A.aa(n,"index","index out of range"))
 k=m[n]
 m=k.a
 if(a6.b(m)){l=k.c
@@ -164461,7 +164462,7 @@ q.ch=null}s=2
 return A.m(q.MW(),$async$Ai)
 case 2:p=t.C5,o=0
 case 3:if(!(n=j.c,m=n.length,o<m)){s=5
-break}if(o>m)A.l(A.a9(o,"index","index out of range"))
+break}if(o>m)A.l(A.aa(o,"index","index out of range"))
 l=n[o]
 n=l.a
 if(p.b(n)){m=l.c
@@ -165059,8 +165060,8 @@ b_D(a){var s,r,q,p,o,n,m=this,l="not a number",k=m.Q
 if(k!=null)for(s=k.length,r=isNaN(0),q=0;q<k.length;k.length===s||(0,A.L)(k),++q){p=k[q]
 o=p.a
 if(o==null){n=m.gle()
-if(isNaN(n))A.l(A.a9(n,l,null))
-if(r)A.l(A.a9(0,l,null))
+if(isNaN(n))A.l(A.aa(n,l,null))
+if(r)A.l(A.aa(0,l,null))
 o=p.a=new A.iK(n,0)}n=m.a.a
 n===$&&A.a()
 n.db=o
@@ -165080,8 +165081,8 @@ break}l={}
 k=g[m]
 j=l.a=k.a
 if(j==null){i=q.gle()
-if(isNaN(i))A.l(A.a9(i,"not a number",null))
-if(n)A.l(A.a9(0,"not a number",null))
+if(isNaN(i))A.l(A.aa(i,"not a number",null))
+if(n)A.l(A.aa(0,"not a number",null))
 i=k.a=l.a=new A.iK(i,0)}else i=j
 h=q.a.a
 h===$&&A.a()
@@ -165136,11 +165137,11 @@ k=l.i(0,"objectNumber")
 k.toString
 if(p<=0)break
 else{j=new A.a1()
-if(isNaN(k))A.l(A.a9(k,f,g))
+if(isNaN(k))A.l(A.aa(k,f,g))
 else j.a=k
 r.push(j)
 j=new A.a1()
-if(isNaN(p))A.l(A.a9(p,f,g))
+if(isNaN(p))A.l(A.aa(p,f,g))
 else j.a=p
 r.push(j)
 h.b_T(n,k,p,o)
@@ -165205,12 +165206,12 @@ s=11
 break
 case 12:j=f.b
 i=new A.a1()
-if(isNaN(j))A.l(A.a9(j,"is not a number",null))
+if(isNaN(j))A.l(A.aa(j,"is not a number",null))
 else i.a=j
 n.push(i)
 j=f.a
 i=new A.a1()
-if(isNaN(j))A.l(A.a9(j,"is not a number",null))
+if(isNaN(j))A.l(A.aa(j,"is not a number",null))
 else i.a=j
 n.push(i)
 s=13
@@ -165877,7 +165878,7 @@ q=-1===n
 if(!q){if(0!==i.dx[n]){e=i.Q
 e===$&&A.a()
 i.ax=e
-r=n}s=n}else if(-1===r)throw A.d(A.a9(-1,"Lexical Error: Unmatched Input.",h))
+r=n}s=n}else if(-1===r)throw A.d(A.aa(-1,"Lexical Error: Unmatched Input.",h))
 else{if(0!==(i.dx[r]&2)){e=i.ax
 e===$&&A.a()
 o=i.at
@@ -165977,7 +165978,7 @@ case-35:break
 case 35:i.fy=i.fy+i.mY()
 break
 case-36:break
-case 37:A.l(A.a9(B.ls,g+i.gap(0),h))
+case 37:A.l(A.aa(B.ls,g+i.gap(0),h))
 break
 case-37:break
 case 38:return B.u2
@@ -165995,9 +165996,9 @@ o===$&&A.a()
 if(o[e-1]===115){e=o[e]
 e=e===116||e===37}else e=!1
 if(e)break
-else{A.l(A.a9(B.ls,g+i.gap(0),h))
+else{A.l(A.aa(B.ls,g+i.gap(0),h))
 break}case-43:break
-case 48:A.l(A.a9(B.ls,g+i.gap(0),h))
+case 48:A.l(A.aa(B.ls,g+i.gap(0),h))
 break
 case-44:break
 case 50:if(i.fr){l=e-2
@@ -166010,12 +166011,12 @@ m=i.Q
 if(o[m-1]===46){e=o[m]
 e=e===32||e===93}}if(e)break}else{o=i.ay
 o===$&&A.a()
-if(o[e-1]===46&&o[e]===45)return B.nU}A.l(A.a9(B.ls,g+i.gap(0),h))
+if(o[e-1]===46&&o[e]===45)return B.nU}A.l(A.aa(B.ls,g+i.gap(0),h))
 break
 case-45:break
 case 52:break
 case-46:break
-case 54:A.l(A.a9(B.ls,g+i.gap(0),h))
+case 54:A.l(A.aa(B.ls,g+i.gap(0),h))
 break
 case-47:break
 default:break}s=f[i.cy.a]
@@ -166071,10 +166072,10 @@ A.b5i.prototype={
 M(){return"_Error."+this.b}}
 A.aJf.prototype={
 i(a,b){var s=this.c,r=s.length
-if(b>r)A.l(A.a9(b,"index","index out of range"))
+if(b>r)A.l(A.aa(b,"index","index out of range"))
 return s[b]},
 lD(a,b,c){var s,r,q,p=this
-if(b==null)throw A.d(A.a9(b,"element","value cannot be null"))
+if(b==null)throw A.d(A.aa(b,"element","value cannot be null"))
 if(c==null){s=A.bqv(b,null)
 p.c.push(s)
 if(!p.d.p(0,b)){r=p.d
@@ -166096,7 +166097,7 @@ c.e=p.c.length-1}},
 D(a,b){return this.lD(0,b,null)},
 a_h(a){var s=0,r=A.z(t.H),q=this,p,o
 var $async$a_h=A.u(function(b,c){if(b===1)return A.w(c,r)
-for(;;)switch(s){case 0:if(a==null)throw A.d(A.a9(a,"element","value cannot be null"))
+for(;;)switch(s){case 0:if(a==null)throw A.d(A.aa(a,"element","value cannot be null"))
 p=A.bqv(a,null)
 q.c.push(p)
 if(!q.d.p(0,a)){o=q.d
@@ -166206,7 +166207,7 @@ a5G(a){var s,r
 try{s=this.b.i(0,a.a).a
 return s}catch(r){return null}},
 a45(a,b){var s,r=this
-if(a<0||a>r.c.length)throw A.d(A.a9(a,"oldObjIndex","index out of range"))
+if(a<0||a>r.c.length)throw A.d(A.aa(a,"oldObjIndex","index out of range"))
 s=r.c[a]
 if(!J.e(s.a,b)){r.d.H(0,s.a)
 r.d.h(0,b,a)}s.a=b
@@ -166214,7 +166215,7 @@ b.sap(0,a)},
 a46(a,b){return this.bid(a,b)},
 bid(a,b){var s=0,r=A.z(t.H),q=this,p
 var $async$a46=A.u(function(c,d){if(c===1)return A.w(d,r)
-for(;;)switch(s){case 0:if(a<0||a>q.c.length)throw A.d(A.a9(a,"oldObjIndex","index out of range"))
+for(;;)switch(s){case 0:if(a<0||a>q.c.length)throw A.d(A.aa(a,"oldObjIndex","index out of range"))
 p=q.c[a]
 if(!J.e(p.a,b)){q.d.H(0,p.a)
 q.d.h(0,b,a)}p.a=b
@@ -166277,7 +166278,7 @@ this.fW(0)
 for(;;){s=this.d
 if(s===B.u1)r=!1
 else{r=s===B.jf
-if(!r)A.l(A.a9(!1,"Invalid format",null))}if(!r)break
+if(!r)A.l(A.aa(!1,"Invalid format",null))}if(!r)break
 a.bgM(this,b)}},
 a3y(a,a0){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b=this
 a=a
@@ -166647,7 +166648,7 @@ break
 case 0:case 4:s="Internal error."
 break
 default:s=null}r=this.c.gap(0)
-throw A.d(A.a9(a,A.p(s)+b+" before "+r,null))}}
+throw A.d(A.aa(a,A.p(s)+b+" before "+r,null))}}
 A.I9.prototype={
 M(){return"_ErrorType."+this.b}}
 A.ahB.prototype={}
@@ -166676,7 +166677,7 @@ q.a.sap(0,p)}},
 b26(){var s,r,q,p=this,o=p.a
 o===$&&A.a()
 s=o.b
-if(s===0)throw A.d(A.a9(p.gap(0),"Invalid PDF Document Format",null))
+if(s===0)throw A.d(A.aa(p.gap(0),"Invalid PDF Document Format",null))
 o.sap(0,s-1)
 o=p.c
 for(;;){s=p.e
@@ -166688,7 +166689,7 @@ r=s}else r=p.a.eN()
 if(!B.b.n(o,A.aP(r)))break
 s=p.a
 q=s.b-2
-if(q<0)A.l(A.a9(q,"position","Invalid position"))
+if(q<0)A.l(A.aa(q,"position","Invalid position"))
 s.b=q}return p.a.b},
 EX(){var s,r=this.e
 r===$&&A.a()
@@ -166745,7 +166746,7 @@ r=s.eN()}p=r}if(p===13)if(A.aP(q.EX())!=="\n"){s=q.a
 s===$&&A.a()
 s.sap(0,s.b-1)}return o},
 Rb(a,b,c){var s,r,q,p,o,n,m=this
-if(c<0)throw A.d(A.a9(c,"The value can't be less then zero",null))
+if(c<0)throw A.d(A.aa(c,"The value can't be less then zero",null))
 s=m.e
 s===$&&A.a()
 if(s&&c>0){s=m.d
@@ -166766,7 +166767,7 @@ if(c>p)c=p
 o=m.nH(c)
 for(n=0;n<c;++n)a[r+n]=o[n]}r+=c}return r-b},
 a0n(a,b,c){var s,r,q,p,o,n=this,m=a.length
-if(b>m)throw A.d(A.a9(b,"Invalid index to read",null))
+if(b>m)throw A.d(A.aa(b,"Invalid index to read",null))
 s=n.a
 s===$&&A.a()
 r=s.b
@@ -166785,7 +166786,7 @@ a[b]=o;++b;++q}return A.c(["next",b,"buffer",a],t.N,t.z)},
 Yn(a){var s,r=this.a
 r===$&&A.a()
 s=r.b
-if(s<a)throw A.d(A.a9(this.gap(0),"Invalid PDF Document Format",null))
+if(s<a)throw A.d(A.aa(this.gap(0),"Invalid PDF Document Format",null))
 r.sap(0,s-a)
 return A.dX(this.nH(a),0,null)},
 D2(a){var s,r,q,p,o,n,m=this,l="Invalid PDF Document Format",k="position",j="Invalid position",i="startxref"
@@ -166797,17 +166798,17 @@ if(m.a.b<s)return-1
 r=m.Yn(s)
 q=m.a
 p=q.b-s
-while(r!==a){if(p<0)throw A.d(A.a9(p,l,null))
+while(r!==a){if(p<0)throw A.d(A.aa(p,l,null))
 o=q.b-1
-if(o<0)A.l(A.a9(o,k,j))
+if(o<0)A.l(A.aa(o,k,j))
 q.b=o
 if(o<s)return-1
 r=m.Yn(s)
 q=m.a
-p=q.b-s}for(q=a==="xref";q;)if(m.D2(i)===p-5)for(r=i;r!==a;){if(p<0)throw A.d(A.a9(p,l,null))
+p=q.b-s}for(q=a==="xref";q;)if(m.D2(i)===p-5)for(r=i;r!==a;){if(p<0)throw A.d(A.aa(p,l,null))
 o=m.a
 n=o.b-1
-if(n<0)A.l(A.a9(n,k,j))
+if(n<0)A.l(A.aa(n,k,j))
 o.b=n
 if(n<s)return-1
 r=m.Yn(s)
@@ -166830,24 +166831,24 @@ m=i.a0n(d,1,f)
 l=A.d5(m.i(0,"next"))
 d=s.a(m.i(0,"buffer"))
 q=i.a
-if(n<0)A.l(A.a9(n,h,g))
+if(n<0)A.l(A.aa(n,h,g))
 q.b=n
 if(l<f)return-1
 else{d.toString
 if(a===A.dX(d,0,null))return n
 else{q=i.a
 p=q.b+1
-if(p<0)A.l(A.a9(p,h,g))
+if(p<0)A.l(A.aa(p,h,g))
 q.b=p}}}}else if(q===115){q=i.a
 n=q.b-1
-if(n<0)A.l(A.a9(n,h,g))
+if(n<0)A.l(A.aa(n,h,g))
 q.b=n
 k=s.a(i.a0n(A.ao(9,0,!1,e),1,9).i(0,"buffer"))
 k.toString
 r="startxref"===A.dX(k,0,null)
 if(r){j=n+1
 q=i.a
-if(j<0)A.l(A.a9(j,h,g))
+if(j<0)A.l(A.aa(j,h,g))
 q.b=j}}else if(o===-1)return-1}},
 adZ(a){var s=this.e
 s===$&&A.a()
@@ -166973,14 +166974,14 @@ s.X(0,B.e.l(b))}else if(typeof b=="number"){b=B.d.aJ(b,2)
 if(B.c.e9(b,".00")){s=b.length
 b=s===3?"0":B.c.V(b,0,s-3)}r.a.X(0,b)}else if(typeof b=="string")r.a.X(0,b)
 else if(t.Y.b(b))r.a.X(0,b)
-else throw A.d(A.a9(b,u.y,null))}}
+else throw A.d(A.aa(b,u.y,null))}}
 A.Ps.prototype={
 TN(a,b){var s=this
 if(b!=null){s.b=b
 s.f=s.e=b.b
 s.c=!0}else s.f=s.e=s.a.length},
 X(a,b){var s,r,q,p=this
-if(b==null)throw A.d(A.a9(b,"data","value cannot be null"))
+if(b==null)throw A.d(A.aa(b,"data","value cannot be null"))
 if(A.jp(b))p.X(0,B.e.l(b))
 else if(typeof b=="number"){s=B.d.aJ(b,2)
 if(B.c.e9(s,".00")){r=s.length
@@ -167002,7 +167003,7 @@ r.toString
 B.b.N(r,s.de(a,q,o))}},
 iC(a){var s=0,r=A.z(t.H),q=this,p,o,n
 var $async$iC=A.u(function(b,c){if(b===1)return A.w(c,r)
-for(;;)switch(s){case 0:if(a==null)throw A.d(A.a9(a,"data","value cannot be null"))
+for(;;)switch(s){case 0:if(a==null)throw A.d(A.aa(a,"data","value cannot be null"))
 if(A.jp(a))q.iC(B.e.l(a))
 else if(typeof a=="number"){p=B.e.aJ(a,2)
 if(B.c.e9(p,".00")){o=p.length
@@ -167036,7 +167037,7 @@ gA(a){var s=this.a
 s.toString
 return J.aC(s)},
 gap(a){return this.b},
-sap(a,b){if(b<0)throw A.d(A.a9(b,"position","Invalid position"))
+sap(a,b){if(b<0)throw A.d(A.aa(b,"position","Invalid position"))
 this.b=b},
 eN(){var s,r,q=this
 if(q.b!==q.gA(q)){s=q.a
@@ -167685,7 +167686,7 @@ l===$&&A.a()
 l=l.e
 s=l.length
 if(!(p<s))break
-if(p>=s)A.l(A.a9(p,"index out of range",null))
+if(p>=s)A.l(A.aa(p,"index out of range",null))
 n=l[p]
 l=n.d
 l===$&&A.a()
@@ -167734,7 +167735,7 @@ break}}else{q=l
 break}}return c.x.r8(q)}else{a=a.e
 if(a!=null){a=a.d
 a===$&&A.a()
-return a.SB(a0)}else{if(a0<0||a0>=c.gcY(0))throw A.d(A.a9("index","out of range",b))
+return a.SB(a0)}else{if(a0<0||a0>=c.gcY(0))throw A.d(A.aa("index","out of range",b))
 a=c.x.b.d.a
 a===$&&A.a()
 a=a.e
@@ -167742,12 +167743,12 @@ s=a.length
 g=0
 m=0
 for(;;){if(!(m<s)){f=b
-break}if(m>=s)A.l(A.a9(m,"index out of range",b))
+break}if(m>=s)A.l(A.aa(m,"index out of range",b))
 n=a[m].d
 n===$&&A.a()
 e=n.f.a.length
 d=a0-g
-if(a0>=g&&d<e){if(d<0||d>=e)A.l(A.a9(d,"our of range",b))
+if(a0>=g&&d<e){if(d<0||d>=e)A.l(A.aa(d,"our of range",b))
 f=n.d[d]
 break}g+=e;++m}return f}}},
 b3I(a){var s,r,q,p,o
@@ -167761,12 +167762,12 @@ else{q=p.a
 q.toString
 q=B.d.a6(q)}o=q+1
 q=new A.a1()
-if(isNaN(o))A.l(A.a9(o,"is not a number",null))
+if(isNaN(o))A.l(A.aa(o,"is not a number",null))
 else q.a=o
 a.L("Count",q)
 a=s.a(A.ap(a.t(0,a.q("Parent"))))}},
 aO0(a5,a6,a7){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4=this
-if(a5<0&&a5>a4.gcY(0))throw A.d(A.a9(a5,"page index is not within range",null))
+if(a5<0&&a5>a4.gcY(0))throw A.d(A.aa(a5,"page index is not within range",null))
 s=a4.x
 s===$&&A.a()
 s=s.b.a
@@ -167836,7 +167837,7 @@ o=s
 continue}else a+=a3-1}}}else{a6=a4.zM(s).a.length
 o=s}return A.c(["node",o,"index",a6],t.N,t.z)},
 aNs(a5,a6,a7){var s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1=this,a2="tempNode",a3="tempLocalIndex",a4="isParentNodeFetched"
-if(a6<0&&a6>a1.gcY(0))throw A.d(A.a9(a6,"page index is not within range",null))
+if(a6<0&&a6>a1.gcY(0))throw A.d(A.aa(a6,"page index is not within range",null))
 s=a1.b
 if(s==null){s=a1.x
 s===$&&A.a()
@@ -167945,7 +167946,7 @@ o=o.e
 s=o.length
 r=0
 q=0
-for(;q<s;++q){if(q>=s)A.l(A.a9(q,"index out of range",null))
+for(;q<s;++q){if(q>=s)A.l(A.aa(q,"index out of range",null))
 p=o[q].d
 p===$&&A.a()
 r+=p.f.a.length}return r}}
@@ -167998,7 +167999,7 @@ o===$&&A.a()
 o=o.e
 q=o.length
 if(!(r<q))break
-if(r>=q)A.l(A.a9(r,"index out of range",null))
+if(r>=q)A.l(A.aa(r,"index out of range",null))
 o=o[r]
 q=o.c
 if(q==null){q=o.d
@@ -168019,7 +168020,7 @@ o===$&&A.a()
 o=o.e
 r=o.length
 if(!(s<r))break
-if(s>=r)A.l(A.a9(s,p,null))
+if(s>=r)A.l(A.aa(s,p,null))
 o=o[s]
 r=o.c
 if(r==null){r=o.d
@@ -168034,7 +168035,7 @@ if(o.n(0,b)){o=this.b.d.a
 o===$&&A.a()
 o=o.e
 r=o.length
-if(s>=r)A.l(A.a9(s,p,null))
+if(s>=r)A.l(A.aa(s,p,null))
 o=o[s]
 r=o.c
 if(r==null){r=o.d
@@ -169097,7 +169098,7 @@ p=J.e(r,p.c)
 r=p}if(r){B.b.ct(this.f.a,s)
 B.b.H(this.d,b)
 break}}},
-SB(a){if(a<0||a>=this.f.a.length)throw A.d(A.a9(a,"our of range",null))
+SB(a){if(a<0||a>=this.f.a.length)throw A.d(A.aa(a,"our of range",null))
 return this.d[a]},
 a5a(a,b,c){var s,r,q,p,o,n,m,l,k,j,i,h,g=this
 if(c==null){s=g.c
@@ -169320,7 +169321,7 @@ i(a,b){var s
 if(b>=0){s=this.a
 s===$&&A.a()
 s=b>=s.e.length}else s=!0
-if(s)A.l(A.a9(b,"index out of range",null))
+if(s)A.l(A.aa(b,"index out of range",null))
 s=this.a
 s===$&&A.a()
 return s.e[b]},
@@ -169341,7 +169342,7 @@ aXt(a){var s
 if(a>=0){s=this.a
 s===$&&A.a()
 s=a>=s.e.length}else s=!0
-if(s)throw A.d(A.a9(a,"index out of range",null))
+if(s)throw A.d(A.aa(a,"index out of range",null))
 s=this.a
 s===$&&A.a()
 return s.e[a]},
@@ -170144,7 +170145,7 @@ s===$&&A.a()
 s=s.fy
 s.toString
 s=s===""}else s=!1
-if(s)throw A.d(A.a9(u.Z,i,i))
+if(s)throw A.d(A.aa(u.Z,i,i))
 s=j.a
 if(s.r){s=s.dx
 if(s!=null){s=s.b
@@ -170330,7 +170331,7 @@ p===$&&A.a()
 p=p.fy
 p.toString
 p=p===""}else p=!1
-if(p)throw A.d(A.a9(u.Z,null,null))
+if(p)throw A.d(A.aa(u.Z,null,null))
 p=q.a
 s=p.r?3:5
 break
@@ -170718,7 +170719,7 @@ n.rx=m}else if(p instanceof A.aF){p=p.gbd()
 if(p!=null&&p instanceof A.je){m=p.a
 n.dx=!1
 n.rx=m}}}q=a1.p(0,"Filter")?A.ap(a1.t(0,a1.q("Filter"))):b
-if(q!=null&&q instanceof A.aW&&q.b!=="Standard")A.l(A.a9(q,"Invalid Format: Unsupported security filter",b))
+if(q!=null&&q instanceof A.aW&&q.b!=="Standard")A.l(A.aa(q,"Invalid Format: Unsupported security filter",b))
 m=a1.yV("P")
 n.as=m
 l=n.w
@@ -170740,7 +170741,7 @@ n.Q=a1.yV("V")
 m=n.z=a1.yV("R")
 if(m!==0)n.fx=m
 k=a1.yV("V")
-if(k===4&&k!==n.z)A.l(A.a9("Invalid Format: V and R entries of the Encryption dictionary does not match.",b,b))
+if(k===4&&k!==n.z)A.l(A.aa("Invalid Format: V and R entries of the Encryption dictionary does not match.",b,b))
 if(k===5){m=a1.CT(0,"UE").a
 m.toString
 n.p2=new Uint8Array(A.bu(m))
@@ -170794,7 +170795,7 @@ k=4}l=!1
 if(m!==0){m.toString
 if(B.e.b7(m,8)!==0)m=k===1||k===2||k===3
 else m=l}else m=l
-if(m)A.l(A.a9("Invalid format: Invalid/Unsupported security dictionary.",b,b))
+if(m)A.l(A.aa("Invalid format: Invalid/Unsupported security dictionary.",b,b))
 n.dx=!0
 a2.toString
 if(!a2){m=n.ry
@@ -170812,7 +170813,7 @@ g=e}else if(n.K4(m)){n.fy=m
 g=e}else if(!g)n.k2=null
 o=!g
 if(o)n.at=f
-if(o)throw A.d(A.a9(c.CW,"password","Cannot open an encrypted document. The password is invalid."))
+if(o)throw A.d(A.aa(c.CW,"password","Cannot open an encrypted document. The password is invalid."))
 a1.y=!1
 a1.b=!0
 d=A.byz()
@@ -170957,12 +170958,12 @@ b3(a){var s,r,q,p,o
 if(a!=null)if(a instanceof A.ah)B.b.N(this.a,a.a)
 else if(t.EW.b(a)||t.zQ.b(a))for(s=a.length,r=this.a,q=0;q<a.length;a.length===s||(0,A.L)(a),++q){p=a[q]
 o=new A.a1()
-if(isNaN(p))A.l(A.a9(p,"is not a number",null))
+if(isNaN(p))A.l(A.aa(p,"is not a number",null))
 else o.a=p
 r.push(o)}else if(t.qy.b(a)||t.lc.b(a))J.h7(a,B.b.gqh(this.a))},
 i(a,b){return this.a[b]},
 cR(a,b,c){var s=this.a,r=s.length
-if(b>r)throw A.d(A.a9("index out of range "+b,null,null))
+if(b>r)throw A.d(A.aa("index out of range "+b,null,null))
 else if(b===r)s.push(c)
 else B.b.cR(s,b,c)
 this.b=!0},
@@ -171047,8 +171048,8 @@ s.z=!1},
 i(a,b){return this.t(0,this.q(b))},
 h(a,b,c){return this.L(b,c)},
 L(a,b){var s,r,q="value cannot be null"
-if(a==null)throw A.d(A.a9(a,"key",q))
-if(b==null)throw A.d(A.a9(b,"value",q))
+if(a==null)throw A.d(A.aa(a,"key",q))
+if(b==null)throw A.d(A.aa(b,"value",q))
 s=this.a
 s.toString
 r=this.q(a)
@@ -171310,7 +171311,7 @@ s.toString
 return"/"+this.wJ(s)},
 k(a,b){if(b==null)return!1
 return b instanceof A.aW&&this.b==b.b},
-gG(a){return J.a5(this.b)},
+gG(a){return J.a6(this.b)},
 ghP(){var s=this.c
 return s==null?this.c=!1:s},
 shP(a){this.c=a},
@@ -171351,7 +171352,7 @@ mn(a){return new A.i5()},
 $ieH:1,
 gt1(){return null}}
 A.a1.prototype={
-ag(a){if(isNaN(a))throw A.d(A.a9(a,"is not a number",null))
+ag(a){if(isNaN(a))throw A.d(A.aa(a,"is not a number",null))
 else this.a=a},
 ghP(){var s=this.b
 return s==null?this.b=!1:s},
@@ -171401,10 +171402,10 @@ $ieH:1,
 ga38(){return this.a},
 gt1(){return null}}
 A.aF.prototype={
-pY(a){if(a==null)throw A.d(A.a9(a,"object","value cannot be null"))
+pY(a){if(a==null)throw A.d(A.aa(a,"object","value cannot be null"))
 if(t.lg.b(a))this.a=A.ja(a)
 else if(t.B_.b(a))this.a=a
-else throw A.d(A.a9(u.m,null,null))},
+else throw A.d(A.aa(u.m,null,null))},
 gbd(){var s,r,q=this,p=q.b,o=p==null
 if(!o||q.a==null){if(!o){o=q.r
 o===$&&A.a()
@@ -171566,7 +171567,7 @@ m=o.abG(m,s)}if(a)o.b=!0}else if(n instanceof A.ah)for(s=n.a,r="",q=0;q<s.length
 if(p!=null&&p instanceof A.aW)r=p.b
 if(!(r==="ASCIIHexDecode")){m.toString
 r.toString
-m=o.abG(m,r)}if(a)o.b=!0}else throw A.d(A.a9("","Invalid format",null))
+m=o.abG(m,r)}if(a)o.b=!0}else throw A.d(A.aa("","Invalid format",null))
 return m},
 abG(a,b){var s,r,q
 a=a
@@ -171596,7 +171597,7 @@ else{if(s instanceof A.ah)p=s
 else o=s instanceof A.i5?s:d
 q=d}}if(o!=null)return a
 n=q==null
-if(n)if(p==null)throw A.d(A.a9(a0,c,d))
+if(n)if(p==null)throw A.d(A.aa(a0,c,d))
 m=p!=null
 if(m){l=p.a[0]
 if(l!=null&&l instanceof A.a0)if(l.p(0,"Name")){k=l.t(0,l.q("Name"))
@@ -171606,7 +171607,7 @@ if(i instanceof A.a1){n=i.a
 n.toString
 j=B.d.a6(n)}}}else if(m&&p.a.length>0){h=p.a[0]
 j=h!=null&&h instanceof A.a0&&h.p(0,b)?h.yV(b):1}if(j===1)return a
-else if(j===2)throw A.d(A.a9(j,"Unsupported predictor: TIFF 2.",d))
+else if(j===2)throw A.d(A.aa(j,"Unsupported predictor: TIFF 2.",d))
 else if(j<16&&j>2){s=q.t(0,q.q("Colors"))
 if(s!=null&&s instanceof A.a1){n=s.a
 n.toString
@@ -171620,8 +171621,8 @@ m=n.gaXp()
 n.a=m
 n.b=1
 e=g*f
-if(e<=0)A.l(A.a9(e,"There cannot be less or equal to zero bytes in a line.",d))
-return n.aUM(a,e+1,m,!1)}else throw A.d(A.a9(a0,c,d))}return a},
+if(e<=0)A.l(A.aa(e,"There cannot be less or equal to zero bytes in a line.",d))
+return n.aUM(a,e+1,m,!1)}else throw A.d(A.aa(a0,c,d))}return a},
 FF(a){var s,r,q=this,p="Filter",o=q.t(0,q.q(p))
 if(o instanceof A.aF)o=o.a
 s=A.cK()
@@ -171634,16 +171635,16 @@ q.L(p,r)}s.b=A.ak(a)
 if(r==null)q.L(p,s.bI())
 else r.cR(0,0,s.bI())},
 X(a,b){var s,r="value cannot be empty"
-if(b==null)throw A.d(A.a9(b,"pdfObject","value cannot be null"))
+if(b==null)throw A.d(A.aa(b,"pdfObject","value cannot be null"))
 if(typeof b=="string"||t.u.b(b)){A.bK(b)
-if(b.length===0)throw A.d(A.a9(b,r,null))
+if(b.length===0)throw A.d(A.aa(b,r,null))
 this.X(0,B.aq.bm(b))}else{s=t.Y
 if(s.b(b)||t.wT.b(b)){s.a(b)
-if(J.eS(b))throw A.d(A.a9(b,r,null))
+if(J.eS(b))throw A.d(A.aa(b,r,null))
 s=this.ay
 s.toString
 J.a_k(s,b)
-this.b=!0}else throw A.d(A.a9(b,u.y,null))}},
+this.b=!0}else throw A.d(A.aa(b,u.y,null))}},
 AU(){var s=this,r=s.gf7()
 r.toString
 J.buv(r)
@@ -171947,7 +171948,7 @@ k(a,b){if(b==null)return!1
 if(b instanceof A.rl)return A.a0_(this.CP(),b.CP())
 else return!1},
 l(a){return J.a8(this.c)},
-ep(a){throw A.d(A.a9(a,"stream","Not Implemented"))},
+ep(a){throw A.d(A.aa(a,"stream","Not Implemented"))},
 $ize:1}
 A.a_V.prototype={
 l(a){return"NULL"},
@@ -171974,7 +171975,7 @@ if(b==null)return p.atW(0,p.c)
 else{for(s="[",r=0;q=p.c,r<q.length;++r){s+=J.a8(q[r])
 if(r!==p.c.length-1)s+=", "}return s+"]"}},
 l(a){return this.atW(0,null)},
-ep(a){throw A.d(A.a9("Not Implemented",null,null))}}
+ep(a){throw A.d(A.aa("Not Implemented",null,null))}}
 A.a_X.prototype={
 aCO(a){this.c=[]},
 i(a,b){var s=this.c
@@ -172005,7 +172006,7 @@ if(r!==q)return r<q}return o===p},
 l(a){var s=this.c
 s===$&&A.a()
 return A.pP(s,"[","]")},
-ep(a){throw A.d(A.a9("Not Implemented",null,null))},
+ep(a){throw A.d(A.aa("Not Implemented",null,null))},
 a6X(){var s,r,q,p,o,n,m,l,k=this,j=k.c
 j===$&&A.a()
 j=j.length
@@ -172028,10 +172029,10 @@ this.c=a},
 k(a,b){if(b==null)return!1
 if(b instanceof A.DN)return this.c==b.c&&this.d==b.d&&J.e(this.a5F(0),b.a5F(0))
 else return!1},
-gG(a){var s=J.a5(this.c),r=this.e
+gG(a){var s=J.a6(this.c),r=this.e
 return r!=null?(s^r.gG(r))>>>0:s},
 l(a){return"["+A.p(this.c)+"]"+A.p(this.e)},
-ep(a){throw A.d(A.a9(a,"stream","Not Implemented"))},
+ep(a){throw A.d(A.aa(a,"stream","Not Implemented"))},
 a5F(a){var s=this.e
 if(s!=null)return s.m2()
 return null}}
@@ -172041,7 +172042,7 @@ ep(a){var s=this.c
 s===$&&A.a()
 a.kG(24,B.aq.bm(s))},
 k(a,b){if(b==null)return!1
-throw A.d(A.a9("Not implemented",null,null))},
+throw A.d(A.aa("Not implemented",null,null))},
 gG(a){var s=this.c
 s===$&&A.a()
 return B.c.gG(s)}}
@@ -172073,7 +172074,7 @@ switch(a){case 4:s=new A.yb()
 s.a=this
 return s
 case 16:return A.bv7(this)
-default:throw A.d(A.a9(a,"tagValue","Invalid entry in sequence"))}},
+default:throw A.d(A.aa(a,"tagValue","Invalid entry in sequence"))}},
 Id(){var s,r,q=A.kW(null)
 while(s=this.Ie(),s!=null){r=q.a
 r===$&&A.a()
@@ -172088,7 +172089,7 @@ r=A.bv1(s,k)
 s=(k&32)===0
 q=!s
 p=A.bv_(l.a,l.b)
-if(p<0){if(s)throw A.d(A.a9(p,"length","Invalid length specified"))
+if(p<0){if(s)throw A.d(A.aa(p,"length","Invalid length specified"))
 o=new A.r5()
 o.wx(A.buY(l.a,l.b),l.b)
 if((k&128)!==0)return A.boZ(!0,r,o)
@@ -172141,7 +172142,7 @@ a3R(){var s,r,q,p,o=this,n=o.c.eN()
 n.toString
 if(n>0){s=A.bv1(o.c,n)
 r=A.bv_(o.c,o.a)
-if(r<0){if((n&32)===0)throw A.d(A.a9(r,"length","Encodeing length is invalid"))
+if(r<0){if((n&32)===0)throw A.d(A.aa(r,"length","Encodeing length is invalid"))
 q=new A.r5()
 q.wx(A.buY(o.c,o.a),o.a)
 if((n&128)!==0){n=A.boZ(!0,s,q)
@@ -172156,8 +172157,8 @@ n=n.Id()
 p=n.a
 p===$&&A.a()
 return p.length<1?$.bnX():A.arG(n)
-default:throw A.d(A.a9(s,"tag","Invalid object in the sequence"))}}else return o.b6y(n,s,r)}else if(n<0)return null
-else{n=A.a9(n,"tag","End of contents is invalid")
+default:throw A.d(A.aa(s,"tag","Invalid object in the sequence"))}}else return o.b6y(n,s,r)}else if(n<0)return null
+else{n=A.aa(n,"tag","End of contents is invalid")
 throw A.d(n)}},
 av7(a){var s,r=A.b([],t.t),q=t.jy,p=t.xQ,o=0
 for(;;){s=a.a
@@ -172189,7 +172190,7 @@ q===$&&A.a()
 if(q===0)return-1
 q=r.e.eN()
 q.toString
-if(q<0)throw A.d(A.a9(q,"result","Invalid length in bytes"))
+if(q<0)throw A.d(A.aa(q,"result","Invalid length in bytes"))
 s=r.w-1
 r.w=s
 if(s===0)r.z9(!0)
@@ -172198,7 +172199,7 @@ lR(a,b,c,d){var s,r=this,q=r.w
 q===$&&A.a()
 if(q===0)return 0
 s=r.a72(0,b,c,Math.min(d,q))
-if(s<1)throw A.d(A.a9(s,"count","Object truncated"))
+if(s<1)throw A.d(A.aa(s,"count","Object truncated"))
 q=r.w-s
 r.w=q
 if(q===0)r.z9(!0)
@@ -172210,7 +172211,7 @@ s=J.eJ(p,t.S)
 for(r=0;r<p;++r)s[r]=0
 p=q.w-q.Rb(s,0,s.length)
 q.w=p
-if(p!==0)throw A.d(A.a9(s,"bytes","Object truncated"))
+if(p!==0)throw A.d(A.aa(s,"bytes","Object truncated"))
 q.z9(!0)
 return s},
 Rb(a,b,c){var s,r
@@ -172220,7 +172221,7 @@ s+=r}return s}}
 A.CU.prototype={
 Rr(){var s=this.e.eN()
 s.toString
-if(s<0)throw A.d(A.a9(s,"value","Invalid data in stream"))
+if(s<0)throw A.d(A.aa(s,"value","Invalid data in stream"))
 return s},
 a00(){var s=this,r=s.w
 if(r===0){if(s.Rr()!==0)throw A.d(A.cw("Invalid content"))
@@ -172344,7 +172345,7 @@ A.LW.prototype={
 l(a){var s=this.jZ(0)
 s.toString
 return s},
-gG(a){return J.a5(this.jZ(0))},
+gG(a){return J.a6(this.jZ(0))},
 k(a,b){if(b==null)return!1
 if(b instanceof A.LW)return this.jZ(0)==b.jZ(0)
 else return!1}}
@@ -172353,7 +172354,7 @@ jZ(a){return this.e},
 ep(a){var s=this.e
 s.toString
 a.kG(22,B.aq.bm(s))},
-gG(a){return J.a5(this.e)},
+gG(a){return J.a6(this.e)},
 k(a,b){if(b==null)return!1
 if(b instanceof A.LN)return this.e==b.e
 else return!1}}
@@ -172365,7 +172366,7 @@ r.toString
 o[0]=r
 A.jG(o,1,q,0,o.length-1)
 a.kG(3,o)},
-gG(a){return(J.a5(this.f)^A.a00(this.e))>>>0},
+gG(a){return(J.a6(this.f)^A.a00(this.e))>>>0},
 k(a,b){if(b==null)return!1
 if(b instanceof A.LO)return this.f==b.f&&A.a0_(this.e,b.e)
 else return!1},
@@ -172378,7 +172379,7 @@ aCT(a){var s,r,q
 for(s="",r=0;r!==(a.length/2|0);++r){q=2*r
 s+=A.aP((a[q]<<8|a[q+1]&255)>>>0)}this.e=s},
 jZ(a){return this.e},
-gG(a){return J.a5(this.e)},
+gG(a){return J.a6(this.e)},
 k(a,b){if(b==null)return!1
 if(b instanceof A.LP)return this.e==b.e
 else return!1},
@@ -172395,7 +172396,7 @@ a.kG(19,B.aq.bm(s))},
 k(a,b){if(b==null)return!1
 if(b instanceof A.LU)return this.e==b.e
 else return!1},
-gG(a){return J.a5(this.e)}}
+gG(a){return J.a6(this.e)}}
 A.LQ.prototype={
 ep(a){var s=this.c
 s===$&&A.a()
@@ -172458,7 +172459,7 @@ B.b.N(a,p)}}return a},
 aus(a,b){return this.auu(a,b,null)},
 aut(a,b){return this.auu(a,null,b)},
 ep(a){a.kG(6,this.a5f())},
-gG(a){return J.a5(this.c)},
+gG(a){return J.a6(this.c)},
 k(a,b){if(b==null)return!1
 if(b instanceof A.yF)return this.c==b.c
 else return!1},
@@ -172564,7 +172565,7 @@ kH(a){var s=this
 if(a==null){s.a.push(5)
 s.a.push(0)}else if(a instanceof A.eC)a.ep(s)
 else if(a instanceof A.dT)a.m2().ep(s)
-else throw A.d(A.a9(a,"obj","Invalid object specified"))}}
+else throw A.d(A.aa(a,"obj","Invalid object specified"))}}
 A.DN.prototype={
 ep(a){var s,r=this.e.Sd(),q=this.d
 q.toString
@@ -172583,7 +172584,7 @@ a.kG(23,B.aq.bm(s))},
 k(a,b){if(b==null)return!1
 if(b instanceof A.LY)return this.c==b.c
 else return!1},
-gG(a){return J.a5(this.c)},
+gG(a){return J.a6(this.c)},
 l(a){var s=this.c
 s.toString
 return s}}
@@ -172605,7 +172606,7 @@ a.kG(12,B.aq.bm(s))},
 k(a,b){if(b==null)return!1
 if(b instanceof A.LZ)return this.e==b.e
 else return!1},
-gG(a){return J.a5(this.e)}}
+gG(a){return J.a6(this.e)}}
 A.LX.prototype={
 jZ(a){return this.e},
 ep(a){var s=this.e
@@ -172617,7 +172618,7 @@ return s},
 k(a,b){if(b==null)return!1
 if(b instanceof A.LX)return this.e==b.e
 else return!1},
-gG(a){return J.a5(this.e)}}
+gG(a){return J.a6(this.e)}}
 A.auZ.prototype={
 $1(a){return this.a.push(a&255)},
 $S:26}
@@ -172625,7 +172626,7 @@ A.aqt.prototype={
 bja(a,b,c,d){var s,r,q,p,o,n,m
 this.a===$&&A.a()
 s=b.length
-if(B.e.b7(s,16)!==0)throw A.d(A.a9(u.n+s,null,null))
+if(B.e.b7(s,16)!==0)throw A.d(A.aa(u.n+s,null,null))
 r=new Uint8Array(s)
 for(q=0,p=0;q<s;){o=this.a
 n=new Uint8Array(A.bu(b))
@@ -172640,7 +172641,7 @@ A.aqu.prototype={
 pK(a){var s,r,q,p,o,n
 this.a===$&&A.a()
 s=a.length
-if(B.e.b7(s,16)!==0)throw A.d(A.a9(u.n+s,null,null))
+if(B.e.b7(s,16)!==0)throw A.d(A.aa(u.n+s,null,null))
 r=new Uint8Array(s)
 for(q=0,p=0;q<s;){o=this.a
 n=o.f
@@ -173038,8 +173039,8 @@ amo(a,b){var s,r=a.length,q=r-b
 for(s=a.$flags|0;b<r;){s&2&&A.aw(a)
 a[b]=q;++b}return q},
 b8S(a,b){var s,r="Invalid pad",q=b.length,p=b[q-1]&255
-if(p<1||p>q)throw A.d(A.a9(b,"input",r))
-for(s=1;s<=p;++s)if(b[q-s]!==p)throw A.d(A.a9(b,"input",r))
+if(p<1||p>q)throw A.d(A.aa(b,"input",r))
+for(s=1;s<=p;++s)if(b[q-s]!==p)throw A.d(A.aa(b,"input",r))
 return p}}
 A.KD.prototype={}
 A.a0W.prototype={
@@ -173053,7 +173054,7 @@ s.f=!1},
 vv(a,b,c){var s,r,q=this
 q.f=b
 if(c instanceof A.zq){s=c.b
-if(s.length!==16)throw A.d(A.a9(s,"Initialization vector must be the same length as block size",null))
+if(s.length!==16)throw A.d(A.aa(s,"Initialization vector must be the same length as block size",null))
 r=q.c
 r===$&&A.a()
 B.F.pU(r,0,s)
@@ -173070,7 +173071,7 @@ yq(a,b,c,d){var s=this.f
 s.toString
 return s?this.P4(a,b,c,d):this.OG(a,b,c,d)},
 P4(a,b,c,d){var s,r,q,p,o,n=this,m=n.b
-if(b+m>a.length)throw A.d(A.a9("Invalid length in input bytes",null,null))
+if(b+m>a.length)throw A.d(A.aa("Invalid length in input bytes",null,null))
 for(s=n.d,r=0;r<m;++r){q=s[r]
 p=a[b+r]
 s.$flags&2&&A.aw(s)
@@ -173082,7 +173083,7 @@ s.toString
 B.F.cF(s,0,n.b,J.fa(B.F.gbL(c),c.byteOffset+d,n.b))
 return o},
 OG(a,b,c,d){var s,r,q,p,o,n,m,l=this,k=l.b
-if(b+k>a.length)throw A.d(A.a9("Invalid length in input bytes",null,null))
+if(b+k>a.length)throw A.d(A.aa("Invalid length in input bytes",null,null))
 s=l.e
 s.toString
 B.F.cF(s,0,k,J.fa(B.F.gbL(a),a.byteOffset+b,16))
@@ -173344,7 +173345,7 @@ if(r==="sha1"||r==="sha-1"||r==="sha_1")q=B.QX
 else if(r==="sha256"||r==="sha-256"||r==="sha_256")q=B.dP
 else if(r==="sha384"||r==="sha-384"||r==="sha_384")q=B.wP
 else if(r==="sha512"||r==="sha-512"||r==="sha_512")q=B.wQ
-else{if(!(r==="md5"||r==="md-5"||r==="md_5"))throw A.d(A.a9(a,"hashAlgorithm","Invalid message digest algorithm"))
+else{if(!(r==="md5"||r==="md-5"||r==="md_5"))throw A.d(A.aa(a,"hashAlgorithm","Invalid message digest algorithm"))
 q=B.ex}return q},
 b9H(a,b){var s,r,q=typeof b=="string"?this.avw(b):b,p=A.b([],t.J6),o=q.fk(new A.a_p(p,t.Pw)),n=J.eJ(8192,t.S)
 for(s=0;s<8192;++s)n[s]=0
@@ -173369,7 +173370,7 @@ A.bar.prototype={
 aDv(a,b,c,d){var s,r,q,p,o=this,n=A.bNp()
 o.a=n
 n=o.f=n.av0(c)
-if(n==null)throw A.d(A.a9(c,"hashAlgorithm","Unknown Hash Algorithm"))
+if(n==null)throw A.d(A.aa(c,"hashAlgorithm","Unknown Hash Algorithm"))
 o.c=o.b=1
 s=A.t(t.u,t.X)
 o.e=s
@@ -173400,7 +173401,7 @@ s.Q=b
 if(c!=null)if(c==="RSA")s.w="1.2.840.113549.1.1.1"
 else if(c==="DSA")s.w="1.2.840.10040.4.1"
 else if(c==="ECDSA")s.w="1.2.840.10045.2.1"
-else throw A.d(A.a9(c,"algorithm","Invalid entry"))},
+else throw A.d(A.aa(c,"algorithm","Invalid entry"))},
 axd(a,b,c,d,e,a0,a1,a2){var s,r,q,p,o,n,m,l,k,j,i=this,h=null,g={},f=i.z
 if(f!=null){i.as=f
 if(i.y!=null)i.y=i.Q}s=A.kW(h)
@@ -174294,7 +174295,7 @@ j=p.ry
 j.toString
 if(j){j=p.dy
 j=j===B.fb||j===B.j8}else j=!1
-if(j)throw A.d(A.a9(p.dy,"Encrypt only attachment is supported in AES algorithm with 128, 256 and 256Revision6 encryptions only.",null))
+if(j)throw A.d(A.aa(p.dy,"Encrypt only attachment is supported in AES algorithm with 128, 256 and 256Revision6 encryptions only.",null))
 j=p.dy
 if(j===B.fc||j===B.dr||j===B.ds){j=new A.a1()
 j.ag(p.La()+3)
@@ -174557,7 +174558,7 @@ A.aK0.prototype={
 i(a,b){var s,r=this.b
 r===$&&A.a()
 s=r.length
-if(b>=s)A.l(A.a9(b,"Index out of range",null))
+if(b>=s)A.l(A.aa(b,"Index out of range",null))
 return r[b]}}
 A.aJ0.prototype={
 M(){return"PdfGridImagePosition."+this.b}}
@@ -175904,7 +175905,7 @@ c=e7.c
 c.toString
 d9=e.aI(0,c)
 for(e=d9+1,c3=d8;c3<e;++c3){c=d7.d
-if(c3<0||c3>=c.f.a.length)A.l(A.a9(c3,f1,e8))
+if(c3<0||c3>=c.f.a.length)A.l(A.aa(c3,f1,e8))
 c=c.d[c3]
 b=c.a
 b===$&&A.a()
@@ -176100,7 +176101,7 @@ b=c.f.a.length
 e=e[0]
 e.toString
 e=e5+B.d.a6(e)
-if(b>e){if(e<0||e>=b)A.l(A.a9(e,f1,e8))
+if(b>e){if(e<0||e>=b)A.l(A.aa(e,f1,e8))
 e7.c=c.d[e]}else{e=new A.mc()
 c=new A.a0()
 c.a=A.t(l,k)
@@ -178682,7 +178683,7 @@ r.c=n}r=q.a.c.a
 r===$&&A.a()
 r=r.c
 r===$&&A.a()
-if(s+o>r.length)throw A.d(A.a9(f+o+" column "+b,g,g))
+if(s+o>r.length)throw A.d(A.aa(f+o+" column "+b,g,g))
 s=m.e
 r=e.w
 if(r==null){r=new A.eo()
@@ -178692,7 +178693,7 @@ n.b=e
 r.b=A.b([],c)
 e.w=r}r=r.b
 r===$&&A.a()
-if(s+b>r.length)throw A.d(A.a9(f+o+" column "+b,g,g))
+if(s+b>r.length)throw A.d(A.aa(f+o+" column "+b,g,g))
 k=m.f
 s=k>1
 if(s&&m.e>1){j=m.e
@@ -178896,7 +178897,7 @@ r.c=n}r=q.a.c.a
 r===$&&A.a()
 r=r.c
 r===$&&A.a()
-if(s+o>r.length)throw A.d(A.a9(f+o+" column "+b,g,g))
+if(s+o>r.length)throw A.d(A.aa(f+o+" column "+b,g,g))
 s=m.e
 r=e.f
 if(r==null){r=new A.bm()
@@ -178904,7 +178905,7 @@ r.a=e
 r.b=A.b([],c)
 e.f=r}r=r.b
 r===$&&A.a()
-if(s+b>r.length)throw A.d(A.a9(f+o+" column "+b,g,g))
+if(s+b>r.length)throw A.d(A.aa(f+o+" column "+b,g,g))
 k=m.f
 s=k>1
 if(s&&m.e>1){j=m.e
@@ -179729,7 +179730,7 @@ if(s===-1){s=this.a
 s===$&&A.a()
 s=this.c=s.lO()}return s},
 sIq(a,b){var s
-if(b<1)throw A.d(A.a9("value","row span",u.H))
+if(b<1)throw A.d(A.aa("value","row span",u.H))
 if(b>1){this.e=b
 s=this.a
 s===$&&A.a()
@@ -179742,7 +179743,7 @@ s=s.d
 s===$&&A.a()
 s.e=!0}},
 sanC(a,b){var s
-if(b<1)throw A.d(A.a9("value","column span",u.H))
+if(b<1)throw A.d(A.aa("value","column span",u.H))
 if(b>1){this.f=b
 s=this.a
 s===$&&A.a()
@@ -179757,7 +179758,7 @@ gaY(a){var s=null,r=this.as
 return r==null?this.as=A.mb(s,s,s,s):r},
 gJA(){var s=this.w
 return s==null?this.w=A.iL(B.cC,B.cD,0):s},
-rF(a){if(a==null)throw A.d(A.a9(a,"value","value cannot be null"))},
+rF(a){if(a==null)throw A.d(A.aa(a,"value","value cannot be null"))},
 WB(){var s=this,r=s.gaY(0).d
 if(r==null){r=s.a
 r===$&&A.a()
@@ -181818,7 +181819,7 @@ o=B.c.aI(p,":")
 p=(o>0?B.c.bu(p,o+1):p)==="xmpmeta"}else p=!1
 if(p){++r
 if(r>1)throw A.d(A.bE("More than one element satisfies the specified condition",null))
-s=q}}if(s==null)throw A.d(A.a9(s,"node","node cannot be null"))
+s=q}}if(s==null)throw A.d(A.aa(s,"node","node cannot be null"))
 return s},
 xh(a,b){new A.a7d(this.a).X(0,this.b.a4o(!0))},
 baz(a,b){this.a.AU()},
@@ -181925,7 +181926,7 @@ else if(a instanceof A.no)return s.a.c.z
 else if(a instanceof A.nx)return s.a.c.y
 else if(a instanceof A.oM)return s.a.c.Q
 else if(a instanceof A.hi)return s.a.c.as
-else throw A.d(A.a9(a,"annotation","The annotation type is not supported."))},
+else throw A.d(A.aa(a,"annotation","The annotation type is not supported."))},
 adb(a,b){var s,r,q,p,o=a instanceof A.pK
 if(o||a instanceof A.no||a instanceof A.nx||a instanceof A.oM){s=this.d
 r=this.a
@@ -182505,7 +182506,7 @@ k.toString
 k=k.fL(A.B(a).ax.a===B.a5?B.B.E(0.87):B.x.E(0.87),14)
 h.ax.toString
 k=A.bH(A.k("No bookmarks found",g,g,g,g,g,k.aK(g),g,g),g,g,g)}i=t.p
-return A.oX(A.e0(B.bv,A.b([f,new A.d3(o,g,g,A.C(g,A.a6(A.b([new A.KF(r,j,g),A.aa(k,1)],i),B.l,g,B.f,B.h),B.i,g,g,new A.E(m,g,g,g,n,g,g,B.n),g,g,g,g,g,g,l),g)],i),B.O,B.aO,g),B.aH,!1)}}
+return A.oX(A.e0(B.bv,A.b([f,new A.d3(o,g,g,A.C(g,A.a5(A.b([new A.KF(r,j,g),A.a9(k,1)],i),B.l,g,B.f,B.h),B.i,g,g,new A.E(m,g,g,g,n,g,g,B.n),g,g,g,g,g,g,l),g)],i),B.O,B.aO,g),B.aH,!1)}}
 A.as_.prototype={
 $2(a,b){return this.a.e[b]},
 $S:846}
@@ -182589,7 +182590,7 @@ k=A.B(a).ok.z
 k.toString
 k=k.fL(A.B(a).ax.k3,14)
 h.d.toString
-o.push(A.aa(new A.aZ(j,40,new A.av(n,new A.d3(l,j,j,A.k(i.a,j,j,B.X,j,j,k.aK(j),m,j),j),j),j),1))
+o.push(A.a9(new A.aZ(j,40,new A.av(n,new A.d3(l,j,j,A.k(i.a,j,j,B.X,j,j,k.aK(j),m,j),j),j),j),1))
 return A.fh(!1,B.a6,!0,j,A.d8(!1,j,!0,new A.av(p,A.I(o,B.l,j,B.f,B.h,0,j),j),j,!0,j,j,j,q,j,j,j,j,j,new A.arX(h,i),j,j,j,j,j,r,j,j),B.i,s,0,j,j,j,j,j,B.bR)},
 $S:847}
 A.arX.prototype={
@@ -182947,7 +182948,7 @@ b9=b3.a.p4?0:b8
 b3.d.toString
 r=b3.e
 r=r.gbK(r)
-b5=A.a6(A.b([b5,A.C(b4,b4,B.i,r,b4,b4,b4,b9,b4,b4,b4,b4,b4)],s),B.l,b4,B.f,B.h)}else{b5=A.b([new A.aZ(b7,b6,A.bU(b4,b4,b4,r,!1,b4,b4,!1,b4,!1,b4,b4,b4,b4,b4,b4,b4,b4,b4,b5,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,B.S,b4),b4)],s)
+b5=A.a5(A.b([b5,A.C(b4,b4,B.i,r,b4,b4,b4,b9,b4,b4,b4,b4,b4)],s),B.l,b4,B.f,B.h)}else{b5=A.b([new A.aZ(b7,b6,A.bU(b4,b4,b4,r,!1,b4,b4,!1,b4,!1,b4,b4,b4,b4,b4,b4,b4,b4,b4,b5,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,b4,B.S,b4),b4)],s)
 b9=b3.go
 if(b9!=null&&b3.dy!=null){r=b9.c
 q=r.b
@@ -185543,7 +185544,7 @@ k=A.B(a).ok.z
 k.toString
 k=k.fL(A.B(a).ax.a===B.a5?B.B.E(0.87):B.x.E(0.87),14)
 i.dv.toString
-r=A.dW(new A.aZ(361,j,A.a6(A.b([new A.d3(p,j,j,new A.av(B.W9,n,j),j),new A.d3(r,j,j,new A.av(B.W8,A.k(l+"?",j,j,j,j,j,k.aK(j),j,B.ax),j),j)],o),B.l,j,B.f,B.h),j),j,B.I,j,j,B.aj)
+r=A.dW(new A.aZ(361,j,A.a5(A.b([new A.d3(p,j,j,new A.av(B.W9,n,j),j),new A.d3(r,j,j,new A.av(B.W8,A.k(l+"?",j,j,j,j,j,k.aK(j),j,B.ax),j),j)],o),B.l,j,B.f,B.h),j),j,B.I,j,j,B.aj)
 p=A.fR(j,j,j,j,j,j,j,j,j,B.dH,j,j,j,B.cZ,j,j,j,j,j,j,j)
 n=A.B(a).ok.z
 n.toString
@@ -185942,7 +185943,7 @@ n=A.B(a).ok.y
 n.toString
 p.push(new A.av(B.mp,new A.d3(B.bX,l,l,A.k("1 - "+o,l,l,l,l,l,n.kn(A.B(a).ax.k3,14,B.T),l,l),l),l))
 p.push(j.aWG(a))
-p=A.dW(A.a6(p,B.l,l,B.f,B.h),l,B.I,l,l,B.aj)
+p=A.dW(A.a5(p,B.l,l,B.f,B.h),l,B.I,l,l,B.aj)
 o=A.fR(l,l,l,l,l,l,l,l,l,B.dH,l,l,l,B.cZ,l,l,l,l,l,l,l)
 j.x.toString
 n=A.B(a).ok.z
@@ -186588,7 +186589,7 @@ n=A.B(a).ok.y
 n.toString
 p.push(new A.av(B.mp,new A.d3(B.bX,l,l,A.k("1 - "+o,l,l,l,l,l,n.kn(A.B(a).ax.k3,14,B.T),l,l),l),l))
 p.push(i.b2_(a))
-p=A.dW(A.a6(p,B.l,l,B.f,B.h),l,B.I,l,l,B.aj)
+p=A.dW(A.a5(p,B.l,l,B.f,B.h),l,B.I,l,l,B.aj)
 o=A.fR(l,l,l,l,l,l,l,l,l,B.dH,l,l,l,B.cZ,l,l,l,l,l,l,l)
 i.f.toString
 n=A.B(a).ok.z
@@ -186712,7 +186713,7 @@ o=m.e
 o===$&&A.a()
 n=m.f
 n===$&&A.a()
-return A.fh(!1,B.a6,!0,l,new A.qE(k,A.C(l,A.a6(A.b([new A.aZ(l,55,r,l),B.qp,new A.aZ(l,124,A.ns(l,B.cz,!1,l,!0,B.O,l,A.pf(),o,l,l,l,l,l,2,B.a_2,B.I,!0,l,!0,l,!0,n,B.ca,l,l,l,l,l,l,l,l,l,l,l,!1,"\u2022",l,l,l,l,l,!1,l,l,!q,l,!0,l,B.b6,l,l,l,l,l,l,l,l,l,l,l,l,!0,B.aG,B.jt,B.bK,l,l,l,l),l)],p),B.l,l,B.f,B.h),B.i,l,l,new A.E(j,l,l,s,B.AB,l,l,B.n),l,180,l,l,l,l,l),l),B.i,B.E,0,l,l,l,l,l,B.bR)}}
+return A.fh(!1,B.a6,!0,l,new A.qE(k,A.C(l,A.a5(A.b([new A.aZ(l,55,r,l),B.qp,new A.aZ(l,124,A.ns(l,B.cz,!1,l,!0,B.O,l,A.pf(),o,l,l,l,l,l,2,B.a_2,B.I,!0,l,!0,l,!0,n,B.ca,l,l,l,l,l,l,l,l,l,l,l,!1,"\u2022",l,l,l,l,l,!1,l,l,!q,l,!0,l,B.b6,l,l,l,l,l,l,l,l,l,l,l,l,!0,B.aG,B.jt,B.bK,l,l,l,l),l)],p),B.l,l,B.f,B.h),B.i,l,l,new A.E(j,l,l,s,B.AB,l,l,B.n),l,180,l,l,l,l,l),l),B.i,B.E,0,l,l,l,l,l,B.bR)}}
 A.bhu.prototype={
 $0(){var s=this.a
 s.r=!s.a.c.a
@@ -187118,7 +187119,7 @@ s=q.e
 s===$&&A.a()
 if(s!==a){q=q.f
 q===$&&A.a()
-if(!B.b.n(A.f3(q,t.N),a))throw A.d(A.a9(a,"selectedItem","The value is not in the list of items."))
+if(!B.b.n(A.f3(q,t.N),a))throw A.d(A.aa(a,"selectedItem","The value is not in the list of items."))
 q=r.w
 s=q.e
 s===$&&A.a()
@@ -187221,7 +187222,7 @@ r=t.N
 a=A.f3(A.b([A.f3(s,r)[0]],t.s),r)}}else{a=n.je(a).hl(0,!1)
 for(q=0;q<a.length;++q){n=o.w.f
 n===$&&A.a()
-if(!B.b.n(n,a[q]))throw A.d(A.a9(a[q],"selectedItems","The item is not in the list."))}n=o.f
+if(!B.b.n(n,a[q]))throw A.d(A.aa(a[q],"selectedItems","The item is not in the list."))}n=o.f
 if(!n.gHG())a=A.f3(A.b([a[0]],t.s),t.N)}s=o.w.e
 s===$&&A.a()
 p=A.et(s,!0,t.N)
@@ -187396,7 +187397,7 @@ s=q.e
 s===$&&A.a()
 if(s!==a){q=q.f
 q===$&&A.a()
-if(!B.b.n(A.f3(q,t.N),a))throw A.d(A.a9(a,"selectedItem","The value is not in the list of items."))
+if(!B.b.n(A.f3(q,t.N),a))throw A.d(A.aa(a,"selectedItem","The value is not in the list of items."))
 q=r.w
 s=q.e
 s===$&&A.a()
@@ -187678,7 +187679,7 @@ f=A.C(j,new A.Rm($.bsf.bv(),new A.blP(b),$.boe()),B.i,j,j,new A.E(B.x,j,f,r,j,j,
 r=A.B(a).ok.z
 r.toString
 o=A.B(a)
-f=A.dW(new A.aZ(k.d,j,A.a6(A.b([f,B.aU,A.I(A.b([A.k("Pen Color",j,j,j,j,j,r.a0x(o.ax.k3,"Roboto-Regular",14,B.T),j,j),new A.aZ(128,j,A.I(A.bTL(b,a),B.l,j,B.av,B.h,0,j),j)],p),B.l,j,B.av,B.h,0,j)],p),B.l,j,B.bn,B.h),j),j,B.I,j,j,B.aj)
+f=A.dW(new A.aZ(k.d,j,A.a5(A.b([f,B.aU,A.I(A.b([A.k("Pen Color",j,j,j,j,j,r.a0x(o.ax.k3,"Roboto-Regular",14,B.T),j,j),new A.aZ(128,j,A.I(A.bTL(b,a),B.l,j,B.av,B.h,0,j),j)],p),B.l,j,B.av,B.h,0,j)],p),B.l,j,B.bn,B.h),j),j,B.I,j,j,B.aj)
 r=new A.X(20,0,20,0)
 o=!$.ZL?j:new A.blQ(b)
 n=A.fR(j,j,j,j,j,j,j,j,j,B.dH,j,j,j,B.cZ,j,new A.aN(A.n(20),B.w),j,j,j,j,j)
@@ -189095,7 +189096,7 @@ n.toString
 n=A.B(n).ax.a===B.a5?B.B.E(0.87):B.x.E(0.87)
 n=o.fL(n,24)
 e.dg.toString
-o=A.aa(new A.av(B.W4,A.k("Password Protected",d,d,d,d,d,n.aK(d),d,d),d),1)
+o=A.a9(new A.av(B.W4,A.k("Password Protected",d,d,d,d,d,n.aK(d),d,d),d),1)
 n=A.n(40)
 m=e.er
 if(m==null)m=d
@@ -189141,7 +189142,7 @@ f=A.B(f).ax.b}else{f=e.c
 f.toString
 f=A.B(f).ax.a===B.a5?B.xm.E(0.38):B.x5.E(0.38)}f=g.kn(f,14,B.U)
 e.dg.toString
-return A.C(d,A.oX(A.bH(A.C(d,A.a6(A.b([n,new A.av(B.W6,o,d),new A.av(B.VZ,m,d),new A.av(k,A.I(A.b([j,A.dr(A.k("OPEN",d,d,d,d,d,f.aK(d),d,d),i,h)],l),B.l,d,B.f8,B.h,0,d),d)],l),B.v,d,B.f,B.h),B.i,d,d,new A.E(p,d,d,q,d,d,d,B.n),d,264,d,d,d,d,360),d,d,d),B.aH,r),B.i,d,d,new A.E(c,d,d,d,s,d,d,B.n),d,d,d,d,d,d,d)},
+return A.C(d,A.oX(A.bH(A.C(d,A.a5(A.b([n,new A.av(B.W6,o,d),new A.av(B.VZ,m,d),new A.av(k,A.I(A.b([j,A.dr(A.k("OPEN",d,d,d,d,d,f.aK(d),d,d),i,h)],l),B.l,d,B.f8,B.h,0,d),d)],l),B.v,d,B.f,B.h),B.i,d,d,new A.E(p,d,d,q,d,d,d,B.n),d,264,d,d,d,d,360),d,d,d),B.aH,r),B.i,d,d,new A.E(c,d,d,d,s,d,d,B.n),d,d,d,d,d,d,d)},
 b2L(){var s,r,q,p,o,n,m,l,k,j,i,h,g=this,f=null
 g.e5.toString
 s=g.c
@@ -190462,7 +190463,7 @@ q.toString
 p=A.B(a4).ax.a===B.a5?B.B.E(0.87):B.x.E(0.87)
 p=q.kn(p,24,B.U)
 s.dg.toString
-q=A.aa(A.k("Password Protected",a0,a0,a0,a0,a0,p.aK(a0),a0,a0),1)
+q=A.a9(A.k("Password Protected",a0,a0,a0,a0,a0,p.aK(a0),a0,a0),1)
 p=A.n(40)
 s.dg.toString
 o=s.er.ghD()
@@ -190526,7 +190527,7 @@ s.dg.toString
 a=s.er.ghD()
 a=a.z
 j=A.hJ(a0,new A.cl(4,B.ct,new A.al(j.b,1,B.z,-1)),a0,a0,a0,a0,a0,a0,!0,a0,a0,new A.cl(4,i,new A.al(h.fy,1,B.z,-1)),a0,c,a0,a0,a0,a0,a0,a0,a0,new A.cl(4,B.ct,new A.al(g.b,1,B.z,-1)),new A.cl(4,B.ct,new A.al(f.fy,1,B.z,-1)),a0,a0,a0,a0,a0,a0,a0,e,"Enter Password",a0,a0,a0,a0,a0,a0,a0,d,a0,!0,!0,!1,a0,a0,a0,a0,a0,a0,a0,a0,A.f2(a0,a0,a0,a0,a0,A.Z(b,a==null?A.B(a4).ax.k3.E(0.6):a,a0,a0,a0,18),a0,a0,new A.aRM(s,a5),a0,a0,a0,a0,a0),a0,a0,a0,a0,a0)
-o=A.a6(A.b([new A.d3(o,a0,a0,new A.av(B.mp,m,a0),a0),A.MP(A.tP(!0,s.bh,a0,2,j,!1,!1,s.a0,a0,a0,1,k,"*",new A.aRN(s,a5),a0,new A.aRO(s,a4),a0,!1,a0,l,B.aG,a0,B.bK,a0,new A.aRP(s,a5)),s.ci)],n),B.l,a0,B.f,B.h)
+o=A.a5(A.b([new A.d3(o,a0,a0,new A.av(B.mp,m,a0),a0),A.MP(A.tP(!0,s.bh,a0,2,j,!1,!1,s.a0,a0,a0,1,k,"*",new A.aRN(s,a5),a0,new A.aRO(s,a4),a0,!1,a0,l,B.aG,a0,B.bK,a0,new A.aRP(s,a5)),s.ci)],n),B.l,a0,B.f,B.h)
 m=A.fR(a0,a0,a0,a0,a0,a0,a0,a0,a0,B.dH,a0,a0,a0,B.cZ,a0,a0,a0,a0,a0,a0,a0)
 s.a3.toString
 l=A.B(a4).ok.z
@@ -190709,7 +190710,7 @@ if(s)a1=b1.cy.b}else{a3=0
 a1=0}s=b1.x2
 s===$&&A.a()
 p=b1.k1
-a4=s===B.aF?A.I(k,B.l,p,B.bn,B.h,0,a9):A.a6(k,B.l,p,B.bn,B.h)
+a4=s===B.aF?A.I(k,B.l,p,B.bn,B.h,0,a9):A.a5(k,B.l,p,B.bn,B.h)
 a4=A.dy(new A.aZ(a1,a3,a4,a9),b1.p1,a9,a9,a9,a9,new A.aSt(b1))
 p=b1.fp
 p===$&&A.a()
@@ -191108,7 +191109,7 @@ m=q.a
 l=j.b
 f=f?B.ait:B.aiv
 k=t.p
-return A.bpr(i,s,new A.qE(r,new A.aZ(o,p,A.a6(A.b([A.I(A.b([n,A.oX(A.dr(f,new A.aRX(l,g,j.d,j.e,a),i),B.aH,m)],k),B.l,i,B.av,B.h,0,i),A.aa(A.ns(i,B.cz,!1,i,!0,B.O,i,A.pf(),l.cT,i,i,i,i,i,2,B.a_3,B.I,!0,i,!0,i,!0,l.ce,B.ca,i,i,i,i,B.i8,i,i,i,i,i,i,!1,"\u2022",i,new A.aRY(b),i,i,i,!1,i,i,!q.a,i,!0,i,B.b6,i,i,i,i,i,i,i,i,i,i,i,i,!0,B.aG,i,B.bK,i,i,i,i),1)],k),B.l,i,B.f,B.h),i),i),i,i,i,B.V,B.L1,i,new A.aN(h,B.w),i)},
+return A.bpr(i,s,new A.qE(r,new A.aZ(o,p,A.a5(A.b([A.I(A.b([n,A.oX(A.dr(f,new A.aRX(l,g,j.d,j.e,a),i),B.aH,m)],k),B.l,i,B.av,B.h,0,i),A.a9(A.ns(i,B.cz,!1,i,!0,B.O,i,A.pf(),l.cT,i,i,i,i,i,2,B.a_3,B.I,!0,i,!0,i,!0,l.ce,B.ca,i,i,i,i,B.i8,i,i,i,i,i,i,!1,"\u2022",i,new A.aRY(b),i,i,i,!1,i,i,!q.a,i,!0,i,B.b6,i,i,i,i,i,i,i,i,i,i,i,i,!0,B.aG,i,B.bK,i,i,i,i),1)],k),B.l,i,B.f,B.h),i),i),i,i,i,B.V,B.L1,i,new A.aN(h,B.w),i)},
 $S:884}
 A.aRW.prototype={
 $0(){A.aG(this.a,!1).bY(null)},
@@ -202684,8 +202685,8 @@ s($,"c1S","bGo",()=>A.az("''",!0,!1,!1))
 s($,"c4n","kT",()=>A.aTX(new A.bm_(),t.MP,t.FB))
 s($,"c4v","xO",()=>A.aTX(new A.bm7(),t.ut,t.rC))
 s($,"c51","bt",()=>A.aTX(new A.bmR(),t.O,t.A))
-s($,"c4b","bHY",()=>{var q="AI Property Legal Assistant",p="\u090f\u0906\u0908 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0939\u093e\u092f\u0915",o="\u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902",n="{greeting}, {name} \ud83d\udc4b",m="Stamp Duty Calculator",l="\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930",k="Recent Documents",j="\u0939\u093e\u0932 \u0915\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c",i="\u0909\u091a\u093f\u0924 \u0924\u0924\u094d\u092a\u0930\u0924\u093e \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f",h="Upload from Gallery",g="\u0917\u0948\u0932\u0930\u0940 \u0938\u0947 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902",f="Document Content",e="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u093e\u092e\u0917\u094d\u0930\u0940",d="Paste agreement or clause text here...",c="\u0905\u0928\u0941\u092c\u0902\u0927 \u092f\u093e \u0916\u0902\u0921 \u0915\u093e \u092a\u093e\u0920 \u092f\u0939\u093e\u0901 \u092a\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902...",b="Analyze Document Text",a="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091f\u0947\u0915\u094d\u0938\u094d\u091f \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902",a0="Analyzing image document...",a1="\u091b\u0935\u093f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",a2="Reading document...",a3="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092a\u0922\u093c\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",a4="Analyzing scanned PDF via AI vision...",a5="\u090f\u0906\u0908 \u0935\u093f\u091c\u093c\u0928 \u0915\u0947 \u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u0938\u094d\u0915\u0948\u0928 \u0915\u093f\u090f \u0917\u090f \u092a\u0940\u0921\u0940\u090f\u092b \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",a6="Analyzing for risks...",a7="\u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",a8="Delete Permanently",a9="\u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f\u0902",b0="Due Diligence Checklists",b1="\u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f",b2="Untitled Checklist",b3="\u0936\u0940\u0930\u094d\u0937\u0915\u0939\u0940\u0928 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f",b4="What kind of transaction are you doing?",b5="\u0906\u092a \u0915\u093f\u0938 \u092a\u094d\u0930\u0915\u093e\u0930 \u0915\u093e \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u0930 \u0930\u0939\u0947 \u0939\u0948\u0902?",b6="e.g. Verify Title Deed & Encumbrance Certificate",b7="\u0909\u0926\u093e. \u091f\u093e\u0907\u091f\u0932 \u0921\u0940\u0921 \u0914\u0930 \u092d\u093e\u0930 \u092a\u094d\u0930\u092e\u093e\u0923\u092a\u0924\u094d\u0930 \u091c\u093e\u0902\u091a\u0947\u0902",b8="Rename Checklist",b9="\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e \u092c\u0926\u0932\u0947\u0902",c0="Checklist renamed successfully",c1="Checklist moved to Recycle Bin",c2="\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u092f\u093e \u0917\u092f\u093e",c3="Circle Rate Value",c4="\u0938\u0930\u094d\u0915\u093f\u0932 \u0930\u0947\u091f \u092e\u0942\u0932\u094d\u092f",c5="Buyer Gender / Ownership",c6="\u0916\u0930\u0940\u0926\u093e\u0930 \u0915\u093e \u0932\u093f\u0902\u0917 / \u0938\u094d\u0935\u093e\u092e\u093f\u0924\u094d\u0935",c7="Scan New Document",c8="\u0928\u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902",c9="Document Legal Repository",d0="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e\u0928\u0942\u0928\u0940 \u0930\u093f\u092a\u0949\u091c\u093f\u091f\u0930\u0940",d1="{count} total property agreements analyzed",d2="\u0915\u0941\u0932 {count} \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u0917\u092f\u093e",d3='No documents matching "{query}"',d4='"{query}" \u0938\u0947 \u092e\u0947\u0932 \u0916\u093e\u0924\u093e \u0915\u094b\u0908 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u093e',d5="No documents in this category",d6="\u0907\u0938 \u0936\u094d\u0930\u0947\u0923\u0940 \u092e\u0947\u0902 \u0915\u094b\u0908 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0928\u0939\u0940\u0902",d7="Scan a new agreement or document to get an instant AI legal risk report.",d8="\u0924\u0941\u0930\u0902\u0924 \u090f\u0906\u0908 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u0928\u092f\u093e \u0938\u092e\u091d\u094c\u0924\u093e \u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902\u0964",d9="{time} \u0938\u094d\u0915\u0948\u0928 \u0915\u093f\u092f\u093e \u0917\u092f\u093e",e0="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0928\u093e\u092e \u092c\u0926\u0932\u0947\u0902",e1="Risk Analysis Report",e2="\u091c\u094b\u0916\u093f\u092e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0930\u093f\u092a\u094b\u0930\u094d\u091f",e3="High Legal Risk Detected",e4="\u0909\u091a\u094d\u091a \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0915\u093e \u092a\u0924\u093e \u091a\u0932\u093e",e5="No Risk Detected",e6="\u0915\u094b\u0908 \u091c\u094b\u0916\u093f\u092e \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u093e",e7="\ud83d\udd34 {count} High Risk",e8="\ud83d\udd34 {count} \u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e",e9="\ud83d\udfe1 {count} Caution",f0="\ud83d\udfe1 {count} \u0938\u093e\u0935\u0927\u093e\u0928\u0940",f1="\ud83d\udfe2 {count} Compliant",f2="\ud83d\udfe2 {count} \u0905\u0928\u0941\u0930\u0942\u092a",f3="{count} Clauses Total",f4="Uploaded Source Document & Text",f5="\u0905\u092a\u0932\u094b\u0921 \u0915\u093f\u092f\u093e \u0917\u092f\u093e \u0938\u094d\u0930\u094b\u0924 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0914\u0930 \u092a\u093e\u0920",f6="Original uploaded contract file",f7="\u092e\u0942\u0932 \u0905\u092a\u0932\u094b\u0921 \u0915\u0940 \u0917\u0908 \u0905\u0928\u0941\u092c\u0902\u0927 \u092b\u093c\u093e\u0907\u0932",f8="Legal Risk Assessment Report exported successfully!",f9="\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u0915\u0940 \u0917\u0908!",g0="Enter your email or phone to receive a secure OTP code.",g1="\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0913\u091f\u0940\u092a\u0940 \u0915\u094b\u0921 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e \u0908\u092e\u0947\u0932 \u092f\u093e \u092b\u094b\u0928 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902\u0964",g2="name@example.com",g3="\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0913\u091f\u0940\u092a\u0940 \u092d\u0947\u091c\u0947\u0902",g4="Don't have an account? ",g5="Already have an account? ",g6="Sign in to access your saved document scans, RERA compliance checks, and real-time legal assistant.",g7="\u0905\u092a\u0928\u0947 \u0938\u0939\u0947\u091c\u0947 \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928, \u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u091c\u093e\u0902\u091a \u0914\u0930 \u0930\u0940\u092f\u0932-\u091f\u093e\u0907\u092e \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0939\u093e\u092f\u0915 \u0924\u0915 \u092a\u0939\u0941\u0902\u091a\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902\u0964",g8="Build a Safer Property Journey.",g9="\u090f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092f\u093e\u0924\u094d\u0930\u093e \u0915\u093e \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0915\u0930\u0947\u0902\u0964",h0="Verify Your Email",h1="\u0905\u092a\u0928\u093e \u0908\u092e\u0947\u0932 \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0930\u0947\u0902",h2="Enter the 6-digit code sent to\n{email}",h3="{email}\n\u092a\u0930 \u092d\u0947\u091c\u093e \u0917\u092f\u093e 6 \u0905\u0902\u0915\u094b\u0902 \u0915\u093e \u0915\u094b\u0921 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902",h4="{seconds}s \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902",h5="Share Risk Summary",h6="\u091c\u094b\u0916\u093f\u092e \u0938\u093e\u0930\u093e\u0902\u0936 \u0938\u093e\u091d\u093e \u0915\u0930\u0947\u0902",h7="\u092f\u0939 \u0915\u0948\u0938\u0947 \u0915\u093e\u092e \u0915\u0930\u0924\u093e \u0939\u0948",h8="Plain-English Insights",h9="\u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f",i0="Lost connection while checking comparison status. Please check your connection and try again.",i1="\u0924\u0941\u0932\u0928\u093e \u0938\u094d\u0925\u093f\u0924\u093f \u0915\u0940 \u091c\u093e\u0902\u091a \u0915\u0930\u0924\u0947 \u0938\u092e\u092f \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091f\u0942\u091f \u0917\u092f\u093e\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964",i2="Please select both Version A and Version B documents.",i3="\u0915\u0943\u092a\u092f\u093e \u0938\u0902\u0938\u094d\u0915\u0930\u0923 A \u0914\u0930 \u0938\u0902\u0938\u094d\u0915\u0930\u0923 B \u0926\u094b\u0928\u094b\u0902 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091a\u0941\u0928\u0947\u0902\u0964",i4="Please select two distinct versions to compare.",i5="\u0915\u0943\u092a\u092f\u093e \u0924\u0941\u0932\u0928\u093e \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0926\u094b \u0905\u0932\u0917-\u0905\u0932\u0917 \u0938\u0902\u0938\u094d\u0915\u0930\u0923 \u091a\u0941\u0928\u0947\u0902\u0964",i6="Contract Differential Analysis",i7="\u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u0902\u0924\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923",i8="Select two agreement drafts to identify modified clauses, added obligations, deleted buyer protections, and risk escalations.",i9="\u0938\u0902\u0936\u094b\u0927\u093f\u0924 \u0916\u0902\u0921\u094b\u0902, \u091c\u094b\u0921\u093c\u0947 \u0917\u090f \u0926\u093e\u092f\u093f\u0924\u094d\u0935\u094b\u0902, \u0939\u091f\u093e\u090f \u0917\u090f \u0916\u0930\u0940\u0926\u093e\u0930 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0909\u092a\u093e\u092f\u094b\u0902 \u0914\u0930 \u091c\u094b\u0916\u093f\u092e \u0935\u0943\u0926\u094d\u0927\u093f \u0915\u0940 \u092a\u0939\u091a\u093e\u0928 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0926\u094b \u0938\u092e\u091d\u094c\u0924\u0947 \u0915\u0947 \u092a\u094d\u0930\u093e\u0930\u0942\u092a \u091a\u0941\u0928\u0947\u0902\u0964",j0="Analyzing clause alignments, numbers, dates, and legal statutory impact...",j1="\u0916\u0902\u0921 \u0938\u0902\u0930\u0947\u0916\u0923, \u0938\u0902\u0916\u094d\u092f\u093e\u0913\u0902, \u0924\u093f\u0925\u093f\u092f\u094b\u0902 \u0914\u0930 \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u092a\u094d\u0930\u092d\u093e\u0935 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",j2="Couldn't load your documents. Check your connection and try again.",j3="\u0906\u092a\u0915\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0932\u094b\u0921 \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u0947\u0964 \u0905\u092a\u0928\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964",j4="No scanned documents found in your workspace.",j5="\u0906\u092a\u0915\u0947 \u0915\u093e\u0930\u094d\u092f\u0938\u094d\u0925\u093e\u0928 \u092e\u0947\u0902 \u0915\u094b\u0908 \u0938\u094d\u0915\u0948\u0928 \u0915\u093f\u090f \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u0947\u0964",j6="Scan New Agreement",j7="\u0928\u092f\u093e \u0938\u092e\u091d\u094c\u0924\u093e \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902",j8="Choose document version",j9="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u0902\u0938\u094d\u0915\u0930\u0923 \u091a\u0941\u0928\u0947\u0902",k0="Untitled Agreement",k1="\u0936\u0940\u0930\u094d\u0937\u0915\u0939\u0940\u0928 \u0938\u092e\u091d\u094c\u0924\u093e",k2="Run Differential Analysis",k3="\u0905\u0902\u0924\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u091a\u0932\u093e\u090f\u0902",k4=t.N
-return A.c(["a11y.chatSendMessage",A.c(["en","Send message","hi","\u0938\u0902\u0926\u0947\u0936 \u092d\u0947\u091c\u0947\u0902"],k4,k4),"a11y.chatSending",A.c(["en","Sending message","hi","\u0938\u0902\u0926\u0947\u0936 \u092d\u0947\u091c\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948"],k4,k4),"common.appName",A.c(["en","LawBuddy","hi","LawBuddy"],k4,k4),"common.appSubtitle",A.c(["en",q,"hi",p],k4,k4),"common.cancel",A.c(["en","Cancel","hi","\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902"],k4,k4),"common.delete",A.c(["en","Delete","hi","\u0939\u091f\u093e\u090f\u0902"],k4,k4),"common.retry",A.c(["en","Retry","hi",o],k4,k4),"common.close",A.c(["en","Close","hi","\u092c\u0902\u0926 \u0915\u0930\u0947\u0902"],k4,k4),"common.clear",A.c(["en","Clear","hi","\u0938\u093e\u092b\u093c \u0915\u0930\u0947\u0902"],k4,k4),"common.save",A.c(["en","Save","hi","\u0938\u0939\u0947\u091c\u0947\u0902"],k4,k4),"common.add",A.c(["en","Add","hi","\u091c\u094b\u0921\u093c\u0947\u0902"],k4,k4),"common.or",A.c(["en","OR","hi","\u092f\u093e"],k4,k4),"common.understood",A.c(["en","Understood","hi","\u0938\u092e\u091d \u0917\u092f\u093e"],k4,k4),"common.gotIt",A.c(["en","Got it","hi","\u0938\u092e\u091d \u0917\u092f\u093e"],k4,k4),"common.viewDetails",A.c(["en","View Details","hi","\u0935\u093f\u0935\u0930\u0923 \u0926\u0947\u0916\u0947\u0902"],k4,k4),"common.explore",A.c(["en","Explore \u2192","hi","\u0926\u0947\u0916\u0947\u0902 \u2192"],k4,k4),"common.live",A.c(["en","Live","hi","\u0932\u093e\u0907\u0935"],k4,k4),"common.back",A.c(["en","Back","hi","\u092a\u0940\u091b\u0947"],k4,k4),"common.backToHome",A.c(["en","Back to Home","hi","\u0939\u094b\u092e \u092a\u0930 \u0935\u093e\u092a\u0938 \u091c\u093e\u090f\u0902"],k4,k4),"common.settings",A.c(["en","Settings","hi","\u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"],k4,k4),"common.language",A.c(["en","Language","hi","\u092d\u093e\u0937\u093e"],k4,k4),"common.english",A.c(["en","English","hi","English"],k4,k4),"common.hindi",A.c(["en","\u0939\u093f\u0902\u0926\u0940","hi","\u0939\u093f\u0902\u0926\u0940"],k4,k4),"common.theme",A.c(["en","Theme","hi","\u0925\u0940\u092e"],k4,k4),"common.appearance",A.c(["en","Theme","hi","\u0925\u0940\u092e"],k4,k4),"common.themeAppearance",A.c(["en","Theme & Appearance","hi","\u0925\u0940\u092e \u0914\u0930 \u0938\u094d\u0935\u0930\u0942\u092a"],k4,k4),"common.chooseAppearance",A.c(["en","Choose how LawBuddy looks","hi","\u091a\u0941\u0928\u0947\u0902 \u0915\u093f LawBuddy \u0915\u0948\u0938\u093e \u0926\u093f\u0916\u0947"],k4,k4),"common.light",A.c(["en","Light","hi","\u0932\u093e\u0907\u091f"],k4,k4),"common.dark",A.c(["en","Dark","hi","\u0921\u093e\u0930\u094d\u0915"],k4,k4),"common.system",A.c(["en","System","hi","\u0938\u093f\u0938\u094d\u091f\u092e"],k4,k4),"common.profile",A.c(["en","Profile","hi","\u092a\u094d\u0930\u094b\u092b\u093e\u0907\u0932"],k4,k4),"common.accountDetails",A.c(["en","Account Details","hi","\u0916\u093e\u0924\u093e \u0935\u093f\u0935\u0930\u0923"],k4,k4),"common.fullName",A.c(["en","Full Name","hi","\u092a\u0942\u0930\u093e \u0928\u093e\u092e"],k4,k4),"common.emailAddress",A.c(["en","Email Address","hi","\u0908\u092e\u0947\u0932 \u092a\u0924\u093e"],k4,k4),"common.yes",A.c(["en","Yes","hi","\u0939\u093e\u0901"],k4,k4),"common.no",A.c(["en","No","hi","\u0928\u0939\u0940\u0902"],k4,k4),"common.signOut",A.c(["en","Sign Out","hi","\u0938\u093e\u0907\u0928 \u0906\u0909\u091f"],k4,k4),"common.signOutConfirm",A.c(["en","Are you sure you want to sign out of your LawBuddy session?","hi","\u0915\u094d\u092f\u093e \u0906\u092a \u0905\u092a\u0928\u0947 LawBuddy \u0938\u0924\u094d\u0930 \u0938\u0947 \u0938\u093e\u0907\u0928 \u0906\u0909\u091f \u0915\u0930\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?"],k4,k4),"brand.name",A.c(["en","LawBuddy","hi","LawBuddy"],k4,k4),"brand.tagline",A.c(["en","LEGALTECH AI","hi","\u0932\u0940\u0917\u0932\u091f\u0947\u0915 \u090f\u0906\u0908"],k4,k4),"brand.subtitle",A.c(["en",q,"hi",p],k4,k4),"home.goodMorning",A.c(["en","Good Morning","hi","\u0936\u0941\u092d \u092a\u094d\u0930\u092d\u093e\u0924"],k4,k4),"home.goodAfternoon",A.c(["en","Good Afternoon","hi","\u0936\u0941\u092d \u0926\u094b\u092a\u0939\u0930"],k4,k4),"home.goodEvening",A.c(["en","Good Evening","hi","\u0936\u0941\u092d \u0938\u0902\u0927\u094d\u092f\u093e"],k4,k4),"home.greeting",A.c(["en",n,"hi",n],k4,k4),"home.quickActions",A.c(["en","Quick Actions","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u0915\u093e\u0930\u094d\u092f"],k4,k4),"home.quickActionsSubtitle",A.c(["en","Select a tool to manage your property legal workflow","hi","\u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u0940 \u0915\u093e\u0930\u094d\u092f\u092a\u094d\u0930\u0935\u093e\u0939 \u0915\u094b \u092a\u094d\u0930\u092c\u0902\u0927\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u0909\u092a\u0915\u0930\u0923 \u091a\u0941\u0928\u0947\u0902"],k4,k4),"home.scanAgreement",A.c(["en","Scan Agreement","hi","\u0938\u092e\u091d\u094c\u0924\u093e \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902"],k4,k4),"home.scanAgreementDesc",A.c(["en","Analyze documents for legal risk","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0915\u0947 \u0932\u093f\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u094b\u0902 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902"],k4,k4),"home.legalChatbot",A.c(["en","Legal Chatbot","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091a\u0948\u091f\u092c\u0949\u091f"],k4,k4),"home.legalChatbotDesc",A.c(["en","Ask property & RERA questions","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0914\u0930 \u0930\u0947\u0930\u093e \u092a\u0930 \u092a\u094d\u0930\u0936\u094d\u0928 \u092a\u0942\u091b\u0947\u0902"],k4,k4),"home.propertyChecklist",A.c(["en","Property Checklist","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"home.stampDutyCalculator",A.c(["en",m,"hi",l],k4,k4),"home.stampDutyCalculatorDesc",A.c(["en","Calculate stamp duty & registration charges","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0936\u0941\u0932\u094d\u0915 \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902"],k4,k4),"home.activeChecklistsZero",A.c(["en","0 Active Checklists","hi","0 \u0938\u0915\u094d\u0930\u093f\u092f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"home.activeChecklistsBadge",A.c(["en","{count} Active {unit}","hi","{count} \u0938\u0915\u094d\u0930\u093f\u092f {unit}"],k4,k4),"home.checklistUnitSingular",A.c(["en","Checklist","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"home.checklistUnitPlural",A.c(["en","Checklists","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"home.checklistZeroTasks",A.c(["en","0 tasks \u2022 Tap to generate property guides","hi","0 \u0915\u093e\u0930\u094d\u092f \u2022 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0917\u093e\u0907\u0921 \u092c\u0928\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u091f\u0948\u092a \u0915\u0930\u0947\u0902"],k4,k4),"home.checklistZeroCompleted",A.c(["en","0 tasks completed \u2022 Tap to view guides","hi","0 \u0915\u093e\u0930\u094d\u092f \u092a\u0942\u0930\u094d\u0923 \u2022 \u0917\u093e\u0907\u0921 \u0926\u0947\u0916\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u091f\u0948\u092a \u0915\u0930\u0947\u0902"],k4,k4),"home.checklistTasksProgress",A.c(["en","{completed} of {total} tasks done","hi","{completed} \u092e\u0947\u0902 \u0938\u0947 {total} \u0915\u093e\u0930\u094d\u092f \u092a\u0942\u0930\u0947 \u0939\u0941\u090f"],k4,k4),"home.guideUnitSingular",A.c(["en","guide","hi","\u0917\u093e\u0907\u0921"],k4,k4),"home.guideUnitPlural",A.c(["en","guides","hi","\u0917\u093e\u0907\u0921"],k4,k4),"home.recentDocuments",A.c(["en",k,"hi",j],k4,k4),"home.viewAll",A.c(["en","View All ({count})","hi","\u0938\u092d\u0940 \u0926\u0947\u0916\u0947\u0902 ({count})"],k4,k4),"home.noAgreementsScanned",A.c(["en","No agreements scanned yet","hi","\u0905\u092d\u0940 \u0924\u0915 \u0915\u094b\u0908 \u0938\u092e\u091d\u094c\u0924\u093e \u0938\u094d\u0915\u0948\u0928 \u0928\u0939\u0940\u0902 \u0915\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948"],k4,k4),"home.uploadOrScanAgreement",A.c(["en","Upload or scan your property agreement for AI risk assessment.","hi","\u090f\u0906\u0908 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u0947 \u0915\u094b \u0905\u092a\u0932\u094b\u0921 \u092f\u093e \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"home.scanOrUploadAgreementBtn",A.c(["en","Scan or Upload Agreement","hi","\u0938\u092e\u091d\u094c\u0924\u093e \u0938\u094d\u0915\u0948\u0928 \u092f\u093e \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],k4,k4),"home.latestLegalUpdates",A.c(["en","Latest Legal Updates","hi","\u0928\u0935\u0940\u0928\u0924\u092e \u0915\u093e\u0928\u0942\u0928\u0940 \u0905\u092a\u0921\u0947\u091f"],k4,k4),"home.noLegalUpdates",A.c(["en","No legal updates available at this moment","hi","\u0907\u0938 \u0938\u092e\u092f \u0915\u094b\u0908 \u0915\u093e\u0928\u0942\u0928\u0940 \u0905\u092a\u0921\u0947\u091f \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948"],k4,k4),"home.reraAlert",A.c(["en","RERA ALERT","hi","\u0930\u0947\u0930\u093e \u0905\u0932\u0930\u094d\u091f"],k4,k4),"home.reraAdvisoryDetails",A.c(["en","RERA Advisory Details","hi","\u0930\u0947\u0930\u093e \u0938\u0932\u093e\u0939 \u0935\u093f\u0935\u0930\u0923"],k4,k4),"home.reraStatutoryNote",A.c(["en","Under Section 18 of the RERA Act, promoter default in handover or escrow accounting mandates strict statutory interest compensation at SBI MCLR + 2%.","hi","\u0930\u0947\u0930\u093e \u0905\u0927\u093f\u0928\u093f\u092f\u092e \u0915\u0940 \u0927\u093e\u0930\u093e 18 \u0915\u0947 \u0924\u0939\u0924, \u0939\u0948\u0902\u0921\u0913\u0935\u0930 \u092f\u093e \u090f\u0938\u094d\u0915\u094d\u0930\u094b \u0905\u0915\u093e\u0909\u0902\u091f\u093f\u0902\u0917 \u092e\u0947\u0902 \u092a\u094d\u0930\u092e\u094b\u091f\u0930 \u0921\u093f\u092b\u0949\u0932\u094d\u091f \u0939\u094b\u0928\u0947 \u092a\u0930 SBI MCLR + 2% \u092a\u0930 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u092c\u094d\u092f\u093e\u091c \u092e\u0941\u0906\u0935\u091c\u093e \u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0939\u0948\u0964"],k4,k4),"home.askLegalAi",A.c(["en","Ask Legal AI","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u0938\u0947 \u092a\u0942\u091b\u0947\u0902"],k4,k4),"home.needLegalHelp",A.c(["en","Need Legal Help? Ask LawBuddy","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u092e\u0926\u0926 \u091a\u093e\u0939\u093f\u090f? LawBuddy \u0938\u0947 \u092a\u0942\u091b\u0947\u0902"],k4,k4),"home.overviewTitle",A.c(["en","LEGAL PORTFOLIO OVERVIEW","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u094b\u0930\u094d\u091f\u092b\u094b\u0932\u093f\u092f\u094b \u0905\u0935\u0932\u094b\u0915\u0928"],k4,k4),"home.totalScannedDocs",A.c(["en","Documents Analyzed","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u090f \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"home.totalScannedDocsSub",A.c(["en","Agreements in workspace","hi","\u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u0947\u0924\u094d\u0930 \u092e\u0947\u0902 \u0938\u092e\u091d\u094c\u0924\u0947"],k4,k4),"home.highRiskCount",A.c(["en","Risk Flags Identified","hi","\u092a\u0939\u091a\u093e\u0928\u0947 \u0917\u090f \u091c\u094b\u0916\u093f\u092e"],k4,k4),"home.highRiskCountSub",A.c(["en","Agreements requiring review","hi","\u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0906\u0935\u0936\u094d\u092f\u0915 \u0938\u092e\u091d\u094c\u0924\u0947"],k4,k4),"home.noHighRisks",A.c(["en","No critical risk flags","hi","\u0915\u094b\u0908 \u0917\u0902\u092d\u0940\u0930 \u091c\u094b\u0916\u093f\u092e \u0928\u0939\u0940\u0902"],k4,k4),"home.dueDiligenceProgress",A.c(["en","Due Diligence Tasks","hi","\u091c\u093e\u0902\u091a \u0915\u093e\u0930\u094d\u092f \u092a\u094d\u0930\u0917\u0924\u093f"],k4,k4),"home.activeChecklists",A.c(["en","Active Checklists","hi","\u0938\u0915\u094d\u0930\u093f\u092f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"home.systemOnline",A.c(["en","Legal Engine Online","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0907\u0902\u091c\u0928 \u0938\u0915\u094d\u0930\u093f\u092f"],k4,k4),"home.primaryScanSpotlight",A.c(["en","INSTANT AI ASSESSMENT","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u090f\u0906\u0908 \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928"],k4,k4),"home.heroTag",A.c(["en","YOUR PROPERTY \u2022 YOUR RIGHTS \u2022 YOUR CONFIDENCE","hi","\u0906\u092a\u0915\u0940 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u2022 \u0906\u092a\u0915\u0947 \u0905\u0927\u093f\u0915\u093e\u0930 \u2022 \u0906\u092a\u0915\u093e \u0935\u093f\u0936\u094d\u0935\u093e\u0938"],k4,k4),"home.heroSub",A.c(["en","Review your agreements, check RERA risks, and make informed property decisions with AI built for Indian real estate.","hi","\u0905\u092a\u0928\u0947 \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u0940 \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902, \u0930\u0947\u0930\u093e \u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0915\u0940 \u091c\u093e\u0902\u091a \u0915\u0930\u0947\u0902 \u0914\u0930 \u092d\u093e\u0930\u0924\u0940\u092f \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0915\u0947 \u0932\u093f\u090f \u092c\u0928\u0947 \u090f\u0906\u0908 \u0915\u0947 \u0938\u093e\u0925 \u0938\u0942\u091a\u093f\u0924 \u0928\u093f\u0930\u094d\u0923\u092f \u0932\u0947\u0902\u0964"],k4,k4),"home.scanNewDocument",A.c(["en","Scan Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902"],k4,k4),"home.allTasksDone",A.c(["en","All due diligence verification tasks completed","hi","\u0938\u092d\u0940 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u093e\u0930\u094d\u092f \u092a\u0942\u0930\u094d\u0923 \u0939\u094b \u0917\u090f"],k4,k4),"home.noActiveChecklists",A.c(["en","No active transaction checklists","hi","\u0915\u094b\u0908 \u0938\u0915\u094d\u0930\u093f\u092f \u0932\u0947\u0928\u0926\u0947\u0928 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0928\u0939\u0940\u0902 \u0939\u0948"],k4,k4),"home.defaultChecklistTitle",A.c(["en","Property Purchase Diligence","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0916\u0930\u0940\u0926 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940"],k4,k4),"home.defaultTaskTitle",A.c(["en","Title search & Encumbrance check","hi","\u091f\u093e\u0907\u091f\u0932 \u0916\u094b\u091c \u0914\u0930 \u092d\u093e\u0930 \u091c\u093e\u0902\u091a"],k4,k4),"home.clausesEvaluated",A.c(["en","{count} clauses evaluated across tenancy & title compliance","hi","\u0915\u093f\u0930\u093e\u092f\u093e \u0914\u0930 \u0936\u0940\u0930\u094d\u0937\u0915 \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u092e\u0947\u0902 {count} \u0916\u0902\u0921\u094b\u0902 \u0915\u093e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"],k4,k4),"home.assessmentComplete",A.c(["en","AI clause extraction and legal risk assessment complete","hi","\u090f\u0906\u0908 \u0916\u0902\u0921 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923 \u0914\u0930 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u092a\u0942\u0930\u094d\u0923"],k4,k4),"home.workspaceSubtitle",A.c(["en","Your property legal workspace","hi","\u0906\u092a\u0915\u093e \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u0940 \u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u0947\u0924\u094d\u0930"],k4,k4),"home.latestAnalysisReview",A.c(["en","Latest Document Analysis","hi","\u0928\u0935\u0940\u0928\u0924\u092e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],k4,k4),"home.latestAnalysisSub",A.c(["en","Real-time risk assessment & clause audit","hi","\u0935\u093e\u0938\u094d\u0924\u0935\u093f\u0915 \u0938\u092e\u092f \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0914\u0930 \u0916\u0902\u0921 \u0911\u0921\u093f\u091f"],k4,k4),"home.viewFullAnalysis",A.c(["en","View Full Analysis","hi","\u092a\u0942\u0930\u094d\u0923 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0926\u0947\u0916\u0947\u0902"],k4,k4),"home.riskDistribution",A.c(["en","Legal Risk Breakdown","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0935\u093f\u0935\u0930\u0923"],k4,k4),"home.riskDistributionSub",A.c(["en","Clause severity across analyzed agreements","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u090f \u0917\u090f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u092e\u0947\u0902 \u0916\u0902\u0921 \u0917\u0902\u092d\u0940\u0930\u0924\u093e"],k4,k4),"home.highRiskLabel",A.c(["en","High Risk","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],k4,k4),"home.mediumRiskLabel",A.c(["en","Caution","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940"],k4,k4),"home.lowRiskLabel",A.c(["en","Compliant","hi","\u0905\u0928\u0941\u092a\u093e\u0932\u0928"],k4,k4),"home.dueDiligenceSection",A.c(["en","Due Diligence Checklist","hi",i],k4,k4),"home.dueDiligenceSub",A.c(["en","Mandatory property transaction verification","hi","\u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0932\u0947\u0928\u0926\u0947\u0928 \u0938\u0924\u094d\u092f\u093e\u092a\u0928"],k4,k4),"home.openChecklist",A.c(["en","Open Checklist","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0916\u094b\u0932\u0947\u0902"],k4,k4),"home.recentActivity",A.c(["en","Recent Workspace Activity","hi","\u0939\u093e\u0932\u093f\u092f\u093e \u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u0947\u0924\u094d\u0930 \u0917\u0924\u093f\u0935\u093f\u0927\u093f"],k4,k4),"home.recentActivitySub",A.c(["en","Audit trail of scans and verification progress","hi","\u0938\u094d\u0915\u0948\u0928 \u0914\u0930 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u092a\u094d\u0930\u0917\u0924\u093f \u0915\u093e \u0911\u0921\u093f\u091f \u091f\u094d\u0930\u0947\u0932"],k4,k4),"home.noActivityYet",A.c(["en","No recent activity recorded yet","hi","\u0905\u092d\u0940 \u0924\u0915 \u0915\u094b\u0908 \u0939\u093e\u0932\u093f\u092f\u093e \u0917\u0924\u093f\u0935\u093f\u0927\u093f \u0926\u0930\u094d\u091c \u0928\u0939\u0940\u0902 \u0915\u0940 \u0917\u0908 \u0939\u0948"],k4,k4),"home.legalIntelligence",A.c(["en","Legal Intelligence & News","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u0914\u0930 \u0938\u092e\u093e\u091a\u093e\u0930"],k4,k4),"home.legalIntelligenceSub",A.c(["en","Real estate statutory alerts & circulars","hi","\u0905\u091a\u0932 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0905\u0932\u0930\u094d\u091f \u0914\u0930 \u092a\u0930\u093f\u092a\u0924\u094d\u0930"],k4,k4),"home.reraAwarenessTitle",A.c(["en","RERA Statutory Notice","hi","\u0930\u0947\u0930\u093e \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0938\u0942\u091a\u0928\u093e"],k4,k4),"home.reraAwarenessSub",A.c(["en","Mandatory statutory protections under RERA","hi","\u0930\u0947\u0930\u093e \u0915\u0947 \u0924\u0939\u0924 \u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093e"],k4,k4),"sidebar.overview",A.c(["en","OVERVIEW","hi","\u0905\u0935\u0932\u094b\u0915\u0928"],k4,k4),"sidebar.workspace",A.c(["en","WORKSPACE","hi","\u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u0947\u0924\u094d\u0930"],k4,k4),"sidebar.legalTools",A.c(["en","LEGAL TOOLS","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0909\u092a\u0915\u0930\u0923"],k4,k4),"sidebar.legalInfo",A.c(["en","LEGAL INFORMATION","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940"],k4,k4),"sidebar.main",A.c(["en","MAIN","hi","\u092e\u0941\u0916\u094d\u092f"],k4,k4),"sidebar.dashboard",A.c(["en","Dashboard","hi","\u0921\u0948\u0936\u092c\u094b\u0930\u094d\u0921"],k4,k4),"sidebar.documents",A.c(["en","Documents","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"sidebar.riskAnalysis",A.c(["en","Risk Analysis","hi","\u091c\u094b\u0916\u093f\u092e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],k4,k4),"sidebar.checklists",A.c(["en","Checklists","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"sidebar.reraCompliance",A.c(["en","RERA & Compliance","hi","\u0930\u0947\u0930\u093e \u0914\u0930 \u0905\u0928\u0941\u092a\u093e\u0932\u0928"],k4,k4),"sidebar.documentComparison",A.c(["en","Document Comparison","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0924\u0941\u0932\u0928\u093e"],k4,k4),"sidebar.legalAi",A.c(["en","Legal AI","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908"],k4,k4),"sidebar.stampDuty",A.c(["en",m,"hi",l],k4,k4),"sidebar.administration",A.c(["en","ADMINISTRATION","hi","\u092a\u094d\u0930\u0936\u093e\u0938\u0928"],k4,k4),"sidebar.adminAnalytics",A.c(["en","Admin Analytics","hi","\u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0915 \u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938"],k4,k4),"sidebar.settings",A.c(["en","Settings","hi","\u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"],k4,k4),"sidebar.profile",A.c(["en","Profile","hi","\u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932"],k4,k4),"scan.title",A.c(["en","Scan or Input Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928 \u092f\u093e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"scan.subtitle",A.c(["en","Upload a legal document for AI-powered verification and analysis.","hi","\u090f\u0906\u0908-\u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0914\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"scan.takePhoto",A.c(["en","Take a Photo","hi","\u092b\u094b\u091f\u094b \u0916\u0940\u0902\u091a\u0947\u0902"],k4,k4),"scan.cameraBadge",A.c(["en","CAMERA SCAN","hi","\u0915\u0948\u092e\u0930\u093e \u0938\u094d\u0915\u0948\u0928"],k4,k4),"scan.cameraDesc",A.c(["en","Instant OCR scanning of physical deed pages via camera.","hi","\u0915\u0948\u092e\u0930\u0947 \u0915\u0947 \u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u092d\u094c\u0924\u093f\u0915 \u0935\u093f\u0932\u0947\u0916 \u092a\u0943\u0937\u094d\u0920\u094b\u0902 \u0915\u0940 \u0924\u094d\u0935\u0930\u093f\u0924 \u0913\u0938\u0940\u0906\u0930 \u0938\u094d\u0915\u0948\u0928\u093f\u0902\u0917\u0964"],k4,k4),"scan.uploadGallery",A.c(["en",h,"hi",g],k4,k4),"scan.uploadFromGallery",A.c(["en",h,"hi",g],k4,k4),"scan.galleryBadge",A.c(["en","PHOTO GALLERY","hi","\u092b\u094b\u091f\u094b \u0917\u0948\u0932\u0930\u0940"],k4,k4),"scan.galleryDesc",A.c(["en","Upload high-resolution document photos or screenshots.","hi","\u0909\u091a\u094d\u091a-\u0930\u093f\u091c\u093c\u0949\u0932\u094d\u092f\u0942\u0936\u0928 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092b\u093c\u094b\u091f\u094b \u092f\u093e \u0938\u094d\u0915\u094d\u0930\u0940\u0928\u0936\u0949\u091f \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"scan.uploadPdf",A.c(["en","Upload PDF","hi","\u092a\u0940\u0921\u0940\u090f\u092b \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],k4,k4),"scan.pdfBadge",A.c(["en","PDF DOCUMENT","hi","\u092a\u0940\u0921\u0940\u090f\u092b \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"scan.pdfDesc",A.c(["en","Upload multi-page PDF agreements & registry documents.","hi","\u092c\u0939\u0941-\u092a\u0943\u0937\u094d\u0920\u0940\u092f \u092a\u0940\u0921\u0940\u090f\u092b \u0938\u092e\u091d\u094c\u0924\u0947 \u0914\u0930 \u0930\u091c\u093f\u0938\u094d\u091f\u094d\u0930\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"scan.selectAndUpload",A.c(["en","Select & Upload","hi","\u091a\u0941\u0928\u0947\u0902 \u0914\u0930 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],k4,k4),"scan.orPasteClauses",A.c(["en","OR PASTE DOCUMENT CLAUSES","hi","\u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0916\u0902\u0921 \u092a\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902"],k4,k4),"scan.docContent",A.c(["en",f,"hi",e],k4,k4),"scan.documentContent",A.c(["en",f,"hi",e],k4,k4),"scan.pastePrompt",A.c(["en","Paste or type the legal document here.","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u094b \u092f\u0939\u093e\u0901 \u092a\u0947\u0938\u094d\u091f \u092f\u093e \u091f\u093e\u0907\u092a \u0915\u0930\u0947\u0902\u0964"],k4,k4),"scan.hint",A.c(["en",d,"hi",c],k4,k4),"scan.pasteHint",A.c(["en",d,"hi",c],k4,k4),"scan.analyzeText",A.c(["en",b,"hi",a],k4,k4),"scan.analyzeBtn",A.c(["en",b,"hi",a],k4,k4),"scan.emptyError",A.c(["en","Please enter or paste document text.","hi","\u0915\u0943\u092a\u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091f\u0947\u0915\u094d\u0938\u094d\u091f \u0926\u0930\u094d\u091c \u092f\u093e \u092a\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902\u0964"],k4,k4),"scan.analyzingImage",A.c(["en",a0,"hi",a1],k4,k4),"scan.processingPhoto",A.c(["en",a0,"hi",a1],k4,k4),"scan.readingDoc",A.c(["en",a2,"hi",a3],k4,k4),"scan.processingPdf",A.c(["en",a2,"hi",a3],k4,k4),"scan.analyzingVision",A.c(["en",a4,"hi",a5],k4,k4),"scan.processingPdfVision",A.c(["en",a4,"hi",a5],k4,k4),"scan.analyzingRisks",A.c(["en",a6,"hi",a7],k4,k4),"scan.processingRisk",A.c(["en",a6,"hi",a7],k4,k4),"scan.pleaseWait",A.c(["en","Please wait while we process your request.","hi","\u0915\u0943\u092a\u092f\u093e \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902 \u091c\u092c \u0924\u0915 \u0939\u092e \u0906\u092a\u0915\u0947 \u0905\u0928\u0941\u0930\u094b\u0927 \u0915\u094b \u0938\u0902\u0938\u093e\u0927\u093f\u0924 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964"],k4,k4),"scan.analyzingTitle",A.c(["en","Analyzing your document","hi","\u0906\u092a\u0915\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948"],k4,k4),"scan.stepReading",A.c(["en","Reading & extracting document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092a\u0922\u093c\u0928\u093e \u0914\u0930 \u0928\u093f\u0915\u093e\u0932\u0928\u093e"],k4,k4),"scan.stepReadingDesc",A.c(["en","Processing document pages and extracting content","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092a\u0943\u0937\u094d\u0920\u094b\u0902 \u0915\u094b \u0938\u0902\u0938\u093e\u0927\u093f\u0924 \u0915\u0930\u0928\u093e \u0914\u0930 \u0938\u093e\u092e\u0917\u094d\u0930\u0940 \u0928\u093f\u0915\u093e\u0932\u0928\u093e"],k4,k4),"scan.stepStructuring",A.c(["en","Structuring clauses","hi","\u0916\u0902\u0921\u094b\u0902 \u0915\u094b \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093f\u0924 \u0915\u0930\u0928\u093e"],k4,k4),"scan.stepStructuringDesc",A.c(["en","Identifying and organizing legal clauses","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u092a\u0939\u091a\u093e\u0928 \u0914\u0930 \u0906\u092f\u094b\u091c\u0928 \u0915\u0930\u0928\u093e"],k4,k4),"scan.stepAuditing",A.c(["en","Auditing legal risk","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0915\u093e \u0911\u0921\u093f\u091f"],k4,k4),"scan.stepAuditingDesc",A.c(["en","Checking clauses against applicable legal provisions","hi","\u0932\u093e\u0917\u0942 \u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u094d\u0930\u093e\u0935\u0927\u093e\u0928\u094b\u0902 \u0915\u0947 \u0905\u0928\u0941\u0938\u093e\u0930 \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u091c\u093e\u0902\u091a"],k4,k4),"scan.stepPreparing",A.c(["en","Preparing results","hi","\u092a\u0930\u093f\u0923\u093e\u092e \u0924\u0948\u092f\u093e\u0930 \u0915\u093f\u090f \u091c\u093e \u0930\u0939\u0947 \u0939\u0948\u0902"],k4,k4),"scan.stepPreparingDesc",A.c(["en","Finalizing your analysis report & summary","hi","\u0906\u092a\u0915\u0940 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0914\u0930 \u0938\u093e\u0930\u093e\u0902\u0936 \u0915\u094b \u0905\u0902\u0924\u093f\u092e \u0930\u0942\u092a \u0926\u0947\u0928\u093e"],k4,k4),"scan.retryingStatus",A.c(["en",u.l,"hi","\u0905\u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0905\u0928\u0941\u092a\u0932\u092c\u094d\u0927 \u2014 \u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],k4,k4),"chat.title",A.c(["en","Legal AI Assistant","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u0938\u0939\u093e\u092f\u0915"],k4,k4),"chat.subtitle",A.c(["en","Indian Property, RERA & Contract Specialist","hi","\u092d\u093e\u0930\u0924\u0940\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f, \u0930\u0947\u0930\u093e \u0914\u0930 \u0905\u0928\u0941\u092c\u0902\u0927 \u0935\u093f\u0936\u0947\u0937\u091c\u094d\u091e"],k4,k4),"chat.chatHistory",A.c(["en","Chat History","hi","\u091a\u0948\u091f \u0907\u0924\u093f\u0939\u093e\u0938"],k4,k4),"chat.newChat",A.c(["en","New Chat","hi","\u0928\u0908 \u092c\u093e\u0924\u091a\u0940\u0924"],k4,k4),"chat.savedConsultations",A.c(["en","Saved Consultations","hi","\u0938\u0939\u0947\u091c\u0940 \u0917\u0908 \u092c\u093e\u0924\u091a\u0940\u0924"],k4,k4),"chat.sessionsStored",A.c(["en","{count} sessions stored in Atlas","hi","Atlas \u092e\u0947\u0902 {count} \u0938\u0924\u094d\u0930 \u0938\u0902\u0917\u094d\u0930\u0939\u0940\u0924 \u0939\u0948\u0902"],k4,k4),"chat.searchConsultations",A.c(["en","Search consultations","hi","\u092a\u0930\u093e\u092e\u0930\u094d\u0936 \u0916\u094b\u091c\u0947\u0902"],k4,k4),"chat.inputHint",A.c(["en","Ask about a clause or document...","hi","\u0915\u093f\u0938\u0940 \u0916\u0902\u0921 \u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902 \u092a\u0942\u091b\u0947\u0902..."],k4,k4),"chat.startNewConsultation",A.c(["en","Start New Consultation","hi","\u0928\u0908 \u092c\u093e\u0924\u091a\u0940\u0924 \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902"],k4,k4),"chat.noMatchingConversations",A.c(["en","No matching conversations","hi","\u0915\u094b\u0908 \u092e\u093f\u0932\u0924\u0940-\u091c\u0941\u0932\u0924\u0940 \u092c\u093e\u0924\u091a\u0940\u0924 \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u0940"],k4,k4),"chat.noSavedConversations",A.c(["en","No saved conversations yet","hi","\u0905\u092d\u0940 \u0924\u0915 \u0915\u094b\u0908 \u0938\u0939\u0947\u091c\u0940 \u0917\u0908 \u092c\u093e\u0924\u091a\u0940\u0924 \u0928\u0939\u0940\u0902 \u0939\u0948"],k4,k4),"chat.turnsCount",A.c(["en","{count} turns","hi","{count} \u0938\u0902\u0926\u0947\u0936"],k4,k4),"chat.deleteTitle",A.c(["en","Permanently Delete Conversation?","hi","\u092c\u093e\u0924\u091a\u0940\u0924 \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f\u0902?"],k4,k4),"chat.deleteContent",A.c(["en","This will permanently delete this conversation. This cannot be undone.","hi","\u092f\u0939 \u092c\u093e\u0924\u091a\u0940\u0924 \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0940 \u091c\u093e\u090f\u0917\u0940\u0964 \u0907\u0938\u0947 \u092a\u0942\u0930\u094d\u0935\u0935\u0924 \u0928\u0939\u0940\u0902 \u0915\u093f\u092f\u093e \u091c\u093e \u0938\u0915\u0924\u093e \u0939\u0948\u0964"],k4,k4),"chat.deleteAction",A.c(["en",a8,"hi",a9],k4,k4),"chat.deletedToast",A.c(["en","Conversation permanently deleted","hi","\u092c\u093e\u0924\u091a\u0940\u0924 \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0940 \u0917\u0908"],k4,k4),"chat.heroHeadline",A.c(["en","Indian Property & RERA Legal AI","hi","\u092d\u093e\u0930\u0924\u0940\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0914\u0930 \u0930\u0947\u0930\u093e \u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908"],k4,k4),"chat.heroSubtitle",A.c(["en","Instant legal analysis, agreement scrutiny, and RERA rights guidance for homebuyers, landlords & tenants.","hi","\u0918\u0930 \u0916\u0930\u0940\u0926\u093e\u0930\u094b\u0902, \u092e\u0915\u093e\u0928 \u092e\u093e\u0932\u093f\u0915\u094b\u0902 \u0914\u0930 \u0915\u093f\u0930\u093e\u092f\u0947\u0926\u093e\u0930\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0924\u094d\u0935\u0930\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923, \u0905\u0928\u0941\u092c\u0902\u0927 \u091c\u093e\u0902\u091a \u0914\u0930 \u0930\u0947\u0930\u093e \u0905\u0927\u093f\u0915\u093e\u0930 \u092e\u093e\u0930\u094d\u0917\u0926\u0930\u094d\u0936\u0928\u0964"],k4,k4),"chat.tagRera",A.c(["en","RERA Compliant","hi","\u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928"],k4,k4),"chat.tagTenancy",A.c(["en","Model Tenancy Act","hi","\u092e\u0949\u0921\u0932 \u091f\u0947\u0928\u0947\u0902\u0938\u0940 \u090f\u0915\u094d\u091f"],k4,k4),"chat.tagTransfer",A.c(["en","Transfer of Property Act","hi","\u091f\u094d\u0930\u093e\u0902\u0938\u092b\u0930 \u0911\u092b \u092a\u094d\u0930\u0949\u092a\u0930\u094d\u091f\u0940 \u090f\u0915\u094d\u091f"],k4,k4),"chat.card1Cat",A.c(["en","PROPERTY AGREEMENTS","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u0947"],k4,k4),"chat.card1Title",A.c(["en","Review Agreement Clauses","hi","\u0938\u092e\u091d\u094c\u0924\u093e \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902"],k4,k4),"chat.card1Desc",A.c(["en","Scan lease or sale deed terms for hidden liabilities, lock-ins, and risky clauses.","hi","\u091b\u093f\u092a\u0940 \u0939\u0941\u0908 \u0926\u0947\u0928\u0926\u093e\u0930\u093f\u092f\u094b\u0902, \u0932\u0949\u0915-\u0907\u0928 \u0914\u0930 \u091c\u094b\u0916\u093f\u092e \u092d\u0930\u0947 \u0916\u0902\u0921\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u092a\u091f\u094d\u091f\u0947 \u092f\u093e \u092c\u093f\u0915\u094d\u0930\u0940 \u0935\u093f\u0932\u0947\u0916 \u0915\u0940 \u0936\u0930\u094d\u0924\u094b\u0902 \u0915\u0940 \u091c\u093e\u0902\u091a \u0915\u0930\u0947\u0902\u0964"],k4,k4),"chat.card2Cat",A.c(["en","RERA COMPLIANCE","hi","\u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928"],k4,k4),"chat.card2Title",A.c(["en","RERA Rights & Delays","hi","\u0930\u0947\u0930\u093e \u0905\u0927\u093f\u0915\u093e\u0930 \u0914\u0930 \u0926\u0947\u0930\u0940"],k4,k4),"chat.card2Desc",A.c(["en","Understand builder handover delays, Section 18 interest compensation, and escrow norms.","hi","\u092c\u093f\u0932\u094d\u0921\u0930 \u0939\u0948\u0902\u0921\u0913\u0935\u0930 \u092e\u0947\u0902 \u0926\u0947\u0930\u0940, \u0927\u093e\u0930\u093e 18 \u092c\u094d\u092f\u093e\u091c \u092e\u0941\u0906\u0935\u091c\u093e \u0914\u0930 \u090f\u0938\u094d\u0915\u094d\u0930\u094b \u092e\u093e\u0928\u0926\u0902\u0921\u094b\u0902 \u0915\u094b \u0938\u092e\u091d\u0947\u0902\u0964"],k4,k4),"chat.card3Cat",A.c(["en","LEGAL DRAFTING","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u094d\u0930\u093e\u0930\u0942\u092a\u0923"],k4,k4),"chat.card3Title",A.c(["en","Draft Tenancy & NOC","hi","\u0915\u093f\u0930\u093e\u092f\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0914\u0930 \u090f\u0928\u0913\u0938\u0940 \u0915\u093e \u092e\u0938\u094c\u0926\u093e \u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902"],k4,k4),"chat.card3Desc",A.c(["en","Generate standard residential lease, sale agreement, or NOC templates with statutory clauses.","hi","\u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0916\u0902\u0921\u094b\u0902 \u0915\u0947 \u0938\u093e\u0925 \u092e\u093e\u0928\u0915 \u0906\u0935\u093e\u0938\u0940\u092f \u092a\u091f\u094d\u091f\u093e, \u092c\u093f\u0915\u094d\u0930\u0940 \u0938\u092e\u091d\u094c\u0924\u093e \u092f\u093e \u090f\u0928\u0913\u0938\u0940 \u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f \u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"chat.card4Cat",A.c(["en","STAMP DUTY & TITLE","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u0936\u0940\u0930\u094d\u0937\u0915"],k4,k4),"chat.card4Title",A.c(["en","Stamp Duty & Registry","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u0930\u091c\u093f\u0938\u094d\u091f\u094d\u0930\u0940"],k4,k4),"chat.card4Desc",A.c(["en","Mandatory document checklist, encumbrance certificate, and state registration guidelines.","hi","\u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f, \u092d\u093e\u0930 \u092a\u094d\u0930\u092e\u093e\u0923\u092a\u0924\u094d\u0930 \u0914\u0930 \u0930\u093e\u091c\u094d\u092f \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0926\u093f\u0936\u093e\u0928\u093f\u0930\u094d\u0926\u0947\u0936\u0964"],k4,k4),"chat.rateLimitMessage",A.c(["en","Rate limit reached. Please wait a moment before sending another query.","hi","\u0926\u0930 \u0938\u0940\u092e\u093e \u092a\u0942\u0930\u0940 \u0939\u094b \u0917\u0908\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u0917\u0932\u093e \u092a\u094d\u0930\u0936\u094d\u0928 \u092d\u0947\u091c\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u0915\u0941\u091b \u0926\u0947\u0930 \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902\u0964"],k4,k4),"chat.copiedToClipboard",A.c(["en","Copied to clipboard","hi","\u0915\u094d\u0932\u093f\u092a\u092c\u094b\u0930\u094d\u0921 \u092a\u0930 \u0915\u0949\u092a\u0940 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"],k4,k4),"chat.rateLimitToast",A.c(["en","Rate limit exceeded. Please wait a moment.","hi","\u0926\u0930 \u0938\u0940\u092e\u093e \u092a\u093e\u0930 \u0939\u094b \u0917\u0908\u0964 \u0915\u0943\u092a\u092f\u093e \u0915\u0941\u091b \u0915\u094d\u0937\u0923 \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902\u0964"],k4,k4),"chat.chip1",A.c(["en","Check builder handover delay rights under RERA","hi","\u0930\u0947\u0930\u093e \u0915\u0947 \u0924\u0939\u0924 \u092c\u093f\u0932\u094d\u0921\u0930 \u0939\u0948\u0902\u0921\u0913\u0935\u0930 \u092e\u0947\u0902 \u0926\u0947\u0930\u0940 \u0915\u0947 \u0905\u0927\u093f\u0915\u093e\u0930 \u091c\u093e\u0902\u091a\u0947\u0902"],k4,k4),"chat.chip2",A.c(["en","Draft standard tenancy agreement clauses","hi","\u092e\u093e\u0928\u0915 \u0915\u093f\u0930\u093e\u092f\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0916\u0902\u0921\u094b\u0902 \u0915\u093e \u092e\u0938\u094c\u0926\u093e \u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902"],k4,k4),"chat.chip3",A.c(["en","Explain hidden liabilities in sale deeds","hi","\u092c\u093f\u0915\u094d\u0930\u0940 \u0935\u093f\u0932\u0947\u0916\u094b\u0902 \u092e\u0947\u0902 \u091b\u093f\u092a\u0940 \u0926\u0947\u0928\u0926\u093e\u0930\u093f\u092f\u094b\u0902 \u0915\u094b \u0938\u092e\u091d\u0947\u0902"],k4,k4),"chat.chip4",A.c(["en","Verify encumbrance certificate checklist","hi","\u092d\u093e\u0930 \u092a\u094d\u0930\u092e\u093e\u0923\u092a\u0924\u094d\u0930 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0930\u0947\u0902"],k4,k4),"chat.disclaimer",A.c(["en","LawBuddy provides legal information powered by AI. It does not constitute formal legal counsel.","hi","LawBuddy \u090f\u0906\u0908 \u0926\u094d\u0935\u093e\u0930\u093e \u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u092a\u094d\u0930\u0926\u093e\u0928 \u0915\u0930\u0924\u093e \u0939\u0948\u0964 \u092f\u0939 \u0914\u092a\u091a\u093e\u0930\u093f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0932\u093e\u0939 \u0915\u093e \u0935\u093f\u0915\u0932\u094d\u092a \u0928\u0939\u0940\u0902 \u0939\u0948\u0964"],k4,k4),"chat.askLegalAi",A.c(["en","Ask Legal AI","hi","\u0932\u0940\u0917\u0932 \u090f\u0906\u0908 \u0938\u0947 \u092a\u0942\u091b\u0947\u0902"],k4,k4),"chat.typingTitle",A.c(["en","Legal AI is analyzing your query...","hi","\u0932\u0940\u0917\u0932 \u090f\u0906\u0908 \u0906\u092a\u0915\u0947 \u092a\u094d\u0930\u0936\u094d\u0928 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930 \u0930\u0939\u093e \u0939\u0948..."],k4,k4),"chat.typingSubtitle",A.c(["en","Reviewing statutory provisions and property jurisprudence","hi","\u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u092a\u094d\u0930\u093e\u0935\u0927\u093e\u0928\u094b\u0902 \u0914\u0930 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928 \u0915\u0940 \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0915\u0940 \u091c\u093e \u0930\u0939\u0940 \u0939\u0948"],k4,k4),"checklists.title",A.c(["en",b0,"hi",b1],k4,k4),"checklists.titleLabel",A.c(["en","Checklist Title","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0936\u0940\u0930\u094d\u0937\u0915"],k4,k4),"checklists.defaultTitle",A.c(["en","Property Due Diligence Checklist","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0909\u091a\u093f\u0924 \u0924\u0924\u094d\u092a\u0930\u0924\u093e \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"checklists.untitledChecklist",A.c(["en",b2,"hi",b3],k4,k4),"checklists.new",A.c(["en","New Checklist","hi","\u0928\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"checklists.newChecklist",A.c(["en","New Checklist","hi","\u0928\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"checklists.createTitle",A.c(["en","Generate Custom Legal Checklist","hi","\u0915\u0938\u094d\u091f\u092e \u0915\u093e\u0928\u0942\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092c\u0928\u093e\u090f\u0902"],k4,k4),"checklists.createPromptDesc",A.c(["en","Describe your property scenario to automatically generate tailored legal verification steps.","hi","\u0905\u0928\u0941\u0915\u0942\u0932\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u091a\u0930\u0923\u094b\u0902 \u0915\u094b \u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0909\u0924\u094d\u092a\u0928\u094d\u0928 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092a\u0930\u093f\u0926\u0943\u0936\u094d\u092f \u0915\u093e \u0935\u0930\u094d\u0923\u0928 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"checklists.createHint",A.c(["en","e.g. Buying an Under-construction Apartment in Mumbai","hi","\u0909\u0926\u093e. \u092e\u0941\u0902\u092c\u0908 \u092e\u0947\u0902 \u0928\u093f\u0930\u094d\u092e\u093e\u0923\u093e\u0927\u0940\u0928 \u0905\u092a\u093e\u0930\u094d\u091f\u092e\u0947\u0902\u091f \u0916\u0930\u0940\u0926\u0928\u093e"],k4,k4),"checklists.quickPresets",A.c(["en","Quick Presets","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u092a\u094d\u0930\u0940\u0938\u0947\u091f"],k4,k4),"checklists.newBtn",A.c(["en","New","hi","\u0928\u092f\u093e"],k4,k4),"checklists.prompt",A.c(["en",b4,"hi",b5],k4,k4),"checklists.question",A.c(["en",b4,"hi",b5],k4,k4),"checklists.hint",A.c(["en","e.g. Buying a Resale Flat in Mumbai","hi","\u0909\u0926\u093e. \u092e\u0941\u0902\u092c\u0908 \u092e\u0947\u0902 \u0930\u0940\u0938\u0947\u0932 \u092b\u094d\u0932\u0948\u091f \u0916\u0930\u0940\u0926\u0928\u093e"],k4,k4),"checklists.generate",A.c(["en","Generate","hi","\u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902"],k4,k4),"checklists.generateBtn",A.c(["en","Generate","hi","\u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902"],k4,k4),"checklists.empty",A.c(["en",'No checklists yet\nTap "New" to create a due diligence checklist.',"hi",'\u0905\u092d\u0940 \u0915\u094b\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0928\u0939\u0940\u0902 \u0939\u0948\n\u0928\u0908 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092c\u0928\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f "\u0928\u092f\u093e" \u092a\u0930 \u091f\u0948\u092a \u0915\u0930\u0947\u0902\u0964'],k4,k4),"checklists.untitled",A.c(["en",b2,"hi",b3],k4,k4),"checklists.addItem",A.c(["en","Add Item","hi","\u0906\u0907\u091f\u092e \u091c\u094b\u0921\u093c\u0947\u0902"],k4,k4),"checklists.addNewItem",A.c(["en","Add New Item","hi","\u0928\u092f\u093e \u0906\u0907\u091f\u092e \u091c\u094b\u0921\u093c\u0947\u0902"],k4,k4),"checklists.addNewTask",A.c(["en","Add New Task","hi","\u0928\u092f\u093e \u0915\u093e\u0930\u094d\u092f \u091c\u094b\u0921\u093c\u0947\u0902"],k4,k4),"checklists.addTaskAction",A.c(["en","Add Task","hi","\u0915\u093e\u0930\u094d\u092f \u091c\u094b\u0921\u093c\u0947\u0902"],k4,k4),"checklists.enterTitle",A.c(["en","Task title","hi","\u0915\u093e\u0930\u094d\u092f \u0936\u0940\u0930\u094d\u0937\u0915"],k4,k4),"checklists.enterTaskTitle",A.c(["en","Task title","hi","\u0915\u093e\u0930\u094d\u092f \u0936\u0940\u0930\u094d\u0937\u0915"],k4,k4),"checklists.taskDescription",A.c(["en","Task Title / Description","hi","\u0915\u093e\u0930\u094d\u092f \u0936\u0940\u0930\u094d\u0937\u0915 / \u0935\u093f\u0935\u0930\u0923"],k4,k4),"checklists.verifyTitleDeed",A.c(["en",b6,"hi",b7],k4,k4),"checklists.taskHint",A.c(["en",b6,"hi",b7],k4,k4),"checklists.add",A.c(["en","Add","hi","\u091c\u094b\u0921\u093c\u0947\u0902"],k4,k4),"checklists.addBtn",A.c(["en","Add","hi","\u091c\u094b\u0921\u093c\u0947\u0902"],k4,k4),"checklists.cancel",A.c(["en","Cancel","hi","\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902"],k4,k4),"checklists.saveAction",A.c(["en","Save Changes","hi","\u092a\u0930\u093f\u0935\u0930\u094d\u0924\u0928 \u0938\u0939\u0947\u091c\u0947\u0902"],k4,k4),"checklists.retryAction",A.c(["en","Retry","hi",o],k4,k4),"checklists.taskAddedSuccess",A.c(["en","Task added successfully","hi","\u0915\u093e\u0930\u094d\u092f \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u091c\u094b\u0921\u093c\u093e \u0917\u092f\u093e"],k4,k4),"checklists.failedToAdd",A.c(["en","Failed to add task: {error}","hi","\u0915\u093e\u0930\u094d\u092f \u091c\u094b\u0921\u093c\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932: {error}"],k4,k4),"checklists.taskDeletedSuccess",A.c(["en","Task removed successfully","hi","\u0915\u093e\u0930\u094d\u092f \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u0939\u091f\u093e\u092f\u093e \u0917\u092f\u093e"],k4,k4),"checklists.deleteTaskTitle",A.c(["en","Delete Task","hi","\u0915\u093e\u0930\u094d\u092f \u0939\u091f\u093e\u090f\u0902"],k4,k4),"checklists.deleteTaskConfirm",A.c(["en",'Are you sure you want to remove "{task}" from this checklist?',"hi",'\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 \u0907\u0938 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u0947 "{task}" \u0915\u094b \u0939\u091f\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?'],k4,k4),"checklists.renameChecklistTitle",A.c(["en",b8,"hi",b9],k4,k4),"checklists.newTitleHint",A.c(["en","Enter new checklist title...","hi","\u0928\u092f\u093e \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0936\u0940\u0930\u094d\u0937\u0915 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902..."],k4,k4),"checklists.renameSuccess",A.c(["en",c0,"hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092c\u0926\u0932\u093e \u0917\u092f\u093e"],k4,k4),"checklists.renameFailed",A.c(["en","Failed to rename checklist: {error}","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e \u092c\u0926\u0932\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932: {error}"],k4,k4),"checklists.deleteChecklistTitle",A.c(["en","Move Checklist to Recycle Bin?","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u090f\u0902?"],k4,k4),"checklists.deleteChecklistConfirm",A.c(["en",'Are you sure you want to move "{title}" to the Recycle Bin? You can restore it within 30 days.',"hi",'\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 "{title}" \u0915\u094b \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902? \u0906\u092a \u0907\u0938\u0947 30 \u0926\u093f\u0928\u094b\u0902 \u0915\u0947 \u092d\u0940\u0924\u0930 \u092a\u0941\u0928\u0930\u094d\u0938\u094d\u0925\u093e\u092a\u093f\u0924 \u0915\u0930 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964'],k4,k4),"checklists.delete",A.c(["en","Move to Bin","hi","\u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u090f\u0902"],k4,k4),"checklists.deleteAction",A.c(["en","Move to Bin","hi","\u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u090f\u0902"],k4,k4),"checklists.checklistDeletedSuccess",A.c(["en",c1,"hi",c2],k4,k4),"checklists.failedToDelete",A.c(["en","Failed to delete: {error}","hi","\u0939\u091f\u093e\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932: {error}"],k4,k4),"checklists.deleteChecklist",A.c(["en","Move to Recycle Bin","hi","\u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u090f\u0902"],k4,k4),"checklists.deleteConfirm",A.c(["en","Are you sure you want to move this checklist to the Recycle Bin?","hi","\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 \u0907\u0938 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u094b \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?"],k4,k4),"checklists.deletedSuccess",A.c(["en",c1,"hi",c2],k4,k4),"checklists.renameChecklist",A.c(["en",b8,"hi",b9],k4,k4),"checklists.enterNewName",A.c(["en","Checklist name","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e"],k4,k4),"checklists.renamedSuccess",A.c(["en",c0,"hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092c\u0926\u0932 \u0926\u093f\u092f\u093e \u0917\u092f\u093e"],k4,k4),"checklists.alreadyExistsTitle",A.c(["en","Checklist Already Exists","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092a\u0939\u0932\u0947 \u0938\u0947 \u092e\u094c\u091c\u0942\u0926 \u0939\u0948"],k4,k4),"checklists.alreadyExistsDesc",A.c(["en",'A checklist matching "{title}" already exists in your active cases.',"hi",'"{title}" \u0938\u0947 \u092e\u0947\u0932 \u0916\u093e\u0928\u0947 \u0935\u093e\u0932\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092a\u0939\u0932\u0947 \u0938\u0947 \u0939\u0940 \u0906\u092a\u0915\u0947 \u0938\u0915\u094d\u0930\u093f\u092f \u0915\u0947\u0938 \u092e\u0947\u0902 \u092e\u094c\u091c\u0942\u0926 \u0939\u0948\u0964'],k4,k4),"checklists.alreadyExistsPrompt",A.c(["en","Would you like to open the existing checklist or still create a new one?","hi","\u0915\u094d\u092f\u093e \u0906\u092a \u092e\u094c\u091c\u0942\u0926\u093e \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0916\u094b\u0932\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902 \u092f\u093e \u092b\u093f\u0930 \u092d\u0940 \u090f\u0915 \u0928\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092c\u0928\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?"],k4,k4),"checklists.viewExisting",A.c(["en","View Existing","hi","\u092e\u094c\u091c\u0942\u0926\u093e \u0926\u0947\u0916\u0947\u0902"],k4,k4),"checklists.stillCreate",A.c(["en","Still Create","hi","\u092b\u093f\u0930 \u092d\u0940 \u092c\u0928\u093e\u090f\u0902"],k4,k4),"checklists.deleteItem",A.c(["en","Delete Item","hi","\u0906\u0907\u091f\u092e \u0939\u091f\u093e\u090f\u0902"],k4,k4),"checklists.deleteItemConfirm",A.c(["en","Delete this task from checklist?","hi","\u0915\u094d\u092f\u093e \u0907\u0938 \u0915\u093e\u0930\u094d\u092f \u0915\u094b \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u0947 \u0939\u091f\u093e\u0928\u093e \u0939\u0948?"],k4,k4),"checklists.itemDeleted",A.c(["en","Task removed","hi","\u0915\u093e\u0930\u094d\u092f \u0939\u091f\u093e \u0926\u093f\u092f\u093e \u0917\u092f\u093e"],k4,k4),"checklists.filterAll",A.c(["en","All Tasks","hi","\u0938\u092d\u0940 \u0915\u093e\u0930\u094d\u092f"],k4,k4),"checklists.filterPending",A.c(["en","Pending","hi","\u0932\u0902\u092c\u093f\u0924"],k4,k4),"checklists.filterFlagged",A.c(["en","Flagged Issues","hi","\u0927\u094d\u0935\u091c\u093e\u0902\u0915\u093f\u0924 \u092e\u0941\u0926\u094d\u0926\u0947"],k4,k4),"checklists.filterCompleted",A.c(["en","Completed","hi","\u092a\u0942\u0930\u094d\u0923"],k4,k4),"checklists.progress",A.c(["en","Progress","hi","\u092a\u094d\u0930\u0917\u0924\u093f"],k4,k4),"checklists.completedRatio",A.c(["en","{completed} of {total} completed","hi","{total} \u092e\u0947\u0902 \u0938\u0947 {completed} \u092a\u0942\u0930\u094d\u0923"],k4,k4),"checklists.allDone",A.c(["en","All due-diligence items completed!","hi","\u0938\u092d\u0940 \u091c\u093e\u0902\u091a \u0915\u093e\u0930\u094d\u092f \u092a\u0942\u0930\u094d\u0923 \u0939\u094b \u0917\u090f!"],k4,k4),"checklists.flaggedBadge",A.c(["en","FLAGGED BY DOCUMENT ISSUE","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092e\u0941\u0926\u094d\u0926\u0947 \u0926\u094d\u0935\u093e\u0930\u093e \u0927\u094d\u0935\u091c\u093e\u0902\u0915\u093f\u0924"],k4,k4),"checklists.flaggedCountBadge",A.c(["en","{count} Flagged","hi","{count} \u0927\u094d\u0935\u091c\u093e\u0902\u0915\u093f\u0924"],k4,k4),"checklists.triggeredBy",A.c(["en","Triggered by: {doc}","hi","\u091f\u094d\u0930\u093f\u0917\u0930: {doc}"],k4,k4),"checklists.triggeredByMulti",A.c(["en","Triggered by {count} documents","hi","{count} \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c\u094b\u0902 \u0926\u094d\u0935\u093e\u0930\u093e \u091f\u094d\u0930\u093f\u0917\u0930"],k4,k4),"checklists.viewRelatedIssue",A.c(["en","View related issue","hi","\u0938\u0902\u092c\u0902\u0927\u093f\u0924 \u092e\u0941\u0926\u094d\u0926\u093e \u0926\u0947\u0916\u0947\u0902"],k4,k4),"checklists.viewRelatedIssues",A.c(["en","View {count} related issues","hi","{count} \u0938\u0902\u092c\u0902\u0927\u093f\u0924 \u092e\u0941\u0926\u094d\u0926\u0947 \u0926\u0947\u0916\u0947\u0902"],k4,k4),"checklists.relatedIssueModalTitle",A.c(["en","Cross-Referenced Document Issue","hi","\u0915\u094d\u0930\u0949\u0938-\u0938\u0902\u0926\u0930\u094d\u092d\u093f\u0924 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092e\u0941\u0926\u094d\u0926\u093e"],k4,k4),"checklists.whyFlaggedTitle",A.c(["en","Why this was flagged:","hi","\u0907\u0938\u0947 \u0915\u094d\u092f\u094b\u0902 \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u0915\u093f\u092f\u093e \u0917\u092f\u093e:"],k4,k4),"checklists.whyFlaggedDesc",A.c(["en","LawBuddy detected a legal concern in {doc} relating to this verification task.","hi","LawBuddy \u0928\u0947 \u0907\u0938 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u093e\u0930\u094d\u092f \u0938\u0947 \u0938\u0902\u092c\u0902\u0927\u093f\u0924 {doc} \u092e\u0947\u0902 \u090f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u091a\u093f\u0902\u0924\u093e \u0915\u093e \u092a\u0924\u093e \u0932\u0917\u093e\u092f\u093e\u0964"],k4,k4),"checklists.clauseFindingTitle",A.c(["en","Detected Clause Finding","hi","\u092a\u0939\u091a\u093e\u0928\u093e \u0917\u092f\u093e \u0916\u0902\u0921 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937"],k4,k4),"checklists.statutoryCitationsTitle",A.c(["en","Legal & Statutory Citations","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0914\u0930 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0938\u0902\u0926\u0930\u094d\u092d"],k4,k4),"checklists.buyerImpactTitle",A.c(["en","Buyer Impact & Practical Consequence","hi","\u0916\u0930\u0940\u0926\u093e\u0930 \u092a\u0930 \u092a\u094d\u0930\u092d\u093e\u0935 \u0914\u0930 \u0935\u094d\u092f\u093e\u0935\u0939\u093e\u0930\u093f\u0915 \u092a\u0930\u093f\u0923\u093e\u092e"],k4,k4),"checklists.recommendationTitle",A.c(["en","Recommended Due Diligence Action","hi","\u0905\u0928\u0941\u0936\u0902\u0938\u093f\u0924 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0908"],k4,k4),"checklists.markAsVerified",A.c(["en","Mark as Verified","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u0915\u0930\u0947\u0902"],k4,k4),"checklists.markAsPending",A.c(["en","Mark as Pending","hi","\u0932\u0902\u092c\u093f\u0924 \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u0915\u0930\u0947\u0902"],k4,k4),"checklists.starterTitle",A.c(["en","Quick Starter Templates","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f"],k4,k4),"checklists.template1",A.c(["en","Buying Resale Flat","hi","\u092a\u0941\u0928\u0930\u094d\u0935\u093f\u0915\u094d\u0930\u092f \u092b\u094d\u0932\u0948\u091f \u0916\u0930\u0940\u0926\u0928\u093e"],k4,k4),"checklists.template2",A.c(["en","Under-Construction RERA Property","hi","\u0928\u093f\u0930\u094d\u092e\u093e\u0923\u093e\u0927\u0940\u0928 \u0930\u0947\u0930\u093e \u0938\u0902\u092a\u0924\u094d\u0924\u093f"],k4,k4),"checklists.template3",A.c(["en","Commercial Lease Agreement","hi","\u0935\u094d\u092f\u093e\u0935\u0938\u093e\u092f\u093f\u0915 \u0932\u0940\u091c \u0938\u092e\u091d\u094c\u0924\u093e"],k4,k4),"checklists.template4",A.c(["en","Agricultural / Plot Land Due Diligence","hi","\u0915\u0943\u0937\u093f / \u092a\u094d\u0932\u0949\u091f \u092d\u0942\u092e\u093f \u091c\u093e\u0902\u091a"],k4,k4),"checklists.subtitle",A.c(["en","Track your property's legal due diligence.","hi","\u0905\u092a\u0928\u0940 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u0940 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u093e\u0902\u091a \u0915\u0940 \u0928\u093f\u0917\u0930\u093e\u0928\u0940 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"checklists.heroTitle",A.c(["en","PROPERTY DUE DILIGENCE","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940"],k4,k4),"checklists.heroHeadline",A.c(["en","Verify before you commit.","hi","\u092a\u094d\u0930\u0924\u093f\u092c\u0926\u094d\u0927 \u0939\u094b\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964"],k4,k4),"checklists.heroSub",A.c(["en","Keep every important legal verification step organized in one place.","hi","\u092a\u094d\u0930\u0924\u094d\u092f\u0947\u0915 \u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u0926\u092e \u0915\u094b \u090f\u0915 \u0938\u094d\u0925\u093e\u0928 \u092a\u0930 \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093f\u0924 \u0930\u0916\u0947\u0902\u0964"],k4,k4),"checklists.casesHeading",A.c(["en","Active Due-Diligence Cases","hi","\u0938\u0915\u094d\u0930\u093f\u092f \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u092e\u093e\u092e\u0932\u0947"],k4,k4),"checklists.verificationBadge",A.c(["en","PROPERTY VERIFICATION","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u0924\u094d\u092f\u093e\u092a\u0928"],k4,k4),"checklists.dueDiligenceProgress",A.c(["en","Due-diligence progress","hi","\u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u092a\u094d\u0930\u0917\u0924\u093f"],k4,k4),"checklists.inProgress",A.c(["en","In Progress","hi","\u092a\u094d\u0930\u0917\u0924\u093f \u092e\u0947\u0902"],k4,k4),"checklists.completed",A.c(["en","Completed","hi","\u092a\u0942\u0930\u094d\u0923"],k4,k4),"checklists.emptyTitle",A.c(["en","Start your property due diligence","hi","\u0905\u092a\u0928\u0940 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u0940 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902"],k4,k4),"checklists.emptySub",A.c(["en","Create a checklist to organize the legal documents, approvals and verification steps you need before committing to a property.","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u0947 \u0932\u093f\u090f \u092a\u094d\u0930\u0924\u093f\u092c\u0926\u094d\u0927 \u0939\u094b\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u0906\u0935\u0936\u094d\u092f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u094b\u0902, \u0905\u0928\u0941\u092e\u094b\u0926\u0928\u094b\u0902 \u0914\u0930 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u091a\u0930\u0923\u094b\u0902 \u0915\u094b \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092c\u0928\u093e\u090f\u0902\u0964"],k4,k4),"checklists.quickStartSub",A.c(["en","Start with a property-specific due-diligence checklist.","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f-\u0935\u093f\u0936\u093f\u0937\u094d\u091f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u0947 \u0938\u093e\u0925 \u0936\u0941\u0930\u0941\u0906\u0924 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"calc.screenTitle",A.c(["en","Stamp Duty & Registration Calculator","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930"],k4,k4),"calc.screenSubtitle",A.c(["en","Calculate estimated stamp duty, registration charges, and state cess across India.","hi","\u092d\u093e\u0930\u0924 \u092d\u0930 \u092e\u0947\u0902 \u0905\u0928\u0941\u092e\u093e\u0928\u093f\u0924 \u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915, \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u0930\u093e\u091c\u094d\u092f \u0909\u092a\u0915\u0930 \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902\u0964"],k4,k4),"calc.cardTitle",A.c(["en","Property & Transaction Details","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0914\u0930 \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u093e \u0935\u093f\u0935\u0930\u0923"],k4,k4),"calc.propertyType",A.c(["en","Property Type","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e \u092a\u094d\u0930\u0915\u093e\u0930"],k4,k4),"calc.propertyTypeLabel",A.c(["en","Property Category","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u0940 \u0936\u094d\u0930\u0947\u0923\u0940"],k4,k4),"calc.selectPropertyType",A.c(["en","Select property type","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092a\u094d\u0930\u0915\u093e\u0930 \u091a\u0941\u0928\u0947\u0902"],k4,k4),"calc.selectPropertyTypeHint",A.c(["en","Select property category","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0936\u094d\u0930\u0947\u0923\u0940 \u091a\u0941\u0928\u0947\u0902"],k4,k4),"calc.typeResidential",A.c(["en","Residential","hi","\u0906\u0935\u093e\u0938\u0940\u092f"],k4,k4),"calc.typeCommercial",A.c(["en","Commercial","hi","\u0935\u094d\u092f\u093e\u0935\u0938\u093e\u092f\u093f\u0915"],k4,k4),"calc.typeAgricultural",A.c(["en","Agricultural","hi","\u0915\u0943\u0937\u093f"],k4,k4),"calc.typeOther",A.c(["en","Other","hi","\u0905\u0928\u094d\u092f"],k4,k4),"calc.propertyTypeResidential",A.c(["en","Residential","hi","\u0906\u0935\u093e\u0938\u0940\u092f"],k4,k4),"calc.propertyTypeCommercial",A.c(["en","Commercial","hi","\u0935\u094d\u092f\u093e\u0935\u0938\u093e\u092f\u093f\u0915"],k4,k4),"calc.propertyTypeAgricultural",A.c(["en","Agricultural","hi","\u0915\u0943\u0937\u093f"],k4,k4),"calc.propertyTypeOther",A.c(["en","Other","hi","\u0905\u0928\u094d\u092f"],k4,k4),"calc.state",A.c(["en","State / UT","hi","\u0930\u093e\u091c\u094d\u092f / \u0915\u0947\u0902\u0926\u094d\u0930 \u0936\u093e\u0938\u093f\u0924 \u092a\u094d\u0930\u0926\u0947\u0936"],k4,k4),"calc.stateLabel",A.c(["en","State / Jurisdiction","hi","\u0930\u093e\u091c\u094d\u092f / \u0915\u094d\u0937\u0947\u0924\u094d\u0930\u093e\u0927\u093f\u0915\u093e\u0930"],k4,k4),"calc.selectState",A.c(["en","Select state","hi","\u0930\u093e\u091c\u094d\u092f \u091a\u0941\u0928\u0947\u0902"],k4,k4),"calc.selectStateHint",A.c(["en","Select State / Union Territory","hi","\u0930\u093e\u091c\u094d\u092f / \u0915\u0947\u0902\u0926\u094d\u0930 \u0936\u093e\u0938\u093f\u0924 \u092a\u094d\u0930\u0926\u0947\u0936 \u091a\u0941\u0928\u0947\u0902"],k4,k4),"calc.agreementValue",A.c(["en","Agreement Value","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u092e\u0942\u0932\u094d\u092f"],k4,k4),"calc.propValueLabel",A.c(["en","Agreement / Declared Value (\u20b9)","hi","\u0905\u0928\u0941\u092c\u0902\u0927 / \u0918\u094b\u0937\u093f\u0924 \u092e\u0942\u0932\u094d\u092f (\u20b9)"],k4,k4),"calc.enterAgreementValue",A.c(["en","e.g. 75,00,000","hi","\u0909\u0926\u093e. 75,00,000"],k4,k4),"calc.enterPropValError",A.c(["en","Please enter the agreement property value","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092e\u0942\u0932\u094d\u092f \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"calc.circleRate",A.c(["en",c3,"hi",c4],k4,k4),"calc.circleRateLabel",A.c(["en","Circle Rate Value (\u20b9)","hi","\u0938\u0930\u094d\u0915\u093f\u0932 \u0930\u0947\u091f \u092e\u0942\u0932\u094d\u092f (\u20b9)"],k4,k4),"calc.enterCircleRate",A.c(["en","e.g. 50,00,000","hi","\u0909\u0926\u093e. 50,00,000"],k4,k4),"calc.gender",A.c(["en",c5,"hi",c6],k4,k4),"calc.genderLabel",A.c(["en",c5,"hi",c6],k4,k4),"calc.selectGender",A.c(["en","Select gender","hi","\u0932\u093f\u0902\u0917 \u091a\u0941\u0928\u0947\u0902"],k4,k4),"calc.selectGenderHint",A.c(["en","Select ownership gender category","hi","\u0938\u094d\u0935\u093e\u092e\u093f\u0924\u094d\u0935 \u0932\u093f\u0902\u0917 \u0936\u094d\u0930\u0947\u0923\u0940 \u091a\u0941\u0928\u0947\u0902"],k4,k4),"calc.genderMale",A.c(["en","Male","hi","\u092a\u0941\u0930\u0941\u0937"],k4,k4),"calc.genderFemale",A.c(["en","Female (Concession where applicable)","hi","\u092e\u0939\u093f\u0932\u093e (\u091c\u0939\u093e\u0901 \u0932\u093e\u0917\u0942 \u0939\u094b \u091b\u0942\u091f)"],k4,k4),"calc.genderJoint",A.c(["en","Joint (Male + Female)","hi","\u0938\u0902\u092f\u0941\u0915\u094d\u0924 (\u092a\u0941\u0930\u0941\u0937 + \u092e\u0939\u093f\u0932\u093e)"],k4,k4),"calc.genderOther",A.c(["en","Other / Legal Entity","hi","\u0905\u0928\u094d\u092f / \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0902\u0938\u094d\u0925\u093e"],k4,k4),"calc.firstTimeBuyer",A.c(["en","First Time Buyer","hi","\u092a\u0939\u0932\u0940 \u092c\u093e\u0930 \u0916\u0930\u0940\u0926\u093e\u0930"],k4,k4),"calc.firstTimeLabel",A.c(["en","First-Time Homebuyer?","hi","\u0915\u094d\u092f\u093e \u092a\u0939\u0932\u0940 \u092c\u093e\u0930 \u0918\u0930 \u0916\u0930\u0940\u0926 \u0930\u0939\u0947 \u0939\u0948\u0902?"],k4,k4),"calc.selectOption",A.c(["en","Select option","hi","\u0935\u093f\u0915\u0932\u094d\u092a \u091a\u0941\u0928\u0947\u0902"],k4,k4),"calc.selectOptionHint",A.c(["en","Select Yes or No","hi","\u0939\u093e\u0901 \u092f\u093e \u0928\u0939\u0940\u0902 \u091a\u0941\u0928\u0947\u0902"],k4,k4),"calc.yes",A.c(["en","Yes","hi","\u0939\u093e\u0901"],k4,k4),"calc.no",A.c(["en","No","hi","\u0928\u0939\u0940\u0902"],k4,k4),"calc.calculateBtn",A.c(["en","Calculate Stamp Duty","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902"],k4,k4),"calc.calcButton",A.c(["en","Calculate Charges","hi","\u0936\u0941\u0932\u094d\u0915 \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902"],k4,k4),"calc.resetBtn",A.c(["en","Reset","hi","\u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0947\u0902"],k4,k4),"calc.resetButton",A.c(["en","Reset All","hi","\u0938\u092d\u0940 \u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0947\u0902"],k4,k4),"calc.fillAllError",A.c(["en","Please complete all required fields.","hi","\u0915\u0943\u092a\u092f\u093e \u0938\u092d\u0940 \u0906\u0935\u0936\u094d\u092f\u0915 \u092b\u093c\u0940\u0932\u094d\u0921 \u092d\u0930\u0947\u0902\u0964"],k4,k4),"calc.validValueError",A.c(["en","Please enter valid numerical amounts.","hi","\u0915\u0943\u092a\u092f\u093e \u092e\u093e\u0928\u094d\u092f \u0938\u0902\u0916\u094d\u092f\u093e\u0924\u094d\u092e\u0915 \u0930\u093e\u0936\u093f \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902\u0964"],k4,k4),"calc.summaryTitle",A.c(["en","Stamp Duty & Registration Summary","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0938\u093e\u0930\u093e\u0902\u0936"],k4,k4),"calc.rowAgreementValue",A.c(["en","Agreement Value","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u092e\u0942\u0932\u094d\u092f"],k4,k4),"calc.rowCircleRate",A.c(["en",c3,"hi",c4],k4,k4),"calc.rowApplicableMarketValue",A.c(["en","Applicable Consideration Base","hi","\u0932\u093e\u0917\u0942 \u0935\u093f\u091a\u093e\u0930\u0923\u0940\u092f \u0906\u0927\u093e\u0930"],k4,k4),"calc.rowStampDuty",A.c(["en","Stamp Duty ({rate}%)","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 ({rate}%)"],k4,k4),"calc.rowRegistration",A.c(["en","Registration Fee ({rate}%)","hi","\u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0936\u0941\u0932\u094d\u0915 ({rate}%)"],k4,k4),"calc.totalPayable",A.c(["en","Total Estimated Statutory Charges","hi","\u0915\u0941\u0932 \u0905\u0928\u0941\u092e\u093e\u0928\u093f\u0924 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0936\u0941\u0932\u094d\u0915"],k4,k4),"calc.stampPlusReg",A.c(["en","Stamp Duty + Registration + Applicable Surcharges","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 + \u092a\u0902\u091c\u0940\u0915\u0930\u0923 + \u0932\u093e\u0917\u0942 \u0905\u0927\u093f\u092d\u093e\u0930"],k4,k4),"calc.disclaimer",A.c(["en","Calculations are indicative estimates based on prevailing state stamp schedules. Verify final rates with the local sub-registrar office.","hi","\u0917\u0923\u0928\u093e \u092a\u094d\u0930\u091a\u0932\u093f\u0924 \u0930\u093e\u091c\u094d\u092f \u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0905\u0928\u0941\u0938\u0942\u091a\u093f\u092f\u094b\u0902 \u092a\u0930 \u0906\u0927\u093e\u0930\u093f\u0924 \u0938\u093e\u0902\u0915\u0947\u0924\u093f\u0915 \u0905\u0928\u0941\u092e\u093e\u0928 \u0939\u0948\u0902\u0964 \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0909\u092a-\u092a\u0902\u091c\u0940\u092f\u0915 \u0915\u093e\u0930\u094d\u092f\u093e\u0932\u092f \u0938\u0947 \u0905\u0902\u0924\u093f\u092e \u0926\u0930\u094b\u0902 \u0915\u093e \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"calc.ratesVerifiedOn",A.c(["en","Rates last verified on {date}","hi","\u0926\u0930\u0947\u0902 \u0905\u0902\u0924\u093f\u092e \u092c\u093e\u0930 {date} \u0915\u094b \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0940 \u0917\u0908\u0902"],k4,k4),"calc.sourceLabel",A.c(["en","Source: {source}","hi","\u0938\u094d\u0930\u094b\u0924: {source}"],k4,k4),"calc.ratesWarning",A.c(["en","Statutory rates may have changed since verification. Please confirm with your local Sub-Registrar or IGR portal.","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u0947 \u092c\u093e\u0926 \u0938\u0947 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0926\u0930\u0947\u0902 \u092c\u0926\u0932 \u0938\u0915\u0924\u0940 \u0939\u0948\u0902\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u0947 \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0909\u092a-\u092a\u0902\u091c\u0940\u092f\u0915 \u092f\u093e \u0906\u0908\u091c\u0940\u0906\u0930 \u092a\u094b\u0930\u094d\u091f\u0932 \u0938\u0947 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964"],k4,k4),"calc.moreThan90Days",A.c(["en","> 90 DAYS","hi","> 90 \u0926\u093f\u0928"],k4,k4),"recentDocs.title",A.c(["en",k,"hi",j],k4,k4),"recentDocs.scanNew",A.c(["en",c7,"hi",c8],k4,k4),"recentDocs.scanNewDoc",A.c(["en",c7,"hi",c8],k4,k4),"recentDocs.repository",A.c(["en",c9,"hi",d0],k4,k4),"recentDocs.repoTitle",A.c(["en",c9,"hi",d0],k4,k4),"recentDocs.vaultSubtitle",A.c(["en","Your property documents, organized and analyzed.","hi","\u0906\u092a\u0915\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c, \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093f\u0924 \u0914\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u093f\u0924\u0964"],k4,k4),"recentDocs.secureVault",A.c(["en","SECURE LEGAL VAULT","hi","\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u0949\u0932\u094d\u091f"],k4,k4),"recentDocs.documents",A.c(["en","DOCUMENTS","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"recentDocs.totalAnalyzed",A.c(["en",d1,"hi",d2],k4,k4),"recentDocs.repoSubtitle",A.c(["en",d1,"hi",d2],k4,k4),"recentDocs.total",A.c(["en","Total","hi","\u0915\u0941\u0932"],k4,k4),"recentDocs.statTotal",A.c(["en","Total","hi","\u0915\u0941\u0932"],k4,k4),"recentDocs.highRisk",A.c(["en","High Risk","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],k4,k4),"recentDocs.statHighRisk",A.c(["en","High Risk","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],k4,k4),"recentDocs.caution",A.c(["en","Caution","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940"],k4,k4),"recentDocs.statCaution",A.c(["en","Caution","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940"],k4,k4),"recentDocs.compliant",A.c(["en","Compliant","hi","\u0905\u0928\u0941\u0930\u0942\u092a"],k4,k4),"recentDocs.statCompliant",A.c(["en","Compliant","hi","\u0905\u0928\u0941\u0930\u0942\u092a"],k4,k4),"recentDocs.searchHint",A.c(["en","Search documents","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0916\u094b\u091c\u0947\u0902"],k4,k4),"recentDocs.all",A.c(["en","All","hi","\u0938\u092d\u0940"],k4,k4),"recentDocs.filterAll",A.c(["en","All","hi","\u0938\u092d\u0940"],k4,k4),"recentDocs.resetFilters",A.c(["en","Reset Filters","hi","\u092b\u093c\u093f\u0932\u094d\u091f\u0930 \u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0947\u0902"],k4,k4),"recentDocs.noDocsMatching",A.c(["en",d3,"hi",d4],k4,k4),"recentDocs.noMatch",A.c(["en",d3,"hi",d4],k4,k4),"recentDocs.noDocsCategory",A.c(["en",d5,"hi",d6],k4,k4),"recentDocs.noCategory",A.c(["en",d5,"hi",d6],k4,k4),"recentDocs.emptyPrompt",A.c(["en",d7,"hi",d8],k4,k4),"recentDocs.emptyDesc",A.c(["en",d7,"hi",d8],k4,k4),"recentDocs.scanned",A.c(["en","Scanned {time}","hi",d9],k4,k4),"recentDocs.scannedPrefix",A.c(["en","Scanned {time}","hi",d9],k4,k4),"recentDocs.justNow",A.c(["en","Just now","hi","\u0905\u092d\u0940"],k4,k4),"recentDocs.mAgo",A.c(["en","{count}m ago","hi","{count} \u092e\u093f\u0928\u091f \u092a\u0939\u0932\u0947"],k4,k4),"recentDocs.hAgo",A.c(["en","{count}h ago","hi","{count} \u0918\u0902\u091f\u0947 \u092a\u0939\u0932\u0947"],k4,k4),"recentDocs.dAgo",A.c(["en","{count}d ago","hi","{count} \u0926\u093f\u0928 \u092a\u0939\u0932\u0947"],k4,k4),"recentDocs.recently",A.c(["en","Recently","hi","\u0939\u093e\u0932 \u0939\u0940 \u092e\u0947\u0902"],k4,k4),"recentDocs.rename",A.c(["en","Rename Document","hi",e0],k4,k4),"recentDocs.renameTitle",A.c(["en","Rename Document","hi",e0],k4,k4),"recentDocs.renameHint",A.c(["en","Document name","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0928\u093e\u092e"],k4,k4),"recentDocs.save",A.c(["en","Save","hi","\u0938\u0939\u0947\u091c\u0947\u0902"],k4,k4),"recentDocs.cancel",A.c(["en","Cancel","hi","\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902"],k4,k4),"recentDocs.delete",A.c(["en","Delete Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0939\u091f\u093e\u090f\u0902"],k4,k4),"recentDocs.deleteConfirm",A.c(["en","Are you sure you want to delete this document analysis?","hi","\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 \u0907\u0938 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u094b \u0939\u091f\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?"],k4,k4),"recentDocs.renamedSuccess",A.c(["en","Document renamed successfully","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0928\u093e\u092e \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092c\u0926\u0932 \u0926\u093f\u092f\u093e \u0917\u092f\u093e"],k4,k4),"recentDocs.deletedSuccess",A.c(["en","Document moved to Recycle Bin","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u092f\u093e \u0917\u092f\u093e"],k4,k4),"recentDocs.actions",A.c(["en","Actions","hi","\u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0907\u092f\u093e\u0902"],k4,k4),"recentDocs.viewDocument",A.c(["en","View Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0926\u0947\u0916\u0947\u0902"],k4,k4),"recentDocs.viewAnalysis",A.c(["en","View Analysis","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0926\u0947\u0916\u0947\u0902"],k4,k4),"recentDocs.downloadReport",A.c(["en","Download Risk Report","hi","\u091c\u094b\u0916\u093f\u092e \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],k4,k4),"recentDocs.reanalyze",A.c(["en","Re-analyze Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u092a\u0941\u0928\u0903 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902"],k4,k4),"recentDocs.downloadingReport",A.c(["en","Generating & downloading risk report PDF...","hi","\u091c\u094b\u0916\u093f\u092e \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092a\u0940\u0921\u0940\u090f\u092b \u0924\u0948\u092f\u093e\u0930 \u0914\u0930 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0940 \u091c\u093e \u0930\u0939\u0940 \u0939\u0948..."],k4,k4),"recentDocs.reportDownloaded",A.c(["en","Legal Risk Report PDF downloaded successfully","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092a\u0940\u0921\u0940\u090f\u092b \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0940 \u0917\u0908"],k4,k4),"recentDocs.reanalyzing",A.c(["en","Re-analyzing document with Legal AI...","hi","\u0932\u0940\u0917\u0932 \u090f\u0906\u0908 \u0915\u0947 \u0938\u093e\u0925 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u092a\u0941\u0928\u0903 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],k4,k4),"recentDocs.reanalyzeSuccess",A.c(["en","Document re-analyzed successfully","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u092a\u0941\u0928\u0903 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092a\u0942\u0930\u093e \u0939\u0941\u0906"],k4,k4),"recentDocs.reanalyzeFailed",A.c(["en","Failed to re-analyze document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u092a\u0941\u0928\u0903 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932"],k4,k4),"bin.title",A.c(["en","Recycle Bin","hi","\u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928"],k4,k4),"bin.documentsTab",A.c(["en","Documents","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"bin.checklistsTab",A.c(["en","Checklists","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"bin.emptyTitle",A.c(["en","Recycle Bin is Empty","hi","\u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u0916\u093e\u0932\u0940 \u0939\u0948"],k4,k4),"bin.emptySubtitle",A.c(["en","Deleted documents will be kept here for 30 days before being permanently removed.","hi","\u0939\u091f\u093e\u090f \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f \u091c\u093e\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 30 \u0926\u093f\u0928\u094b\u0902 \u0924\u0915 \u092f\u0939\u093e\u0902 \u0930\u0916\u0947 \u091c\u093e\u090f\u0902\u0917\u0947\u0964"],k4,k4),"bin.emptyChecklistsTitle",A.c(["en","No Deleted Checklists","hi","\u0915\u094b\u0908 \u0939\u091f\u093e\u0908 \u0917\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0928\u0939\u0940\u0902 \u0939\u0948"],k4,k4),"bin.emptyChecklistsSubtitle",A.c(["en","Deleted checklists will be kept here for 30 days before being permanently removed.","hi","\u0939\u091f\u093e\u090f \u0917\u090f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f \u091c\u093e\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 30 \u0926\u093f\u0928\u094b\u0902 \u0924\u0915 \u092f\u0939\u093e\u0902 \u0930\u0916\u0947 \u091c\u093e\u090f\u0902\u0917\u0947\u0964"],k4,k4),"bin.restore",A.c(["en","Restore","hi","\u092a\u0941\u0928\u0930\u094d\u0938\u094d\u0925\u093e\u092a\u093f\u0924 \u0915\u0930\u0947\u0902"],k4,k4),"bin.deletePermanently",A.c(["en",a8,"hi",a9],k4,k4),"bin.permanentConfirmTitle",A.c(["en","Permanently Delete Document?","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f\u0902?"],k4,k4),"bin.permanentConfirmMessage",A.c(["en","This will permanently delete this document and all associated data. This action is irreversible and cannot be undone.","hi","\u092f\u0939 \u0907\u0938 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0914\u0930 \u0938\u092d\u0940 \u0938\u0902\u092c\u0926\u094d\u0927 \u0921\u0947\u091f\u093e \u0915\u094b \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0947\u0917\u093e\u0964 \u092f\u0939 \u0915\u094d\u0930\u093f\u092f\u093e \u0905\u092a\u0930\u093f\u0935\u0930\u094d\u0924\u0928\u0940\u092f \u0939\u0948\u0964"],k4,k4),"bin.permanentConfirmChecklistTitle",A.c(["en","Permanently Delete Checklist?","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f\u0902?"],k4,k4),"bin.permanentConfirmChecklistMessage",A.c(["en","This will permanently delete this checklist and all its items. This action is irreversible and cannot be undone.","hi","\u092f\u0939 \u0907\u0938 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0914\u0930 \u0909\u0938\u0915\u0947 \u0938\u092d\u0940 \u0915\u093e\u0930\u094d\u092f\u094b\u0902 \u0915\u094b \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0947\u0917\u093e\u0964 \u092f\u0939 \u0915\u094d\u0930\u093f\u092f\u093e \u0905\u092a\u0930\u093f\u0935\u0930\u094d\u0924\u0928\u0940\u092f \u0939\u0948\u0964"],k4,k4),"bin.restoredSuccess",A.c(["en","Document restored to library","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0932\u093e\u0907\u092c\u094d\u0930\u0947\u0930\u0940 \u092e\u0947\u0902 \u092a\u0941\u0928\u0930\u094d\u0938\u094d\u0925\u093e\u092a\u093f\u0924 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"],k4,k4),"bin.permanentlyDeletedSuccess",A.c(["en","Document permanently deleted","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u093f\u092f\u093e \u0917\u092f\u093e"],k4,k4),"bin.checklistRestoredSuccess",A.c(["en","Checklist restored to library","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0932\u093e\u0907\u092c\u094d\u0930\u0947\u0930\u0940 \u092e\u0947\u0902 \u092a\u0941\u0928\u0930\u094d\u0938\u094d\u0925\u093e\u092a\u093f\u0924 \u0915\u0940 \u0917\u0908"],k4,k4),"bin.checklistPermanentlyDeletedSuccess",A.c(["en","Checklist permanently deleted","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0940 \u0917\u0908"],k4,k4),"bin.autoPurgeNote",A.c(["en","Items in the bin for more than 30 days are automatically deleted permanently.","hi","30 \u0926\u093f\u0928\u094b\u0902 \u0938\u0947 \u0905\u0927\u093f\u0915 \u0938\u092e\u092f \u0938\u0947 \u092c\u093f\u0928 \u092e\u0947\u0902 \u092e\u094c\u091c\u0942\u0926 \u0906\u0907\u091f\u092e \u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u093f\u090f \u091c\u093e\u0924\u0947 \u0939\u0948\u0902\u0964"],k4,k4),"sidebar.bin",A.c(["en","Recycle Bin","hi","\u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928"],k4,k4),"analysis.reportTitle",A.c(["en",e1,"hi",e2],k4,k4),"analysis.title",A.c(["en",e1,"hi",e2],k4,k4),"analysis.pageOneOfOne",A.c(["en","PAGE 1 OF 1","hi","\u092a\u0943\u0937\u094d\u0920 1 / 1"],k4,k4),"analysis.highRiskDetected",A.c(["en",e3,"hi",e4],k4,k4),"analysis.moderateCaution",A.c(["en","Moderate Caution Advised","hi","\u092e\u0927\u094d\u092f\u092e \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0915\u0940 \u0938\u0932\u093e\u0939 \u0926\u0940 \u0917\u0908 \u0939\u0948"],k4,k4),"analysis.noRiskDetected",A.c(["en",e5,"hi",e6],k4,k4),"analysis.standardLowRisk",A.c(["en",e5,"hi",e6],k4,k4),"analysis.exportPdf",A.c(["en","Export PDF","hi","\u092a\u0940\u0921\u0940\u090f\u092b \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u0915\u0930\u0947\u0902"],k4,k4),"analysis.highRiskCount",A.c(["en",e7,"hi",e8],k4,k4),"analysis.pillHighRisk",A.c(["en",e7,"hi",e8],k4,k4),"analysis.cautionCount",A.c(["en",e9,"hi",f0],k4,k4),"analysis.pillCaution",A.c(["en",e9,"hi",f0],k4,k4),"analysis.compliantCount",A.c(["en",f1,"hi",f2],k4,k4),"analysis.pillCompliant",A.c(["en",f1,"hi",f2],k4,k4),"analysis.clausesTotal",A.c(["en",f3,"hi","{count} \u0915\u0941\u0932 \u0916\u0902\u0921"],k4,k4),"analysis.pillTotalClauses",A.c(["en",f3,"hi","{count} \u0915\u0941\u0932 \u0916\u0902\u0921"],k4,k4),"analysis.sourceDocTitle",A.c(["en",f4,"hi",f5],k4,k4),"analysis.sourceDocDefault",A.c(["en",f4,"hi",f5],k4,k4),"analysis.originalUploaded",A.c(["en",f6,"hi",f7],k4,k4),"analysis.originalContractFile",A.c(["en",f6,"hi",f7],k4,k4),"analysis.expandWindow",A.c(["en","Expand Window","hi","\u0935\u093f\u0902\u0921\u094b \u092c\u0921\u093c\u093e \u0915\u0930\u0947\u0902"],k4,k4),"analysis.originalContractText",A.c(["en","Original Contract Text:","hi","\u092e\u0942\u0932 \u0905\u0928\u0941\u092c\u0902\u0927 \u092a\u093e\u0920:"],k4,k4),"analysis.analyzedClauses",A.c(["en","Analyzed Clauses & Explanations","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u090f \u0917\u090f \u0916\u0902\u0921 \u0914\u0930 \u0938\u094d\u092a\u0937\u094d\u091f\u0940\u0915\u0930\u0923"],k4,k4),"analysis.tapToExplain",A.c(["en","Tap to explain","hi","\u0938\u094d\u092a\u0937\u094d\u091f\u0940\u0915\u0930\u0923 \u0915\u0947 \u0932\u093f\u090f \u091f\u0948\u092a \u0915\u0930\u0947\u0902"],k4,k4),"analysis.riskRationale",A.c(["en","Risk Rationale: {reason}","hi","\u091c\u094b\u0916\u093f\u092e \u0915\u093e \u0915\u093e\u0930\u0923: {reason}"],k4,k4),"analysis.simplifyingJargon",A.c(["en","Simplifying legal jargon with AI...","hi","\u090f\u0906\u0908 \u0915\u0947 \u0938\u093e\u0925 \u0915\u093e\u0928\u0942\u0928\u0940 \u0936\u092c\u094d\u0926\u093e\u0935\u0932\u0940 \u0915\u094b \u0938\u0930\u0932 \u092c\u0928\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],k4,k4),"analysis.plainEnglish",A.c(["en","Plain English Translation","hi","\u0938\u0930\u0932 \u0905\u0928\u0941\u0935\u093e\u0926"],k4,k4),"analysis.gotIt",A.c(["en","Got it","hi","\u0938\u092e\u091d \u0917\u092f\u093e"],k4,k4),"analysis.pdfSuccess",A.c(["en",f8,"hi",f9],k4,k4),"analysis.exportSuccess",A.c(["en",f8,"hi",f9],k4,k4),"analysis.pdfFailed",A.c(["en","Failed to export PDF: {error}","hi","\u092a\u0940\u0921\u0940\u090f\u092b \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932: {error}"],k4,k4),"analysis.copySuccess",A.c(["en","Contract text copied to clipboard!","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u092a\u093e\u0920 \u0915\u094d\u0932\u093f\u092a\u092c\u094b\u0930\u094d\u0921 \u092a\u0930 \u0915\u0949\u092a\u0940 \u0915\u093f\u092f\u093e \u0917\u092f\u093e!"],k4,k4),"analysis.copyText",A.c(["en","Copy Text","hi","\u092a\u093e\u0920 \u0915\u0949\u092a\u0940 \u0915\u0930\u0947\u0902"],k4,k4),"analysis.extractedWords",A.c(["en","Original Extracted Text ({count} words)","hi","\u092e\u0942\u0932 \u0928\u093f\u0915\u093e\u0932\u093e \u0917\u092f\u093e \u092a\u093e\u0920 ({count} \u0936\u092c\u094d\u0926)"],k4,k4),"auth.welcomeBack",A.c(["en","Welcome Back","hi","\u0935\u093e\u092a\u0938\u0940 \u092a\u0930 \u0938\u094d\u0935\u093e\u0917\u0924 \u0939\u0948"],k4,k4),"auth.loginToAccount",A.c(["en","Sign in to your account to continue","hi","\u091c\u093e\u0930\u0940 \u0930\u0916\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0916\u093e\u0924\u0947 \u092e\u0947\u0902 \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902"],k4,k4),"auth.enterEmailPhone",A.c(["en",g0,"hi",g1],k4,k4),"auth.loginOtpPrompt",A.c(["en",g0,"hi",g1],k4,k4),"auth.email",A.c(["en","Email","hi","\u0908\u092e\u0947\u0932"],k4,k4),"auth.mobile",A.c(["en","Mobile","hi","\u092e\u094b\u092c\u093e\u0907\u0932"],k4,k4),"auth.emailAddress",A.c(["en","Email Address","hi","\u0908\u092e\u0947\u0932 \u092a\u0924\u093e"],k4,k4),"auth.mobileNumber",A.c(["en","Mobile Number","hi","\u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930"],k4,k4),"auth.fullName",A.c(["en","Full Name","hi","\u092a\u0942\u0930\u093e \u0928\u093e\u092e"],k4,k4),"auth.emailHint",A.c(["en",g2,"hi",g2],k4,k4),"auth.phoneHint",A.c(["en","e.g. 9876543210","hi","\u0909\u0926\u093e. 9876543210"],k4,k4),"auth.nameHint",A.c(["en","Full name","hi","\u092a\u0942\u0930\u093e \u0928\u093e\u092e"],k4,k4),"auth.enterIdentifier",A.c(["en","Please enter your {type}","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e {type} \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.enterFullName",A.c(["en","Please enter your full name","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u092a\u0942\u0930\u093e \u0928\u093e\u092e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.emailRequired",A.c(["en","Please enter your email address","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0908\u092e\u0947\u0932 \u092a\u0924\u093e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.enterValidEmail",A.c(["en","Please enter a valid email address","hi","\u0915\u0943\u092a\u092f\u093e \u090f\u0915 \u092e\u093e\u0928\u094d\u092f \u0908\u092e\u0947\u0932 \u092a\u0924\u093e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.mobileRequired",A.c(["en","Please enter your mobile number","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.enterValidPhone",A.c(["en","Please enter a valid 10-digit mobile number","hi","\u0915\u0943\u092a\u092f\u093e \u090f\u0915 \u092e\u093e\u0928\u094d\u092f 10 \u0905\u0902\u0915\u094b\u0902 \u0915\u093e \u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.validEmail",A.c(["en","Enter a valid email address","hi","\u090f\u0915 \u092e\u093e\u0928\u094d\u092f \u0908\u092e\u0947\u0932 \u092a\u0924\u093e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.validPhone",A.c(["en","Enter a valid phone number","hi","\u090f\u0915 \u092e\u093e\u0928\u094d\u092f \u092b\u093c\u094b\u0928 \u0928\u0902\u092c\u0930 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.sendOtp",A.c(["en","Send Secure OTP","hi",g3],k4,k4),"auth.sendSecureOtp",A.c(["en","Send Secure OTP","hi",g3],k4,k4),"auth.sendVerificationCode",A.c(["en","We will send a 6-digit verification code to this address.","hi","\u0939\u092e \u0907\u0938 \u092a\u0924\u0947 \u092a\u0930 6 \u0905\u0902\u0915\u094b\u0902 \u0915\u093e \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u094b\u0921 \u092d\u0947\u091c\u0947\u0902\u0917\u0947\u0964"],k4,k4),"auth.createAccount",A.c(["en","Create Account","hi","\u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902"],k4,k4),"auth.createAccountSub",A.c(["en","Create your account to securely scan, analyze, and manage your property agreements.","hi","\u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u094b \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0938\u094d\u0915\u0948\u0928, \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0914\u0930 \u092a\u094d\u0930\u092c\u0902\u0927\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902\u0964"],k4,k4),"auth.createYourAccount",A.c(["en","Create your account","hi","\u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902"],k4,k4),"auth.enterDetails",A.c(["en","Enter your details to get started securely with LawBuddy.","hi","LawBuddy \u0915\u0947 \u0938\u093e\u0925 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0936\u0941\u0930\u0941\u0906\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e \u0935\u093f\u0935\u0930\u0923 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902\u0964"],k4,k4),"auth.noAccount",A.c(["en",g4,"hi","\u0916\u093e\u0924\u093e \u0928\u0939\u0940\u0902 \u0939\u0948? "],k4,k4),"auth.dontHaveAccount",A.c(["en",g4,"hi","\u0916\u093e\u0924\u093e \u0928\u0939\u0940\u0902 \u0939\u0948? "],k4,k4),"auth.alreadyHaveAccount",A.c(["en",g5,"hi","\u092a\u0939\u0932\u0947 \u0938\u0947 \u0939\u0940 \u090f\u0915 \u0916\u093e\u0924\u093e \u0939\u0948? "],k4,k4),"auth.signUp",A.c(["en","Sign Up","hi","\u0938\u093e\u0907\u0928 \u0905\u092a \u0915\u0930\u0947\u0902"],k4,k4),"auth.logIn",A.c(["en","Log In","hi","\u0932\u0949\u0917 \u0907\u0928 \u0915\u0930\u0947\u0902"],k4,k4),"auth.backToHome",A.c(["en","Back","hi","\u092a\u0940\u091b\u0947"],k4,k4),"auth.intelligentProtection",A.c(["en","Intelligent Protection for Property Agreements.","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u092c\u0941\u0926\u094d\u0927\u093f\u092e\u093e\u0928 \u0938\u0941\u0930\u0915\u094d\u0937\u093e\u0964"],k4,k4),"auth.loginHeroSub",A.c(["en",g6,"hi",g7],k4,k4),"auth.signInSubtitle",A.c(["en",g6,"hi",g7],k4,k4),"auth.loginHeroDesc",A.c(["en",g6,"hi",g7],k4,k4),"auth.pillarRera",A.c(["en","RERA Compliance Verification","hi","\u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0938\u0924\u094d\u092f\u093e\u092a\u0928"],k4,k4),"auth.pillarReraSub",A.c(["en","Automated cross-checking against official state statutory provisions.","hi","\u0906\u0927\u093f\u0915\u093e\u0930\u093f\u0915 \u0930\u093e\u091c\u094d\u092f \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u092a\u094d\u0930\u093e\u0935\u0927\u093e\u0928\u094b\u0902 \u0915\u0947 \u0916\u093f\u0932\u093e\u092b \u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u0915\u094d\u0930\u0949\u0938-\u091a\u0947\u0915\u093f\u0902\u0917\u0964"],k4,k4),"auth.pillarAudit",A.c(["en","Instant Risk Audit","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u091c\u094b\u0916\u093f\u092e \u0911\u0921\u093f\u091f"],k4,k4),"auth.pillarAuditSub",A.c(["en","Detect ambiguous clauses, penalties, and deviations in seconds.","hi","\u0938\u0947\u0915\u0902\u0921\u094b\u0902 \u092e\u0947\u0902 \u0905\u0938\u094d\u092a\u0937\u094d\u091f \u0916\u0902\u0921\u094b\u0902, \u0926\u0902\u0921\u094b\u0902 \u0914\u0930 \u0935\u093f\u091a\u0932\u0928\u094b\u0902 \u0915\u093e \u092a\u0924\u093e \u0932\u0917\u093e\u090f\u0902\u0964"],k4,k4),"auth.pillarDueDiligence",A.c(["en",b0,"hi",i],k4,k4),"auth.pillarDueDiligenceSub",A.c(["en","Tailored legal task lists for buyers, sellers, and tenants.","hi","\u0916\u0930\u0940\u0926\u093e\u0930\u094b\u0902, \u0935\u093f\u0915\u094d\u0930\u0947\u0924\u093e\u0913\u0902 \u0914\u0930 \u0915\u093f\u0930\u093e\u092f\u0947\u0926\u093e\u0930\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0905\u0928\u0941\u0915\u0942\u0932\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u0915\u093e\u0930\u094d\u092f \u0938\u0942\u091a\u093f\u092f\u093e\u0902\u0964"],k4,k4),"auth.bankGradeSecurity",A.c(["en","256-bit Encrypted \u2022 Strict Confidentiality","hi","256-\u092c\u093f\u091f \u090f\u0928\u094d\u0915\u094d\u0930\u093f\u092a\u094d\u091f\u0947\u0921 \u2022 \u092a\u0942\u0930\u094d\u0923 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e"],k4,k4),"auth.mobileSubtitle",A.c(["en",q,"hi",p],k4,k4),"auth.signupHeroTitle",A.c(["en",g8,"hi",g9],k4,k4),"auth.buildSaferJourney",A.c(["en",g8,"hi",g9],k4,k4),"auth.signupHeroSub",A.c(["en","Join thousands of homebuyers and legal professionals safeguarding their property transactions.","hi","\u0939\u091c\u093e\u0930\u094b\u0902 \u0918\u0930 \u0916\u0930\u0940\u0926\u093e\u0930\u094b\u0902 \u0914\u0930 \u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u0947\u0936\u0947\u0935\u0930\u094b\u0902 \u0938\u0947 \u091c\u0941\u0921\u093c\u0947\u0902 \u091c\u094b \u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u0940 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0915\u0930 \u0930\u0939\u0947 \u0939\u0948\u0902\u0964"],k4,k4),"auth.signUpSubtitle",A.c(["en","Create your account to securely scan, analyze, and manage your property agreements with LawBuddy.","hi","LawBuddy \u0915\u0947 \u0938\u093e\u0925 \u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u094b \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0938\u094d\u0915\u0948\u0928, \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0914\u0930 \u092a\u094d\u0930\u092c\u0902\u0927\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902\u0964"],k4,k4),"auth.signupFeatureInstantAudit",A.c(["en","Instant Document Audits","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0911\u0921\u093f\u091f"],k4,k4),"auth.signupFeatureInstantAuditSub",A.c(["en","Comprehensive 3-tier risk analysis with severity tagging.","hi","\u0917\u0902\u092d\u0940\u0930\u0924\u093e \u091f\u0948\u0917\u093f\u0902\u0917 \u0915\u0947 \u0938\u093e\u0925 \u0935\u094d\u092f\u093e\u092a\u0915 3-\u0938\u094d\u0924\u0930\u0940\u092f \u091c\u094b\u0916\u093f\u092e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923\u0964"],k4,k4),"auth.signupFeatureAiExplain",A.c(["en","Plain-Language Explanations","hi","\u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u092e\u0947\u0902 \u0935\u094d\u092f\u093e\u0916\u094d\u092f\u093e"],k4,k4),"auth.signupFeatureAiExplainSub",A.c(["en","Complex legal terminology translated into clear actionable advice.","hi","\u091c\u091f\u093f\u0932 \u0915\u093e\u0928\u0942\u0928\u0940 \u0936\u092c\u094d\u0926\u093e\u0935\u0932\u0940 \u0915\u093e \u0938\u094d\u092a\u0937\u094d\u091f \u0935\u094d\u092f\u093e\u0935\u0939\u093e\u0930\u093f\u0915 \u0938\u0932\u093e\u0939 \u092e\u0947\u0902 \u0905\u0928\u0941\u0935\u093e\u0926\u0964"],k4,k4),"auth.signupFeatureCustomChecklists",A.c(["en","Custom Legal Checklists","hi","\u0915\u0938\u094d\u091f\u092e \u0915\u093e\u0928\u0942\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"auth.signupFeatureCustomChecklistsSub",A.c(["en","Track key verification steps throughout your transaction lifecycle.","hi","\u0905\u092a\u0928\u0947 \u0932\u0947\u0928\u0926\u0947\u0928 \u091c\u0940\u0935\u0928\u091a\u0915\u094d\u0930 \u0915\u0947 \u0926\u094c\u0930\u093e\u0928 \u092e\u0941\u0916\u094d\u092f \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u091a\u0930\u0923\u094b\u0902 \u0915\u094b \u091f\u094d\u0930\u0948\u0915 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"auth.reraSafety",A.c(["en","RERA & Contract Safety","hi","\u0930\u0947\u0930\u093e \u0914\u0930 \u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u0941\u0930\u0915\u094d\u0937\u093e"],k4,k4),"auth.aiReady",A.c(["en","AI Analysis Ready","hi","\u090f\u0906\u0908 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0924\u0948\u092f\u093e\u0930"],k4,k4),"auth.clauseAssessment",A.c(["en","Clause Risk Assessment \u2022 Escrow Compliance","hi","\u0916\u0902\u0921 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u2022 \u090f\u0938\u094d\u0915\u094d\u0930\u094b \u0905\u0928\u0941\u092a\u093e\u0932\u0928"],k4,k4),"auth.agreementIntelligence",A.c(["en","Agreement Intelligence","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u092c\u0941\u0926\u094d\u0927\u093f\u092e\u0924\u094d\u0924\u093e"],k4,k4),"auth.aiProtectionReady",A.c(["en","AI Protection Ready","hi","\u090f\u0906\u0908 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0924\u0948\u092f\u093e\u0930"],k4,k4),"auth.clauseDocVerification",A.c(["en","Clause Risk Assessment \u2022 Document Verification","hi","\u0916\u0902\u0921 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u2022 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u0924\u094d\u092f\u093e\u092a\u0928"],k4,k4),"auth.encrypted",A.c(["en","End-to-end encrypted \u2022 Strictly confidential","hi","\u090f\u0902\u0921-\u091f\u0942-\u090f\u0902\u0921 \u090f\u0928\u094d\u0915\u094d\u0930\u093f\u092a\u094d\u091f\u0947\u0921 \u2022 \u092a\u0942\u0930\u0940 \u0924\u0930\u0939 \u0917\u094b\u092a\u0928\u0940\u092f"],k4,k4),"auth.verifyYourEmail",A.c(["en",h0,"hi",h1],k4,k4),"auth.verifyEmail",A.c(["en",h0,"hi",h1],k4,k4),"auth.enter6Digit",A.c(["en",h2,"hi",h3],k4,k4),"auth.enterCodeSentTo",A.c(["en",h2,"hi",h3],k4,k4),"auth.enterComplete6Digit",A.c(["en","Please enter the complete 6-digit OTP code","hi","\u0915\u0943\u092a\u092f\u093e \u092a\u0942\u0930\u093e 6 \u0905\u0902\u0915\u094b\u0902 \u0915\u093e \u0913\u091f\u0940\u092a\u0940 \u0915\u094b\u0921 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.codeExpiresIn",A.c(["en","Code expires in {time}","hi","\u0915\u094b\u0921 {time} \u092e\u0947\u0902 \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b \u091c\u093e\u090f\u0917\u093e"],k4,k4),"auth.codeExpired",A.c(["en","Code has expired","hi","\u0915\u094b\u0921 \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b \u091a\u0941\u0915\u093e \u0939\u0948"],k4,k4),"auth.verify",A.c(["en","Verify","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0930\u0947\u0902"],k4,k4),"auth.didntReceiveCode",A.c(["en","Didn't receive the code? ","hi","\u0915\u094b\u0921 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0928\u0939\u0940\u0902 \u0939\u0941\u0906? "],k4,k4),"auth.resend",A.c(["en","Resend","hi","\u092a\u0941\u0928\u0903 \u092d\u0947\u091c\u0947\u0902"],k4,k4),"auth.waitCooldown",A.c(["en","Wait {seconds}s","hi",h4],k4,k4),"auth.waitSeconds",A.c(["en","Wait {seconds}s","hi",h4],k4,k4),"auth.otpSentSuccess",A.c(["en","OTP sent successfully","hi","\u0913\u091f\u0940\u092a\u0940 \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092d\u0947\u091c\u093e \u0917\u092f\u093e"],k4,k4),"auth.otpResentSuccess",A.c(["en","A new OTP has been sent to your email.","hi","\u0906\u092a\u0915\u0940 \u0908\u092e\u0947\u0932 \u092a\u0930 \u090f\u0915 \u0928\u092f\u093e \u0913\u091f\u0940\u092a\u0940 \u092d\u0947\u091c\u093e \u0917\u092f\u093e \u0939\u0948\u0964"],k4,k4),"auth.otpResendFailed",A.c(["en","Failed to resend OTP","hi","\u0913\u091f\u0940\u092a\u0940 \u092a\u0941\u0928\u0903 \u092d\u0947\u091c\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932"],k4,k4),"auth.resendFailed",A.c(["en","Failed to resend verification code. Please try again.","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u094b\u0921 \u092a\u0941\u0928\u0903 \u092d\u0947\u091c\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928: \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"auth.enterValidOtp",A.c(["en","Please enter a valid 6-digit OTP","hi","\u0915\u0943\u092a\u092f\u093e \u090f\u0915 \u092e\u093e\u0928\u094d\u092f 6-\u0905\u0902\u0915\u0940\u092f \u0913\u091f\u0940\u092a\u0940 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],k4,k4),"auth.verificationSuccess",A.c(["en","Verification successful!","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0938\u092b\u0932!"],k4,k4),"auth.mobileOtpComingSoon",A.c(["en","Mobile OTP coming soon. Please use email.","hi","\u092e\u094b\u092c\u093e\u0907\u0932 \u0913\u091f\u0940\u092a\u0940 \u091c\u0932\u094d\u0926 \u0906 \u0930\u0939\u093e \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u0908\u092e\u0947\u0932 \u0915\u093e \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"auth.invalidOtp",A.c(["en","Invalid OTP","hi","\u0905\u092e\u093e\u0928\u094d\u092f \u0913\u091f\u0940\u092a\u0940"],k4,k4),"analysis.shareRiskSummary",A.c(["en",h5,"hi",h6],k4,k4),"analysis.shareModalTitle",A.c(["en",h5,"hi",h6],k4,k4),"analysis.shareModalSubtitle",A.c(["en","Share a secure, read-only summary of this property legal analysis.","hi","\u0907\u0938 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093e \u090f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924, \u0915\u0947\u0935\u0932-\u092a\u0922\u093c\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u0938\u093e\u0930\u093e\u0902\u0936 \u0938\u093e\u091d\u093e \u0915\u0930\u0947\u0902\u0964"],k4,k4),"analysis.shareWhatsApp",A.c(["en","Share on WhatsApp","hi","WhatsApp \u092a\u0930 \u0938\u093e\u091d\u093e \u0915\u0930\u0947\u0902"],k4,k4),"analysis.shareWhatsAppDesc",A.c(["en","Send key findings and link via WhatsApp","hi","WhatsApp \u0915\u0947 \u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u092e\u0941\u0916\u094d\u092f \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937 \u0914\u0930 \u0932\u093f\u0902\u0915 \u092d\u0947\u091c\u0947\u0902"],k4,k4),"analysis.shareEmail",A.c(["en","Share via Email","hi","\u0908\u092e\u0947\u0932 \u0926\u094d\u0935\u093e\u0930\u093e \u0938\u093e\u091d\u093e \u0915\u0930\u0947\u0902"],k4,k4),"analysis.shareEmailDesc",A.c(["en","Compose an email with analysis summary & link","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0938\u093e\u0930\u093e\u0902\u0936 \u0914\u0930 \u0932\u093f\u0902\u0915 \u0915\u0947 \u0938\u093e\u0925 \u090f\u0915 \u0908\u092e\u0947\u0932 \u092c\u0928\u093e\u090f\u0902"],k4,k4),"analysis.copyShareLink",A.c(["en","Copy Link","hi","\u0932\u093f\u0902\u0915 \u0915\u0949\u092a\u0940 \u0915\u0930\u0947\u0902"],k4,k4),"analysis.copyShareLinkDesc",A.c(["en","Generate and copy a secure read-only URL","hi","\u090f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0915\u0947\u0935\u0932-\u092a\u0922\u093c\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u0932\u093f\u0902\u0915 \u092c\u0928\u093e\u090f\u0902 \u0914\u0930 \u0915\u0949\u092a\u0940 \u0915\u0930\u0947\u0902"],k4,k4),"analysis.downloadPdfDesc",A.c(["en","Export full analysis report as PDF","hi","\u092a\u0942\u0930\u094d\u0923 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0915\u094b \u092a\u0940\u0921\u0940\u090f\u092b \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u0915\u0930\u0947\u0902"],k4,k4),"analysis.linkCopiedSuccess",A.c(["en","Share link copied to clipboard!","hi","\u0938\u093e\u091d\u093e\u0915\u0930\u0923 \u0932\u093f\u0902\u0915 \u0915\u094d\u0932\u093f\u092a\u092c\u094b\u0930\u094d\u0921 \u092a\u0930 \u0915\u0949\u092a\u0940 \u0915\u093f\u092f\u093e \u0917\u092f\u093e!"],k4,k4),"analysis.shareGenerating",A.c(["en","Generating secure share link...","hi","\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0938\u093e\u091d\u093e\u0915\u0930\u0923 \u0932\u093f\u0902\u0915 \u092c\u0928\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],k4,k4),"analysis.shareFailed",A.c(["en","Failed to generate share link. Please try again.","hi","\u0938\u093e\u091d\u093e\u0915\u0930\u0923 \u0932\u093f\u0902\u0915 \u092c\u0928\u093e\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928: \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"analysis.sharedReadOnly",A.c(["en","Shared Read-Only Risk Summary","hi","\u0938\u093e\u091d\u093e \u0915\u093f\u092f\u093e \u0917\u092f\u093e \u0915\u0947\u0935\u0932-\u092a\u0922\u093c\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u091c\u094b\u0916\u093f\u092e \u0938\u093e\u0930\u093e\u0902\u0936"],k4,k4),"analysis.sharedDisclaimer",A.c(["en","This is a secure, read-only legal risk summary generated by LawBuddy. The underlying document and private owner data remain protected.","hi","\u092f\u0939 LawBuddy \u0926\u094d\u0935\u093e\u0930\u093e \u0909\u0924\u094d\u092a\u0928\u094d\u0928 \u090f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924, \u0915\u0947\u0935\u0932-\u092a\u0922\u093c\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0938\u093e\u0930\u093e\u0902\u0936 \u0939\u0948\u0964 \u092e\u0942\u0932 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0914\u0930 \u0928\u093f\u091c\u0940 \u0921\u0947\u091f\u093e \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0930\u0939\u0924\u0947 \u0939\u0948\u0902\u0964"],k4,k4),"analysis.sharedNotFound",A.c(["en","Risk Summary Not Found","hi","\u091c\u094b\u0916\u093f\u092e \u0938\u093e\u0930\u093e\u0902\u0936 \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u093e"],k4,k4),"analysis.sharedNotFoundDesc",A.c(["en","This share link may have expired or been removed.","hi","\u092f\u0939 \u0938\u093e\u091d\u093e\u0915\u0930\u0923 \u0932\u093f\u0902\u0915 \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948 \u092f\u093e \u0939\u091f\u093e \u0926\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948\u0964"],k4,k4),"analysis.scanYourOwnCta",A.c(["en","Scan Your Own Agreement","hi","\u0905\u092a\u0928\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902"],k4,k4),"analysis.allClauses",A.c(["en","All Clauses","hi","\u0938\u092d\u0940 \u0916\u0902\u0921"],k4,k4),"analysis.statutoryCitations",A.c(["en","Statutory Citations","hi","\u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0909\u0926\u094d\u0927\u0930\u0923"],k4,k4),"analysis.reraReferences",A.c(["en","RERA References","hi","\u0930\u0947\u0930\u093e \u0938\u0902\u0926\u0930\u094d\u092d"],k4,k4),"analysis.buyerImpact",A.c(["en","Buyer Impact","hi","\u0916\u0930\u0940\u0926\u093e\u0930 \u092a\u0930 \u092a\u094d\u0930\u092d\u093e\u0935"],k4,k4),"analysis.recommendation",A.c(["en","Recommendation","hi","\u0938\u093f\u092b\u093e\u0930\u093f\u0936"],k4,k4),"welcome.disclaimerTitle",A.c(["en","Legal Disclaimer","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0905\u0938\u094d\u0935\u0940\u0915\u0930\u0923"],k4,k4),"welcome.disclaimerContent",A.c(["en","This application provides AI-generated information for preliminary document review and educational purposes only. It does not constitute legal advice or create an advocate-client relationship. For important property transactions, consult a qualified legal professional.","hi","\u092f\u0939 \u090f\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928 \u0915\u0947\u0935\u0932 \u092a\u094d\u0930\u093e\u0930\u0902\u092d\u093f\u0915 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0914\u0930 \u0936\u0948\u0915\u094d\u0937\u093f\u0915 \u0909\u0926\u094d\u0926\u0947\u0936\u094d\u092f\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u090f\u0906\u0908-\u091c\u0928\u093f\u0924 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u092a\u094d\u0930\u0926\u093e\u0928 \u0915\u0930\u0924\u093e \u0939\u0948\u0964 \u092f\u0939 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0932\u093e\u0939 \u0915\u093e \u0917\u0920\u0928 \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u093e \u0939\u0948 \u0914\u0930 \u0928 \u0939\u0940 \u0935\u0915\u0940\u0932-\u0917\u094d\u0930\u093e\u0939\u0915 \u0938\u0902\u092c\u0902\u0927 \u092c\u0928\u093e\u0924\u093e \u0939\u0948\u0964 \u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u0947 \u0932\u093f\u090f, \u0915\u093f\u0938\u0940 \u092f\u094b\u0917\u094d\u092f \u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u0947\u0936\u0947\u0935\u0930 \u0938\u0947 \u092a\u0930\u093e\u092e\u0930\u094d\u0936 \u0932\u0947\u0902\u0964"],k4,k4),"welcome.privacyPolicy",A.c(["en","Privacy Policy","hi","\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f"],k4,k4),"welcome.termsOfUse",A.c(["en","Terms of Use","hi","\u0909\u092a\u092f\u094b\u0917 \u0915\u0940 \u0936\u0930\u094d\u0924\u0947\u0902"],k4,k4),"welcome.storagePreferences",A.c(["en","Storage Preferences","hi","\u092d\u0902\u0921\u093e\u0930\u0923 \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902"],k4,k4),"welcome.headerTagline",A.c(["en","REAL ESTATE AI TECH","hi","\u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u090f\u0906\u0908 \u091f\u0947\u0915"],k4,k4),"welcome.navFeatures",A.c(["en","Features","hi","\u0938\u0941\u0935\u093f\u0927\u093e\u090f\u0902"],k4,k4),"welcome.navHowItWorks",A.c(["en","How It Works","hi",h7],k4,k4),"welcome.navRiskSystem",A.c(["en","Risk System","hi","\u091c\u094b\u0916\u093f\u092e \u092a\u094d\u0930\u0923\u093e\u0932\u0940"],k4,k4),"welcome.navDisclaimer",A.c(["en","Disclaimer","hi","\u0905\u0938\u094d\u0935\u0940\u0915\u0930\u0923"],k4,k4),"welcome.signIn",A.c(["en","Sign In","hi","\u0938\u093e\u0907\u0928 \u0907\u0928"],k4,k4),"welcome.heroEyebrowDesktop",A.c(["en","AI-POWERED LEGALTECH FOR INDIAN REAL ESTATE","hi","\u092d\u093e\u0930\u0924\u0940\u092f \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0915\u0947 \u0932\u093f\u090f \u090f\u0906\u0908-\u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0932\u0940\u0917\u0932\u091f\u0947\u0915"],k4,k4),"welcome.heroEyebrowMobile",A.c(["en","AI-POWERED REAL ESTATE LEGALTECH","hi","\u090f\u0906\u0908-\u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0932\u0940\u0917\u0932\u091f\u0947\u0915"],k4,k4),"welcome.headlineLine1",A.c(["en","UNDERSTAND","hi","\u0938\u092e\u091d\u0947\u0902"],k4,k4),"welcome.headlineLine2Prefix",A.c(["en","YOUR ","hi","\u0905\u092a\u0928\u0940 "],k4,k4),"welcome.headlineLine2Accent",A.c(["en","PROPERTY","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f"],k4,k4),"welcome.headlineLine2Full",A.c(["en","YOUR PROPERTY","hi","\u0905\u092a\u0928\u0940 \u0938\u0902\u092a\u0924\u094d\u0924\u093f"],k4,k4),"welcome.headlineLine3",A.c(["en","BEFORE YOU SIGN.","hi","\u0939\u0938\u094d\u0924\u093e\u0915\u094d\u0937\u0930 \u0915\u0930\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947\u0964"],k4,k4),"welcome.heroNarrative",A.c(["en","Analyze real-estate contracts, detect potential legal risks under RERA, and understand complex clauses in plain English \u2014 powered by AI built for Indian property law.","hi","\u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0905\u0928\u0941\u092c\u0902\u0927\u094b\u0902 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902, \u0930\u0947\u0930\u093e \u0915\u0947 \u0924\u0939\u0924 \u0938\u0902\u092d\u093e\u0935\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0915\u093e \u092a\u0924\u093e \u0932\u0917\u093e\u090f\u0902, \u0914\u0930 \u091c\u091f\u093f\u0932 \u0916\u0902\u0921\u094b\u0902 \u0915\u094b \u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u092e\u0947\u0902 \u0938\u092e\u091d\u0947\u0902 \u2014 \u092d\u093e\u0930\u0924\u0940\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928 \u0915\u0947 \u0932\u093f\u090f \u0928\u093f\u0930\u094d\u092e\u093f\u0924 \u090f\u0906\u0908 \u0926\u094d\u0935\u093e\u0930\u093e \u0938\u0902\u091a\u093e\u0932\u093f\u0924\u0964"],k4,k4),"welcome.getStarted",A.c(["en","Get Started","hi","\u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902"],k4,k4),"welcome.alreadyHaveAccount",A.c(["en",g5,"hi","\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u0947 \u092a\u093e\u0938 \u092a\u0939\u0932\u0947 \u0938\u0947 \u090f\u0915 \u0916\u093e\u0924\u093e \u0939\u0948? "],k4,k4),"welcome.signInAction",A.c(["en","Sign in","hi","\u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902"],k4,k4),"welcome.sideWordScan",A.c(["en","SCAN","hi","\u0938\u094d\u0915\u0948\u0928"],k4,k4),"welcome.sideWordAnalyze",A.c(["en","ANALYZE","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],k4,k4),"welcome.sideWordProtect",A.c(["en","PROTECT","hi","\u0938\u0941\u0930\u0915\u094d\u0937\u093e"],k4,k4),"welcome.sideWordUnderstand",A.c(["en","UNDERSTAND","hi","\u0938\u092e\u091d\u0947\u0902"],k4,k4),"welcome.sideWordProperty",A.c(["en","PROPERTY","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f"],k4,k4),"welcome.sideWordRera",A.c(["en","RERA","hi","\u0930\u0947\u0930\u093e"],k4,k4),"welcome.sideWordClauses",A.c(["en","CLAUSES","hi","\u0916\u0902\u0921"],k4,k4),"welcome.sideWordSecure",A.c(["en","SECURE","hi","\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924"],k4,k4),"welcome.mockDocTitle",A.c(["en","PROPERTY SALE AGREEMENT","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092c\u093f\u0915\u094d\u0930\u0940 \u0938\u092e\u091d\u094c\u0924\u093e"],k4,k4),"welcome.aiScanActive",A.c(["en","AI Scan Active","hi","\u090f\u0906\u0908 \u0938\u094d\u0915\u0948\u0928 \u0938\u0915\u094d\u0930\u093f\u092f"],k4,k4),"welcome.mockClauseTitle",A.c(["en","Clause 7.2 \u2014 Forfeiture","hi","\u0916\u0902\u0921 7.2 \u2014 \u091c\u092c\u094d\u0924\u0940"],k4,k4),"welcome.mockRelevantLaw",A.c(["en","Relevant Property Law","hi","\u092a\u094d\u0930\u093e\u0938\u0902\u0917\u093f\u0915 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928"],k4,k4),"welcome.mockClauseBody",A.c(["en",'"In case of delay beyond 30 days, 100% of earnest deposit shall be forfeited without notice."',"hi",'"30 \u0926\u093f\u0928\u094b\u0902 \u0938\u0947 \u0905\u0927\u093f\u0915 \u0915\u0940 \u0926\u0947\u0930\u0940 \u0915\u0947 \u092e\u093e\u092e\u0932\u0947 \u092e\u0947\u0902, \u092c\u093f\u0928\u093e \u0915\u093f\u0938\u0940 \u0938\u0942\u091a\u0928\u093e \u0915\u0947 100% \u092c\u092f\u093e\u0928\u093e \u0930\u093e\u0936\u093f \u091c\u092c\u094d\u0924 \u0915\u0930 \u0932\u0940 \u091c\u093e\u090f\u0917\u0940\u0964"'],k4,k4),"welcome.mockRiskDetected",A.c(["en",e3,"hi",e4],k4,k4),"welcome.mockRiskScore",A.c(["en","Score: 84/100","hi","\u0938\u094d\u0915\u094b\u0930: 84/100"],k4,k4),"welcome.mockPlainEnglish",A.c(["en","Plain English: The builder can confiscate all your advance money even for minor payment delays.","hi","\u0938\u0930\u0932 \u0905\u0930\u094d\u0925: \u092d\u0941\u0917\u0924\u093e\u0928 \u092e\u0947\u0902 \u092e\u093e\u092e\u0942\u0932\u0940 \u0926\u0947\u0930\u0940 \u0915\u0947 \u0932\u093f\u090f \u092d\u0940 \u092c\u093f\u0932\u094d\u0921\u0930 \u0906\u092a\u0915\u0947 \u0938\u093e\u0930\u0947 \u0905\u0917\u094d\u0930\u093f\u092e \u092a\u0948\u0938\u0947 \u091c\u092c\u094d\u0924 \u0915\u0930 \u0938\u0915\u0924\u093e \u0939\u0948\u0964"],k4,k4),"welcome.marqueeTrack1",A.c(["en","SCAN CONTRACTS  \u2726  RERA COMPLIANCE AUDIT  \u2726  PLAIN-ENGLISH INSIGHTS  \u2726  DETECT UNFAIR CLAUSES  \u2726  INDIAN PROPERTY LAW  \u2726  ","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902  \u2726  \u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0911\u0921\u093f\u091f  \u2726  \u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f  \u2726  \u0905\u0928\u0941\u091a\u093f\u0924 \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u092a\u0939\u091a\u093e\u0928  \u2726  \u092d\u093e\u0930\u0924\u0940\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928  \u2726  "],k4,k4),"welcome.marqueeTrack2",A.c(["en","STAMP DUTY CALCULATOR  \u2726  DUE DILIGENCE CHECKLISTS  \u2726  24/7 LEGAL AI CHAT  \u2726  EXPORTABLE PDF REPORTS  \u2726  TITLE CLEARANCE & OC  \u2726  ","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930  \u2726  \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f  \u2726  24/7 \u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u091a\u0948\u091f  \u2726  \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u092f\u094b\u0917\u094d\u092f \u092a\u0940\u0921\u0940\u090f\u092b \u0930\u093f\u092a\u094b\u0930\u094d\u091f  \u2726  \u0936\u0940\u0930\u094d\u0937\u0915 \u092e\u0902\u091c\u0942\u0930\u0940 \u0914\u0930 \u0913\u0938\u0940  \u2726  "],k4,k4),"welcome.featuresEyebrow",A.c(["en","YOUR LEGAL DOCUMENTS, MADE CLEAR.","hi","\u0906\u092a\u0915\u0947 \u0915\u093e\u0928\u0942\u0928\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c, \u092a\u0942\u0930\u0940 \u0924\u0930\u0939 \u0938\u094d\u092a\u0937\u094d\u091f\u0964"],k4,k4),"welcome.featuresTitle",A.c(["en","Complete Legal Protection Suite","hi","\u0938\u0902\u092a\u0942\u0930\u094d\u0923 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0938\u0941\u0907\u091f"],k4,k4),"welcome.featuresSubtitle",A.c(["en","Six specialized AI tools built to simplify Indian real estate transactions.","hi","\u092d\u093e\u0930\u0924\u0940\u092f \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u094b \u0938\u0930\u0932 \u092c\u0928\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0928\u093f\u0930\u094d\u092e\u093f\u0924 \u091b\u0939 \u0935\u093f\u0936\u0947\u0937 \u090f\u0906\u0908 \u0909\u092a\u0915\u0930\u0923\u0964"],k4,k4),"welcome.featScanTag",A.c(["en","OCR & PDF","hi","\u0913\u0938\u0940\u0906\u0930 \u0914\u0930 \u092a\u0940\u0921\u0940\u090f\u092b"],k4,k4),"welcome.featScanTitle",A.c(["en","Scan & Extract","hi","\u0938\u094d\u0915\u0948\u0928 \u0914\u0930 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923"],k4,k4),"welcome.featScanDesc",A.c(["en","Upload PDF agreements, capture physical contracts via OCR camera, or paste legal text directly.","hi","\u092a\u0940\u0921\u0940\u090f\u092b \u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902, \u0913\u0938\u0940\u0906\u0930 \u0915\u0948\u092e\u0930\u0947 \u0938\u0947 \u092d\u094c\u0924\u093f\u0915 \u0905\u0928\u0941\u092c\u0902\u0927 \u0915\u0948\u092a\u094d\u091a\u0930 \u0915\u0930\u0947\u0902, \u092f\u093e \u0938\u0940\u0927\u0947 \u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u093e\u0920 \u092a\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902\u0964"],k4,k4),"welcome.featRisksTag",A.c(["en","AI AUDIT","hi","\u090f\u0906\u0908 \u0911\u0921\u093f\u091f"],k4,k4),"welcome.featRisksTitle",A.c(["en","Detect Legal Risks","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0915\u093e \u092a\u0924\u093e \u0932\u0917\u093e\u090f\u0902"],k4,k4),"welcome.featRisksDesc",A.c(["en","Identify potentially unfair, non-compliant, or one-sided builder clauses with RERA-trained AI.","hi","\u0930\u0947\u0930\u093e-\u092a\u094d\u0930\u0936\u093f\u0915\u094d\u0937\u093f\u0924 \u090f\u0906\u0908 \u0915\u0947 \u0938\u093e\u0925 \u0938\u0902\u092d\u093e\u0935\u093f\u0924 \u0905\u0928\u0941\u091a\u093f\u0924, \u0917\u0948\u0930-\u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u092f\u093e \u090f\u0915\u0924\u0930\u092b\u093e \u092c\u093f\u0932\u094d\u0921\u0930 \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u092a\u0939\u091a\u093e\u0928 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"welcome.featPlainEnglishTag",A.c(["en","SIMPLIFIED","hi","\u0938\u0930\u0932\u0940\u0915\u0943\u0924"],k4,k4),"welcome.featPlainEnglishTitle",A.c(["en",h8,"hi",h9],k4,k4),"welcome.featPlainEnglishDesc",A.c(["en","Demystify dense legal jargon into 2-3 sentence layman explanations and negotiation advice.","hi","\u091c\u091f\u093f\u0932 \u0915\u093e\u0928\u0942\u0928\u0940 \u0936\u092c\u094d\u0926\u093e\u0935\u0932\u0940 \u0915\u094b 2-3 \u0935\u093e\u0915\u094d\u092f\u094b\u0902 \u0915\u0947 \u0938\u0930\u0932 \u0938\u094d\u092a\u0937\u094d\u091f\u0940\u0915\u0930\u0923 \u0914\u0930 \u092c\u093e\u0924\u091a\u0940\u0924 \u0915\u0940 \u0938\u0932\u093e\u0939 \u092e\u0947\u0902 \u092c\u0926\u0932\u0947\u0902\u0964"],k4,k4),"welcome.featCalculatorTag",A.c(["en","STATE-WISE","hi","\u0930\u093e\u091c\u094d\u092f-\u0935\u093e\u0930"],k4,k4),"welcome.featCalculatorTitle",A.c(["en",m,"hi",l],k4,k4),"welcome.featCalculatorDesc",A.c(["en","Compute state-wise stamp duty, registration charges, local cess, and female buyer discounts across India.","hi","\u092a\u0942\u0930\u0947 \u092d\u093e\u0930\u0924 \u092e\u0947\u0902 \u0930\u093e\u091c\u094d\u092f-\u0935\u093e\u0930 \u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915, \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0936\u0941\u0932\u094d\u0915, \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0909\u092a\u0915\u0930 \u0914\u0930 \u092e\u0939\u093f\u0932\u093e \u0916\u0930\u0940\u0926\u093e\u0930 \u091b\u0942\u091f \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902\u0964"],k4,k4),"welcome.featChatTag",A.c(["en","24/7 CHAT","hi","24/7 \u091a\u0948\u091f"],k4,k4),"welcome.featChatTitle",A.c(["en","AI Legal Assistant","hi","\u090f\u0906\u0908 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0939\u093e\u092f\u0915"],k4,k4),"welcome.featChatDesc",A.c(["en","Get instant 24/7 answers on property laws, tenancy disputes, builder notices, and contract clauses.","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u094b\u0902, \u0915\u093f\u0930\u093e\u092f\u0947\u0926\u093e\u0930\u0940 \u0935\u093f\u0935\u093e\u0926\u094b\u0902, \u092c\u093f\u0932\u094d\u0921\u0930 \u0928\u094b\u091f\u093f\u0938 \u0914\u0930 \u0905\u0928\u0941\u092c\u0902\u0927 \u0916\u0902\u0921\u094b\u0902 \u092a\u0930 24/7 \u0924\u094d\u0935\u0930\u093f\u0924 \u0909\u0924\u094d\u0924\u0930 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"welcome.featChecklistTag",A.c(["en","CHECKLIST","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"welcome.featChecklistTitle",A.c(["en",b0,"hi",b1],k4,k4),"welcome.featChecklistDesc",A.c(["en","Step-by-step buyer verification covering title clearance, RERA approvals, encumbrance & OC records.","hi","\u0936\u0940\u0930\u094d\u0937\u0915 \u092e\u0902\u091c\u0942\u0930\u0940, \u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092e\u094b\u0926\u0928, \u092d\u093e\u0930 \u092a\u094d\u0930\u092e\u093e\u0923\u092a\u0924\u094d\u0930 \u0914\u0930 \u0913\u0938\u0940 \u0930\u093f\u0915\u0949\u0930\u094d\u0921 \u0915\u094b \u0915\u0935\u0930 \u0915\u0930\u0928\u0947 \u0935\u093e\u0932\u093e \u091a\u0930\u0923-\u0926\u0930-\u091a\u0930\u0923 \u0938\u0924\u094d\u092f\u093e\u092a\u0928\u0964"],k4,k4),"welcome.howEyebrow",A.c(["en","SIMPLE 4-STEP PROCESS","hi","\u0938\u0930\u0932 4-\u091a\u0930\u0923\u0940\u092f \u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e"],k4,k4),"welcome.howTitle",A.c(["en","How It Works","hi",h7],k4,k4),"welcome.step1Title",A.c(["en","Upload Agreement","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],k4,k4),"welcome.step1Desc",A.c(["en","Upload your property agreement, sale deed, or rental contract.","hi","\u0905\u092a\u0928\u093e \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u093e, \u092c\u093f\u0915\u094d\u0930\u0940 \u0935\u093f\u0932\u0947\u0916, \u092f\u093e \u0915\u093f\u0930\u093e\u092f\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"welcome.step2Title",A.c(["en","AI Contract Scan","hi","\u090f\u0906\u0908 \u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u094d\u0915\u0948\u0928"],k4,k4),"welcome.step2Desc",A.c(["en","AI examines the text and evaluates statutory RERA compliance.","hi","\u090f\u0906\u0908 \u092a\u093e\u0920 \u0915\u0940 \u091c\u093e\u0902\u091a \u0915\u0930\u0924\u093e \u0939\u0948 \u0914\u0930 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0915\u093e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0915\u0930\u0924\u093e \u0939\u0948\u0964"],k4,k4),"welcome.step3Title",A.c(["en",h8,"hi",h9],k4,k4),"welcome.step3Desc",A.c(["en","Get plain-English explanations and flagged risk highlights.","hi","\u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u0938\u094d\u092a\u0937\u094d\u091f\u0940\u0915\u0930\u0923 \u0914\u0930 \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u091c\u094b\u0916\u093f\u092e \u0939\u093e\u0907\u0932\u093e\u0907\u091f \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"welcome.step4Title",A.c(["en","Legal Audit Report","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0911\u0921\u093f\u091f \u0930\u093f\u092a\u094b\u0930\u094d\u091f"],k4,k4),"welcome.step4Desc",A.c(["en","Generate and download a structured legal risk assessment PDF.","hi","\u090f\u0915 \u0938\u0902\u0930\u091a\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u092a\u0940\u0921\u0940\u090f\u092b \u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902 \u0914\u0930 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"welcome.riskEyebrow",A.c(["en","AI-POWERED AUDIT PREVIEW","hi","\u090f\u0906\u0908-\u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0911\u0921\u093f\u091f \u092a\u0942\u0930\u094d\u0935\u093e\u0935\u0932\u094b\u0915\u0928"],k4,k4),"welcome.riskTitle",A.c(["en","See What LawBuddy Finds","hi","\u0926\u0947\u0916\u0947\u0902 LawBuddy \u0915\u094d\u092f\u093e \u0916\u094b\u091c\u0924\u093e \u0939\u0948"],k4,k4),"welcome.riskSubtitle",A.c(["en","Our RERA-trained engine inspects agreement clauses line-by-line to flag unfair conditions, non-compliant timelines, and asymmetric liabilities.","hi","\u0939\u092e\u093e\u0930\u093e \u0930\u0947\u0930\u093e-\u092a\u094d\u0930\u0936\u093f\u0915\u094d\u0937\u093f\u0924 \u0907\u0902\u091c\u0928 \u0905\u0928\u0941\u091a\u093f\u0924 \u0936\u0930\u094d\u0924\u094b\u0902, \u0917\u0948\u0930-\u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0938\u092e\u092f-\u0938\u0940\u092e\u093e\u0913\u0902 \u0914\u0930 \u090f\u0915\u0924\u0930\u092b\u093e \u0926\u0947\u0928\u0926\u093e\u0930\u093f\u092f\u094b\u0902 \u0915\u094b \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u0928\u0941\u092c\u0902\u0927 \u0916\u0902\u0921\u094b\u0902 \u0915\u093e \u092a\u0902\u0915\u094d\u0924\u093f-\u0926\u0930-\u092a\u0902\u0915\u094d\u0924\u093f \u0928\u093f\u0930\u0940\u0915\u094d\u0937\u0923 \u0915\u0930\u0924\u093e \u0939\u0948\u0964"],k4,k4),"welcome.riskDocExtract",A.c(["en","AGREEMENT FOR SALE (EXTRACT)","hi","\u092c\u093f\u0915\u094d\u0930\u0940 \u0915\u0947 \u0932\u093f\u090f \u0938\u092e\u091d\u094c\u0924\u093e (\u0905\u0902\u0936)"],k4,k4),"welcome.riskPotentialRisk",A.c(["en","POTENTIAL RISK DETECTED","hi","\u0938\u0902\u092d\u093e\u0935\u093f\u0924 \u091c\u094b\u0916\u093f\u092e \u0915\u093e \u092a\u0924\u093e \u091a\u0932\u093e"],k4,k4),"welcome.riskClauseTitle",A.c(["en","Clause 7.2 \u2014 Default & Forfeiture of Earnest Deposit","hi","\u0916\u0902\u0921 7.2 \u2014 \u0921\u093f\u092b\u093c\u0949\u0932\u094d\u091f \u0914\u0930 \u092c\u092f\u093e\u0928\u093e \u0930\u093e\u0936\u093f \u0915\u0940 \u091c\u092c\u094d\u0924\u0940"],k4,k4),"welcome.riskClauseBody",A.c(["en",'"In the event of any delay in milestone payment exceeding 15 days, the Promoter shall have the unilateral right to cancel the allotment and forfeit 100% of the Earnest Money Deposit and accrued interest without further notice."',"hi",'"15 \u0926\u093f\u0928\u094b\u0902 \u0938\u0947 \u0905\u0927\u093f\u0915 \u0915\u0947 \u092e\u093e\u0907\u0932\u0938\u094d\u091f\u094b\u0928 \u092d\u0941\u0917\u0924\u093e\u0928 \u092e\u0947\u0902 \u0915\u093f\u0938\u0940 \u092d\u0940 \u0926\u0947\u0930\u0940 \u0915\u0940 \u0938\u094d\u0925\u093f\u0924\u093f \u092e\u0947\u0902, \u092a\u094d\u0930\u092e\u094b\u091f\u0930 \u0915\u094b \u092c\u093f\u0928\u093e \u0915\u093f\u0938\u0940 \u092a\u0942\u0930\u094d\u0935 \u0938\u0942\u091a\u0928\u093e \u0915\u0947 \u0906\u0935\u0902\u091f\u0928 \u0930\u0926\u094d\u0926 \u0915\u0930\u0928\u0947 \u0914\u0930 \u092c\u092f\u093e\u0928\u093e \u0930\u093e\u0936\u093f \u0914\u0930 \u0905\u0930\u094d\u091c\u093f\u0924 \u092c\u094d\u092f\u093e\u091c \u0915\u093e 100% \u091c\u092c\u094d\u0924 \u0915\u0930\u0928\u0947 \u0915\u093e \u090f\u0915\u0924\u0930\u092b\u093e \u0905\u0927\u093f\u0915\u093e\u0930 \u0939\u094b\u0917\u093e\u0964"'],k4,k4),"welcome.riskStatutoryDesc",A.c(["en","Excessive forfeiture clause exceeds statutory 10% ceiling prescribed under Section 13(1) of RERA Model Rules.","hi","\u0905\u0924\u094d\u092f\u0927\u093f\u0915 \u091c\u092c\u094d\u0924\u0940 \u0916\u0902\u0921 \u0930\u0947\u0930\u093e \u092e\u0949\u0921\u0932 \u0928\u093f\u092f\u092e\u094b\u0902 \u0915\u0940 \u0927\u093e\u0930\u093e 13(1) \u0915\u0947 \u0924\u0939\u0924 \u0928\u093f\u0930\u094d\u0927\u093e\u0930\u093f\u0924 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 10% \u0938\u0940\u092e\u093e \u0938\u0947 \u0905\u0927\u093f\u0915 \u0939\u0948\u0964"],k4,k4),"welcome.riskAssessmentTitle",A.c(["en","AI Legal Risk Assessment","hi","\u090f\u0906\u0908 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928"],k4,k4),"welcome.riskScoreElevated",A.c(["en","{score} / 100 \u2022 Elevated","hi","{score} / 100 \u2022 \u092c\u0922\u093c\u093e \u0939\u0941\u0906"],k4,k4),"welcome.riskHighBadge",A.c(["en","\ud83d\udd34 High Risk","hi","\ud83d\udd34 \u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],k4,k4),"welcome.riskHighDesc",A.c(["en","Clause 7.2: Unilateral earnest forfeiture (100%)","hi","\u0916\u0902\u0921 7.2: \u090f\u0915\u0924\u0930\u092b\u093e \u092c\u092f\u093e\u0928\u093e \u091c\u092c\u094d\u0924\u0940 (100%)"],k4,k4),"welcome.riskCautionBadge",A.c(["en","\ud83d\udfe1 Caution","hi","\ud83d\udfe1 \u0938\u093e\u0935\u0927\u093e\u0928\u0940"],k4,k4),"welcome.riskCautionDesc",A.c(["en","Clause 14.1: Asymmetric delay penalty compensation","hi","\u0916\u0902\u0921 14.1: \u0905\u0938\u092e\u092e\u093f\u0924 \u0935\u093f\u0932\u0902\u092c \u091c\u0941\u0930\u094d\u092e\u093e\u0928\u093e \u092e\u0941\u0906\u0935\u091c\u093e"],k4,k4),"welcome.riskStandardBadge",A.c(["en","\ud83d\udfe2 Standard","hi","\ud83d\udfe2 \u092e\u093e\u0928\u0915"],k4,k4),"welcome.riskStandardDesc",A.c(["en","Clause 3.1: Carpet area specification & RERA warranty","hi","\u0916\u0902\u0921 3.1: \u0915\u093e\u0930\u092a\u0947\u091f \u090f\u0930\u093f\u092f\u093e \u0935\u093f\u0928\u093f\u0930\u094d\u0926\u0947\u0936 \u0914\u0930 \u0930\u0947\u0930\u093e \u0935\u093e\u0930\u0902\u091f\u0940"],k4,k4),"welcome.riskRecommendation",A.c(["en","Recommendation: Demand amendment to restrict forfeiture to max 10% of total consideration as per standard MahaRERA guidelines.","hi","\u0938\u093f\u092b\u093e\u0930\u093f\u0936: \u092e\u093e\u0928\u0915 \u092e\u0939\u093e-\u0930\u0947\u0930\u093e \u0926\u093f\u0936\u093e\u0928\u093f\u0930\u094d\u0926\u0947\u0936\u094b\u0902 \u0915\u0947 \u0905\u0928\u0941\u0938\u093e\u0930 \u091c\u092c\u094d\u0924\u0940 \u0915\u094b \u0915\u0941\u0932 \u092a\u094d\u0930\u0924\u093f\u092b\u0932 \u0915\u0947 \u0905\u0927\u093f\u0915\u0924\u092e 10% \u0924\u0915 \u0938\u0940\u092e\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u0902\u0936\u094b\u0927\u0928 \u0915\u0940 \u092e\u093e\u0902\u0917 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"welcome.ctaTitle",A.c(["en","Before You Sign,\nKnow What You're Signing.","hi","\u0939\u0938\u094d\u0924\u093e\u0915\u094d\u0937\u0930 \u0915\u0930\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947,\n\u091c\u093e\u0928\u0947\u0902 \u0915\u093f \u0906\u092a \u0915\u094d\u092f\u093e \u0939\u0938\u094d\u0924\u093e\u0915\u094d\u0937\u0930 \u0915\u0930 \u0930\u0939\u0947 \u0939\u0948\u0902\u0964"],k4,k4),"welcome.ctaSubtitle",A.c(["en","Upload your property document and let LawBuddy help you understand the clauses, risks, and important legal considerations.","hi","\u0905\u092a\u0928\u093e \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902 \u0914\u0930 LawBuddy \u0915\u094b \u0916\u0902\u0921\u094b\u0902, \u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0914\u0930 \u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u093f\u091a\u093e\u0930\u094b\u0902 \u0915\u094b \u0938\u092e\u091d\u0928\u0947 \u092e\u0947\u0902 \u0906\u092a\u0915\u0940 \u092e\u0926\u0926 \u0915\u0930\u0928\u0947 \u0926\u0947\u0902\u0964"],k4,k4),"welcome.ctaExplore",A.c(["en","Explore Features","hi","\u0938\u0941\u0935\u093f\u0927\u093e\u090f\u0902 \u0926\u0947\u0916\u0947\u0902"],k4,k4),"welcome.ctaAnalyze",A.c(["en","Analyze Your Document \u2192","hi","\u0905\u092a\u0928\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091c\u093e\u0902\u091a\u0947\u0902 \u2192"],k4,k4),"adminAnalytics.badge",A.c(["en","ADMIN","hi","\u090f\u0921\u092e\u093f\u0928"],k4,k4),"adminAnalytics.title",A.c(["en","Admin Analytics","hi","\u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0915 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],k4,k4),"adminAnalytics.subtitle",A.c(["en","LawBuddy System Insights","hi","LawBuddy \u0938\u093f\u0938\u094d\u091f\u092e \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f"],k4,k4),"adminAnalytics.refreshTooltip",A.c(["en","Refresh Analytics","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0924\u093e\u091c\u093c\u093e \u0915\u0930\u0947\u0902"],k4,k4),"adminAnalytics.loadingText",A.c(["en","Aggregating system telemetry & insights...","hi","\u0938\u093f\u0938\u094d\u091f\u092e \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u0914\u0930 \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f \u090f\u0915\u0924\u094d\u0930\u093f\u0924 \u0915\u0940 \u091c\u093e \u0930\u0939\u0940 \u0939\u0948..."],k4,k4),"adminAnalytics.kpiTotalUsers",A.c(["en","Total Users","hi","\u0915\u0941\u0932 \u0909\u092a\u092f\u094b\u0917\u0915\u0930\u094d\u0924\u093e"],k4,k4),"adminAnalytics.kpiTotalUsersSub",A.c(["en","Registered accounts","hi","\u092a\u0902\u091c\u0940\u0915\u0943\u0924 \u0916\u093e\u0924\u0947"],k4,k4),"adminAnalytics.kpiDocsAnalyzed",A.c(["en","Docs Analyzed","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u093f\u0924 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"adminAnalytics.kpiDocsAnalyzedSub",A.c(["en","Completed analyses","hi","\u092a\u0942\u0930\u094d\u0923 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],k4,k4),"adminAnalytics.kpiClausesEvaluated",A.c(["en","Clauses Evaluated","hi","\u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u093f\u0924 \u0916\u0902\u0921"],k4,k4),"adminAnalytics.kpiClausesEvaluatedSub",A.c(["en","Total legal clauses","hi","\u0915\u0941\u0932 \u0915\u093e\u0928\u0942\u0928\u0940 \u0916\u0902\u0921"],k4,k4),"adminAnalytics.kpiAvgPages",A.c(["en","Avg. Pages","hi","\u0914\u0938\u0924 \u092a\u0943\u0937\u094d\u0920"],k4,k4),"adminAnalytics.kpiAvgPagesSub",A.c(["en","Pages per contract","hi","\u092a\u094d\u0930\u0924\u093f \u0905\u0928\u0941\u092c\u0902\u0927 \u092a\u0943\u0937\u094d\u0920"],k4,k4),"adminAnalytics.supportingActivity",A.c(["en","Supporting Activity:","hi","\u0938\u0939\u093e\u092f\u0915 \u0917\u0924\u093f\u0935\u093f\u0927\u093f:"],k4,k4),"adminAnalytics.chatSessions",A.c(["en","Chat Sessions","hi","\u091a\u0948\u091f \u0938\u0924\u094d\u0930"],k4,k4),"adminAnalytics.diligenceChecklists",A.c(["en","Diligence Checklists","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],k4,k4),"adminAnalytics.riskSectionTitle",A.c(["en","Risk Classification & Distribution","hi","\u091c\u094b\u0916\u093f\u092e \u0935\u0930\u094d\u0917\u0940\u0915\u0930\u0923 \u0914\u0930 \u0935\u093f\u0924\u0930\u0923"],k4,k4),"adminAnalytics.riskSectionSub",A.c(["en","Dual-level evaluation: Overall Contract Risk vs. Granular Clause Severity","hi","\u0926\u094b\u0939\u0930\u0947 \u0938\u094d\u0924\u0930 \u0915\u093e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928: \u0938\u092e\u0917\u094d\u0930 \u0905\u0928\u0941\u092c\u0902\u0927 \u091c\u094b\u0916\u093f\u092e \u092c\u0928\u093e\u092e \u0938\u0942\u0915\u094d\u0937\u094d\u092e \u0916\u0902\u0921 \u0917\u0902\u092d\u0940\u0930\u0924\u093e"],k4,k4),"adminAnalytics.docRiskTitle",A.c(["en","Document-Level Risk","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c-\u0938\u094d\u0924\u0930\u0940\u092f \u091c\u094b\u0916\u093f\u092e"],k4,k4),"adminAnalytics.docsCount",A.c(["en","{count} docs","hi","{count} \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"adminAnalytics.highRiskDocs",A.c(["en","High Risk Documents","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e \u0935\u093e\u0932\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"adminAnalytics.mediumRiskDocs",A.c(["en","Medium Risk Documents","hi","\u092e\u0927\u094d\u092f\u092e \u091c\u094b\u0916\u093f\u092e \u0935\u093e\u0932\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"adminAnalytics.lowRiskDocs",A.c(["en","Low Risk Documents","hi","\u0915\u092e \u091c\u094b\u0916\u093f\u092e \u0935\u093e\u0932\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],k4,k4),"adminAnalytics.clauseSeverityTitle",A.c(["en","Clause-Level Severity","hi","\u0916\u0902\u0921-\u0938\u094d\u0924\u0930\u0940\u092f \u0917\u0902\u092d\u0940\u0930\u0924\u093e"],k4,k4),"adminAnalytics.clausesCount",A.c(["en","{count} clauses","hi","{count} \u0916\u0902\u0921"],k4,k4),"adminAnalytics.highRiskClauses",A.c(["en","HIGH_RISK Clauses","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e \u0935\u093e\u0932\u0947 \u0916\u0902\u0921"],k4,k4),"adminAnalytics.cautionClauses",A.c(["en","CAUTION Clauses","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0916\u0902\u0921"],k4,k4),"adminAnalytics.compliantClauses",A.c(["en","COMPLIANT Clauses","hi","\u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0935\u093e\u0932\u0947 \u0916\u0902\u0921"],k4,k4),"adminAnalytics.findingCategoriesTitle",A.c(["en","Legal Issue Categories Breakdown","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u092e\u0941\u0926\u094d\u0926\u093e \u0936\u094d\u0930\u0947\u0923\u093f\u092f\u093e\u0902 \u0935\u093f\u092d\u093e\u091c\u0928"],k4,k4),"adminAnalytics.findingCategoriesSub",A.c(["en","Actual categorized findings identified during contract analysis","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0947 \u0926\u094c\u0930\u093e\u0928 \u092a\u0939\u091a\u093e\u0928\u0947 \u0917\u090f \u0935\u093e\u0938\u094d\u0924\u0935\u093f\u0915 \u0935\u0930\u094d\u0917\u0940\u0915\u0943\u0924 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937"],k4,k4),"adminAnalytics.catClausesCount",A.c(["en","{count} clauses ({percent}%)","hi","{count} \u0916\u0902\u0921 ({percent}%)"],k4,k4),"adminAnalytics.emptyCategories",A.c(["en","No categorized clause issues recorded yet.","hi","\u0905\u092d\u0940 \u0924\u0915 \u0915\u094b\u0908 \u0935\u0930\u094d\u0917\u0940\u0915\u0943\u0924 \u0916\u0902\u0921 \u092e\u0941\u0926\u094d\u0926\u093e \u0926\u0930\u094d\u091c \u0928\u0939\u0940\u0902 \u0915\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948\u0964"],k4,k4),"adminAnalytics.pipelineTitle",A.c(["en","Ingestion & Extraction Pipeline Insights","hi","\u0907\u0928\u091c\u0947\u0936\u0928 \u0914\u0930 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923 \u092a\u093e\u0907\u092a\u0932\u093e\u0907\u0928 \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f"],k4,k4),"adminAnalytics.pipelineSub",A.c(["en","Distribution of uploaded document formats and extraction engines","hi","\u0905\u092a\u0932\u094b\u0921 \u0915\u093f\u090f \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092a\u094d\u0930\u093e\u0930\u0942\u092a\u094b\u0902 \u0914\u0930 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923 \u0907\u0902\u091c\u0928\u094b\u0902 \u0915\u093e \u0935\u093f\u0924\u0930\u0923"],k4,k4),"adminAnalytics.sourceTypesTitle",A.c(["en","Document Source Types","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0930\u094b\u0924 \u092a\u094d\u0930\u0915\u093e\u0930"],k4,k4),"adminAnalytics.extractionMethodsTitle",A.c(["en","Extraction Pipeline Methods","hi","\u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923 \u092a\u093e\u0907\u092a\u0932\u093e\u0907\u0928 \u0935\u093f\u0927\u093f\u092f\u093e\u0902"],k4,k4),"adminAnalytics.recentActivityTitle",A.c(["en","Recent Analysis Activity Feed","hi","\u0939\u093e\u0932\u093f\u092f\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0917\u0924\u093f\u0935\u093f\u0927\u093f \u092b\u093c\u0940\u0921"],k4,k4),"adminAnalytics.recentActivitySub",A.c(["en","Real-time telemetry of completed document risk evaluations (sanitized metadata)","hi","\u092a\u0942\u0930\u094d\u0923 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928\u094b\u0902 \u0915\u0940 \u0935\u093e\u0938\u094d\u0924\u0935\u093f\u0915 \u0938\u092e\u092f \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 (\u0938\u094d\u0935\u091a\u094d\u091b \u092e\u0947\u091f\u093e\u0921\u0947\u091f\u093e)"],k4,k4),"adminAnalytics.emptyRecentScans",A.c(["en","No recent document analysis telemetry recorded.","hi","\u0915\u094b\u0908 \u0939\u093e\u0932\u093f\u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u0926\u0930\u094d\u091c \u0928\u0939\u0940\u0902 \u0915\u0940 \u0917\u0908 \u0939\u0948\u0964"],k4,k4),"adminAnalytics.pagesUnitSingular",A.c(["en","page","hi","\u092a\u0943\u0937\u094d\u0920"],k4,k4),"adminAnalytics.pagesUnitPlural",A.c(["en","pages","hi","\u092a\u0943\u0937\u094d\u0920"],k4,k4),"adminAnalytics.riskBreakdownCompact",A.c(["en","{high}H \u2022 {caution}C \u2022 {compliant}OK","hi","{high}\u0909\u091a\u094d\u091a \u2022 {caution}\u0938\u093e\u0935\u0927\u093e\u0928 \u2022 {compliant}\u0938\u0939\u0940"],k4,k4),"adminAnalytics.justNow",A.c(["en","Just now","hi","\u0905\u092d\u0940"],k4,k4),"adminAnalytics.minutesAgo",A.c(["en","{minutes}m ago","hi","{minutes} \u092e\u093f. \u092a\u0939\u0932\u0947"],k4,k4),"adminAnalytics.hoursAgo",A.c(["en","{hours}h ago","hi","{hours} \u0918\u0902\u091f\u0947 \u092a\u0939\u0932\u0947"],k4,k4),"adminAnalytics.daysAgo",A.c(["en","{days}d ago","hi","{days} \u0926\u093f\u0928 \u092a\u0939\u0932\u0947"],k4,k4),"adminAnalytics.accessRestricted",A.c(["en","Access Restricted","hi","\u092a\u0939\u0941\u0902\u091a \u092a\u094d\u0930\u0924\u093f\u092c\u0902\u0927\u093f\u0924 \u0939\u0948"],k4,k4),"adminAnalytics.accessRestrictedDesc",A.c(["en","You do not have administrator permissions to access the system analytics dashboard. Only verified administrators can view system-wide telemetry.","hi","\u0938\u093f\u0938\u094d\u091f\u092e \u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938 \u0921\u0948\u0936\u092c\u094b\u0930\u094d\u0921 \u0924\u0915 \u092a\u0939\u0941\u0902\u091a\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0906\u092a\u0915\u0947 \u092a\u093e\u0938 \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0915 \u0905\u0928\u0941\u092e\u0924\u093f\u092f\u093e\u0902 \u0928\u0939\u0940\u0902 \u0939\u0948\u0902\u0964 \u0915\u0947\u0935\u0932 \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0915 \u0939\u0940 \u0938\u093f\u0938\u094d\u091f\u092e-\u0935\u094d\u092f\u093e\u092a\u0940 \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u0926\u0947\u0916 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964"],k4,k4),"adminAnalytics.returnToWorkspace",A.c(["en","Return to Workspace","hi","\u0915\u093e\u0930\u094d\u092f\u0938\u094d\u0925\u093e\u0928 \u092a\u0930 \u0935\u093e\u092a\u0938 \u091c\u093e\u090f\u0902"],k4,k4),"adminAnalytics.loadFailed",A.c(["en","Failed to Load Analytics","hi","\u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938 \u0932\u094b\u0921 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932"],k4,k4),"adminAnalytics.unexpectedError",A.c(["en","An unexpected network error occurred.","hi","\u090f\u0915 \u0905\u092a\u094d\u0930\u0924\u094d\u092f\u093e\u0936\u093f\u0924 \u0928\u0947\u091f\u0935\u0930\u094d\u0915 \u0924\u094d\u0930\u0941\u091f\u093f \u0939\u0941\u0908\u0964"],k4,k4),"adminAnalytics.retryConnection",A.c(["en","Retry Connection","hi","\u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u0915\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902"],k4,k4),"adminAnalytics.emptyTelemetry",A.c(["en","No Analytics Telemetry Available","hi","\u0915\u094b\u0908 \u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938 \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948"],k4,k4),"adminAnalytics.emptyTelemetryDesc",A.c(["en","As users upload and evaluate real estate contracts, system metrics will populate here in real time.","hi","\u091c\u0948\u0938\u0947-\u091c\u0948\u0938\u0947 \u0909\u092a\u092f\u094b\u0917\u0915\u0930\u094d\u0924\u093e \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u092a\u0932\u094b\u0921 \u0914\u0930 \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0915\u0930\u0947\u0902\u0917\u0947, \u0938\u093f\u0938\u094d\u091f\u092e \u092e\u0947\u091f\u094d\u0930\u093f\u0915\u094d\u0938 \u092f\u0939\u093e\u0902 \u0935\u093e\u0938\u094d\u0924\u0935\u093f\u0915 \u0938\u092e\u092f \u092e\u0947\u0902 \u0926\u093f\u0916\u093e\u0908 \u0926\u0947\u0902\u0917\u0947\u0964"],k4,k4),"adminAnalytics.refreshBtn",A.c(["en","Refresh","hi","\u0924\u093e\u091c\u093c\u093e \u0915\u0930\u0947\u0902"],k4,k4),"docComparison.initializing",A.c(["en","Initializing...","hi","\u0906\u0930\u0902\u092d \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],k4,k4),"docComparison.startingComparison",A.c(["en","Starting comparison...","hi","\u0924\u0941\u0932\u0928\u093e \u0936\u0941\u0930\u0942 \u0939\u094b \u0930\u0939\u0940 \u0939\u0948..."],k4,k4),"docComparison.processing",A.c(["en","Processing...","hi","\u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e \u091c\u093e\u0930\u0940 \u0939\u0948..."],k4,k4),"docComparison.timeoutError",A.c(["en","This comparison is taking longer than expected. It may still finish in the background \u2014 check back shortly, or try again.","hi","\u0907\u0938 \u0924\u0941\u0932\u0928\u093e \u092e\u0947\u0902 \u0905\u092a\u0947\u0915\u094d\u0937\u093e \u0938\u0947 \u0905\u0927\u093f\u0915 \u0938\u092e\u092f \u0932\u0917 \u0930\u0939\u093e \u0939\u0948\u0964 \u092f\u0939 \u092a\u0943\u0937\u094d\u0920\u092d\u0942\u092e\u093f \u092e\u0947\u0902 \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948 \u2014 \u0925\u094b\u0921\u093c\u0940 \u0926\u0947\u0930 \u092c\u093e\u0926 \u091c\u093e\u0902\u091a\u0947\u0902, \u092f\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"docComparison.failedError",A.c(["en","Comparison failed.","hi","\u0924\u0941\u0932\u0928\u093e \u0935\u093f\u092b\u0932 \u0930\u0939\u0940\u0964"],k4,k4),"docComparison.lostConnectionError",A.c(["en",i0,"hi",i1],k4,k4),"docComparison.selectBothError",A.c(["en",i2,"hi",i3],k4,k4),"docComparison.selectDistinctError",A.c(["en",i4,"hi",i5],k4,k4),"docComparison.startError",A.c(["en","Unable to start document comparison. Please check your connection and try again.","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0924\u0941\u0932\u0928\u093e \u0936\u0941\u0930\u0942 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"docComparison.appBarTitle",A.c(["en","Compare Agreements","hi","\u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u0940 \u0924\u0941\u0932\u0928\u093e \u0915\u0930\u0947\u0902"],k4,k4),"docComparison.heading",A.c(["en",i6,"hi",i7],k4,k4),"docComparison.subheading",A.c(["en",i8,"hi",i9],k4,k4),"docComparison.processingDesc",A.c(["en",j0,"hi",j1],k4,k4),"docComparison.versionALabel",A.c(["en","Version A (Baseline / Before Negotiation)","hi","\u0938\u0902\u0938\u094d\u0915\u0930\u0923 A (\u092e\u0942\u0932 / \u092c\u093e\u0924\u091a\u0940\u0924 \u0938\u0947 \u092a\u0939\u0932\u0947)"],k4,k4),"docComparison.versionBLabel",A.c(["en","Version B (Revised / After Negotiation)","hi","\u0938\u0902\u0938\u094d\u0915\u0930\u0923 B (\u0938\u0902\u0936\u094b\u0927\u093f\u0924 / \u092c\u093e\u0924\u091a\u0940\u0924 \u0915\u0947 \u092c\u093e\u0926)"],k4,k4),"docComparison.loadDocsError",A.c(["en",j2,"hi",j3],k4,k4),"docComparison.noDocs",A.c(["en",j4,"hi",j5],k4,k4),"docComparison.scanNewBtn",A.c(["en",j6,"hi",j7],k4,k4),"docComparison.chooseVersionHint",A.c(["en",j8,"hi",j9],k4,k4),"docComparison.untitledDoc",A.c(["en",k0,"hi",k1],k4,k4),"docComparison.runAnalysisBtn",A.c(["en",k2,"hi",k3],k4,k4),"docComparison.headerTitle",A.c(["en",i6,"hi",i7],k4,k4),"docComparison.headerSubtitle",A.c(["en",i8,"hi",i9],k4,k4),"docComparison.processingSubtitle",A.c(["en",j0,"hi",j1],k4,k4),"docComparison.connectionLost",A.c(["en",i0,"hi",i1],k4,k4),"docComparison.selectBothPrompt",A.c(["en",i2,"hi",i3],k4,k4),"docComparison.selectDistinctPrompt",A.c(["en",i4,"hi",i5],k4,k4),"docComparison.loadFailed",A.c(["en",j2,"hi",j3],k4,k4),"docComparison.noScannedDocs",A.c(["en",j4,"hi",j5],k4,k4),"docComparison.scanNewAgreement",A.c(["en",j6,"hi",j7],k4,k4),"docComparison.chooseVersion",A.c(["en",j8,"hi",j9],k4,k4),"docComparison.untitledAgreement",A.c(["en",k0,"hi",k1],k4,k4),"docComparison.runAnalysis",A.c(["en",k2,"hi",k3],k4,k4),"chatCitation.openLinkError",A.c(["en","Unable to open citation link. Please try again.","hi","\u0909\u0926\u094d\u0927\u0930\u0923 \u0932\u093f\u0902\u0915 \u0916\u094b\u0932\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"chatCitation.sourcesHeader",A.c(["en","Authoritative Legal Sources ({count})","hi","\u092a\u094d\u0930\u093e\u092e\u093e\u0923\u093f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u094d\u0930\u094b\u0924 ({count})"],k4,k4),"chatCitation.ragGrounded",A.c(["en","RAG Grounded","hi","RAG \u0906\u0927\u093e\u0930\u093f\u0924"],k4,k4),"chatCitation.statutoryLaw",A.c(["en","Statutory Law","hi","\u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0915\u093e\u0928\u0942\u0928"],k4,k4),"chatCitation.secPrefix",A.c(["en","Sec {section}","hi","\u0927\u093e\u0930\u093e {section}"],k4,k4),"chatCitation.officialLaw",A.c(["en","Official Law","hi","\u0906\u0927\u093f\u0915\u093e\u0930\u093f\u0915 \u0915\u093e\u0928\u0942\u0928"],k4,k4),"chatCitation.officialSource",A.c(["en","Official Source","hi","\u0906\u0927\u093f\u0915\u093e\u0930\u093f\u0915 \u0938\u094d\u0930\u094b\u0924"],k4,k4),"chatCitation.defaultJurisdiction",A.c(["en","India","hi","\u092d\u093e\u0930\u0924"],k4,k4),"chat.loadSessionsError",A.c(["en","Unable to load previous conversations. Please check your connection and try again.","hi","\u092a\u093f\u091b\u0932\u0940 \u092c\u093e\u0924\u091a\u0940\u0924 \u0932\u094b\u0921 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"chat.loadSessionDetailsError",A.c(["en","Unable to load this conversation. Please try again.","hi","\u0907\u0938 \u092c\u093e\u0924\u091a\u0940\u0924 \u0915\u094b \u0932\u094b\u0921 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"chat.defaultAiReply",A.c(["en","I have reviewed your legal request.","hi","\u092e\u0948\u0902\u0928\u0947 \u0906\u092a\u0915\u0947 \u0915\u093e\u0928\u0942\u0928\u0940 \u0905\u0928\u0941\u0930\u094b\u0927 \u0915\u0940 \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0915\u0930 \u0932\u0940 \u0939\u0948\u0964"],k4,k4),"chat.assistantUnavailable",A.c(["en","The Legal AI Assistant is temporarily unavailable. Please check your internet connection and try again.","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u0938\u0939\u093e\u092f\u0915 \u0905\u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0905\u0928\u0941\u092a\u0932\u092c\u094d\u0927 \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0907\u0902\u091f\u0930\u0928\u0947\u091f \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"chat.topBarBadge",A.c(["en","24/7 LEGAL AI ASSISTANT \u2022 RERA SPECIALIST","hi","24/7 \u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u0938\u0939\u093e\u092f\u0915 \u2022 \u0930\u0947\u0930\u093e \u0935\u093f\u0936\u0947\u0937\u091c\u094d\u091e"],k4,k4),"home.defaultUserName",A.c(["en","User","hi","\u0909\u092a\u092f\u094b\u0917\u0915\u0930\u094d\u0924\u093e"],k4,k4),"home.openLinkError",A.c(["en","Unable to open this link. Please try again.","hi","\u0907\u0938 \u0932\u093f\u0902\u0915 \u0915\u094b \u0916\u094b\u0932\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],k4,k4),"consent.privacyPreferences",A.c(["en","Privacy preferences","hi","\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902"],k4,k4),"consent.bannerDescription",A.c(["en","We use essential browser storage to keep LawBuddy working and remember your preferences.","hi","\u0939\u092e LawBuddy \u0915\u094b \u091a\u093e\u0932\u0942 \u0930\u0916\u0928\u0947 \u0914\u0930 \u0906\u092a\u0915\u0940 \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u0913\u0902 \u0915\u094b \u092f\u093e\u0926 \u0930\u0916\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0906\u0935\u0936\u094d\u092f\u0915 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u0938\u094d\u091f\u094b\u0930\u0947\u091c \u0915\u093e \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964"],k4,k4),"consent.customize",A.c(["en","Customize","hi","\u0905\u0928\u0941\u0915\u0942\u0932\u093f\u0924 \u0915\u0930\u0947\u0902"],k4,k4),"consent.necessaryOnly",A.c(["en","Necessary Only","hi","\u0915\u0947\u0935\u0932 \u0906\u0935\u0936\u094d\u092f\u0915"],k4,k4),"consent.acceptPreferences",A.c(["en","Accept Preferences","hi","\u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902 \u0938\u094d\u0935\u0940\u0915\u093e\u0930 \u0915\u0930\u0947\u0902"],k4,k4),"consent.acceptAll",A.c(["en","Accept All","hi","\u0938\u092d\u0940 \u0938\u094d\u0935\u0940\u0915\u093e\u0930 \u0915\u0930\u0947\u0902"],k4,k4),"consent.savePreferences",A.c(["en","Save Preferences","hi","\u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902 \u0938\u0939\u0947\u091c\u0947\u0902"],k4,k4),"consent.privacyStoragePrefTitle",A.c(["en","Privacy & Storage Preferences","hi","\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0914\u0930 \u0938\u0902\u0917\u094d\u0930\u0939\u0923 \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902"],k4,k4),"consent.privacyStoragePrefIntro",A.c(["en","Configure how LawBuddy uses local storage to store data on your device. Strictly necessary tokens cannot be disabled as they are required for account security.","hi","\u0915\u0949\u0928\u094d\u092b\u093c\u093f\u0917\u0930 \u0915\u0930\u0947\u0902 \u0915\u093f LawBuddy \u0906\u092a\u0915\u0947 \u0921\u093f\u0935\u093e\u0907\u0938 \u092a\u0930 \u0921\u0947\u091f\u093e \u0938\u0902\u0917\u094d\u0930\u0939\u0940\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0938\u0902\u0917\u094d\u0930\u0939\u0923 \u0915\u093e \u0909\u092a\u092f\u094b\u0917 \u0915\u0948\u0938\u0947 \u0915\u0930\u0924\u093e \u0939\u0948\u0964 \u0915\u0921\u093c\u093e\u0908 \u0938\u0947 \u0906\u0935\u0936\u094d\u092f\u0915 \u091f\u094b\u0915\u0928 \u0905\u0915\u094d\u0937\u092e \u0928\u0939\u0940\u0902 \u0915\u093f\u090f \u091c\u093e \u0938\u0915\u0924\u0947 \u0915\u094d\u092f\u094b\u0902\u0915\u093f \u0935\u0947 \u0916\u093e\u0924\u093e \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0915\u0947 \u0932\u093f\u090f \u0906\u0935\u0936\u094d\u092f\u0915 \u0939\u0948\u0902\u0964"],k4,k4),"consent.strictlyNecessaryTitle",A.c(["en","STRICTLY NECESSARY","hi","\u0915\u0921\u093c\u093e\u0908 \u0938\u0947 \u0906\u0935\u0936\u094d\u092f\u0915"],k4,k4),"consent.alwaysOnBadge",A.c(["en","Always On","hi","\u0939\u092e\u0947\u0936\u093e \u091a\u093e\u0932\u0942"],k4,k4),"consent.strictlyNecessaryDesc",A.c(["en","Required for authentication and core LawBuddy functionality.","hi","\u092a\u094d\u0930\u092e\u093e\u0923\u0940\u0915\u0930\u0923 \u0914\u0930 \u092e\u0941\u0916\u094d\u092f LawBuddy \u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u092e\u0924\u093e \u0915\u0947 \u0932\u093f\u090f \u0906\u0935\u0936\u094d\u092f\u0915\u0964"],k4,k4),"consent.functionalPrefTitle",A.c(["en","FUNCTIONAL / PREFERENCES","hi","\u0915\u093e\u0930\u094d\u092f\u093e\u0924\u094d\u092e\u0915 / \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902"],k4,k4),"consent.functionalPrefDesc",A.c(["en","Remember theme and language preferences across sessions.","hi","\u0938\u0924\u094d\u0930\u094b\u0902 \u0915\u0947 \u0926\u094c\u0930\u093e\u0928 \u0925\u0940\u092e \u0914\u0930 \u092d\u093e\u0937\u093e \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u0913\u0902 \u0915\u094b \u092f\u093e\u0926 \u0930\u0916\u0947\u0902\u0964"],k4,k4),"consent.analyticsTitle",A.c(["en","ANALYTICS","hi","\u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938"],k4,k4),"consent.notCurrentlyUsedBadge",A.c(["en","Not currently used","hi","\u0935\u0930\u094d\u0924\u092e\u093e\u0928 \u092e\u0947\u0902 \u0909\u092a\u092f\u094b\u0917 \u0928\u0939\u0940\u0902 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"],k4,k4),"consent.analyticsDesc",A.c(["en","We do not collect usage telemetry or run analytics trackers.","hi","\u0939\u092e \u0909\u092a\u092f\u094b\u0917 \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u090f\u0915\u0924\u094d\u0930 \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902 \u092f\u093e \u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938 \u091f\u094d\u0930\u0948\u0915\u0930\u094d\u0938 \u0928\u0939\u0940\u0902 \u091a\u0932\u093e\u0924\u0947 \u0939\u0948\u0902\u0964"],k4,k4),"consent.marketingTitle",A.c(["en","MARKETING","hi","\u092e\u093e\u0930\u094d\u0915\u0947\u091f\u093f\u0902\u0917"],k4,k4),"consent.marketingDesc",A.c(["en","We do not display third-party advertisements or tracking pixels.","hi","\u0939\u092e \u0924\u0943\u0924\u0940\u092f-\u092a\u0915\u094d\u0937 \u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u092f\u093e \u091f\u094d\u0930\u0948\u0915\u093f\u0902\u0917 \u092a\u093f\u0915\u094d\u0938\u0947\u0932 \u092a\u094d\u0930\u0926\u0930\u094d\u0936\u093f\u0924 \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964"],k4,k4),"consent.readFullPrivacyPolicy",A.c(["en","Read our full Privacy Policy","hi","\u0939\u092e\u093e\u0930\u0940 \u092a\u0942\u0930\u0940 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f \u092a\u0922\u093c\u0947\u0902"],k4,k4)],k4,t.GU)})
+s($,"c4b","bHY",()=>{var q="AI Property Legal Assistant",p="\u090f\u0906\u0908 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0939\u093e\u092f\u0915",o="\u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902",n="{greeting}, {name} \ud83d\udc4b",m="Stamp Duty Calculator",l="\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930",k="Recent Documents",j="\u0939\u093e\u0932 \u0915\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c",i="\u0909\u091a\u093f\u0924 \u0924\u0924\u094d\u092a\u0930\u0924\u093e \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f",h="Upload from Gallery",g="\u0917\u0948\u0932\u0930\u0940 \u0938\u0947 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902",f="Document Content",e="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u093e\u092e\u0917\u094d\u0930\u0940",d="Paste agreement or clause text here...",c="\u0905\u0928\u0941\u092c\u0902\u0927 \u092f\u093e \u0916\u0902\u0921 \u0915\u093e \u092a\u093e\u0920 \u092f\u0939\u093e\u0901 \u092a\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902...",b="Analyze Document Text",a="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091f\u0947\u0915\u094d\u0938\u094d\u091f \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902",a0="Analyzing image document...",a1="\u091b\u0935\u093f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",a2="Reading document...",a3="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092a\u0922\u093c\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",a4="Analyzing scanned PDF via AI vision...",a5="\u090f\u0906\u0908 \u0935\u093f\u091c\u093c\u0928 \u0915\u0947 \u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u0938\u094d\u0915\u0948\u0928 \u0915\u093f\u090f \u0917\u090f \u092a\u0940\u0921\u0940\u090f\u092b \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",a6="Analyzing for risks...",a7="\u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",a8="Delete Permanently",a9="\u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f\u0902",b0="Due Diligence Checklists",b1="\u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f",b2="Untitled Checklist",b3="\u0936\u0940\u0930\u094d\u0937\u0915\u0939\u0940\u0928 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f",b4="What kind of transaction are you doing?",b5="\u0906\u092a \u0915\u093f\u0938 \u092a\u094d\u0930\u0915\u093e\u0930 \u0915\u093e \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u0930 \u0930\u0939\u0947 \u0939\u0948\u0902?",b6="e.g. Verify Title Deed & Encumbrance Certificate",b7="\u0909\u0926\u093e. \u091f\u093e\u0907\u091f\u0932 \u0921\u0940\u0921 \u0914\u0930 \u092d\u093e\u0930 \u092a\u094d\u0930\u092e\u093e\u0923\u092a\u0924\u094d\u0930 \u091c\u093e\u0902\u091a\u0947\u0902",b8="Rename Checklist",b9="\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e \u092c\u0926\u0932\u0947\u0902",c0="Checklist renamed successfully",c1="Checklist moved to Recycle Bin",c2="\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u092f\u093e \u0917\u092f\u093e",c3="Circle Rate Value",c4="\u0938\u0930\u094d\u0915\u093f\u0932 \u0930\u0947\u091f \u092e\u0942\u0932\u094d\u092f",c5="Buyer Gender / Ownership",c6="\u0916\u0930\u0940\u0926\u093e\u0930 \u0915\u093e \u0932\u093f\u0902\u0917 / \u0938\u094d\u0935\u093e\u092e\u093f\u0924\u094d\u0935",c7="Scan New Document",c8="\u0928\u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902",c9="Document Legal Repository",d0="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e\u0928\u0942\u0928\u0940 \u0930\u093f\u092a\u0949\u091c\u093f\u091f\u0930\u0940",d1="{count} total property agreements analyzed",d2="\u0915\u0941\u0932 {count} \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u0917\u092f\u093e",d3='No documents matching "{query}"',d4='"{query}" \u0938\u0947 \u092e\u0947\u0932 \u0916\u093e\u0924\u093e \u0915\u094b\u0908 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u093e',d5="No documents in this category",d6="\u0907\u0938 \u0936\u094d\u0930\u0947\u0923\u0940 \u092e\u0947\u0902 \u0915\u094b\u0908 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0928\u0939\u0940\u0902",d7="Scan a new agreement or document to get an instant AI legal risk report.",d8="\u0924\u0941\u0930\u0902\u0924 \u090f\u0906\u0908 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u0928\u092f\u093e \u0938\u092e\u091d\u094c\u0924\u093e \u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902\u0964",d9="{time} \u0938\u094d\u0915\u0948\u0928 \u0915\u093f\u092f\u093e \u0917\u092f\u093e",e0="{count} \u0918\u0902\u091f\u0947 \u092a\u0939\u0932\u0947",e1="{count} \u0926\u093f\u0928 \u092a\u0939\u0932\u0947",e2="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0928\u093e\u092e \u092c\u0926\u0932\u0947\u0902",e3="Risk Analysis Report",e4="\u091c\u094b\u0916\u093f\u092e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0930\u093f\u092a\u094b\u0930\u094d\u091f",e5="High Legal Risk Detected",e6="\u0909\u091a\u094d\u091a \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0915\u093e \u092a\u0924\u093e \u091a\u0932\u093e",e7="No Risk Detected",e8="\u0915\u094b\u0908 \u091c\u094b\u0916\u093f\u092e \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u093e",e9="\ud83d\udd34 {count} High Risk",f0="\ud83d\udd34 {count} \u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e",f1="\ud83d\udfe1 {count} Caution",f2="\ud83d\udfe1 {count} \u0938\u093e\u0935\u0927\u093e\u0928\u0940",f3="\ud83d\udfe2 {count} Compliant",f4="\ud83d\udfe2 {count} \u0905\u0928\u0941\u0930\u0942\u092a",f5="{count} Clauses Total",f6="Uploaded Source Document & Text",f7="\u0905\u092a\u0932\u094b\u0921 \u0915\u093f\u092f\u093e \u0917\u092f\u093e \u0938\u094d\u0930\u094b\u0924 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0914\u0930 \u092a\u093e\u0920",f8="Original uploaded contract file",f9="\u092e\u0942\u0932 \u0905\u092a\u0932\u094b\u0921 \u0915\u0940 \u0917\u0908 \u0905\u0928\u0941\u092c\u0902\u0927 \u092b\u093c\u093e\u0907\u0932",g0="Legal Risk Assessment Report exported successfully!",g1="\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u0915\u0940 \u0917\u0908!",g2="Enter your email or phone to receive a secure OTP code.",g3="\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0913\u091f\u0940\u092a\u0940 \u0915\u094b\u0921 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e \u0908\u092e\u0947\u0932 \u092f\u093e \u092b\u094b\u0928 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902\u0964",g4="name@example.com",g5="\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0913\u091f\u0940\u092a\u0940 \u092d\u0947\u091c\u0947\u0902",g6="Don't have an account? ",g7="Already have an account? ",g8="Sign in to access your saved document scans, RERA compliance checks, and real-time legal assistant.",g9="\u0905\u092a\u0928\u0947 \u0938\u0939\u0947\u091c\u0947 \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928, \u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u091c\u093e\u0902\u091a \u0914\u0930 \u0930\u0940\u092f\u0932-\u091f\u093e\u0907\u092e \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0939\u093e\u092f\u0915 \u0924\u0915 \u092a\u0939\u0941\u0902\u091a\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902\u0964",h0="Build a Safer Property Journey.",h1="\u090f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092f\u093e\u0924\u094d\u0930\u093e \u0915\u093e \u0928\u093f\u0930\u094d\u092e\u093e\u0923 \u0915\u0930\u0947\u0902\u0964",h2="Verify Your Email",h3="\u0905\u092a\u0928\u093e \u0908\u092e\u0947\u0932 \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0930\u0947\u0902",h4="Enter the 6-digit code sent to\n{email}",h5="{email}\n\u092a\u0930 \u092d\u0947\u091c\u093e \u0917\u092f\u093e 6 \u0905\u0902\u0915\u094b\u0902 \u0915\u093e \u0915\u094b\u0921 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902",h6="{seconds}s \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902",h7="Share Risk Summary",h8="\u091c\u094b\u0916\u093f\u092e \u0938\u093e\u0930\u093e\u0902\u0936 \u0938\u093e\u091d\u093e \u0915\u0930\u0947\u0902",h9="\u092f\u0939 \u0915\u0948\u0938\u0947 \u0915\u093e\u092e \u0915\u0930\u0924\u093e \u0939\u0948",i0="PROPERTY SALE AGREEMENT",i1="\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092c\u093f\u0915\u094d\u0930\u0940 \u0938\u092e\u091d\u094c\u0924\u093e",i2="\u090f\u0906\u0908 \u0938\u094d\u0915\u0948\u0928 \u0938\u0915\u094d\u0930\u093f\u092f",i3="Clause 7.2 \u2014 Forfeiture",i4="Relevant Property Law",i5="\u092a\u094d\u0930\u093e\u0938\u0902\u0917\u093f\u0915 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928",i6='"In case of delay beyond 30 days, 100% of earnest deposit shall be forfeited without notice."',i7='"30 \u0926\u093f\u0928\u094b\u0902 \u0938\u0947 \u0905\u0927\u093f\u0915 \u0915\u0940 \u0926\u0947\u0930\u0940 \u0915\u0947 \u092e\u093e\u092e\u0932\u0947 \u092e\u0947\u0902, \u092c\u093f\u0928\u093e \u0915\u093f\u0938\u0940 \u0938\u0942\u091a\u0928\u093e \u0915\u0947 100% \u092c\u092f\u093e\u0928\u093e \u0930\u093e\u0936\u093f \u091c\u092c\u094d\u0924 \u0915\u0930 \u0932\u0940 \u091c\u093e\u090f\u0917\u0940\u0964"',i8="Plain English: The builder can confiscate all your advance money even for minor payment delays.",i9="\u0938\u0930\u0932 \u0905\u0930\u094d\u0925: \u092d\u0941\u0917\u0924\u093e\u0928 \u092e\u0947\u0902 \u092e\u093e\u092e\u0942\u0932\u0940 \u0926\u0947\u0930\u0940 \u0915\u0947 \u0932\u093f\u090f \u092d\u0940 \u092c\u093f\u0932\u094d\u0921\u0930 \u0906\u092a\u0915\u0947 \u0938\u093e\u0930\u0947 \u0905\u0917\u094d\u0930\u093f\u092e \u092a\u0948\u0938\u0947 \u091c\u092c\u094d\u0924 \u0915\u0930 \u0938\u0915\u0924\u093e \u0939\u0948\u0964",j0="\u0938\u094d\u0915\u0948\u0928 \u0914\u0930 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923",j1="Upload PDF agreements, capture physical contracts via OCR camera, or paste legal text directly.",j2="\u092a\u0940\u0921\u0940\u090f\u092b \u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902, \u0913\u0938\u0940\u0906\u0930 \u0915\u0948\u092e\u0930\u0947 \u0938\u0947 \u092d\u094c\u0924\u093f\u0915 \u0905\u0928\u0941\u092c\u0902\u0927 \u0915\u0948\u092a\u094d\u091a\u0930 \u0915\u0930\u0947\u0902, \u092f\u093e \u0938\u0940\u0927\u0947 \u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u093e\u0920 \u092a\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902\u0964",j3="Detect Legal Risks",j4="\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0915\u093e \u092a\u0924\u093e \u0932\u0917\u093e\u090f\u0902",j5="Identify potentially unfair, non-compliant, or one-sided builder clauses with RERA-trained AI.",j6="\u0930\u0947\u0930\u093e-\u092a\u094d\u0930\u0936\u093f\u0915\u094d\u0937\u093f\u0924 \u090f\u0906\u0908 \u0915\u0947 \u0938\u093e\u0925 \u0938\u0902\u092d\u093e\u0935\u093f\u0924 \u0905\u0928\u0941\u091a\u093f\u0924, \u0917\u0948\u0930-\u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u092f\u093e \u090f\u0915\u0924\u0930\u092b\u093e \u092c\u093f\u0932\u094d\u0921\u0930 \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u092a\u0939\u091a\u093e\u0928 \u0915\u0930\u0947\u0902\u0964",j7="Plain-English Insights",j8="\u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f",j9="Demystify dense legal jargon into 2-3 sentence layman explanations and negotiation advice.",k0="\u091c\u091f\u093f\u0932 \u0915\u093e\u0928\u0942\u0928\u0940 \u0936\u092c\u094d\u0926\u093e\u0935\u0932\u0940 \u0915\u094b 2-3 \u0935\u093e\u0915\u094d\u092f\u094b\u0902 \u0915\u0947 \u0938\u0930\u0932 \u0938\u094d\u092a\u0937\u094d\u091f\u0940\u0915\u0930\u0923 \u0914\u0930 \u092c\u093e\u0924\u091a\u0940\u0924 \u0915\u0940 \u0938\u0932\u093e\u0939 \u092e\u0947\u0902 \u092c\u0926\u0932\u0947\u0902\u0964",k1="Compute state-wise stamp duty, registration charges, local cess, and female buyer discounts across India.",k2="\u092a\u0942\u0930\u0947 \u092d\u093e\u0930\u0924 \u092e\u0947\u0902 \u0930\u093e\u091c\u094d\u092f-\u0935\u093e\u0930 \u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915, \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0936\u0941\u0932\u094d\u0915, \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0909\u092a\u0915\u0930 \u0914\u0930 \u092e\u0939\u093f\u0932\u093e \u0916\u0930\u0940\u0926\u093e\u0930 \u091b\u0942\u091f \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902\u0964",k3="AI Legal Assistant",k4="\u090f\u0906\u0908 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0939\u093e\u092f\u0915",k5="Get instant 24/7 answers on property laws, tenancy disputes, builder notices, and contract clauses.",k6="\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u094b\u0902, \u0915\u093f\u0930\u093e\u092f\u0947\u0926\u093e\u0930\u0940 \u0935\u093f\u0935\u093e\u0926\u094b\u0902, \u092c\u093f\u0932\u094d\u0921\u0930 \u0928\u094b\u091f\u093f\u0938 \u0914\u0930 \u0905\u0928\u0941\u092c\u0902\u0927 \u0916\u0902\u0921\u094b\u0902 \u092a\u0930 24/7 \u0924\u094d\u0935\u0930\u093f\u0924 \u0909\u0924\u094d\u0924\u0930 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0947\u0902\u0964",k7="Step-by-step buyer verification covering title clearance, RERA approvals, encumbrance & OC records.",k8="\u0936\u0940\u0930\u094d\u0937\u0915 \u092e\u0902\u091c\u0942\u0930\u0940, \u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092e\u094b\u0926\u0928, \u092d\u093e\u0930 \u092a\u094d\u0930\u092e\u093e\u0923\u092a\u0924\u094d\u0930 \u0914\u0930 \u0913\u0938\u0940 \u0930\u093f\u0915\u0949\u0930\u094d\u0921 \u0915\u094b \u0915\u0935\u0930 \u0915\u0930\u0928\u0947 \u0935\u093e\u0932\u093e \u091a\u0930\u0923-\u0926\u0930-\u091a\u0930\u0923 \u0938\u0924\u094d\u092f\u093e\u092a\u0928\u0964",k9="SIMPLE 4-STEP PROCESS",l0="\u0938\u0930\u0932 4-\u091a\u0930\u0923\u0940\u092f \u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e",l1="AI-POWERED AUDIT PREVIEW",l2="\u090f\u0906\u0908-\u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0911\u0921\u093f\u091f \u092a\u0942\u0930\u094d\u0935\u093e\u0935\u0932\u094b\u0915\u0928",l3="See What LawBuddy Finds",l4="\u0926\u0947\u0916\u0947\u0902 LawBuddy \u0915\u094d\u092f\u093e \u0916\u094b\u091c\u0924\u093e \u0939\u0948",l5="Our RERA-trained engine inspects agreement clauses line-by-line to flag unfair conditions, non-compliant timelines, and asymmetric liabilities.",l6="\u0939\u092e\u093e\u0930\u093e \u0930\u0947\u0930\u093e-\u092a\u094d\u0930\u0936\u093f\u0915\u094d\u0937\u093f\u0924 \u0907\u0902\u091c\u0928 \u0905\u0928\u0941\u091a\u093f\u0924 \u0936\u0930\u094d\u0924\u094b\u0902, \u0917\u0948\u0930-\u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0938\u092e\u092f-\u0938\u0940\u092e\u093e\u0913\u0902 \u0914\u0930 \u090f\u0915\u0924\u0930\u092b\u093e \u0926\u0947\u0928\u0926\u093e\u0930\u093f\u092f\u094b\u0902 \u0915\u094b \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u0928\u0941\u092c\u0902\u0927 \u0916\u0902\u0921\u094b\u0902 \u0915\u093e \u092a\u0902\u0915\u094d\u0924\u093f-\u0926\u0930-\u092a\u0902\u0915\u094d\u0924\u093f \u0928\u093f\u0930\u0940\u0915\u094d\u0937\u0923 \u0915\u0930\u0924\u093e \u0939\u0948\u0964",l7="AGREEMENT FOR SALE (EXTRACT)",l8="\u092c\u093f\u0915\u094d\u0930\u0940 \u0915\u0947 \u0932\u093f\u090f \u0938\u092e\u091d\u094c\u0924\u093e (\u0905\u0902\u0936)",l9="POTENTIAL RISK DETECTED",m0="\u0938\u0902\u092d\u093e\u0935\u093f\u0924 \u091c\u094b\u0916\u093f\u092e \u0915\u093e \u092a\u0924\u093e \u091a\u0932\u093e",m1="Excessive forfeiture clause exceeds statutory 10% ceiling prescribed under Section 13(1) of RERA Model Rules.",m2="\u0905\u0924\u094d\u092f\u0927\u093f\u0915 \u091c\u092c\u094d\u0924\u0940 \u0916\u0902\u0921 \u0930\u0947\u0930\u093e \u092e\u0949\u0921\u0932 \u0928\u093f\u092f\u092e\u094b\u0902 \u0915\u0940 \u0927\u093e\u0930\u093e 13(1) \u0915\u0947 \u0924\u0939\u0924 \u0928\u093f\u0930\u094d\u0927\u093e\u0930\u093f\u0924 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 10% \u0938\u0940\u092e\u093e \u0938\u0947 \u0905\u0927\u093f\u0915 \u0939\u0948\u0964",m3="{score} / 100 \u2022 Elevated",m4="{score} / 100 \u2022 \u092c\u0922\u093c\u093e \u0939\u0941\u0906",m5="Clause 7.2: Unilateral earnest forfeiture (100%)",m6="\u0916\u0902\u0921 7.2: \u090f\u0915\u0924\u0930\u092b\u093e \u092c\u092f\u093e\u0928\u093e \u091c\u092c\u094d\u0924\u0940 (100%)",m7="Clause 14.1: Asymmetric delay penalty compensation",m8="\u0916\u0902\u0921 14.1: \u0905\u0938\u092e\u092e\u093f\u0924 \u0935\u093f\u0932\u0902\u092c \u091c\u0941\u0930\u094d\u092e\u093e\u0928\u093e \u092e\u0941\u0906\u0935\u091c\u093e",m9="Clause 3.1: Carpet area specification & RERA warranty",n0="\u0916\u0902\u0921 3.1: \u0915\u093e\u0930\u092a\u0947\u091f \u090f\u0930\u093f\u092f\u093e \u0935\u093f\u0928\u093f\u0930\u094d\u0926\u0947\u0936 \u0914\u0930 \u0930\u0947\u0930\u093e \u0935\u093e\u0930\u0902\u091f\u0940",n1="Before You Sign,\nKnow What You're Signing.",n2="\u0939\u0938\u094d\u0924\u093e\u0915\u094d\u0937\u0930 \u0915\u0930\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947,\n\u091c\u093e\u0928\u0947\u0902 \u0915\u093f \u0906\u092a \u0915\u094d\u092f\u093e \u0939\u0938\u094d\u0924\u093e\u0915\u094d\u0937\u0930 \u0915\u0930 \u0930\u0939\u0947 \u0939\u0948\u0902\u0964",n3="Upload your property document and let LawBuddy help you understand the clauses, risks, and important legal considerations.",n4="\u0905\u092a\u0928\u093e \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902 \u0914\u0930 LawBuddy \u0915\u094b \u0916\u0902\u0921\u094b\u0902, \u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0914\u0930 \u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u093f\u091a\u093e\u0930\u094b\u0902 \u0915\u094b \u0938\u092e\u091d\u0928\u0947 \u092e\u0947\u0902 \u0906\u092a\u0915\u0940 \u092e\u0926\u0926 \u0915\u0930\u0928\u0947 \u0926\u0947\u0902\u0964",n5="Explore Features",n6="Analyze Your Document \u2192",n7="\u0905\u092a\u0928\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091c\u093e\u0902\u091a\u0947\u0902 \u2192",n8="Aggregating system telemetry & insights...",n9="\u0938\u093f\u0938\u094d\u091f\u092e \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u0914\u0930 \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f \u090f\u0915\u0924\u094d\u0930\u093f\u0924 \u0915\u0940 \u091c\u093e \u0930\u0939\u0940 \u0939\u0948...",o0="Diligence Checklists",o1="\u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f",o2="Dual-level evaluation: Overall Contract Risk vs. Granular Clause Severity",o3="\u0926\u094b\u0939\u0930\u0947 \u0938\u094d\u0924\u0930 \u0915\u093e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928: \u0938\u092e\u0917\u094d\u0930 \u0905\u0928\u0941\u092c\u0902\u0927 \u091c\u094b\u0916\u093f\u092e \u092c\u0928\u093e\u092e \u0938\u0942\u0915\u094d\u0937\u094d\u092e \u0916\u0902\u0921 \u0917\u0902\u092d\u0940\u0930\u0924\u093e",o4="{count} \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c",o5="Clause-Level Severity",o6="\u0916\u0902\u0921-\u0938\u094d\u0924\u0930\u0940\u092f \u0917\u0902\u092d\u0940\u0930\u0924\u093e",o7="Legal Issue Categories Breakdown",o8="\u0915\u093e\u0928\u0942\u0928\u0940 \u092e\u0941\u0926\u094d\u0926\u093e \u0936\u094d\u0930\u0947\u0923\u093f\u092f\u093e\u0902 \u0935\u093f\u092d\u093e\u091c\u0928",o9="Actual categorized findings identified during contract analysis",p0="\u0905\u0928\u0941\u092c\u0902\u0927 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0947 \u0926\u094c\u0930\u093e\u0928 \u092a\u0939\u091a\u093e\u0928\u0947 \u0917\u090f \u0935\u093e\u0938\u094d\u0924\u0935\u093f\u0915 \u0935\u0930\u094d\u0917\u0940\u0915\u0943\u0924 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937",p1="{count} clauses ({percent}%)",p2="{count} \u0916\u0902\u0921 ({percent}%)",p3="No categorized clause issues recorded yet.",p4="\u0905\u092d\u0940 \u0924\u0915 \u0915\u094b\u0908 \u0935\u0930\u094d\u0917\u0940\u0915\u0943\u0924 \u0916\u0902\u0921 \u092e\u0941\u0926\u094d\u0926\u093e \u0926\u0930\u094d\u091c \u0928\u0939\u0940\u0902 \u0915\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948\u0964",p5="Distribution of uploaded document formats and extraction engines",p6="\u0905\u092a\u0932\u094b\u0921 \u0915\u093f\u090f \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092a\u094d\u0930\u093e\u0930\u0942\u092a\u094b\u0902 \u0914\u0930 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923 \u0907\u0902\u091c\u0928\u094b\u0902 \u0915\u093e \u0935\u093f\u0924\u0930\u0923",p7="Real-time telemetry of completed document risk evaluations (sanitized metadata)",p8="\u092a\u0942\u0930\u094d\u0923 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928\u094b\u0902 \u0915\u0940 \u0935\u093e\u0938\u094d\u0924\u0935\u093f\u0915 \u0938\u092e\u092f \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 (\u0938\u094d\u0935\u091a\u094d\u091b \u092e\u0947\u091f\u093e\u0921\u0947\u091f\u093e)",p9="No recent document analysis telemetry recorded.",q0="\u0915\u094b\u0908 \u0939\u093e\u0932\u093f\u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u0926\u0930\u094d\u091c \u0928\u0939\u0940\u0902 \u0915\u0940 \u0917\u0908 \u0939\u0948\u0964",q1="Access Restricted",q2="\u092a\u0939\u0941\u0902\u091a \u092a\u094d\u0930\u0924\u093f\u092c\u0902\u0927\u093f\u0924 \u0939\u0948",q3="You do not have administrator permissions to access the system analytics dashboard. Only verified administrators can view system-wide telemetry.",q4="\u0938\u093f\u0938\u094d\u091f\u092e \u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938 \u0921\u0948\u0936\u092c\u094b\u0930\u094d\u0921 \u0924\u0915 \u092a\u0939\u0941\u0902\u091a\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0906\u092a\u0915\u0947 \u092a\u093e\u0938 \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0915 \u0905\u0928\u0941\u092e\u0924\u093f\u092f\u093e\u0902 \u0928\u0939\u0940\u0902 \u0939\u0948\u0902\u0964 \u0915\u0947\u0935\u0932 \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0915 \u0939\u0940 \u0938\u093f\u0938\u094d\u091f\u092e-\u0935\u094d\u092f\u093e\u092a\u0940 \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u0926\u0947\u0916 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964",q5="Failed to Load Analytics",q6="\u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938 \u0932\u094b\u0921 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932",q7="No Analytics Telemetry Available",q8="\u0915\u094b\u0908 \u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938 \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948",q9="As users upload and evaluate real estate contracts, system metrics will populate here in real time.",r0="\u091c\u0948\u0938\u0947-\u091c\u0948\u0938\u0947 \u0909\u092a\u092f\u094b\u0917\u0915\u0930\u094d\u0924\u093e \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u092a\u0932\u094b\u0921 \u0914\u0930 \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0915\u0930\u0947\u0902\u0917\u0947, \u0938\u093f\u0938\u094d\u091f\u092e \u092e\u0947\u091f\u094d\u0930\u093f\u0915\u094d\u0938 \u092f\u0939\u093e\u0902 \u0935\u093e\u0938\u094d\u0924\u0935\u093f\u0915 \u0938\u092e\u092f \u092e\u0947\u0902 \u0926\u093f\u0916\u093e\u0908 \u0926\u0947\u0902\u0917\u0947\u0964",r1="Lost connection while checking comparison status. Please check your connection and try again.",r2="\u0924\u0941\u0932\u0928\u093e \u0938\u094d\u0925\u093f\u0924\u093f \u0915\u0940 \u091c\u093e\u0902\u091a \u0915\u0930\u0924\u0947 \u0938\u092e\u092f \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091f\u0942\u091f \u0917\u092f\u093e\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964",r3="Please select both Version A and Version B documents.",r4="\u0915\u0943\u092a\u092f\u093e \u0938\u0902\u0938\u094d\u0915\u0930\u0923 A \u0914\u0930 \u0938\u0902\u0938\u094d\u0915\u0930\u0923 B \u0926\u094b\u0928\u094b\u0902 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091a\u0941\u0928\u0947\u0902\u0964",r5="Please select two distinct versions to compare.",r6="\u0915\u0943\u092a\u092f\u093e \u0924\u0941\u0932\u0928\u093e \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0926\u094b \u0905\u0932\u0917-\u0905\u0932\u0917 \u0938\u0902\u0938\u094d\u0915\u0930\u0923 \u091a\u0941\u0928\u0947\u0902\u0964",r7="Contract Differential Analysis",r8="\u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u0902\u0924\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923",r9="Select two agreement drafts to identify modified clauses, added obligations, deleted buyer protections, and risk escalations.",s0="\u0938\u0902\u0936\u094b\u0927\u093f\u0924 \u0916\u0902\u0921\u094b\u0902, \u091c\u094b\u0921\u093c\u0947 \u0917\u090f \u0926\u093e\u092f\u093f\u0924\u094d\u0935\u094b\u0902, \u0939\u091f\u093e\u090f \u0917\u090f \u0916\u0930\u0940\u0926\u093e\u0930 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0909\u092a\u093e\u092f\u094b\u0902 \u0914\u0930 \u091c\u094b\u0916\u093f\u092e \u0935\u0943\u0926\u094d\u0927\u093f \u0915\u0940 \u092a\u0939\u091a\u093e\u0928 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0926\u094b \u0938\u092e\u091d\u094c\u0924\u0947 \u0915\u0947 \u092a\u094d\u0930\u093e\u0930\u0942\u092a \u091a\u0941\u0928\u0947\u0902\u0964",s1="Analyzing clause alignments, numbers, dates, and legal statutory impact...",s2="\u0916\u0902\u0921 \u0938\u0902\u0930\u0947\u0916\u0923, \u0938\u0902\u0916\u094d\u092f\u093e\u0913\u0902, \u0924\u093f\u0925\u093f\u092f\u094b\u0902 \u0914\u0930 \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u092a\u094d\u0930\u092d\u093e\u0935 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948...",s3="Couldn't load your documents. Check your connection and try again.",s4="\u0906\u092a\u0915\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0932\u094b\u0921 \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u0947\u0964 \u0905\u092a\u0928\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964",s5="No scanned documents found in your workspace.",s6="\u0906\u092a\u0915\u0947 \u0915\u093e\u0930\u094d\u092f\u0938\u094d\u0925\u093e\u0928 \u092e\u0947\u0902 \u0915\u094b\u0908 \u0938\u094d\u0915\u0948\u0928 \u0915\u093f\u090f \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u0947\u0964",s7="Scan New Agreement",s8="\u0928\u092f\u093e \u0938\u092e\u091d\u094c\u0924\u093e \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902",s9="Choose document version",t0="\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u0902\u0938\u094d\u0915\u0930\u0923 \u091a\u0941\u0928\u0947\u0902",t1="Untitled Agreement",t2="\u0936\u0940\u0930\u094d\u0937\u0915\u0939\u0940\u0928 \u0938\u092e\u091d\u094c\u0924\u093e",t3="Run Differential Analysis",t4="\u0905\u0902\u0924\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u091a\u0932\u093e\u090f\u0902",t5=t.N
+return A.c(["a11y.chatSendMessage",A.c(["en","Send message","hi","\u0938\u0902\u0926\u0947\u0936 \u092d\u0947\u091c\u0947\u0902"],t5,t5),"a11y.chatSending",A.c(["en","Sending message","hi","\u0938\u0902\u0926\u0947\u0936 \u092d\u0947\u091c\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948"],t5,t5),"common.appName",A.c(["en","LawBuddy","hi","LawBuddy"],t5,t5),"common.appSubtitle",A.c(["en",q,"hi",p],t5,t5),"common.cancel",A.c(["en","Cancel","hi","\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902"],t5,t5),"common.delete",A.c(["en","Delete","hi","\u0939\u091f\u093e\u090f\u0902"],t5,t5),"common.retry",A.c(["en","Retry","hi",o],t5,t5),"common.close",A.c(["en","Close","hi","\u092c\u0902\u0926 \u0915\u0930\u0947\u0902"],t5,t5),"common.clear",A.c(["en","Clear","hi","\u0938\u093e\u092b\u093c \u0915\u0930\u0947\u0902"],t5,t5),"common.save",A.c(["en","Save","hi","\u0938\u0939\u0947\u091c\u0947\u0902"],t5,t5),"common.add",A.c(["en","Add","hi","\u091c\u094b\u0921\u093c\u0947\u0902"],t5,t5),"common.or",A.c(["en","OR","hi","\u092f\u093e"],t5,t5),"common.understood",A.c(["en","Understood","hi","\u0938\u092e\u091d \u0917\u092f\u093e"],t5,t5),"common.gotIt",A.c(["en","Got it","hi","\u0938\u092e\u091d \u0917\u092f\u093e"],t5,t5),"common.viewDetails",A.c(["en","View Details","hi","\u0935\u093f\u0935\u0930\u0923 \u0926\u0947\u0916\u0947\u0902"],t5,t5),"common.explore",A.c(["en","Explore \u2192","hi","\u0926\u0947\u0916\u0947\u0902 \u2192"],t5,t5),"common.live",A.c(["en","Live","hi","\u0932\u093e\u0907\u0935"],t5,t5),"common.back",A.c(["en","Back","hi","\u092a\u0940\u091b\u0947"],t5,t5),"common.backToHome",A.c(["en","Back to Home","hi","\u0939\u094b\u092e \u092a\u0930 \u0935\u093e\u092a\u0938 \u091c\u093e\u090f\u0902"],t5,t5),"common.settings",A.c(["en","Settings","hi","\u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"],t5,t5),"common.language",A.c(["en","Language","hi","\u092d\u093e\u0937\u093e"],t5,t5),"common.english",A.c(["en","English","hi","English"],t5,t5),"common.hindi",A.c(["en","\u0939\u093f\u0902\u0926\u0940","hi","\u0939\u093f\u0902\u0926\u0940"],t5,t5),"common.theme",A.c(["en","Theme","hi","\u0925\u0940\u092e"],t5,t5),"common.appearance",A.c(["en","Theme","hi","\u0925\u0940\u092e"],t5,t5),"common.themeAppearance",A.c(["en","Theme & Appearance","hi","\u0925\u0940\u092e \u0914\u0930 \u0938\u094d\u0935\u0930\u0942\u092a"],t5,t5),"common.chooseAppearance",A.c(["en","Choose how LawBuddy looks","hi","\u091a\u0941\u0928\u0947\u0902 \u0915\u093f LawBuddy \u0915\u0948\u0938\u093e \u0926\u093f\u0916\u0947"],t5,t5),"common.light",A.c(["en","Light","hi","\u0932\u093e\u0907\u091f"],t5,t5),"common.dark",A.c(["en","Dark","hi","\u0921\u093e\u0930\u094d\u0915"],t5,t5),"common.system",A.c(["en","System","hi","\u0938\u093f\u0938\u094d\u091f\u092e"],t5,t5),"common.profile",A.c(["en","Profile","hi","\u092a\u094d\u0930\u094b\u092b\u093e\u0907\u0932"],t5,t5),"common.accountDetails",A.c(["en","Account Details","hi","\u0916\u093e\u0924\u093e \u0935\u093f\u0935\u0930\u0923"],t5,t5),"common.fullName",A.c(["en","Full Name","hi","\u092a\u0942\u0930\u093e \u0928\u093e\u092e"],t5,t5),"common.emailAddress",A.c(["en","Email Address","hi","\u0908\u092e\u0947\u0932 \u092a\u0924\u093e"],t5,t5),"common.yes",A.c(["en","Yes","hi","\u0939\u093e\u0901"],t5,t5),"common.no",A.c(["en","No","hi","\u0928\u0939\u0940\u0902"],t5,t5),"common.signOut",A.c(["en","Sign Out","hi","\u0938\u093e\u0907\u0928 \u0906\u0909\u091f"],t5,t5),"common.signOutConfirm",A.c(["en","Are you sure you want to sign out of your LawBuddy session?","hi","\u0915\u094d\u092f\u093e \u0906\u092a \u0905\u092a\u0928\u0947 LawBuddy \u0938\u0924\u094d\u0930 \u0938\u0947 \u0938\u093e\u0907\u0928 \u0906\u0909\u091f \u0915\u0930\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?"],t5,t5),"brand.name",A.c(["en","LawBuddy","hi","LawBuddy"],t5,t5),"brand.tagline",A.c(["en","LEGALTECH AI","hi","\u0932\u0940\u0917\u0932\u091f\u0947\u0915 \u090f\u0906\u0908"],t5,t5),"brand.subtitle",A.c(["en",q,"hi",p],t5,t5),"home.goodMorning",A.c(["en","Good Morning","hi","\u0936\u0941\u092d \u092a\u094d\u0930\u092d\u093e\u0924"],t5,t5),"home.goodAfternoon",A.c(["en","Good Afternoon","hi","\u0936\u0941\u092d \u0926\u094b\u092a\u0939\u0930"],t5,t5),"home.goodEvening",A.c(["en","Good Evening","hi","\u0936\u0941\u092d \u0938\u0902\u0927\u094d\u092f\u093e"],t5,t5),"home.greeting",A.c(["en",n,"hi",n],t5,t5),"home.quickActions",A.c(["en","Quick Actions","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u0915\u093e\u0930\u094d\u092f"],t5,t5),"home.quickActionsSubtitle",A.c(["en","Select a tool to manage your property legal workflow","hi","\u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u0940 \u0915\u093e\u0930\u094d\u092f\u092a\u094d\u0930\u0935\u093e\u0939 \u0915\u094b \u092a\u094d\u0930\u092c\u0902\u0927\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u0909\u092a\u0915\u0930\u0923 \u091a\u0941\u0928\u0947\u0902"],t5,t5),"home.scanAgreement",A.c(["en","Scan Agreement","hi","\u0938\u092e\u091d\u094c\u0924\u093e \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902"],t5,t5),"home.scanAgreementDesc",A.c(["en","Analyze documents for legal risk","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0915\u0947 \u0932\u093f\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u094b\u0902 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902"],t5,t5),"home.legalChatbot",A.c(["en","Legal Chatbot","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091a\u0948\u091f\u092c\u0949\u091f"],t5,t5),"home.legalChatbotDesc",A.c(["en","Ask property & RERA questions","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0914\u0930 \u0930\u0947\u0930\u093e \u092a\u0930 \u092a\u094d\u0930\u0936\u094d\u0928 \u092a\u0942\u091b\u0947\u0902"],t5,t5),"home.propertyChecklist",A.c(["en","Property Checklist","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"home.stampDutyCalculator",A.c(["en",m,"hi",l],t5,t5),"home.stampDutyCalculatorDesc",A.c(["en","Calculate stamp duty & registration charges","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0936\u0941\u0932\u094d\u0915 \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902"],t5,t5),"home.activeChecklistsZero",A.c(["en","0 Active Checklists","hi","0 \u0938\u0915\u094d\u0930\u093f\u092f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"home.activeChecklistsBadge",A.c(["en","{count} Active {unit}","hi","{count} \u0938\u0915\u094d\u0930\u093f\u092f {unit}"],t5,t5),"home.checklistUnitSingular",A.c(["en","Checklist","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"home.checklistUnitPlural",A.c(["en","Checklists","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"home.checklistZeroTasks",A.c(["en","0 tasks \u2022 Tap to generate property guides","hi","0 \u0915\u093e\u0930\u094d\u092f \u2022 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0917\u093e\u0907\u0921 \u092c\u0928\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u091f\u0948\u092a \u0915\u0930\u0947\u0902"],t5,t5),"home.checklistZeroCompleted",A.c(["en","0 tasks completed \u2022 Tap to view guides","hi","0 \u0915\u093e\u0930\u094d\u092f \u092a\u0942\u0930\u094d\u0923 \u2022 \u0917\u093e\u0907\u0921 \u0926\u0947\u0916\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u091f\u0948\u092a \u0915\u0930\u0947\u0902"],t5,t5),"home.checklistTasksProgress",A.c(["en","{completed} of {total} tasks done","hi","{completed} \u092e\u0947\u0902 \u0938\u0947 {total} \u0915\u093e\u0930\u094d\u092f \u092a\u0942\u0930\u0947 \u0939\u0941\u090f"],t5,t5),"home.guideUnitSingular",A.c(["en","guide","hi","\u0917\u093e\u0907\u0921"],t5,t5),"home.guideUnitPlural",A.c(["en","guides","hi","\u0917\u093e\u0907\u0921"],t5,t5),"home.recentDocuments",A.c(["en",k,"hi",j],t5,t5),"home.viewAll",A.c(["en","View All ({count})","hi","\u0938\u092d\u0940 \u0926\u0947\u0916\u0947\u0902 ({count})"],t5,t5),"home.noAgreementsScanned",A.c(["en","No agreements scanned yet","hi","\u0905\u092d\u0940 \u0924\u0915 \u0915\u094b\u0908 \u0938\u092e\u091d\u094c\u0924\u093e \u0938\u094d\u0915\u0948\u0928 \u0928\u0939\u0940\u0902 \u0915\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948"],t5,t5),"home.uploadOrScanAgreement",A.c(["en","Upload or scan your property agreement for AI risk assessment.","hi","\u090f\u0906\u0908 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u0947 \u0915\u094b \u0905\u092a\u0932\u094b\u0921 \u092f\u093e \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"home.scanOrUploadAgreementBtn",A.c(["en","Scan or Upload Agreement","hi","\u0938\u092e\u091d\u094c\u0924\u093e \u0938\u094d\u0915\u0948\u0928 \u092f\u093e \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],t5,t5),"home.latestLegalUpdates",A.c(["en","Latest Legal Updates","hi","\u0928\u0935\u0940\u0928\u0924\u092e \u0915\u093e\u0928\u0942\u0928\u0940 \u0905\u092a\u0921\u0947\u091f"],t5,t5),"home.noLegalUpdates",A.c(["en","No legal updates available at this moment","hi","\u0907\u0938 \u0938\u092e\u092f \u0915\u094b\u0908 \u0915\u093e\u0928\u0942\u0928\u0940 \u0905\u092a\u0921\u0947\u091f \u0909\u092a\u0932\u092c\u094d\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948"],t5,t5),"home.reraAlert",A.c(["en","RERA ALERT","hi","\u0930\u0947\u0930\u093e \u0905\u0932\u0930\u094d\u091f"],t5,t5),"home.reraAdvisoryDetails",A.c(["en","RERA Advisory Details","hi","\u0930\u0947\u0930\u093e \u0938\u0932\u093e\u0939 \u0935\u093f\u0935\u0930\u0923"],t5,t5),"home.reraStatutoryNote",A.c(["en","Under Section 18 of the RERA Act, promoter default in handover or escrow accounting mandates strict statutory interest compensation at SBI MCLR + 2%.","hi","\u0930\u0947\u0930\u093e \u0905\u0927\u093f\u0928\u093f\u092f\u092e \u0915\u0940 \u0927\u093e\u0930\u093e 18 \u0915\u0947 \u0924\u0939\u0924, \u0939\u0948\u0902\u0921\u0913\u0935\u0930 \u092f\u093e \u090f\u0938\u094d\u0915\u094d\u0930\u094b \u0905\u0915\u093e\u0909\u0902\u091f\u093f\u0902\u0917 \u092e\u0947\u0902 \u092a\u094d\u0930\u092e\u094b\u091f\u0930 \u0921\u093f\u092b\u0949\u0932\u094d\u091f \u0939\u094b\u0928\u0947 \u092a\u0930 SBI MCLR + 2% \u092a\u0930 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u092c\u094d\u092f\u093e\u091c \u092e\u0941\u0906\u0935\u091c\u093e \u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0939\u0948\u0964"],t5,t5),"home.askLegalAi",A.c(["en","Ask Legal AI","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u0938\u0947 \u092a\u0942\u091b\u0947\u0902"],t5,t5),"home.needLegalHelp",A.c(["en","Need Legal Help? Ask LawBuddy","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u092e\u0926\u0926 \u091a\u093e\u0939\u093f\u090f? LawBuddy \u0938\u0947 \u092a\u0942\u091b\u0947\u0902"],t5,t5),"home.overviewTitle",A.c(["en","LEGAL PORTFOLIO OVERVIEW","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u094b\u0930\u094d\u091f\u092b\u094b\u0932\u093f\u092f\u094b \u0905\u0935\u0932\u094b\u0915\u0928"],t5,t5),"home.totalScannedDocs",A.c(["en","Documents Analyzed","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u090f \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],t5,t5),"home.totalScannedDocsSub",A.c(["en","Agreements in workspace","hi","\u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u0947\u0924\u094d\u0930 \u092e\u0947\u0902 \u0938\u092e\u091d\u094c\u0924\u0947"],t5,t5),"home.highRiskCount",A.c(["en","Risk Flags Identified","hi","\u092a\u0939\u091a\u093e\u0928\u0947 \u0917\u090f \u091c\u094b\u0916\u093f\u092e"],t5,t5),"home.highRiskCountSub",A.c(["en","Agreements requiring review","hi","\u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0906\u0935\u0936\u094d\u092f\u0915 \u0938\u092e\u091d\u094c\u0924\u0947"],t5,t5),"home.noHighRisks",A.c(["en","No critical risk flags","hi","\u0915\u094b\u0908 \u0917\u0902\u092d\u0940\u0930 \u091c\u094b\u0916\u093f\u092e \u0928\u0939\u0940\u0902"],t5,t5),"home.dueDiligenceProgress",A.c(["en","Due Diligence Tasks","hi","\u091c\u093e\u0902\u091a \u0915\u093e\u0930\u094d\u092f \u092a\u094d\u0930\u0917\u0924\u093f"],t5,t5),"home.activeChecklists",A.c(["en","Active Checklists","hi","\u0938\u0915\u094d\u0930\u093f\u092f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"home.systemOnline",A.c(["en","Legal Engine Online","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0907\u0902\u091c\u0928 \u0938\u0915\u094d\u0930\u093f\u092f"],t5,t5),"home.primaryScanSpotlight",A.c(["en","INSTANT AI ASSESSMENT","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u090f\u0906\u0908 \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928"],t5,t5),"home.heroTag",A.c(["en","YOUR PROPERTY \u2022 YOUR RIGHTS \u2022 YOUR CONFIDENCE","hi","\u0906\u092a\u0915\u0940 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u2022 \u0906\u092a\u0915\u0947 \u0905\u0927\u093f\u0915\u093e\u0930 \u2022 \u0906\u092a\u0915\u093e \u0935\u093f\u0936\u094d\u0935\u093e\u0938"],t5,t5),"home.heroSub",A.c(["en","Review your agreements, check RERA risks, and make informed property decisions with AI built for Indian real estate.","hi","\u0905\u092a\u0928\u0947 \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u0940 \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902, \u0930\u0947\u0930\u093e \u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0915\u0940 \u091c\u093e\u0902\u091a \u0915\u0930\u0947\u0902 \u0914\u0930 \u092d\u093e\u0930\u0924\u0940\u092f \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0915\u0947 \u0932\u093f\u090f \u092c\u0928\u0947 \u090f\u0906\u0908 \u0915\u0947 \u0938\u093e\u0925 \u0938\u0942\u091a\u093f\u0924 \u0928\u093f\u0930\u094d\u0923\u092f \u0932\u0947\u0902\u0964"],t5,t5),"home.scanNewDocument",A.c(["en","Scan Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902"],t5,t5),"home.allTasksDone",A.c(["en","All due diligence verification tasks completed","hi","\u0938\u092d\u0940 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u093e\u0930\u094d\u092f \u092a\u0942\u0930\u094d\u0923 \u0939\u094b \u0917\u090f"],t5,t5),"home.noActiveChecklists",A.c(["en","No active transaction checklists","hi","\u0915\u094b\u0908 \u0938\u0915\u094d\u0930\u093f\u092f \u0932\u0947\u0928\u0926\u0947\u0928 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0928\u0939\u0940\u0902 \u0939\u0948"],t5,t5),"home.defaultChecklistTitle",A.c(["en","Property Purchase Diligence","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0916\u0930\u0940\u0926 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940"],t5,t5),"home.defaultTaskTitle",A.c(["en","Title search & Encumbrance check","hi","\u091f\u093e\u0907\u091f\u0932 \u0916\u094b\u091c \u0914\u0930 \u092d\u093e\u0930 \u091c\u093e\u0902\u091a"],t5,t5),"home.clausesEvaluated",A.c(["en","{count} clauses evaluated across tenancy & title compliance","hi","\u0915\u093f\u0930\u093e\u092f\u093e \u0914\u0930 \u0936\u0940\u0930\u094d\u0937\u0915 \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u092e\u0947\u0902 {count} \u0916\u0902\u0921\u094b\u0902 \u0915\u093e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"],t5,t5),"home.assessmentComplete",A.c(["en","AI clause extraction and legal risk assessment complete","hi","\u090f\u0906\u0908 \u0916\u0902\u0921 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923 \u0914\u0930 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u092a\u0942\u0930\u094d\u0923"],t5,t5),"home.workspaceSubtitle",A.c(["en","Your property legal workspace","hi","\u0906\u092a\u0915\u093e \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u0940 \u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u0947\u0924\u094d\u0930"],t5,t5),"home.latestAnalysisReview",A.c(["en","Latest Document Analysis","hi","\u0928\u0935\u0940\u0928\u0924\u092e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],t5,t5),"home.latestAnalysisSub",A.c(["en","Real-time risk assessment & clause audit","hi","\u0935\u093e\u0938\u094d\u0924\u0935\u093f\u0915 \u0938\u092e\u092f \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0914\u0930 \u0916\u0902\u0921 \u0911\u0921\u093f\u091f"],t5,t5),"home.viewFullAnalysis",A.c(["en","View Full Analysis","hi","\u092a\u0942\u0930\u094d\u0923 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0926\u0947\u0916\u0947\u0902"],t5,t5),"home.riskDistribution",A.c(["en","Legal Risk Breakdown","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0935\u093f\u0935\u0930\u0923"],t5,t5),"home.riskDistributionSub",A.c(["en","Clause severity across analyzed agreements","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u090f \u0917\u090f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u092e\u0947\u0902 \u0916\u0902\u0921 \u0917\u0902\u092d\u0940\u0930\u0924\u093e"],t5,t5),"home.highRiskLabel",A.c(["en","High Risk","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],t5,t5),"home.mediumRiskLabel",A.c(["en","Caution","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940"],t5,t5),"home.lowRiskLabel",A.c(["en","Compliant","hi","\u0905\u0928\u0941\u092a\u093e\u0932\u0928"],t5,t5),"home.dueDiligenceSection",A.c(["en","Due Diligence Checklist","hi",i],t5,t5),"home.dueDiligenceSub",A.c(["en","Mandatory property transaction verification","hi","\u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0932\u0947\u0928\u0926\u0947\u0928 \u0938\u0924\u094d\u092f\u093e\u092a\u0928"],t5,t5),"home.openChecklist",A.c(["en","Open Checklist","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0916\u094b\u0932\u0947\u0902"],t5,t5),"home.recentActivity",A.c(["en","Recent Workspace Activity","hi","\u0939\u093e\u0932\u093f\u092f\u093e \u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u0947\u0924\u094d\u0930 \u0917\u0924\u093f\u0935\u093f\u0927\u093f"],t5,t5),"home.recentActivitySub",A.c(["en","Audit trail of scans and verification progress","hi","\u0938\u094d\u0915\u0948\u0928 \u0914\u0930 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u092a\u094d\u0930\u0917\u0924\u093f \u0915\u093e \u0911\u0921\u093f\u091f \u091f\u094d\u0930\u0947\u0932"],t5,t5),"home.noActivityYet",A.c(["en","No recent activity recorded yet","hi","\u0905\u092d\u0940 \u0924\u0915 \u0915\u094b\u0908 \u0939\u093e\u0932\u093f\u092f\u093e \u0917\u0924\u093f\u0935\u093f\u0927\u093f \u0926\u0930\u094d\u091c \u0928\u0939\u0940\u0902 \u0915\u0940 \u0917\u0908 \u0939\u0948"],t5,t5),"home.legalIntelligence",A.c(["en","Legal Intelligence & News","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u0914\u0930 \u0938\u092e\u093e\u091a\u093e\u0930"],t5,t5),"home.legalIntelligenceSub",A.c(["en","Real estate statutory alerts & circulars","hi","\u0905\u091a\u0932 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0905\u0932\u0930\u094d\u091f \u0914\u0930 \u092a\u0930\u093f\u092a\u0924\u094d\u0930"],t5,t5),"home.reraAwarenessTitle",A.c(["en","RERA Statutory Notice","hi","\u0930\u0947\u0930\u093e \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0938\u0942\u091a\u0928\u093e"],t5,t5),"home.reraAwarenessSub",A.c(["en","Mandatory statutory protections under RERA","hi","\u0930\u0947\u0930\u093e \u0915\u0947 \u0924\u0939\u0924 \u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093e"],t5,t5),"sidebar.overview",A.c(["en","OVERVIEW","hi","\u0905\u0935\u0932\u094b\u0915\u0928"],t5,t5),"sidebar.workspace",A.c(["en","WORKSPACE","hi","\u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u0947\u0924\u094d\u0930"],t5,t5),"sidebar.legalTools",A.c(["en","LEGAL TOOLS","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0909\u092a\u0915\u0930\u0923"],t5,t5),"sidebar.legalInfo",A.c(["en","LEGAL INFORMATION","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940"],t5,t5),"sidebar.main",A.c(["en","MAIN","hi","\u092e\u0941\u0916\u094d\u092f"],t5,t5),"sidebar.dashboard",A.c(["en","Dashboard","hi","\u0921\u0948\u0936\u092c\u094b\u0930\u094d\u0921"],t5,t5),"sidebar.documents",A.c(["en","Documents","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],t5,t5),"sidebar.riskAnalysis",A.c(["en","Risk Analysis","hi","\u091c\u094b\u0916\u093f\u092e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],t5,t5),"sidebar.checklists",A.c(["en","Checklists","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"sidebar.reraCompliance",A.c(["en","RERA & Compliance","hi","\u0930\u0947\u0930\u093e \u0914\u0930 \u0905\u0928\u0941\u092a\u093e\u0932\u0928"],t5,t5),"sidebar.documentComparison",A.c(["en","Document Comparison","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0924\u0941\u0932\u0928\u093e"],t5,t5),"sidebar.legalAi",A.c(["en","Legal AI","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908"],t5,t5),"sidebar.stampDuty",A.c(["en",m,"hi",l],t5,t5),"sidebar.administration",A.c(["en","ADMINISTRATION","hi","\u092a\u094d\u0930\u0936\u093e\u0938\u0928"],t5,t5),"sidebar.adminAnalytics",A.c(["en","Admin Analytics","hi","\u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0915 \u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938"],t5,t5),"sidebar.settings",A.c(["en","Settings","hi","\u0938\u0947\u091f\u093f\u0902\u0917\u094d\u0938"],t5,t5),"sidebar.profile",A.c(["en","Profile","hi","\u092a\u094d\u0930\u094b\u092b\u093c\u093e\u0907\u0932"],t5,t5),"scan.title",A.c(["en","Scan or Input Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0915\u0948\u0928 \u092f\u093e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"scan.subtitle",A.c(["en","Upload a legal document for AI-powered verification and analysis.","hi","\u090f\u0906\u0908-\u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0914\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"scan.takePhoto",A.c(["en","Take a Photo","hi","\u092b\u094b\u091f\u094b \u0916\u0940\u0902\u091a\u0947\u0902"],t5,t5),"scan.cameraBadge",A.c(["en","CAMERA SCAN","hi","\u0915\u0948\u092e\u0930\u093e \u0938\u094d\u0915\u0948\u0928"],t5,t5),"scan.cameraDesc",A.c(["en","Instant OCR scanning of physical deed pages via camera.","hi","\u0915\u0948\u092e\u0930\u0947 \u0915\u0947 \u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u092d\u094c\u0924\u093f\u0915 \u0935\u093f\u0932\u0947\u0916 \u092a\u0943\u0937\u094d\u0920\u094b\u0902 \u0915\u0940 \u0924\u094d\u0935\u0930\u093f\u0924 \u0913\u0938\u0940\u0906\u0930 \u0938\u094d\u0915\u0948\u0928\u093f\u0902\u0917\u0964"],t5,t5),"scan.uploadGallery",A.c(["en",h,"hi",g],t5,t5),"scan.uploadFromGallery",A.c(["en",h,"hi",g],t5,t5),"scan.galleryBadge",A.c(["en","PHOTO GALLERY","hi","\u092b\u094b\u091f\u094b \u0917\u0948\u0932\u0930\u0940"],t5,t5),"scan.galleryDesc",A.c(["en","Upload high-resolution document photos or screenshots.","hi","\u0909\u091a\u094d\u091a-\u0930\u093f\u091c\u093c\u0949\u0932\u094d\u092f\u0942\u0936\u0928 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092b\u093c\u094b\u091f\u094b \u092f\u093e \u0938\u094d\u0915\u094d\u0930\u0940\u0928\u0936\u0949\u091f \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"scan.uploadPdf",A.c(["en","Upload PDF","hi","\u092a\u0940\u0921\u0940\u090f\u092b \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],t5,t5),"scan.pdfBadge",A.c(["en","PDF DOCUMENT","hi","\u092a\u0940\u0921\u0940\u090f\u092b \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],t5,t5),"scan.pdfDesc",A.c(["en","Upload multi-page PDF agreements & registry documents.","hi","\u092c\u0939\u0941-\u092a\u0943\u0937\u094d\u0920\u0940\u092f \u092a\u0940\u0921\u0940\u090f\u092b \u0938\u092e\u091d\u094c\u0924\u0947 \u0914\u0930 \u0930\u091c\u093f\u0938\u094d\u091f\u094d\u0930\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"scan.selectAndUpload",A.c(["en","Select & Upload","hi","\u091a\u0941\u0928\u0947\u0902 \u0914\u0930 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],t5,t5),"scan.orPasteClauses",A.c(["en","OR PASTE DOCUMENT CLAUSES","hi","\u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0916\u0902\u0921 \u092a\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902"],t5,t5),"scan.docContent",A.c(["en",f,"hi",e],t5,t5),"scan.documentContent",A.c(["en",f,"hi",e],t5,t5),"scan.pastePrompt",A.c(["en","Paste or type the legal document here.","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u094b \u092f\u0939\u093e\u0901 \u092a\u0947\u0938\u094d\u091f \u092f\u093e \u091f\u093e\u0907\u092a \u0915\u0930\u0947\u0902\u0964"],t5,t5),"scan.hint",A.c(["en",d,"hi",c],t5,t5),"scan.pasteHint",A.c(["en",d,"hi",c],t5,t5),"scan.analyzeText",A.c(["en",b,"hi",a],t5,t5),"scan.analyzeBtn",A.c(["en",b,"hi",a],t5,t5),"scan.emptyError",A.c(["en","Please enter or paste document text.","hi","\u0915\u0943\u092a\u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091f\u0947\u0915\u094d\u0938\u094d\u091f \u0926\u0930\u094d\u091c \u092f\u093e \u092a\u0947\u0938\u094d\u091f \u0915\u0930\u0947\u0902\u0964"],t5,t5),"scan.analyzingImage",A.c(["en",a0,"hi",a1],t5,t5),"scan.processingPhoto",A.c(["en",a0,"hi",a1],t5,t5),"scan.readingDoc",A.c(["en",a2,"hi",a3],t5,t5),"scan.processingPdf",A.c(["en",a2,"hi",a3],t5,t5),"scan.analyzingVision",A.c(["en",a4,"hi",a5],t5,t5),"scan.processingPdfVision",A.c(["en",a4,"hi",a5],t5,t5),"scan.analyzingRisks",A.c(["en",a6,"hi",a7],t5,t5),"scan.processingRisk",A.c(["en",a6,"hi",a7],t5,t5),"scan.pleaseWait",A.c(["en","Please wait while we process your request.","hi","\u0915\u0943\u092a\u092f\u093e \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902 \u091c\u092c \u0924\u0915 \u0939\u092e \u0906\u092a\u0915\u0947 \u0905\u0928\u0941\u0930\u094b\u0927 \u0915\u094b \u0938\u0902\u0938\u093e\u0927\u093f\u0924 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964"],t5,t5),"scan.analyzingTitle",A.c(["en","Analyzing your document","hi","\u0906\u092a\u0915\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948"],t5,t5),"scan.stepReading",A.c(["en","Reading & extracting document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092a\u0922\u093c\u0928\u093e \u0914\u0930 \u0928\u093f\u0915\u093e\u0932\u0928\u093e"],t5,t5),"scan.stepReadingDesc",A.c(["en","Processing document pages and extracting content","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092a\u0943\u0937\u094d\u0920\u094b\u0902 \u0915\u094b \u0938\u0902\u0938\u093e\u0927\u093f\u0924 \u0915\u0930\u0928\u093e \u0914\u0930 \u0938\u093e\u092e\u0917\u094d\u0930\u0940 \u0928\u093f\u0915\u093e\u0932\u0928\u093e"],t5,t5),"scan.stepStructuring",A.c(["en","Structuring clauses","hi","\u0916\u0902\u0921\u094b\u0902 \u0915\u094b \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093f\u0924 \u0915\u0930\u0928\u093e"],t5,t5),"scan.stepStructuringDesc",A.c(["en","Identifying and organizing legal clauses","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u092a\u0939\u091a\u093e\u0928 \u0914\u0930 \u0906\u092f\u094b\u091c\u0928 \u0915\u0930\u0928\u093e"],t5,t5),"scan.stepAuditing",A.c(["en","Auditing legal risk","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0915\u093e \u0911\u0921\u093f\u091f"],t5,t5),"scan.stepAuditingDesc",A.c(["en","Checking clauses against applicable legal provisions","hi","\u0932\u093e\u0917\u0942 \u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u094d\u0930\u093e\u0935\u0927\u093e\u0928\u094b\u0902 \u0915\u0947 \u0905\u0928\u0941\u0938\u093e\u0930 \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u091c\u093e\u0902\u091a"],t5,t5),"scan.stepPreparing",A.c(["en","Preparing results","hi","\u092a\u0930\u093f\u0923\u093e\u092e \u0924\u0948\u092f\u093e\u0930 \u0915\u093f\u090f \u091c\u093e \u0930\u0939\u0947 \u0939\u0948\u0902"],t5,t5),"scan.stepPreparingDesc",A.c(["en","Finalizing your analysis report & summary","hi","\u0906\u092a\u0915\u0940 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0914\u0930 \u0938\u093e\u0930\u093e\u0902\u0936 \u0915\u094b \u0905\u0902\u0924\u093f\u092e \u0930\u0942\u092a \u0926\u0947\u0928\u093e"],t5,t5),"scan.retryingStatus",A.c(["en",u.l,"hi","\u0905\u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0905\u0928\u0941\u092a\u0932\u092c\u094d\u0927 \u2014 \u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],t5,t5),"chat.title",A.c(["en","Legal AI Assistant","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u0938\u0939\u093e\u092f\u0915"],t5,t5),"chat.subtitle",A.c(["en","Indian Property, RERA & Contract Specialist","hi","\u092d\u093e\u0930\u0924\u0940\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f, \u0930\u0947\u0930\u093e \u0914\u0930 \u0905\u0928\u0941\u092c\u0902\u0927 \u0935\u093f\u0936\u0947\u0937\u091c\u094d\u091e"],t5,t5),"chat.chatHistory",A.c(["en","Chat History","hi","\u091a\u0948\u091f \u0907\u0924\u093f\u0939\u093e\u0938"],t5,t5),"chat.newChat",A.c(["en","New Chat","hi","\u0928\u0908 \u092c\u093e\u0924\u091a\u0940\u0924"],t5,t5),"chat.savedConsultations",A.c(["en","Saved Consultations","hi","\u0938\u0939\u0947\u091c\u0940 \u0917\u0908 \u092c\u093e\u0924\u091a\u0940\u0924"],t5,t5),"chat.sessionsStored",A.c(["en","{count} sessions stored in Atlas","hi","Atlas \u092e\u0947\u0902 {count} \u0938\u0924\u094d\u0930 \u0938\u0902\u0917\u094d\u0930\u0939\u0940\u0924 \u0939\u0948\u0902"],t5,t5),"chat.searchConsultations",A.c(["en","Search consultations","hi","\u092a\u0930\u093e\u092e\u0930\u094d\u0936 \u0916\u094b\u091c\u0947\u0902"],t5,t5),"chat.inputHint",A.c(["en","Ask about a clause or document...","hi","\u0915\u093f\u0938\u0940 \u0916\u0902\u0921 \u092f\u093e \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902 \u092a\u0942\u091b\u0947\u0902..."],t5,t5),"chat.startNewConsultation",A.c(["en","Start New Consultation","hi","\u0928\u0908 \u092c\u093e\u0924\u091a\u0940\u0924 \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902"],t5,t5),"chat.noMatchingConversations",A.c(["en","No matching conversations","hi","\u0915\u094b\u0908 \u092e\u093f\u0932\u0924\u0940-\u091c\u0941\u0932\u0924\u0940 \u092c\u093e\u0924\u091a\u0940\u0924 \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u0940"],t5,t5),"chat.noSavedConversations",A.c(["en","No saved conversations yet","hi","\u0905\u092d\u0940 \u0924\u0915 \u0915\u094b\u0908 \u0938\u0939\u0947\u091c\u0940 \u0917\u0908 \u092c\u093e\u0924\u091a\u0940\u0924 \u0928\u0939\u0940\u0902 \u0939\u0948"],t5,t5),"chat.turnsCount",A.c(["en","{count} turns","hi","{count} \u0938\u0902\u0926\u0947\u0936"],t5,t5),"chat.deleteTitle",A.c(["en","Permanently Delete Conversation?","hi","\u092c\u093e\u0924\u091a\u0940\u0924 \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f\u0902?"],t5,t5),"chat.deleteContent",A.c(["en","This will permanently delete this conversation. This cannot be undone.","hi","\u092f\u0939 \u092c\u093e\u0924\u091a\u0940\u0924 \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0940 \u091c\u093e\u090f\u0917\u0940\u0964 \u0907\u0938\u0947 \u092a\u0942\u0930\u094d\u0935\u0935\u0924 \u0928\u0939\u0940\u0902 \u0915\u093f\u092f\u093e \u091c\u093e \u0938\u0915\u0924\u093e \u0939\u0948\u0964"],t5,t5),"chat.deleteAction",A.c(["en",a8,"hi",a9],t5,t5),"chat.deletedToast",A.c(["en","Conversation permanently deleted","hi","\u092c\u093e\u0924\u091a\u0940\u0924 \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0940 \u0917\u0908"],t5,t5),"chat.heroHeadline",A.c(["en","Indian Property & RERA Legal AI","hi","\u092d\u093e\u0930\u0924\u0940\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0914\u0930 \u0930\u0947\u0930\u093e \u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908"],t5,t5),"chat.heroSubtitle",A.c(["en","Instant legal analysis, agreement scrutiny, and RERA rights guidance for homebuyers, landlords & tenants.","hi","\u0918\u0930 \u0916\u0930\u0940\u0926\u093e\u0930\u094b\u0902, \u092e\u0915\u093e\u0928 \u092e\u093e\u0932\u093f\u0915\u094b\u0902 \u0914\u0930 \u0915\u093f\u0930\u093e\u092f\u0947\u0926\u093e\u0930\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0924\u094d\u0935\u0930\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923, \u0905\u0928\u0941\u092c\u0902\u0927 \u091c\u093e\u0902\u091a \u0914\u0930 \u0930\u0947\u0930\u093e \u0905\u0927\u093f\u0915\u093e\u0930 \u092e\u093e\u0930\u094d\u0917\u0926\u0930\u094d\u0936\u0928\u0964"],t5,t5),"chat.tagRera",A.c(["en","RERA Compliant","hi","\u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928"],t5,t5),"chat.tagTenancy",A.c(["en","Model Tenancy Act","hi","\u092e\u0949\u0921\u0932 \u091f\u0947\u0928\u0947\u0902\u0938\u0940 \u090f\u0915\u094d\u091f"],t5,t5),"chat.tagTransfer",A.c(["en","Transfer of Property Act","hi","\u091f\u094d\u0930\u093e\u0902\u0938\u092b\u0930 \u0911\u092b \u092a\u094d\u0930\u0949\u092a\u0930\u094d\u091f\u0940 \u090f\u0915\u094d\u091f"],t5,t5),"chat.card1Cat",A.c(["en","PROPERTY AGREEMENTS","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u0947"],t5,t5),"chat.card1Title",A.c(["en","Review Agreement Clauses","hi","\u0938\u092e\u091d\u094c\u0924\u093e \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902"],t5,t5),"chat.card1Desc",A.c(["en","Scan lease or sale deed terms for hidden liabilities, lock-ins, and risky clauses.","hi","\u091b\u093f\u092a\u0940 \u0939\u0941\u0908 \u0926\u0947\u0928\u0926\u093e\u0930\u093f\u092f\u094b\u0902, \u0932\u0949\u0915-\u0907\u0928 \u0914\u0930 \u091c\u094b\u0916\u093f\u092e \u092d\u0930\u0947 \u0916\u0902\u0921\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u092a\u091f\u094d\u091f\u0947 \u092f\u093e \u092c\u093f\u0915\u094d\u0930\u0940 \u0935\u093f\u0932\u0947\u0916 \u0915\u0940 \u0936\u0930\u094d\u0924\u094b\u0902 \u0915\u0940 \u091c\u093e\u0902\u091a \u0915\u0930\u0947\u0902\u0964"],t5,t5),"chat.card2Cat",A.c(["en","RERA COMPLIANCE","hi","\u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928"],t5,t5),"chat.card2Title",A.c(["en","RERA Rights & Delays","hi","\u0930\u0947\u0930\u093e \u0905\u0927\u093f\u0915\u093e\u0930 \u0914\u0930 \u0926\u0947\u0930\u0940"],t5,t5),"chat.card2Desc",A.c(["en","Understand builder handover delays, Section 18 interest compensation, and escrow norms.","hi","\u092c\u093f\u0932\u094d\u0921\u0930 \u0939\u0948\u0902\u0921\u0913\u0935\u0930 \u092e\u0947\u0902 \u0926\u0947\u0930\u0940, \u0927\u093e\u0930\u093e 18 \u092c\u094d\u092f\u093e\u091c \u092e\u0941\u0906\u0935\u091c\u093e \u0914\u0930 \u090f\u0938\u094d\u0915\u094d\u0930\u094b \u092e\u093e\u0928\u0926\u0902\u0921\u094b\u0902 \u0915\u094b \u0938\u092e\u091d\u0947\u0902\u0964"],t5,t5),"chat.card3Cat",A.c(["en","LEGAL DRAFTING","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u094d\u0930\u093e\u0930\u0942\u092a\u0923"],t5,t5),"chat.card3Title",A.c(["en","Draft Tenancy & NOC","hi","\u0915\u093f\u0930\u093e\u092f\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0914\u0930 \u090f\u0928\u0913\u0938\u0940 \u0915\u093e \u092e\u0938\u094c\u0926\u093e \u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902"],t5,t5),"chat.card3Desc",A.c(["en","Generate standard residential lease, sale agreement, or NOC templates with statutory clauses.","hi","\u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0916\u0902\u0921\u094b\u0902 \u0915\u0947 \u0938\u093e\u0925 \u092e\u093e\u0928\u0915 \u0906\u0935\u093e\u0938\u0940\u092f \u092a\u091f\u094d\u091f\u093e, \u092c\u093f\u0915\u094d\u0930\u0940 \u0938\u092e\u091d\u094c\u0924\u093e \u092f\u093e \u090f\u0928\u0913\u0938\u0940 \u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f \u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"chat.card4Cat",A.c(["en","STAMP DUTY & TITLE","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u0936\u0940\u0930\u094d\u0937\u0915"],t5,t5),"chat.card4Title",A.c(["en","Stamp Duty & Registry","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u0930\u091c\u093f\u0938\u094d\u091f\u094d\u0930\u0940"],t5,t5),"chat.card4Desc",A.c(["en","Mandatory document checklist, encumbrance certificate, and state registration guidelines.","hi","\u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f, \u092d\u093e\u0930 \u092a\u094d\u0930\u092e\u093e\u0923\u092a\u0924\u094d\u0930 \u0914\u0930 \u0930\u093e\u091c\u094d\u092f \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0926\u093f\u0936\u093e\u0928\u093f\u0930\u094d\u0926\u0947\u0936\u0964"],t5,t5),"chat.rateLimitMessage",A.c(["en","Rate limit reached. Please wait a moment before sending another query.","hi","\u0926\u0930 \u0938\u0940\u092e\u093e \u092a\u0942\u0930\u0940 \u0939\u094b \u0917\u0908\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u0917\u0932\u093e \u092a\u094d\u0930\u0936\u094d\u0928 \u092d\u0947\u091c\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u0915\u0941\u091b \u0926\u0947\u0930 \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902\u0964"],t5,t5),"chat.copiedToClipboard",A.c(["en","Copied to clipboard","hi","\u0915\u094d\u0932\u093f\u092a\u092c\u094b\u0930\u094d\u0921 \u092a\u0930 \u0915\u0949\u092a\u0940 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"],t5,t5),"chat.rateLimitToast",A.c(["en","Rate limit exceeded. Please wait a moment.","hi","\u0926\u0930 \u0938\u0940\u092e\u093e \u092a\u093e\u0930 \u0939\u094b \u0917\u0908\u0964 \u0915\u0943\u092a\u092f\u093e \u0915\u0941\u091b \u0915\u094d\u0937\u0923 \u092a\u094d\u0930\u0924\u0940\u0915\u094d\u0937\u093e \u0915\u0930\u0947\u0902\u0964"],t5,t5),"chat.chip1",A.c(["en","Check builder handover delay rights under RERA","hi","\u0930\u0947\u0930\u093e \u0915\u0947 \u0924\u0939\u0924 \u092c\u093f\u0932\u094d\u0921\u0930 \u0939\u0948\u0902\u0921\u0913\u0935\u0930 \u092e\u0947\u0902 \u0926\u0947\u0930\u0940 \u0915\u0947 \u0905\u0927\u093f\u0915\u093e\u0930 \u091c\u093e\u0902\u091a\u0947\u0902"],t5,t5),"chat.chip2",A.c(["en","Draft standard tenancy agreement clauses","hi","\u092e\u093e\u0928\u0915 \u0915\u093f\u0930\u093e\u092f\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0916\u0902\u0921\u094b\u0902 \u0915\u093e \u092e\u0938\u094c\u0926\u093e \u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902"],t5,t5),"chat.chip3",A.c(["en","Explain hidden liabilities in sale deeds","hi","\u092c\u093f\u0915\u094d\u0930\u0940 \u0935\u093f\u0932\u0947\u0916\u094b\u0902 \u092e\u0947\u0902 \u091b\u093f\u092a\u0940 \u0926\u0947\u0928\u0926\u093e\u0930\u093f\u092f\u094b\u0902 \u0915\u094b \u0938\u092e\u091d\u0947\u0902"],t5,t5),"chat.chip4",A.c(["en","Verify encumbrance certificate checklist","hi","\u092d\u093e\u0930 \u092a\u094d\u0930\u092e\u093e\u0923\u092a\u0924\u094d\u0930 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0930\u0947\u0902"],t5,t5),"chat.disclaimer",A.c(["en","LawBuddy provides legal information powered by AI. It does not constitute formal legal counsel.","hi","LawBuddy \u090f\u0906\u0908 \u0926\u094d\u0935\u093e\u0930\u093e \u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u092a\u094d\u0930\u0926\u093e\u0928 \u0915\u0930\u0924\u093e \u0939\u0948\u0964 \u092f\u0939 \u0914\u092a\u091a\u093e\u0930\u093f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0932\u093e\u0939 \u0915\u093e \u0935\u093f\u0915\u0932\u094d\u092a \u0928\u0939\u0940\u0902 \u0939\u0948\u0964"],t5,t5),"chat.askLegalAi",A.c(["en","Ask Legal AI","hi","\u0932\u0940\u0917\u0932 \u090f\u0906\u0908 \u0938\u0947 \u092a\u0942\u091b\u0947\u0902"],t5,t5),"chat.typingTitle",A.c(["en","Legal AI is analyzing your query...","hi","\u0932\u0940\u0917\u0932 \u090f\u0906\u0908 \u0906\u092a\u0915\u0947 \u092a\u094d\u0930\u0936\u094d\u0928 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930 \u0930\u0939\u093e \u0939\u0948..."],t5,t5),"chat.typingSubtitle",A.c(["en","Reviewing statutory provisions and property jurisprudence","hi","\u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u092a\u094d\u0930\u093e\u0935\u0927\u093e\u0928\u094b\u0902 \u0914\u0930 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928 \u0915\u0940 \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0915\u0940 \u091c\u093e \u0930\u0939\u0940 \u0939\u0948"],t5,t5),"checklists.title",A.c(["en",b0,"hi",b1],t5,t5),"checklists.titleLabel",A.c(["en","Checklist Title","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0936\u0940\u0930\u094d\u0937\u0915"],t5,t5),"checklists.defaultTitle",A.c(["en","Property Due Diligence Checklist","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0909\u091a\u093f\u0924 \u0924\u0924\u094d\u092a\u0930\u0924\u093e \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"checklists.untitledChecklist",A.c(["en",b2,"hi",b3],t5,t5),"checklists.new",A.c(["en","New Checklist","hi","\u0928\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"checklists.newChecklist",A.c(["en","New Checklist","hi","\u0928\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"checklists.createTitle",A.c(["en","Generate Custom Legal Checklist","hi","\u0915\u0938\u094d\u091f\u092e \u0915\u093e\u0928\u0942\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092c\u0928\u093e\u090f\u0902"],t5,t5),"checklists.createPromptDesc",A.c(["en","Describe your property scenario to automatically generate tailored legal verification steps.","hi","\u0905\u0928\u0941\u0915\u0942\u0932\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u091a\u0930\u0923\u094b\u0902 \u0915\u094b \u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0909\u0924\u094d\u092a\u0928\u094d\u0928 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092a\u0930\u093f\u0926\u0943\u0936\u094d\u092f \u0915\u093e \u0935\u0930\u094d\u0923\u0928 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"checklists.createHint",A.c(["en","e.g. Buying an Under-construction Apartment in Mumbai","hi","\u0909\u0926\u093e. \u092e\u0941\u0902\u092c\u0908 \u092e\u0947\u0902 \u0928\u093f\u0930\u094d\u092e\u093e\u0923\u093e\u0927\u0940\u0928 \u0905\u092a\u093e\u0930\u094d\u091f\u092e\u0947\u0902\u091f \u0916\u0930\u0940\u0926\u0928\u093e"],t5,t5),"checklists.quickPresets",A.c(["en","Quick Presets","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u092a\u094d\u0930\u0940\u0938\u0947\u091f"],t5,t5),"checklists.newBtn",A.c(["en","New","hi","\u0928\u092f\u093e"],t5,t5),"checklists.prompt",A.c(["en",b4,"hi",b5],t5,t5),"checklists.question",A.c(["en",b4,"hi",b5],t5,t5),"checklists.hint",A.c(["en","e.g. Buying a Resale Flat in Mumbai","hi","\u0909\u0926\u093e. \u092e\u0941\u0902\u092c\u0908 \u092e\u0947\u0902 \u0930\u0940\u0938\u0947\u0932 \u092b\u094d\u0932\u0948\u091f \u0916\u0930\u0940\u0926\u0928\u093e"],t5,t5),"checklists.generate",A.c(["en","Generate","hi","\u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902"],t5,t5),"checklists.generateBtn",A.c(["en","Generate","hi","\u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902"],t5,t5),"checklists.empty",A.c(["en",'No checklists yet\nTap "New" to create a due diligence checklist.',"hi",'\u0905\u092d\u0940 \u0915\u094b\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0928\u0939\u0940\u0902 \u0939\u0948\n\u0928\u0908 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092c\u0928\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f "\u0928\u092f\u093e" \u092a\u0930 \u091f\u0948\u092a \u0915\u0930\u0947\u0902\u0964'],t5,t5),"checklists.untitled",A.c(["en",b2,"hi",b3],t5,t5),"checklists.addItem",A.c(["en","Add Item","hi","\u0906\u0907\u091f\u092e \u091c\u094b\u0921\u093c\u0947\u0902"],t5,t5),"checklists.addNewItem",A.c(["en","Add New Item","hi","\u0928\u092f\u093e \u0906\u0907\u091f\u092e \u091c\u094b\u0921\u093c\u0947\u0902"],t5,t5),"checklists.addNewTask",A.c(["en","Add New Task","hi","\u0928\u092f\u093e \u0915\u093e\u0930\u094d\u092f \u091c\u094b\u0921\u093c\u0947\u0902"],t5,t5),"checklists.addTaskAction",A.c(["en","Add Task","hi","\u0915\u093e\u0930\u094d\u092f \u091c\u094b\u0921\u093c\u0947\u0902"],t5,t5),"checklists.enterTitle",A.c(["en","Task title","hi","\u0915\u093e\u0930\u094d\u092f \u0936\u0940\u0930\u094d\u0937\u0915"],t5,t5),"checklists.enterTaskTitle",A.c(["en","Task title","hi","\u0915\u093e\u0930\u094d\u092f \u0936\u0940\u0930\u094d\u0937\u0915"],t5,t5),"checklists.taskDescription",A.c(["en","Task Title / Description","hi","\u0915\u093e\u0930\u094d\u092f \u0936\u0940\u0930\u094d\u0937\u0915 / \u0935\u093f\u0935\u0930\u0923"],t5,t5),"checklists.verifyTitleDeed",A.c(["en",b6,"hi",b7],t5,t5),"checklists.taskHint",A.c(["en",b6,"hi",b7],t5,t5),"checklists.add",A.c(["en","Add","hi","\u091c\u094b\u0921\u093c\u0947\u0902"],t5,t5),"checklists.addBtn",A.c(["en","Add","hi","\u091c\u094b\u0921\u093c\u0947\u0902"],t5,t5),"checklists.cancel",A.c(["en","Cancel","hi","\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902"],t5,t5),"checklists.saveAction",A.c(["en","Save Changes","hi","\u092a\u0930\u093f\u0935\u0930\u094d\u0924\u0928 \u0938\u0939\u0947\u091c\u0947\u0902"],t5,t5),"checklists.retryAction",A.c(["en","Retry","hi",o],t5,t5),"checklists.taskAddedSuccess",A.c(["en","Task added successfully","hi","\u0915\u093e\u0930\u094d\u092f \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u091c\u094b\u0921\u093c\u093e \u0917\u092f\u093e"],t5,t5),"checklists.failedToAdd",A.c(["en","Failed to add task: {error}","hi","\u0915\u093e\u0930\u094d\u092f \u091c\u094b\u0921\u093c\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932: {error}"],t5,t5),"checklists.taskDeletedSuccess",A.c(["en","Task removed successfully","hi","\u0915\u093e\u0930\u094d\u092f \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u0939\u091f\u093e\u092f\u093e \u0917\u092f\u093e"],t5,t5),"checklists.deleteTaskTitle",A.c(["en","Delete Task","hi","\u0915\u093e\u0930\u094d\u092f \u0939\u091f\u093e\u090f\u0902"],t5,t5),"checklists.deleteTaskConfirm",A.c(["en",'Are you sure you want to remove "{task}" from this checklist?',"hi",'\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 \u0907\u0938 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u0947 "{task}" \u0915\u094b \u0939\u091f\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?'],t5,t5),"checklists.renameChecklistTitle",A.c(["en",b8,"hi",b9],t5,t5),"checklists.newTitleHint",A.c(["en","Enter new checklist title...","hi","\u0928\u092f\u093e \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0936\u0940\u0930\u094d\u0937\u0915 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902..."],t5,t5),"checklists.renameSuccess",A.c(["en",c0,"hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092c\u0926\u0932\u093e \u0917\u092f\u093e"],t5,t5),"checklists.renameFailed",A.c(["en","Failed to rename checklist: {error}","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e \u092c\u0926\u0932\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932: {error}"],t5,t5),"checklists.deleteChecklistTitle",A.c(["en","Move Checklist to Recycle Bin?","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u090f\u0902?"],t5,t5),"checklists.deleteChecklistConfirm",A.c(["en",'Are you sure you want to move "{title}" to the Recycle Bin? You can restore it within 30 days.',"hi",'\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 "{title}" \u0915\u094b \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902? \u0906\u092a \u0907\u0938\u0947 30 \u0926\u093f\u0928\u094b\u0902 \u0915\u0947 \u092d\u0940\u0924\u0930 \u092a\u0941\u0928\u0930\u094d\u0938\u094d\u0925\u093e\u092a\u093f\u0924 \u0915\u0930 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964'],t5,t5),"checklists.delete",A.c(["en","Move to Bin","hi","\u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u090f\u0902"],t5,t5),"checklists.deleteAction",A.c(["en","Move to Bin","hi","\u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u090f\u0902"],t5,t5),"checklists.checklistDeletedSuccess",A.c(["en",c1,"hi",c2],t5,t5),"checklists.failedToDelete",A.c(["en","Failed to delete: {error}","hi","\u0939\u091f\u093e\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932: {error}"],t5,t5),"checklists.deleteChecklist",A.c(["en","Move to Recycle Bin","hi","\u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u090f\u0902"],t5,t5),"checklists.deleteConfirm",A.c(["en","Are you sure you want to move this checklist to the Recycle Bin?","hi","\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 \u0907\u0938 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u094b \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?"],t5,t5),"checklists.deletedSuccess",A.c(["en",c1,"hi",c2],t5,t5),"checklists.renameChecklist",A.c(["en",b8,"hi",b9],t5,t5),"checklists.enterNewName",A.c(["en","Checklist name","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e"],t5,t5),"checklists.renamedSuccess",A.c(["en",c0,"hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u093e \u0928\u093e\u092e \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092c\u0926\u0932 \u0926\u093f\u092f\u093e \u0917\u092f\u093e"],t5,t5),"checklists.alreadyExistsTitle",A.c(["en","Checklist Already Exists","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092a\u0939\u0932\u0947 \u0938\u0947 \u092e\u094c\u091c\u0942\u0926 \u0939\u0948"],t5,t5),"checklists.alreadyExistsDesc",A.c(["en",'A checklist matching "{title}" already exists in your active cases.',"hi",'"{title}" \u0938\u0947 \u092e\u0947\u0932 \u0916\u093e\u0928\u0947 \u0935\u093e\u0932\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092a\u0939\u0932\u0947 \u0938\u0947 \u0939\u0940 \u0906\u092a\u0915\u0947 \u0938\u0915\u094d\u0930\u093f\u092f \u0915\u0947\u0938 \u092e\u0947\u0902 \u092e\u094c\u091c\u0942\u0926 \u0939\u0948\u0964'],t5,t5),"checklists.alreadyExistsPrompt",A.c(["en","Would you like to open the existing checklist or still create a new one?","hi","\u0915\u094d\u092f\u093e \u0906\u092a \u092e\u094c\u091c\u0942\u0926\u093e \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0916\u094b\u0932\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902 \u092f\u093e \u092b\u093f\u0930 \u092d\u0940 \u090f\u0915 \u0928\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092c\u0928\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?"],t5,t5),"checklists.viewExisting",A.c(["en","View Existing","hi","\u092e\u094c\u091c\u0942\u0926\u093e \u0926\u0947\u0916\u0947\u0902"],t5,t5),"checklists.stillCreate",A.c(["en","Still Create","hi","\u092b\u093f\u0930 \u092d\u0940 \u092c\u0928\u093e\u090f\u0902"],t5,t5),"checklists.deleteItem",A.c(["en","Delete Item","hi","\u0906\u0907\u091f\u092e \u0939\u091f\u093e\u090f\u0902"],t5,t5),"checklists.deleteItemConfirm",A.c(["en","Delete this task from checklist?","hi","\u0915\u094d\u092f\u093e \u0907\u0938 \u0915\u093e\u0930\u094d\u092f \u0915\u094b \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u0947 \u0939\u091f\u093e\u0928\u093e \u0939\u0948?"],t5,t5),"checklists.itemDeleted",A.c(["en","Task removed","hi","\u0915\u093e\u0930\u094d\u092f \u0939\u091f\u093e \u0926\u093f\u092f\u093e \u0917\u092f\u093e"],t5,t5),"checklists.filterAll",A.c(["en","All Tasks","hi","\u0938\u092d\u0940 \u0915\u093e\u0930\u094d\u092f"],t5,t5),"checklists.filterPending",A.c(["en","Pending","hi","\u0932\u0902\u092c\u093f\u0924"],t5,t5),"checklists.filterFlagged",A.c(["en","Flagged Issues","hi","\u0927\u094d\u0935\u091c\u093e\u0902\u0915\u093f\u0924 \u092e\u0941\u0926\u094d\u0926\u0947"],t5,t5),"checklists.filterCompleted",A.c(["en","Completed","hi","\u092a\u0942\u0930\u094d\u0923"],t5,t5),"checklists.progress",A.c(["en","Progress","hi","\u092a\u094d\u0930\u0917\u0924\u093f"],t5,t5),"checklists.completedRatio",A.c(["en","{completed} of {total} completed","hi","{total} \u092e\u0947\u0902 \u0938\u0947 {completed} \u092a\u0942\u0930\u094d\u0923"],t5,t5),"checklists.allDone",A.c(["en","All due-diligence items completed!","hi","\u0938\u092d\u0940 \u091c\u093e\u0902\u091a \u0915\u093e\u0930\u094d\u092f \u092a\u0942\u0930\u094d\u0923 \u0939\u094b \u0917\u090f!"],t5,t5),"checklists.flaggedBadge",A.c(["en","FLAGGED BY DOCUMENT ISSUE","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092e\u0941\u0926\u094d\u0926\u0947 \u0926\u094d\u0935\u093e\u0930\u093e \u0927\u094d\u0935\u091c\u093e\u0902\u0915\u093f\u0924"],t5,t5),"checklists.flaggedCountBadge",A.c(["en","{count} Flagged","hi","{count} \u0927\u094d\u0935\u091c\u093e\u0902\u0915\u093f\u0924"],t5,t5),"checklists.triggeredBy",A.c(["en","Triggered by: {doc}","hi","\u091f\u094d\u0930\u093f\u0917\u0930: {doc}"],t5,t5),"checklists.triggeredByMulti",A.c(["en","Triggered by {count} documents","hi","{count} \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c\u094b\u0902 \u0926\u094d\u0935\u093e\u0930\u093e \u091f\u094d\u0930\u093f\u0917\u0930"],t5,t5),"checklists.viewRelatedIssue",A.c(["en","View related issue","hi","\u0938\u0902\u092c\u0902\u0927\u093f\u0924 \u092e\u0941\u0926\u094d\u0926\u093e \u0926\u0947\u0916\u0947\u0902"],t5,t5),"checklists.viewRelatedIssues",A.c(["en","View {count} related issues","hi","{count} \u0938\u0902\u092c\u0902\u0927\u093f\u0924 \u092e\u0941\u0926\u094d\u0926\u0947 \u0926\u0947\u0916\u0947\u0902"],t5,t5),"checklists.relatedIssueModalTitle",A.c(["en","Cross-Referenced Document Issue","hi","\u0915\u094d\u0930\u0949\u0938-\u0938\u0902\u0926\u0930\u094d\u092d\u093f\u0924 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u092e\u0941\u0926\u094d\u0926\u093e"],t5,t5),"checklists.whyFlaggedTitle",A.c(["en","Why this was flagged:","hi","\u0907\u0938\u0947 \u0915\u094d\u092f\u094b\u0902 \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u0915\u093f\u092f\u093e \u0917\u092f\u093e:"],t5,t5),"checklists.whyFlaggedDesc",A.c(["en","LawBuddy detected a legal concern in {doc} relating to this verification task.","hi","LawBuddy \u0928\u0947 \u0907\u0938 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u093e\u0930\u094d\u092f \u0938\u0947 \u0938\u0902\u092c\u0902\u0927\u093f\u0924 {doc} \u092e\u0947\u0902 \u090f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u091a\u093f\u0902\u0924\u093e \u0915\u093e \u092a\u0924\u093e \u0932\u0917\u093e\u092f\u093e\u0964"],t5,t5),"checklists.clauseFindingTitle",A.c(["en","Detected Clause Finding","hi","\u092a\u0939\u091a\u093e\u0928\u093e \u0917\u092f\u093e \u0916\u0902\u0921 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937"],t5,t5),"checklists.statutoryCitationsTitle",A.c(["en","Legal & Statutory Citations","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0914\u0930 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0938\u0902\u0926\u0930\u094d\u092d"],t5,t5),"checklists.buyerImpactTitle",A.c(["en","Buyer Impact & Practical Consequence","hi","\u0916\u0930\u0940\u0926\u093e\u0930 \u092a\u0930 \u092a\u094d\u0930\u092d\u093e\u0935 \u0914\u0930 \u0935\u094d\u092f\u093e\u0935\u0939\u093e\u0930\u093f\u0915 \u092a\u0930\u093f\u0923\u093e\u092e"],t5,t5),"checklists.recommendationTitle",A.c(["en","Recommended Due Diligence Action","hi","\u0905\u0928\u0941\u0936\u0902\u0938\u093f\u0924 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0908"],t5,t5),"checklists.markAsVerified",A.c(["en","Mark as Verified","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u0915\u0930\u0947\u0902"],t5,t5),"checklists.markAsPending",A.c(["en","Mark as Pending","hi","\u0932\u0902\u092c\u093f\u0924 \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u0915\u0930\u0947\u0902"],t5,t5),"checklists.starterTitle",A.c(["en","Quick Starter Templates","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f"],t5,t5),"checklists.template1",A.c(["en","Buying Resale Flat","hi","\u092a\u0941\u0928\u0930\u094d\u0935\u093f\u0915\u094d\u0930\u092f \u092b\u094d\u0932\u0948\u091f \u0916\u0930\u0940\u0926\u0928\u093e"],t5,t5),"checklists.template2",A.c(["en","Under-Construction RERA Property","hi","\u0928\u093f\u0930\u094d\u092e\u093e\u0923\u093e\u0927\u0940\u0928 \u0930\u0947\u0930\u093e \u0938\u0902\u092a\u0924\u094d\u0924\u093f"],t5,t5),"checklists.template3",A.c(["en","Commercial Lease Agreement","hi","\u0935\u094d\u092f\u093e\u0935\u0938\u093e\u092f\u093f\u0915 \u0932\u0940\u091c \u0938\u092e\u091d\u094c\u0924\u093e"],t5,t5),"checklists.template4",A.c(["en","Agricultural / Plot Land Due Diligence","hi","\u0915\u0943\u0937\u093f / \u092a\u094d\u0932\u0949\u091f \u092d\u0942\u092e\u093f \u091c\u093e\u0902\u091a"],t5,t5),"checklists.subtitle",A.c(["en","Track your property's legal due diligence.","hi","\u0905\u092a\u0928\u0940 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u0940 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u093e\u0902\u091a \u0915\u0940 \u0928\u093f\u0917\u0930\u093e\u0928\u0940 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"checklists.heroTitle",A.c(["en","PROPERTY DUE DILIGENCE","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940"],t5,t5),"checklists.heroHeadline",A.c(["en","Verify before you commit.","hi","\u092a\u094d\u0930\u0924\u093f\u092c\u0926\u094d\u0927 \u0939\u094b\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964"],t5,t5),"checklists.heroSub",A.c(["en","Keep every important legal verification step organized in one place.","hi","\u092a\u094d\u0930\u0924\u094d\u092f\u0947\u0915 \u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u0926\u092e \u0915\u094b \u090f\u0915 \u0938\u094d\u0925\u093e\u0928 \u092a\u0930 \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093f\u0924 \u0930\u0916\u0947\u0902\u0964"],t5,t5),"checklists.casesHeading",A.c(["en","Active Due-Diligence Cases","hi","\u0938\u0915\u094d\u0930\u093f\u092f \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u092e\u093e\u092e\u0932\u0947"],t5,t5),"checklists.verificationBadge",A.c(["en","PROPERTY VERIFICATION","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u0924\u094d\u092f\u093e\u092a\u0928"],t5,t5),"checklists.dueDiligenceProgress",A.c(["en","Due-diligence progress","hi","\u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u092a\u094d\u0930\u0917\u0924\u093f"],t5,t5),"checklists.inProgress",A.c(["en","In Progress","hi","\u092a\u094d\u0930\u0917\u0924\u093f \u092e\u0947\u0902"],t5,t5),"checklists.completed",A.c(["en","Completed","hi","\u092a\u0942\u0930\u094d\u0923"],t5,t5),"checklists.emptyTitle",A.c(["en","Start your property due diligence","hi","\u0905\u092a\u0928\u0940 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u0940 \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902"],t5,t5),"checklists.emptySub",A.c(["en","Create a checklist to organize the legal documents, approvals and verification steps you need before committing to a property.","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u0947 \u0932\u093f\u090f \u092a\u094d\u0930\u0924\u093f\u092c\u0926\u094d\u0927 \u0939\u094b\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 \u0906\u0935\u0936\u094d\u092f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u094b\u0902, \u0905\u0928\u0941\u092e\u094b\u0926\u0928\u094b\u0902 \u0914\u0930 \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u091a\u0930\u0923\u094b\u0902 \u0915\u094b \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u092c\u0928\u093e\u090f\u0902\u0964"],t5,t5),"checklists.quickStartSub",A.c(["en","Start with a property-specific due-diligence checklist.","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f-\u0935\u093f\u0936\u093f\u0937\u094d\u091f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0915\u0947 \u0938\u093e\u0925 \u0936\u0941\u0930\u0941\u0906\u0924 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"calc.screenTitle",A.c(["en","Stamp Duty & Registration Calculator","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930"],t5,t5),"calc.screenSubtitle",A.c(["en","Calculate estimated stamp duty, registration charges, and state cess across India.","hi","\u092d\u093e\u0930\u0924 \u092d\u0930 \u092e\u0947\u0902 \u0905\u0928\u0941\u092e\u093e\u0928\u093f\u0924 \u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915, \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u0930\u093e\u091c\u094d\u092f \u0909\u092a\u0915\u0930 \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902\u0964"],t5,t5),"calc.cardTitle",A.c(["en","Property & Transaction Details","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0914\u0930 \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u093e \u0935\u093f\u0935\u0930\u0923"],t5,t5),"calc.propertyType",A.c(["en","Property Type","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e \u092a\u094d\u0930\u0915\u093e\u0930"],t5,t5),"calc.propertyTypeLabel",A.c(["en","Property Category","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u0940 \u0936\u094d\u0930\u0947\u0923\u0940"],t5,t5),"calc.selectPropertyType",A.c(["en","Select property type","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092a\u094d\u0930\u0915\u093e\u0930 \u091a\u0941\u0928\u0947\u0902"],t5,t5),"calc.selectPropertyTypeHint",A.c(["en","Select property category","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0936\u094d\u0930\u0947\u0923\u0940 \u091a\u0941\u0928\u0947\u0902"],t5,t5),"calc.typeResidential",A.c(["en","Residential","hi","\u0906\u0935\u093e\u0938\u0940\u092f"],t5,t5),"calc.typeCommercial",A.c(["en","Commercial","hi","\u0935\u094d\u092f\u093e\u0935\u0938\u093e\u092f\u093f\u0915"],t5,t5),"calc.typeAgricultural",A.c(["en","Agricultural","hi","\u0915\u0943\u0937\u093f"],t5,t5),"calc.typeOther",A.c(["en","Other","hi","\u0905\u0928\u094d\u092f"],t5,t5),"calc.propertyTypeResidential",A.c(["en","Residential","hi","\u0906\u0935\u093e\u0938\u0940\u092f"],t5,t5),"calc.propertyTypeCommercial",A.c(["en","Commercial","hi","\u0935\u094d\u092f\u093e\u0935\u0938\u093e\u092f\u093f\u0915"],t5,t5),"calc.propertyTypeAgricultural",A.c(["en","Agricultural","hi","\u0915\u0943\u0937\u093f"],t5,t5),"calc.propertyTypeOther",A.c(["en","Other","hi","\u0905\u0928\u094d\u092f"],t5,t5),"calc.state",A.c(["en","State / UT","hi","\u0930\u093e\u091c\u094d\u092f / \u0915\u0947\u0902\u0926\u094d\u0930 \u0936\u093e\u0938\u093f\u0924 \u092a\u094d\u0930\u0926\u0947\u0936"],t5,t5),"calc.stateLabel",A.c(["en","State / Jurisdiction","hi","\u0930\u093e\u091c\u094d\u092f / \u0915\u094d\u0937\u0947\u0924\u094d\u0930\u093e\u0927\u093f\u0915\u093e\u0930"],t5,t5),"calc.selectState",A.c(["en","Select state","hi","\u0930\u093e\u091c\u094d\u092f \u091a\u0941\u0928\u0947\u0902"],t5,t5),"calc.selectStateHint",A.c(["en","Select State / Union Territory","hi","\u0930\u093e\u091c\u094d\u092f / \u0915\u0947\u0902\u0926\u094d\u0930 \u0936\u093e\u0938\u093f\u0924 \u092a\u094d\u0930\u0926\u0947\u0936 \u091a\u0941\u0928\u0947\u0902"],t5,t5),"calc.agreementValue",A.c(["en","Agreement Value","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u092e\u0942\u0932\u094d\u092f"],t5,t5),"calc.propValueLabel",A.c(["en","Agreement / Declared Value (\u20b9)","hi","\u0905\u0928\u0941\u092c\u0902\u0927 / \u0918\u094b\u0937\u093f\u0924 \u092e\u0942\u0932\u094d\u092f (\u20b9)"],t5,t5),"calc.enterAgreementValue",A.c(["en","e.g. 75,00,000","hi","\u0909\u0926\u093e. 75,00,000"],t5,t5),"calc.enterPropValError",A.c(["en","Please enter the agreement property value","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u092e\u0942\u0932\u094d\u092f \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"calc.circleRate",A.c(["en",c3,"hi",c4],t5,t5),"calc.circleRateLabel",A.c(["en","Circle Rate Value (\u20b9)","hi","\u0938\u0930\u094d\u0915\u093f\u0932 \u0930\u0947\u091f \u092e\u0942\u0932\u094d\u092f (\u20b9)"],t5,t5),"calc.enterCircleRate",A.c(["en","e.g. 50,00,000","hi","\u0909\u0926\u093e. 50,00,000"],t5,t5),"calc.gender",A.c(["en",c5,"hi",c6],t5,t5),"calc.genderLabel",A.c(["en",c5,"hi",c6],t5,t5),"calc.selectGender",A.c(["en","Select gender","hi","\u0932\u093f\u0902\u0917 \u091a\u0941\u0928\u0947\u0902"],t5,t5),"calc.selectGenderHint",A.c(["en","Select ownership gender category","hi","\u0938\u094d\u0935\u093e\u092e\u093f\u0924\u094d\u0935 \u0932\u093f\u0902\u0917 \u0936\u094d\u0930\u0947\u0923\u0940 \u091a\u0941\u0928\u0947\u0902"],t5,t5),"calc.genderMale",A.c(["en","Male","hi","\u092a\u0941\u0930\u0941\u0937"],t5,t5),"calc.genderFemale",A.c(["en","Female (Concession where applicable)","hi","\u092e\u0939\u093f\u0932\u093e (\u091c\u0939\u093e\u0901 \u0932\u093e\u0917\u0942 \u0939\u094b \u091b\u0942\u091f)"],t5,t5),"calc.genderJoint",A.c(["en","Joint (Male + Female)","hi","\u0938\u0902\u092f\u0941\u0915\u094d\u0924 (\u092a\u0941\u0930\u0941\u0937 + \u092e\u0939\u093f\u0932\u093e)"],t5,t5),"calc.genderOther",A.c(["en","Other / Legal Entity","hi","\u0905\u0928\u094d\u092f / \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0902\u0938\u094d\u0925\u093e"],t5,t5),"calc.firstTimeBuyer",A.c(["en","First Time Buyer","hi","\u092a\u0939\u0932\u0940 \u092c\u093e\u0930 \u0916\u0930\u0940\u0926\u093e\u0930"],t5,t5),"calc.firstTimeLabel",A.c(["en","First-Time Homebuyer?","hi","\u0915\u094d\u092f\u093e \u092a\u0939\u0932\u0940 \u092c\u093e\u0930 \u0918\u0930 \u0916\u0930\u0940\u0926 \u0930\u0939\u0947 \u0939\u0948\u0902?"],t5,t5),"calc.selectOption",A.c(["en","Select option","hi","\u0935\u093f\u0915\u0932\u094d\u092a \u091a\u0941\u0928\u0947\u0902"],t5,t5),"calc.selectOptionHint",A.c(["en","Select Yes or No","hi","\u0939\u093e\u0901 \u092f\u093e \u0928\u0939\u0940\u0902 \u091a\u0941\u0928\u0947\u0902"],t5,t5),"calc.yes",A.c(["en","Yes","hi","\u0939\u093e\u0901"],t5,t5),"calc.no",A.c(["en","No","hi","\u0928\u0939\u0940\u0902"],t5,t5),"calc.calculateBtn",A.c(["en","Calculate Stamp Duty","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902"],t5,t5),"calc.calcButton",A.c(["en","Calculate Charges","hi","\u0936\u0941\u0932\u094d\u0915 \u0915\u0940 \u0917\u0923\u0928\u093e \u0915\u0930\u0947\u0902"],t5,t5),"calc.resetBtn",A.c(["en","Reset","hi","\u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0947\u0902"],t5,t5),"calc.resetButton",A.c(["en","Reset All","hi","\u0938\u092d\u0940 \u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0947\u0902"],t5,t5),"calc.fillAllError",A.c(["en","Please complete all required fields.","hi","\u0915\u0943\u092a\u092f\u093e \u0938\u092d\u0940 \u0906\u0935\u0936\u094d\u092f\u0915 \u092b\u093c\u0940\u0932\u094d\u0921 \u092d\u0930\u0947\u0902\u0964"],t5,t5),"calc.validValueError",A.c(["en","Please enter valid numerical amounts.","hi","\u0915\u0943\u092a\u092f\u093e \u092e\u093e\u0928\u094d\u092f \u0938\u0902\u0916\u094d\u092f\u093e\u0924\u094d\u092e\u0915 \u0930\u093e\u0936\u093f \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902\u0964"],t5,t5),"calc.summaryTitle",A.c(["en","Stamp Duty & Registration Summary","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0914\u0930 \u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0938\u093e\u0930\u093e\u0902\u0936"],t5,t5),"calc.rowAgreementValue",A.c(["en","Agreement Value","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u092e\u0942\u0932\u094d\u092f"],t5,t5),"calc.rowCircleRate",A.c(["en",c3,"hi",c4],t5,t5),"calc.rowApplicableMarketValue",A.c(["en","Applicable Consideration Base","hi","\u0932\u093e\u0917\u0942 \u0935\u093f\u091a\u093e\u0930\u0923\u0940\u092f \u0906\u0927\u093e\u0930"],t5,t5),"calc.rowStampDuty",A.c(["en","Stamp Duty ({rate}%)","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 ({rate}%)"],t5,t5),"calc.rowRegistration",A.c(["en","Registration Fee ({rate}%)","hi","\u092a\u0902\u091c\u0940\u0915\u0930\u0923 \u0936\u0941\u0932\u094d\u0915 ({rate}%)"],t5,t5),"calc.totalPayable",A.c(["en","Total Estimated Statutory Charges","hi","\u0915\u0941\u0932 \u0905\u0928\u0941\u092e\u093e\u0928\u093f\u0924 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0936\u0941\u0932\u094d\u0915"],t5,t5),"calc.stampPlusReg",A.c(["en","Stamp Duty + Registration + Applicable Surcharges","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 + \u092a\u0902\u091c\u0940\u0915\u0930\u0923 + \u0932\u093e\u0917\u0942 \u0905\u0927\u093f\u092d\u093e\u0930"],t5,t5),"calc.disclaimer",A.c(["en","Calculations are indicative estimates based on prevailing state stamp schedules. Verify final rates with the local sub-registrar office.","hi","\u0917\u0923\u0928\u093e \u092a\u094d\u0930\u091a\u0932\u093f\u0924 \u0930\u093e\u091c\u094d\u092f \u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0905\u0928\u0941\u0938\u0942\u091a\u093f\u092f\u094b\u0902 \u092a\u0930 \u0906\u0927\u093e\u0930\u093f\u0924 \u0938\u093e\u0902\u0915\u0947\u0924\u093f\u0915 \u0905\u0928\u0941\u092e\u093e\u0928 \u0939\u0948\u0902\u0964 \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0909\u092a-\u092a\u0902\u091c\u0940\u092f\u0915 \u0915\u093e\u0930\u094d\u092f\u093e\u0932\u092f \u0938\u0947 \u0905\u0902\u0924\u093f\u092e \u0926\u0930\u094b\u0902 \u0915\u093e \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"calc.ratesVerifiedOn",A.c(["en","Rates last verified on {date}","hi","\u0926\u0930\u0947\u0902 \u0905\u0902\u0924\u093f\u092e \u092c\u093e\u0930 {date} \u0915\u094b \u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0940 \u0917\u0908\u0902"],t5,t5),"calc.sourceLabel",A.c(["en","Source: {source}","hi","\u0938\u094d\u0930\u094b\u0924: {source}"],t5,t5),"calc.ratesWarning",A.c(["en","Statutory rates may have changed since verification. Please confirm with your local Sub-Registrar or IGR portal.","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u0947 \u092c\u093e\u0926 \u0938\u0947 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0926\u0930\u0947\u0902 \u092c\u0926\u0932 \u0938\u0915\u0924\u0940 \u0939\u0948\u0902\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u0947 \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0909\u092a-\u092a\u0902\u091c\u0940\u092f\u0915 \u092f\u093e \u0906\u0908\u091c\u0940\u0906\u0930 \u092a\u094b\u0930\u094d\u091f\u0932 \u0938\u0947 \u092a\u0941\u0937\u094d\u091f\u093f \u0915\u0930\u0947\u0902\u0964"],t5,t5),"calc.moreThan90Days",A.c(["en","> 90 DAYS","hi","> 90 \u0926\u093f\u0928"],t5,t5),"recentDocs.title",A.c(["en",k,"hi",j],t5,t5),"recentDocs.scanNew",A.c(["en",c7,"hi",c8],t5,t5),"recentDocs.scanNewDoc",A.c(["en",c7,"hi",c8],t5,t5),"recentDocs.repository",A.c(["en",c9,"hi",d0],t5,t5),"recentDocs.repoTitle",A.c(["en",c9,"hi",d0],t5,t5),"recentDocs.vaultSubtitle",A.c(["en","Your property documents, organized and analyzed.","hi","\u0906\u092a\u0915\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c, \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093f\u0924 \u0914\u0930 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u093f\u0924\u0964"],t5,t5),"recentDocs.secureVault",A.c(["en","SECURE LEGAL VAULT","hi","\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u0949\u0932\u094d\u091f"],t5,t5),"recentDocs.documents",A.c(["en","DOCUMENTS","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],t5,t5),"recentDocs.totalAnalyzed",A.c(["en",d1,"hi",d2],t5,t5),"recentDocs.repoSubtitle",A.c(["en",d1,"hi",d2],t5,t5),"recentDocs.total",A.c(["en","Total","hi","\u0915\u0941\u0932"],t5,t5),"recentDocs.statTotal",A.c(["en","Total","hi","\u0915\u0941\u0932"],t5,t5),"recentDocs.highRisk",A.c(["en","High Risk","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],t5,t5),"recentDocs.statHighRisk",A.c(["en","High Risk","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],t5,t5),"recentDocs.caution",A.c(["en","Caution","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940"],t5,t5),"recentDocs.statCaution",A.c(["en","Caution","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940"],t5,t5),"recentDocs.compliant",A.c(["en","Compliant","hi","\u0905\u0928\u0941\u0930\u0942\u092a"],t5,t5),"recentDocs.statCompliant",A.c(["en","Compliant","hi","\u0905\u0928\u0941\u0930\u0942\u092a"],t5,t5),"recentDocs.searchHint",A.c(["en","Search documents","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0916\u094b\u091c\u0947\u0902"],t5,t5),"recentDocs.all",A.c(["en","All","hi","\u0938\u092d\u0940"],t5,t5),"recentDocs.filterAll",A.c(["en","All","hi","\u0938\u092d\u0940"],t5,t5),"recentDocs.resetFilters",A.c(["en","Reset Filters","hi","\u092b\u093c\u093f\u0932\u094d\u091f\u0930 \u0930\u0940\u0938\u0947\u091f \u0915\u0930\u0947\u0902"],t5,t5),"recentDocs.noDocsMatching",A.c(["en",d3,"hi",d4],t5,t5),"recentDocs.noMatch",A.c(["en",d3,"hi",d4],t5,t5),"recentDocs.noDocsCategory",A.c(["en",d5,"hi",d6],t5,t5),"recentDocs.noCategory",A.c(["en",d5,"hi",d6],t5,t5),"recentDocs.emptyPrompt",A.c(["en",d7,"hi",d8],t5,t5),"recentDocs.emptyDesc",A.c(["en",d7,"hi",d8],t5,t5),"recentDocs.scanned",A.c(["en","Scanned {time}","hi",d9],t5,t5),"recentDocs.scannedPrefix",A.c(["en","Scanned {time}","hi",d9],t5,t5),"recentDocs.justNow",A.c(["en","Just now","hi","\u0905\u092d\u0940"],t5,t5),"recentDocs.mAgo",A.c(["en","{count}m ago","hi","{count} \u092e\u093f\u0928\u091f \u092a\u0939\u0932\u0947"],t5,t5),"recentDocs.hAgo",A.c(["en","{count}h ago","hi",e0],t5,t5),"recentDocs.dAgo",A.c(["en","{count}d ago","hi",e1],t5,t5),"recentDocs.recently",A.c(["en","Recently","hi","\u0939\u093e\u0932 \u0939\u0940 \u092e\u0947\u0902"],t5,t5),"recentDocs.rename",A.c(["en","Rename Document","hi",e2],t5,t5),"recentDocs.renameTitle",A.c(["en","Rename Document","hi",e2],t5,t5),"recentDocs.renameHint",A.c(["en","Document name","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0928\u093e\u092e"],t5,t5),"recentDocs.save",A.c(["en","Save","hi","\u0938\u0939\u0947\u091c\u0947\u0902"],t5,t5),"recentDocs.cancel",A.c(["en","Cancel","hi","\u0930\u0926\u094d\u0926 \u0915\u0930\u0947\u0902"],t5,t5),"recentDocs.delete",A.c(["en","Delete Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0939\u091f\u093e\u090f\u0902"],t5,t5),"recentDocs.deleteConfirm",A.c(["en","Are you sure you want to delete this document analysis?","hi","\u0915\u094d\u092f\u093e \u0906\u092a \u0935\u093e\u0915\u0908 \u0907\u0938 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u094b \u0939\u091f\u093e\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?"],t5,t5),"recentDocs.renamedSuccess",A.c(["en","Document renamed successfully","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u0928\u093e\u092e \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092c\u0926\u0932 \u0926\u093f\u092f\u093e \u0917\u092f\u093e"],t5,t5),"recentDocs.deletedSuccess",A.c(["en","Document moved to Recycle Bin","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u092e\u0947\u0902 \u0932\u0947 \u091c\u093e\u092f\u093e \u0917\u092f\u093e"],t5,t5),"recentDocs.actions",A.c(["en","Actions","hi","\u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0907\u092f\u093e\u0902"],t5,t5),"recentDocs.viewDocument",A.c(["en","View Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0926\u0947\u0916\u0947\u0902"],t5,t5),"recentDocs.viewAnalysis",A.c(["en","View Analysis","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0926\u0947\u0916\u0947\u0902"],t5,t5),"recentDocs.downloadReport",A.c(["en","Download Risk Report","hi","\u091c\u094b\u0916\u093f\u092e \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],t5,t5),"recentDocs.reanalyze",A.c(["en","Re-analyze Document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u092a\u0941\u0928\u0903 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902"],t5,t5),"recentDocs.downloadingReport",A.c(["en","Generating & downloading risk report PDF...","hi","\u091c\u094b\u0916\u093f\u092e \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092a\u0940\u0921\u0940\u090f\u092b \u0924\u0948\u092f\u093e\u0930 \u0914\u0930 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0940 \u091c\u093e \u0930\u0939\u0940 \u0939\u0948..."],t5,t5),"recentDocs.reportDownloaded",A.c(["en","Legal Risk Report PDF downloaded successfully","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u092a\u0940\u0921\u0940\u090f\u092b \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0940 \u0917\u0908"],t5,t5),"recentDocs.reanalyzing",A.c(["en","Re-analyzing document with Legal AI...","hi","\u0932\u0940\u0917\u0932 \u090f\u0906\u0908 \u0915\u0947 \u0938\u093e\u0925 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u092a\u0941\u0928\u0903 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],t5,t5),"recentDocs.reanalyzeSuccess",A.c(["en","Document re-analyzed successfully","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u092a\u0941\u0928\u0903 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092a\u0942\u0930\u093e \u0939\u0941\u0906"],t5,t5),"recentDocs.reanalyzeFailed",A.c(["en","Failed to re-analyze document","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0915\u093e \u092a\u0941\u0928\u0903 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932"],t5,t5),"bin.title",A.c(["en","Recycle Bin","hi","\u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928"],t5,t5),"bin.documentsTab",A.c(["en","Documents","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],t5,t5),"bin.checklistsTab",A.c(["en","Checklists","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"bin.emptyTitle",A.c(["en","Recycle Bin is Empty","hi","\u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928 \u0916\u093e\u0932\u0940 \u0939\u0948"],t5,t5),"bin.emptySubtitle",A.c(["en","Deleted documents will be kept here for 30 days before being permanently removed.","hi","\u0939\u091f\u093e\u090f \u0917\u090f \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f \u091c\u093e\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 30 \u0926\u093f\u0928\u094b\u0902 \u0924\u0915 \u092f\u0939\u093e\u0902 \u0930\u0916\u0947 \u091c\u093e\u090f\u0902\u0917\u0947\u0964"],t5,t5),"bin.emptyChecklistsTitle",A.c(["en","No Deleted Checklists","hi","\u0915\u094b\u0908 \u0939\u091f\u093e\u0908 \u0917\u0908 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0928\u0939\u0940\u0902 \u0939\u0948"],t5,t5),"bin.emptyChecklistsSubtitle",A.c(["en","Deleted checklists will be kept here for 30 days before being permanently removed.","hi","\u0939\u091f\u093e\u090f \u0917\u090f \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f \u091c\u093e\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947 30 \u0926\u093f\u0928\u094b\u0902 \u0924\u0915 \u092f\u0939\u093e\u0902 \u0930\u0916\u0947 \u091c\u093e\u090f\u0902\u0917\u0947\u0964"],t5,t5),"bin.restore",A.c(["en","Restore","hi","\u092a\u0941\u0928\u0930\u094d\u0938\u094d\u0925\u093e\u092a\u093f\u0924 \u0915\u0930\u0947\u0902"],t5,t5),"bin.deletePermanently",A.c(["en",a8,"hi",a9],t5,t5),"bin.permanentConfirmTitle",A.c(["en","Permanently Delete Document?","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f\u0902?"],t5,t5),"bin.permanentConfirmMessage",A.c(["en","This will permanently delete this document and all associated data. This action is irreversible and cannot be undone.","hi","\u092f\u0939 \u0907\u0938 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0914\u0930 \u0938\u092d\u0940 \u0938\u0902\u092c\u0926\u094d\u0927 \u0921\u0947\u091f\u093e \u0915\u094b \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0947\u0917\u093e\u0964 \u092f\u0939 \u0915\u094d\u0930\u093f\u092f\u093e \u0905\u092a\u0930\u093f\u0935\u0930\u094d\u0924\u0928\u0940\u092f \u0939\u0948\u0964"],t5,t5),"bin.permanentConfirmChecklistTitle",A.c(["en","Permanently Delete Checklist?","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e\u090f\u0902?"],t5,t5),"bin.permanentConfirmChecklistMessage",A.c(["en","This will permanently delete this checklist and all its items. This action is irreversible and cannot be undone.","hi","\u092f\u0939 \u0907\u0938 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0914\u0930 \u0909\u0938\u0915\u0947 \u0938\u092d\u0940 \u0915\u093e\u0930\u094d\u092f\u094b\u0902 \u0915\u094b \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0947\u0917\u093e\u0964 \u092f\u0939 \u0915\u094d\u0930\u093f\u092f\u093e \u0905\u092a\u0930\u093f\u0935\u0930\u094d\u0924\u0928\u0940\u092f \u0939\u0948\u0964"],t5,t5),"bin.restoredSuccess",A.c(["en","Document restored to library","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0932\u093e\u0907\u092c\u094d\u0930\u0947\u0930\u0940 \u092e\u0947\u0902 \u092a\u0941\u0928\u0930\u094d\u0938\u094d\u0925\u093e\u092a\u093f\u0924 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"],t5,t5),"bin.permanentlyDeletedSuccess",A.c(["en","Document permanently deleted","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u093f\u092f\u093e \u0917\u092f\u093e"],t5,t5),"bin.checklistRestoredSuccess",A.c(["en","Checklist restored to library","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0932\u093e\u0907\u092c\u094d\u0930\u0947\u0930\u0940 \u092e\u0947\u0902 \u092a\u0941\u0928\u0930\u094d\u0938\u094d\u0925\u093e\u092a\u093f\u0924 \u0915\u0940 \u0917\u0908"],t5,t5),"bin.checklistPermanentlyDeletedSuccess",A.c(["en","Checklist permanently deleted","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u0940 \u0917\u0908"],t5,t5),"bin.autoPurgeNote",A.c(["en","Items in the bin for more than 30 days are automatically deleted permanently.","hi","30 \u0926\u093f\u0928\u094b\u0902 \u0938\u0947 \u0905\u0927\u093f\u0915 \u0938\u092e\u092f \u0938\u0947 \u092c\u093f\u0928 \u092e\u0947\u0902 \u092e\u094c\u091c\u0942\u0926 \u0906\u0907\u091f\u092e \u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0939\u091f\u093e \u0926\u093f\u090f \u091c\u093e\u0924\u0947 \u0939\u0948\u0902\u0964"],t5,t5),"sidebar.bin",A.c(["en","Recycle Bin","hi","\u0930\u0940\u0938\u093e\u092f\u0915\u0932 \u092c\u093f\u0928"],t5,t5),"analysis.reportTitle",A.c(["en",e3,"hi",e4],t5,t5),"analysis.title",A.c(["en",e3,"hi",e4],t5,t5),"analysis.pageOneOfOne",A.c(["en","PAGE 1 OF 1","hi","\u092a\u0943\u0937\u094d\u0920 1 / 1"],t5,t5),"analysis.highRiskDetected",A.c(["en",e5,"hi",e6],t5,t5),"analysis.moderateCaution",A.c(["en","Moderate Caution Advised","hi","\u092e\u0927\u094d\u092f\u092e \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0915\u0940 \u0938\u0932\u093e\u0939 \u0926\u0940 \u0917\u0908 \u0939\u0948"],t5,t5),"analysis.noRiskDetected",A.c(["en",e7,"hi",e8],t5,t5),"analysis.standardLowRisk",A.c(["en",e7,"hi",e8],t5,t5),"analysis.exportPdf",A.c(["en","Export PDF","hi","\u092a\u0940\u0921\u0940\u090f\u092b \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u0915\u0930\u0947\u0902"],t5,t5),"analysis.highRiskCount",A.c(["en",e9,"hi",f0],t5,t5),"analysis.pillHighRisk",A.c(["en",e9,"hi",f0],t5,t5),"analysis.cautionCount",A.c(["en",f1,"hi",f2],t5,t5),"analysis.pillCaution",A.c(["en",f1,"hi",f2],t5,t5),"analysis.compliantCount",A.c(["en",f3,"hi",f4],t5,t5),"analysis.pillCompliant",A.c(["en",f3,"hi",f4],t5,t5),"analysis.clausesTotal",A.c(["en",f5,"hi","{count} \u0915\u0941\u0932 \u0916\u0902\u0921"],t5,t5),"analysis.pillTotalClauses",A.c(["en",f5,"hi","{count} \u0915\u0941\u0932 \u0916\u0902\u0921"],t5,t5),"analysis.sourceDocTitle",A.c(["en",f6,"hi",f7],t5,t5),"analysis.sourceDocDefault",A.c(["en",f6,"hi",f7],t5,t5),"analysis.originalUploaded",A.c(["en",f8,"hi",f9],t5,t5),"analysis.originalContractFile",A.c(["en",f8,"hi",f9],t5,t5),"analysis.expandWindow",A.c(["en","Expand Window","hi","\u0935\u093f\u0902\u0921\u094b \u092c\u0921\u093c\u093e \u0915\u0930\u0947\u0902"],t5,t5),"analysis.originalContractText",A.c(["en","Original Contract Text:","hi","\u092e\u0942\u0932 \u0905\u0928\u0941\u092c\u0902\u0927 \u092a\u093e\u0920:"],t5,t5),"analysis.analyzedClauses",A.c(["en","Analyzed Clauses & Explanations","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093f\u090f \u0917\u090f \u0916\u0902\u0921 \u0914\u0930 \u0938\u094d\u092a\u0937\u094d\u091f\u0940\u0915\u0930\u0923"],t5,t5),"analysis.tapToExplain",A.c(["en","Tap to explain","hi","\u0938\u094d\u092a\u0937\u094d\u091f\u0940\u0915\u0930\u0923 \u0915\u0947 \u0932\u093f\u090f \u091f\u0948\u092a \u0915\u0930\u0947\u0902"],t5,t5),"analysis.riskRationale",A.c(["en","Risk Rationale: {reason}","hi","\u091c\u094b\u0916\u093f\u092e \u0915\u093e \u0915\u093e\u0930\u0923: {reason}"],t5,t5),"analysis.simplifyingJargon",A.c(["en","Simplifying legal jargon with AI...","hi","\u090f\u0906\u0908 \u0915\u0947 \u0938\u093e\u0925 \u0915\u093e\u0928\u0942\u0928\u0940 \u0936\u092c\u094d\u0926\u093e\u0935\u0932\u0940 \u0915\u094b \u0938\u0930\u0932 \u092c\u0928\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],t5,t5),"analysis.plainEnglish",A.c(["en","Plain English Translation","hi","\u0938\u0930\u0932 \u0905\u0928\u0941\u0935\u093e\u0926"],t5,t5),"analysis.gotIt",A.c(["en","Got it","hi","\u0938\u092e\u091d \u0917\u092f\u093e"],t5,t5),"analysis.pdfSuccess",A.c(["en",g0,"hi",g1],t5,t5),"analysis.exportSuccess",A.c(["en",g0,"hi",g1],t5,t5),"analysis.pdfFailed",A.c(["en","Failed to export PDF: {error}","hi","\u092a\u0940\u0921\u0940\u090f\u092b \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932: {error}"],t5,t5),"analysis.copySuccess",A.c(["en","Contract text copied to clipboard!","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u092a\u093e\u0920 \u0915\u094d\u0932\u093f\u092a\u092c\u094b\u0930\u094d\u0921 \u092a\u0930 \u0915\u0949\u092a\u0940 \u0915\u093f\u092f\u093e \u0917\u092f\u093e!"],t5,t5),"analysis.copyText",A.c(["en","Copy Text","hi","\u092a\u093e\u0920 \u0915\u0949\u092a\u0940 \u0915\u0930\u0947\u0902"],t5,t5),"analysis.extractedWords",A.c(["en","Original Extracted Text ({count} words)","hi","\u092e\u0942\u0932 \u0928\u093f\u0915\u093e\u0932\u093e \u0917\u092f\u093e \u092a\u093e\u0920 ({count} \u0936\u092c\u094d\u0926)"],t5,t5),"auth.welcomeBack",A.c(["en","Welcome Back","hi","\u0935\u093e\u092a\u0938\u0940 \u092a\u0930 \u0938\u094d\u0935\u093e\u0917\u0924 \u0939\u0948"],t5,t5),"auth.loginToAccount",A.c(["en","Sign in to your account to continue","hi","\u091c\u093e\u0930\u0940 \u0930\u0916\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u0947 \u0916\u093e\u0924\u0947 \u092e\u0947\u0902 \u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902"],t5,t5),"auth.enterEmailPhone",A.c(["en",g2,"hi",g3],t5,t5),"auth.loginOtpPrompt",A.c(["en",g2,"hi",g3],t5,t5),"auth.email",A.c(["en","Email","hi","\u0908\u092e\u0947\u0932"],t5,t5),"auth.mobile",A.c(["en","Mobile","hi","\u092e\u094b\u092c\u093e\u0907\u0932"],t5,t5),"auth.emailAddress",A.c(["en","Email Address","hi","\u0908\u092e\u0947\u0932 \u092a\u0924\u093e"],t5,t5),"auth.mobileNumber",A.c(["en","Mobile Number","hi","\u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930"],t5,t5),"auth.fullName",A.c(["en","Full Name","hi","\u092a\u0942\u0930\u093e \u0928\u093e\u092e"],t5,t5),"auth.emailHint",A.c(["en",g4,"hi",g4],t5,t5),"auth.phoneHint",A.c(["en","e.g. 9876543210","hi","\u0909\u0926\u093e. 9876543210"],t5,t5),"auth.nameHint",A.c(["en","Full name","hi","\u092a\u0942\u0930\u093e \u0928\u093e\u092e"],t5,t5),"auth.enterIdentifier",A.c(["en","Please enter your {type}","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e {type} \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.enterFullName",A.c(["en","Please enter your full name","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u092a\u0942\u0930\u093e \u0928\u093e\u092e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.emailRequired",A.c(["en","Please enter your email address","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0908\u092e\u0947\u0932 \u092a\u0924\u093e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.enterValidEmail",A.c(["en","Please enter a valid email address","hi","\u0915\u0943\u092a\u092f\u093e \u090f\u0915 \u092e\u093e\u0928\u094d\u092f \u0908\u092e\u0947\u0932 \u092a\u0924\u093e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.mobileRequired",A.c(["en","Please enter your mobile number","hi","\u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.enterValidPhone",A.c(["en","Please enter a valid 10-digit mobile number","hi","\u0915\u0943\u092a\u092f\u093e \u090f\u0915 \u092e\u093e\u0928\u094d\u092f 10 \u0905\u0902\u0915\u094b\u0902 \u0915\u093e \u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.validEmail",A.c(["en","Enter a valid email address","hi","\u090f\u0915 \u092e\u093e\u0928\u094d\u092f \u0908\u092e\u0947\u0932 \u092a\u0924\u093e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.validPhone",A.c(["en","Enter a valid phone number","hi","\u090f\u0915 \u092e\u093e\u0928\u094d\u092f \u092b\u093c\u094b\u0928 \u0928\u0902\u092c\u0930 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.sendOtp",A.c(["en","Send Secure OTP","hi",g5],t5,t5),"auth.sendSecureOtp",A.c(["en","Send Secure OTP","hi",g5],t5,t5),"auth.sendVerificationCode",A.c(["en","We will send a 6-digit verification code to this address.","hi","\u0939\u092e \u0907\u0938 \u092a\u0924\u0947 \u092a\u0930 6 \u0905\u0902\u0915\u094b\u0902 \u0915\u093e \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u094b\u0921 \u092d\u0947\u091c\u0947\u0902\u0917\u0947\u0964"],t5,t5),"auth.createAccount",A.c(["en","Create Account","hi","\u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902"],t5,t5),"auth.createAccountSub",A.c(["en","Create your account to securely scan, analyze, and manage your property agreements.","hi","\u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u094b \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0938\u094d\u0915\u0948\u0928, \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0914\u0930 \u092a\u094d\u0930\u092c\u0902\u0927\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902\u0964"],t5,t5),"auth.createYourAccount",A.c(["en","Create your account","hi","\u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902"],t5,t5),"auth.enterDetails",A.c(["en","Enter your details to get started securely with LawBuddy.","hi","LawBuddy \u0915\u0947 \u0938\u093e\u0925 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0936\u0941\u0930\u0941\u0906\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e \u0935\u093f\u0935\u0930\u0923 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902\u0964"],t5,t5),"auth.noAccount",A.c(["en",g6,"hi","\u0916\u093e\u0924\u093e \u0928\u0939\u0940\u0902 \u0939\u0948? "],t5,t5),"auth.dontHaveAccount",A.c(["en",g6,"hi","\u0916\u093e\u0924\u093e \u0928\u0939\u0940\u0902 \u0939\u0948? "],t5,t5),"auth.alreadyHaveAccount",A.c(["en",g7,"hi","\u092a\u0939\u0932\u0947 \u0938\u0947 \u0939\u0940 \u090f\u0915 \u0916\u093e\u0924\u093e \u0939\u0948? "],t5,t5),"auth.signUp",A.c(["en","Sign Up","hi","\u0938\u093e\u0907\u0928 \u0905\u092a \u0915\u0930\u0947\u0902"],t5,t5),"auth.logIn",A.c(["en","Log In","hi","\u0932\u0949\u0917 \u0907\u0928 \u0915\u0930\u0947\u0902"],t5,t5),"auth.backToHome",A.c(["en","Back","hi","\u092a\u0940\u091b\u0947"],t5,t5),"auth.intelligentProtection",A.c(["en","Intelligent Protection for Property Agreements.","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u092c\u0941\u0926\u094d\u0927\u093f\u092e\u093e\u0928 \u0938\u0941\u0930\u0915\u094d\u0937\u093e\u0964"],t5,t5),"auth.loginHeroSub",A.c(["en",g8,"hi",g9],t5,t5),"auth.signInSubtitle",A.c(["en",g8,"hi",g9],t5,t5),"auth.loginHeroDesc",A.c(["en",g8,"hi",g9],t5,t5),"auth.pillarRera",A.c(["en","RERA Compliance Verification","hi","\u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0938\u0924\u094d\u092f\u093e\u092a\u0928"],t5,t5),"auth.pillarReraSub",A.c(["en","Automated cross-checking against official state statutory provisions.","hi","\u0906\u0927\u093f\u0915\u093e\u0930\u093f\u0915 \u0930\u093e\u091c\u094d\u092f \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u092a\u094d\u0930\u093e\u0935\u0927\u093e\u0928\u094b\u0902 \u0915\u0947 \u0916\u093f\u0932\u093e\u092b \u0938\u094d\u0935\u091a\u093e\u0932\u093f\u0924 \u0915\u094d\u0930\u0949\u0938-\u091a\u0947\u0915\u093f\u0902\u0917\u0964"],t5,t5),"auth.pillarAudit",A.c(["en","Instant Risk Audit","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u091c\u094b\u0916\u093f\u092e \u0911\u0921\u093f\u091f"],t5,t5),"auth.pillarAuditSub",A.c(["en","Detect ambiguous clauses, penalties, and deviations in seconds.","hi","\u0938\u0947\u0915\u0902\u0921\u094b\u0902 \u092e\u0947\u0902 \u0905\u0938\u094d\u092a\u0937\u094d\u091f \u0916\u0902\u0921\u094b\u0902, \u0926\u0902\u0921\u094b\u0902 \u0914\u0930 \u0935\u093f\u091a\u0932\u0928\u094b\u0902 \u0915\u093e \u092a\u0924\u093e \u0932\u0917\u093e\u090f\u0902\u0964"],t5,t5),"auth.pillarDueDiligence",A.c(["en",b0,"hi",i],t5,t5),"auth.pillarDueDiligenceSub",A.c(["en","Tailored legal task lists for buyers, sellers, and tenants.","hi","\u0916\u0930\u0940\u0926\u093e\u0930\u094b\u0902, \u0935\u093f\u0915\u094d\u0930\u0947\u0924\u093e\u0913\u0902 \u0914\u0930 \u0915\u093f\u0930\u093e\u092f\u0947\u0926\u093e\u0930\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0905\u0928\u0941\u0915\u0942\u0932\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u0915\u093e\u0930\u094d\u092f \u0938\u0942\u091a\u093f\u092f\u093e\u0902\u0964"],t5,t5),"auth.bankGradeSecurity",A.c(["en","256-bit Encrypted \u2022 Strict Confidentiality","hi","256-\u092c\u093f\u091f \u090f\u0928\u094d\u0915\u094d\u0930\u093f\u092a\u094d\u091f\u0947\u0921 \u2022 \u092a\u0942\u0930\u094d\u0923 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e"],t5,t5),"auth.mobileSubtitle",A.c(["en",q,"hi",p],t5,t5),"auth.signupHeroTitle",A.c(["en",h0,"hi",h1],t5,t5),"auth.buildSaferJourney",A.c(["en",h0,"hi",h1],t5,t5),"auth.signupHeroSub",A.c(["en","Join thousands of homebuyers and legal professionals safeguarding their property transactions.","hi","\u0939\u091c\u093e\u0930\u094b\u0902 \u0918\u0930 \u0916\u0930\u0940\u0926\u093e\u0930\u094b\u0902 \u0914\u0930 \u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u0947\u0936\u0947\u0935\u0930\u094b\u0902 \u0938\u0947 \u091c\u0941\u0921\u093c\u0947\u0902 \u091c\u094b \u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u0940 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0915\u0930 \u0930\u0939\u0947 \u0939\u0948\u0902\u0964"],t5,t5),"auth.signUpSubtitle",A.c(["en","Create your account to securely scan, analyze, and manage your property agreements with LawBuddy.","hi","LawBuddy \u0915\u0947 \u0938\u093e\u0925 \u0905\u092a\u0928\u0947 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u094b \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0930\u0942\u092a \u0938\u0947 \u0938\u094d\u0915\u0948\u0928, \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0914\u0930 \u092a\u094d\u0930\u092c\u0902\u0927\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u092c\u0928\u093e\u090f\u0902\u0964"],t5,t5),"auth.signupFeatureInstantAudit",A.c(["en","Instant Document Audits","hi","\u0924\u094d\u0935\u0930\u093f\u0924 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0911\u0921\u093f\u091f"],t5,t5),"auth.signupFeatureInstantAuditSub",A.c(["en","Comprehensive 3-tier risk analysis with severity tagging.","hi","\u0917\u0902\u092d\u0940\u0930\u0924\u093e \u091f\u0948\u0917\u093f\u0902\u0917 \u0915\u0947 \u0938\u093e\u0925 \u0935\u094d\u092f\u093e\u092a\u0915 3-\u0938\u094d\u0924\u0930\u0940\u092f \u091c\u094b\u0916\u093f\u092e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923\u0964"],t5,t5),"auth.signupFeatureAiExplain",A.c(["en","Plain-Language Explanations","hi","\u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u092e\u0947\u0902 \u0935\u094d\u092f\u093e\u0916\u094d\u092f\u093e"],t5,t5),"auth.signupFeatureAiExplainSub",A.c(["en","Complex legal terminology translated into clear actionable advice.","hi","\u091c\u091f\u093f\u0932 \u0915\u093e\u0928\u0942\u0928\u0940 \u0936\u092c\u094d\u0926\u093e\u0935\u0932\u0940 \u0915\u093e \u0938\u094d\u092a\u0937\u094d\u091f \u0935\u094d\u092f\u093e\u0935\u0939\u093e\u0930\u093f\u0915 \u0938\u0932\u093e\u0939 \u092e\u0947\u0902 \u0905\u0928\u0941\u0935\u093e\u0926\u0964"],t5,t5),"auth.signupFeatureCustomChecklists",A.c(["en","Custom Legal Checklists","hi","\u0915\u0938\u094d\u091f\u092e \u0915\u093e\u0928\u0942\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"auth.signupFeatureCustomChecklistsSub",A.c(["en","Track key verification steps throughout your transaction lifecycle.","hi","\u0905\u092a\u0928\u0947 \u0932\u0947\u0928\u0926\u0947\u0928 \u091c\u0940\u0935\u0928\u091a\u0915\u094d\u0930 \u0915\u0947 \u0926\u094c\u0930\u093e\u0928 \u092e\u0941\u0916\u094d\u092f \u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u091a\u0930\u0923\u094b\u0902 \u0915\u094b \u091f\u094d\u0930\u0948\u0915 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"auth.reraSafety",A.c(["en","RERA & Contract Safety","hi","\u0930\u0947\u0930\u093e \u0914\u0930 \u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u0941\u0930\u0915\u094d\u0937\u093e"],t5,t5),"auth.aiReady",A.c(["en","AI Analysis Ready","hi","\u090f\u0906\u0908 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0924\u0948\u092f\u093e\u0930"],t5,t5),"auth.clauseAssessment",A.c(["en","Clause Risk Assessment \u2022 Escrow Compliance","hi","\u0916\u0902\u0921 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u2022 \u090f\u0938\u094d\u0915\u094d\u0930\u094b \u0905\u0928\u0941\u092a\u093e\u0932\u0928"],t5,t5),"auth.agreementIntelligence",A.c(["en","Agreement Intelligence","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u092c\u0941\u0926\u094d\u0927\u093f\u092e\u0924\u094d\u0924\u093e"],t5,t5),"auth.aiProtectionReady",A.c(["en","AI Protection Ready","hi","\u090f\u0906\u0908 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0924\u0948\u092f\u093e\u0930"],t5,t5),"auth.clauseDocVerification",A.c(["en","Clause Risk Assessment \u2022 Document Verification","hi","\u0916\u0902\u0921 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u2022 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u0924\u094d\u092f\u093e\u092a\u0928"],t5,t5),"auth.encrypted",A.c(["en","End-to-end encrypted \u2022 Strictly confidential","hi","\u090f\u0902\u0921-\u091f\u0942-\u090f\u0902\u0921 \u090f\u0928\u094d\u0915\u094d\u0930\u093f\u092a\u094d\u091f\u0947\u0921 \u2022 \u092a\u0942\u0930\u0940 \u0924\u0930\u0939 \u0917\u094b\u092a\u0928\u0940\u092f"],t5,t5),"auth.verifyYourEmail",A.c(["en",h2,"hi",h3],t5,t5),"auth.verifyEmail",A.c(["en",h2,"hi",h3],t5,t5),"auth.enter6Digit",A.c(["en",h4,"hi",h5],t5,t5),"auth.enterCodeSentTo",A.c(["en",h4,"hi",h5],t5,t5),"auth.enterComplete6Digit",A.c(["en","Please enter the complete 6-digit OTP code","hi","\u0915\u0943\u092a\u092f\u093e \u092a\u0942\u0930\u093e 6 \u0905\u0902\u0915\u094b\u0902 \u0915\u093e \u0913\u091f\u0940\u092a\u0940 \u0915\u094b\u0921 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.codeExpiresIn",A.c(["en","Code expires in {time}","hi","\u0915\u094b\u0921 {time} \u092e\u0947\u0902 \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b \u091c\u093e\u090f\u0917\u093e"],t5,t5),"auth.codeExpired",A.c(["en","Code has expired","hi","\u0915\u094b\u0921 \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b \u091a\u0941\u0915\u093e \u0939\u0948"],t5,t5),"auth.verify",A.c(["en","Verify","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u093f\u0924 \u0915\u0930\u0947\u0902"],t5,t5),"auth.didntReceiveCode",A.c(["en","Didn't receive the code? ","hi","\u0915\u094b\u0921 \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0928\u0939\u0940\u0902 \u0939\u0941\u0906? "],t5,t5),"auth.resend",A.c(["en","Resend","hi","\u092a\u0941\u0928\u0903 \u092d\u0947\u091c\u0947\u0902"],t5,t5),"auth.waitCooldown",A.c(["en","Wait {seconds}s","hi",h6],t5,t5),"auth.waitSeconds",A.c(["en","Wait {seconds}s","hi",h6],t5,t5),"auth.otpSentSuccess",A.c(["en","OTP sent successfully","hi","\u0913\u091f\u0940\u092a\u0940 \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u092d\u0947\u091c\u093e \u0917\u092f\u093e"],t5,t5),"auth.otpResentSuccess",A.c(["en","A new OTP has been sent to your email.","hi","\u0906\u092a\u0915\u0940 \u0908\u092e\u0947\u0932 \u092a\u0930 \u090f\u0915 \u0928\u092f\u093e \u0913\u091f\u0940\u092a\u0940 \u092d\u0947\u091c\u093e \u0917\u092f\u093e \u0939\u0948\u0964"],t5,t5),"auth.otpResendFailed",A.c(["en","Failed to resend OTP","hi","\u0913\u091f\u0940\u092a\u0940 \u092a\u0941\u0928\u0903 \u092d\u0947\u091c\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932"],t5,t5),"auth.resendFailed",A.c(["en","Failed to resend verification code. Please try again.","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0915\u094b\u0921 \u092a\u0941\u0928\u0903 \u092d\u0947\u091c\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928: \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"auth.enterValidOtp",A.c(["en","Please enter a valid 6-digit OTP","hi","\u0915\u0943\u092a\u092f\u093e \u090f\u0915 \u092e\u093e\u0928\u094d\u092f 6-\u0905\u0902\u0915\u0940\u092f \u0913\u091f\u0940\u092a\u0940 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902"],t5,t5),"auth.verificationSuccess",A.c(["en","Verification successful!","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u0928 \u0938\u092b\u0932!"],t5,t5),"auth.mobileOtpComingSoon",A.c(["en","Mobile OTP coming soon. Please use email.","hi","\u092e\u094b\u092c\u093e\u0907\u0932 \u0913\u091f\u0940\u092a\u0940 \u091c\u0932\u094d\u0926 \u0906 \u0930\u0939\u093e \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u0908\u092e\u0947\u0932 \u0915\u093e \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"auth.invalidOtp",A.c(["en","Invalid OTP","hi","\u0905\u092e\u093e\u0928\u094d\u092f \u0913\u091f\u0940\u092a\u0940"],t5,t5),"analysis.shareRiskSummary",A.c(["en",h7,"hi",h8],t5,t5),"analysis.shareModalTitle",A.c(["en",h7,"hi",h8],t5,t5),"analysis.shareModalSubtitle",A.c(["en","Share a secure, read-only summary of this property legal analysis.","hi","\u0907\u0938 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928\u0940 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u093e \u090f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924, \u0915\u0947\u0935\u0932-\u092a\u0922\u093c\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u0938\u093e\u0930\u093e\u0902\u0936 \u0938\u093e\u091d\u093e \u0915\u0930\u0947\u0902\u0964"],t5,t5),"analysis.shareWhatsApp",A.c(["en","Share on WhatsApp","hi","WhatsApp \u092a\u0930 \u0938\u093e\u091d\u093e \u0915\u0930\u0947\u0902"],t5,t5),"analysis.shareWhatsAppDesc",A.c(["en","Send key findings and link via WhatsApp","hi","WhatsApp \u0915\u0947 \u092e\u093e\u0927\u094d\u092f\u092e \u0938\u0947 \u092e\u0941\u0916\u094d\u092f \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937 \u0914\u0930 \u0932\u093f\u0902\u0915 \u092d\u0947\u091c\u0947\u0902"],t5,t5),"analysis.shareEmail",A.c(["en","Share via Email","hi","\u0908\u092e\u0947\u0932 \u0926\u094d\u0935\u093e\u0930\u093e \u0938\u093e\u091d\u093e \u0915\u0930\u0947\u0902"],t5,t5),"analysis.shareEmailDesc",A.c(["en","Compose an email with analysis summary & link","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0938\u093e\u0930\u093e\u0902\u0936 \u0914\u0930 \u0932\u093f\u0902\u0915 \u0915\u0947 \u0938\u093e\u0925 \u090f\u0915 \u0908\u092e\u0947\u0932 \u092c\u0928\u093e\u090f\u0902"],t5,t5),"analysis.copyShareLink",A.c(["en","Copy Link","hi","\u0932\u093f\u0902\u0915 \u0915\u0949\u092a\u0940 \u0915\u0930\u0947\u0902"],t5,t5),"analysis.copyShareLinkDesc",A.c(["en","Generate and copy a secure read-only URL","hi","\u090f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0915\u0947\u0935\u0932-\u092a\u0922\u093c\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u0932\u093f\u0902\u0915 \u092c\u0928\u093e\u090f\u0902 \u0914\u0930 \u0915\u0949\u092a\u0940 \u0915\u0930\u0947\u0902"],t5,t5),"analysis.downloadPdfDesc",A.c(["en","Export full analysis report as PDF","hi","\u092a\u0942\u0930\u094d\u0923 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0930\u093f\u092a\u094b\u0930\u094d\u091f \u0915\u094b \u092a\u0940\u0921\u0940\u090f\u092b \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u0915\u0930\u0947\u0902"],t5,t5),"analysis.linkCopiedSuccess",A.c(["en","Share link copied to clipboard!","hi","\u0938\u093e\u091d\u093e\u0915\u0930\u0923 \u0932\u093f\u0902\u0915 \u0915\u094d\u0932\u093f\u092a\u092c\u094b\u0930\u094d\u0921 \u092a\u0930 \u0915\u0949\u092a\u0940 \u0915\u093f\u092f\u093e \u0917\u092f\u093e!"],t5,t5),"analysis.shareGenerating",A.c(["en","Generating secure share link...","hi","\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0938\u093e\u091d\u093e\u0915\u0930\u0923 \u0932\u093f\u0902\u0915 \u092c\u0928\u093e\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],t5,t5),"analysis.shareFailed",A.c(["en","Failed to generate share link. Please try again.","hi","\u0938\u093e\u091d\u093e\u0915\u0930\u0923 \u0932\u093f\u0902\u0915 \u092c\u0928\u093e\u0928\u0947 \u092e\u0947\u0902 \u0935\u093f\u092b\u0932\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928: \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"analysis.sharedReadOnly",A.c(["en","Shared Read-Only Risk Summary","hi","\u0938\u093e\u091d\u093e \u0915\u093f\u092f\u093e \u0917\u092f\u093e \u0915\u0947\u0935\u0932-\u092a\u0922\u093c\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u091c\u094b\u0916\u093f\u092e \u0938\u093e\u0930\u093e\u0902\u0936"],t5,t5),"analysis.sharedDisclaimer",A.c(["en","This is a secure, read-only legal risk summary generated by LawBuddy. The underlying document and private owner data remain protected.","hi","\u092f\u0939 LawBuddy \u0926\u094d\u0935\u093e\u0930\u093e \u0909\u0924\u094d\u092a\u0928\u094d\u0928 \u090f\u0915 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924, \u0915\u0947\u0935\u0932-\u092a\u0922\u093c\u0928\u0947 \u092f\u094b\u0917\u094d\u092f \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u0938\u093e\u0930\u093e\u0902\u0936 \u0939\u0948\u0964 \u092e\u0942\u0932 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0914\u0930 \u0928\u093f\u091c\u0940 \u0921\u0947\u091f\u093e \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0930\u0939\u0924\u0947 \u0939\u0948\u0902\u0964"],t5,t5),"analysis.sharedNotFound",A.c(["en","Risk Summary Not Found","hi","\u091c\u094b\u0916\u093f\u092e \u0938\u093e\u0930\u093e\u0902\u0936 \u0928\u0939\u0940\u0902 \u092e\u093f\u0932\u093e"],t5,t5),"analysis.sharedNotFoundDesc",A.c(["en","This share link may have expired or been removed.","hi","\u092f\u0939 \u0938\u093e\u091d\u093e\u0915\u0930\u0923 \u0932\u093f\u0902\u0915 \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948 \u092f\u093e \u0939\u091f\u093e \u0926\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948\u0964"],t5,t5),"analysis.scanYourOwnCta",A.c(["en","Scan Your Own Agreement","hi","\u0905\u092a\u0928\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902"],t5,t5),"analysis.allClauses",A.c(["en","All Clauses","hi","\u0938\u092d\u0940 \u0916\u0902\u0921"],t5,t5),"analysis.statutoryCitations",A.c(["en","Statutory Citations","hi","\u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0909\u0926\u094d\u0927\u0930\u0923"],t5,t5),"analysis.reraReferences",A.c(["en","RERA References","hi","\u0930\u0947\u0930\u093e \u0938\u0902\u0926\u0930\u094d\u092d"],t5,t5),"analysis.buyerImpact",A.c(["en","Buyer Impact","hi","\u0916\u0930\u0940\u0926\u093e\u0930 \u092a\u0930 \u092a\u094d\u0930\u092d\u093e\u0935"],t5,t5),"analysis.recommendation",A.c(["en","Recommendation","hi","\u0938\u093f\u092b\u093e\u0930\u093f\u0936"],t5,t5),"welcome.disclaimerTitle",A.c(["en","Legal Disclaimer","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0905\u0938\u094d\u0935\u0940\u0915\u0930\u0923"],t5,t5),"welcome.disclaimerContent",A.c(["en","This application provides AI-generated information for preliminary document review and educational purposes only. It does not constitute legal advice or create an advocate-client relationship. For important property transactions, consult a qualified legal professional.","hi","\u092f\u0939 \u090f\u092a\u094d\u0932\u093f\u0915\u0947\u0936\u0928 \u0915\u0947\u0935\u0932 \u092a\u094d\u0930\u093e\u0930\u0902\u092d\u093f\u0915 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0914\u0930 \u0936\u0948\u0915\u094d\u0937\u093f\u0915 \u0909\u0926\u094d\u0926\u0947\u0936\u094d\u092f\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u090f\u0906\u0908-\u091c\u0928\u093f\u0924 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u092a\u094d\u0930\u0926\u093e\u0928 \u0915\u0930\u0924\u093e \u0939\u0948\u0964 \u092f\u0939 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0932\u093e\u0939 \u0915\u093e \u0917\u0920\u0928 \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u093e \u0939\u0948 \u0914\u0930 \u0928 \u0939\u0940 \u0935\u0915\u0940\u0932-\u0917\u094d\u0930\u093e\u0939\u0915 \u0938\u0902\u092c\u0902\u0927 \u092c\u0928\u093e\u0924\u093e \u0939\u0948\u0964 \u092e\u0939\u0924\u094d\u0935\u092a\u0942\u0930\u094d\u0923 \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u0947 \u0932\u093f\u090f, \u0915\u093f\u0938\u0940 \u092f\u094b\u0917\u094d\u092f \u0915\u093e\u0928\u0942\u0928\u0940 \u092a\u0947\u0936\u0947\u0935\u0930 \u0938\u0947 \u092a\u0930\u093e\u092e\u0930\u094d\u0936 \u0932\u0947\u0902\u0964"],t5,t5),"welcome.privacyPolicy",A.c(["en","Privacy Policy","hi","\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f"],t5,t5),"welcome.termsOfUse",A.c(["en","Terms of Use","hi","\u0909\u092a\u092f\u094b\u0917 \u0915\u0940 \u0936\u0930\u094d\u0924\u0947\u0902"],t5,t5),"welcome.storagePreferences",A.c(["en","Storage Preferences","hi","\u092d\u0902\u0921\u093e\u0930\u0923 \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902"],t5,t5),"welcome.headerTagline",A.c(["en","REAL ESTATE AI TECH","hi","\u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u090f\u0906\u0908 \u091f\u0947\u0915"],t5,t5),"welcome.navFeatures",A.c(["en","Features","hi","\u0938\u0941\u0935\u093f\u0927\u093e\u090f\u0902"],t5,t5),"welcome.navHowItWorks",A.c(["en","How It Works","hi",h9],t5,t5),"welcome.navRiskSystem",A.c(["en","Risk System","hi","\u091c\u094b\u0916\u093f\u092e \u092a\u094d\u0930\u0923\u093e\u0932\u0940"],t5,t5),"welcome.navDisclaimer",A.c(["en","Disclaimer","hi","\u0905\u0938\u094d\u0935\u0940\u0915\u0930\u0923"],t5,t5),"welcome.signIn",A.c(["en","Sign In","hi","\u0938\u093e\u0907\u0928 \u0907\u0928"],t5,t5),"welcome.heroEyebrowDesktop",A.c(["en","AI-POWERED LEGALTECH FOR INDIAN REAL ESTATE","hi","\u092d\u093e\u0930\u0924\u0940\u092f \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0915\u0947 \u0932\u093f\u090f \u090f\u0906\u0908-\u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0932\u0940\u0917\u0932\u091f\u0947\u0915"],t5,t5),"welcome.heroEyebrowMobile",A.c(["en","AI-POWERED REAL ESTATE LEGALTECH","hi","\u090f\u0906\u0908-\u0938\u0902\u091a\u093e\u0932\u093f\u0924 \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0932\u0940\u0917\u0932\u091f\u0947\u0915"],t5,t5),"welcome.headlineLine1",A.c(["en","UNDERSTAND","hi","\u0938\u092e\u091d\u0947\u0902"],t5,t5),"welcome.headlineLine2Prefix",A.c(["en","YOUR ","hi","\u0905\u092a\u0928\u0940 "],t5,t5),"welcome.headlineLine2Accent",A.c(["en","PROPERTY","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f"],t5,t5),"welcome.headlineLine2Full",A.c(["en","YOUR PROPERTY","hi","\u0905\u092a\u0928\u0940 \u0938\u0902\u092a\u0924\u094d\u0924\u093f"],t5,t5),"welcome.headlineLine3",A.c(["en","BEFORE YOU SIGN.","hi","\u0939\u0938\u094d\u0924\u093e\u0915\u094d\u0937\u0930 \u0915\u0930\u0928\u0947 \u0938\u0947 \u092a\u0939\u0932\u0947\u0964"],t5,t5),"welcome.heroNarrative",A.c(["en","Analyze real-estate contracts, detect potential legal risks under RERA, and understand complex clauses in plain English \u2014 powered by AI built for Indian property law.","hi","\u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0905\u0928\u0941\u092c\u0902\u0927\u094b\u0902 \u0915\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0915\u0930\u0947\u0902, \u0930\u0947\u0930\u093e \u0915\u0947 \u0924\u0939\u0924 \u0938\u0902\u092d\u093e\u0935\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e\u094b\u0902 \u0915\u093e \u092a\u0924\u093e \u0932\u0917\u093e\u090f\u0902, \u0914\u0930 \u091c\u091f\u093f\u0932 \u0916\u0902\u0921\u094b\u0902 \u0915\u094b \u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u092e\u0947\u0902 \u0938\u092e\u091d\u0947\u0902 \u2014 \u092d\u093e\u0930\u0924\u0940\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928 \u0915\u0947 \u0932\u093f\u090f \u0928\u093f\u0930\u094d\u092e\u093f\u0924 \u090f\u0906\u0908 \u0926\u094d\u0935\u093e\u0930\u093e \u0938\u0902\u091a\u093e\u0932\u093f\u0924\u0964"],t5,t5),"welcome.getStarted",A.c(["en","Get Started","hi","\u0936\u0941\u0930\u0942 \u0915\u0930\u0947\u0902"],t5,t5),"welcome.alreadyHaveAccount",A.c(["en",g7,"hi","\u0915\u094d\u092f\u093e \u0906\u092a\u0915\u0947 \u092a\u093e\u0938 \u092a\u0939\u0932\u0947 \u0938\u0947 \u090f\u0915 \u0916\u093e\u0924\u093e \u0939\u0948? "],t5,t5),"welcome.signInAction",A.c(["en","Sign in","hi","\u0938\u093e\u0907\u0928 \u0907\u0928 \u0915\u0930\u0947\u0902"],t5,t5),"welcome.sideWordScan",A.c(["en","SCAN","hi","\u0938\u094d\u0915\u0948\u0928"],t5,t5),"welcome.sideWordAnalyze",A.c(["en","ANALYZE","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],t5,t5),"welcome.sideWordProtect",A.c(["en","PROTECT","hi","\u0938\u0941\u0930\u0915\u094d\u0937\u093e"],t5,t5),"welcome.sideWordUnderstand",A.c(["en","UNDERSTAND","hi","\u0938\u092e\u091d\u0947\u0902"],t5,t5),"welcome.sideWordProperty",A.c(["en","PROPERTY","hi","\u0938\u0902\u092a\u0924\u094d\u0924\u093f"],t5,t5),"welcome.sideWordRera",A.c(["en","RERA","hi","\u0930\u0947\u0930\u093e"],t5,t5),"welcome.sideWordClauses",A.c(["en","CLAUSES","hi","\u0916\u0902\u0921"],t5,t5),"welcome.sideWordSecure",A.c(["en","SECURE","hi","\u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924"],t5,t5),"welcome.mockDocTitle",A.c(["en",i0,"hi",i1],t5,t5),"welcome.aiScanActive",A.c(["en","AI Scan Active","hi",i2],t5,t5),"welcome.mockClauseTitle",A.c(["en",i3,"hi","\u0916\u0902\u0921 7.2 \u2014 \u091c\u092c\u094d\u0924\u0940"],t5,t5),"welcome.mockRelevantLaw",A.c(["en",i4,"hi",i5],t5,t5),"welcome.mockClauseBody",A.c(["en",i6,"hi",i7],t5,t5),"welcome.mockRiskDetected",A.c(["en",e5,"hi",e6],t5,t5),"welcome.mockRiskScore",A.c(["en","Score: 84/100","hi","\u0938\u094d\u0915\u094b\u0930: 84/100"],t5,t5),"welcome.mockPlainEnglish",A.c(["en",i8,"hi",i9],t5,t5),"welcome.heroDocTitle",A.c(["en",i0,"hi",i1],t5,t5),"welcome.heroScanActive",A.c(["en","AI Scan Active","hi",i2],t5,t5),"welcome.heroClauseTitle",A.c(["en",i3,"hi","\u0916\u0902\u0921 7.2 \u2014 \u091c\u092c\u094d\u0924\u0940"],t5,t5),"welcome.heroClauseBadge",A.c(["en",i4,"hi",i5],t5,t5),"welcome.heroClauseBody",A.c(["en",i6,"hi",i7],t5,t5),"welcome.heroRiskDetected",A.c(["en",e5,"hi",e6],t5,t5),"welcome.heroRiskScore",A.c(["en","Score: {score}","hi","\u0938\u094d\u0915\u094b\u0930: {score}"],t5,t5),"welcome.heroPlainEnglish",A.c(["en",i8,"hi",i9],t5,t5),"welcome.marqueeTrack1",A.c(["en","SCAN CONTRACTS  \u2726  RERA COMPLIANCE AUDIT  \u2726  PLAIN-ENGLISH INSIGHTS  \u2726  DETECT UNFAIR CLAUSES  \u2726  INDIAN PROPERTY LAW  \u2726  ","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u094d\u0915\u0948\u0928 \u0915\u0930\u0947\u0902  \u2726  \u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0911\u0921\u093f\u091f  \u2726  \u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f  \u2726  \u0905\u0928\u0941\u091a\u093f\u0924 \u0916\u0902\u0921\u094b\u0902 \u0915\u0940 \u092a\u0939\u091a\u093e\u0928  \u2726  \u092d\u093e\u0930\u0924\u0940\u092f \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0915\u093e\u0928\u0942\u0928  \u2726  "],t5,t5),"welcome.marqueeTrack2",A.c(["en","STAMP DUTY CALCULATOR  \u2726  DUE DILIGENCE CHECKLISTS  \u2726  24/7 LEGAL AI CHAT  \u2726  EXPORTABLE PDF REPORTS  \u2726  TITLE CLEARANCE & OC  \u2726  ","hi","\u0938\u094d\u091f\u093e\u092e\u094d\u092a \u0936\u0941\u0932\u094d\u0915 \u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930  \u2726  \u0909\u091a\u093f\u0924 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f  \u2726  24/7 \u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u091a\u0948\u091f  \u2726  \u0928\u093f\u0930\u094d\u092f\u093e\u0924 \u092f\u094b\u0917\u094d\u092f \u092a\u0940\u0921\u0940\u090f\u092b \u0930\u093f\u092a\u094b\u0930\u094d\u091f  \u2726  \u0936\u0940\u0930\u094d\u0937\u0915 \u092e\u0902\u091c\u0942\u0930\u0940 \u0914\u0930 \u0913\u0938\u0940  \u2726  "],t5,t5),"welcome.featuresEyebrow",A.c(["en","YOUR LEGAL DOCUMENTS, MADE CLEAR.","hi","\u0906\u092a\u0915\u0947 \u0915\u093e\u0928\u0942\u0928\u0940 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c, \u092a\u0942\u0930\u0940 \u0924\u0930\u0939 \u0938\u094d\u092a\u0937\u094d\u091f\u0964"],t5,t5),"welcome.featuresTitle",A.c(["en","Complete Legal Protection Suite","hi","\u0938\u0902\u092a\u0942\u0930\u094d\u0923 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0938\u0941\u0907\u091f"],t5,t5),"welcome.featuresSubtitle",A.c(["en","Six specialized AI tools built to simplify Indian real estate transactions.","hi","\u092d\u093e\u0930\u0924\u0940\u092f \u0930\u093f\u092f\u0932 \u090f\u0938\u094d\u091f\u0947\u091f \u0932\u0947\u0928\u0926\u0947\u0928 \u0915\u094b \u0938\u0930\u0932 \u092c\u0928\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0928\u093f\u0930\u094d\u092e\u093f\u0924 \u091b\u0939 \u0935\u093f\u0936\u0947\u0937 \u090f\u0906\u0908 \u0909\u092a\u0915\u0930\u0923\u0964"],t5,t5),"welcome.featScanTag",A.c(["en","OCR & PDF","hi","\u0913\u0938\u0940\u0906\u0930 \u0914\u0930 \u092a\u0940\u0921\u0940\u090f\u092b"],t5,t5),"welcome.featScanTitle",A.c(["en","Scan & Extract","hi",j0],t5,t5),"welcome.featScanDesc",A.c(["en",j1,"hi",j2],t5,t5),"welcome.featRisksTag",A.c(["en","AI AUDIT","hi","\u090f\u0906\u0908 \u0911\u0921\u093f\u091f"],t5,t5),"welcome.featRisksTitle",A.c(["en",j3,"hi",j4],t5,t5),"welcome.featRisksDesc",A.c(["en",j5,"hi",j6],t5,t5),"welcome.featPlainEnglishTag",A.c(["en","SIMPLIFIED","hi","\u0938\u0930\u0932\u0940\u0915\u0943\u0924"],t5,t5),"welcome.featPlainEnglishTitle",A.c(["en",j7,"hi",j8],t5,t5),"welcome.featPlainEnglishDesc",A.c(["en",j9,"hi",k0],t5,t5),"welcome.featCalculatorTag",A.c(["en","STATE-WISE","hi","\u0930\u093e\u091c\u094d\u092f-\u0935\u093e\u0930"],t5,t5),"welcome.featCalculatorTitle",A.c(["en",m,"hi",l],t5,t5),"welcome.featCalculatorDesc",A.c(["en",k1,"hi",k2],t5,t5),"welcome.featChatTag",A.c(["en","24/7 CHAT","hi","24/7 \u091a\u0948\u091f"],t5,t5),"welcome.featChatTitle",A.c(["en",k3,"hi",k4],t5,t5),"welcome.featChatDesc",A.c(["en",k5,"hi",k6],t5,t5),"welcome.featChecklistTag",A.c(["en","CHECKLIST","hi","\u091a\u0947\u0915\u0932\u093f\u0938\u094d\u091f"],t5,t5),"welcome.featChecklistTitle",A.c(["en",b0,"hi",b1],t5,t5),"welcome.featChecklistDesc",A.c(["en",k7,"hi",k8],t5,t5),"welcome.howEyebrow",A.c(["en",k9,"hi",l0],t5,t5),"welcome.howTitle",A.c(["en","How It Works","hi",h9],t5,t5),"welcome.step1Title",A.c(["en","Upload Agreement","hi","\u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902"],t5,t5),"welcome.step1Desc",A.c(["en","Upload your property agreement, sale deed, or rental contract.","hi","\u0905\u092a\u0928\u093e \u0938\u0902\u092a\u0924\u094d\u0924\u093f \u0938\u092e\u091d\u094c\u0924\u093e, \u092c\u093f\u0915\u094d\u0930\u0940 \u0935\u093f\u0932\u0947\u0916, \u092f\u093e \u0915\u093f\u0930\u093e\u092f\u093e \u0905\u0928\u0941\u092c\u0902\u0927 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"welcome.step2Title",A.c(["en","AI Contract Scan","hi","\u090f\u0906\u0908 \u0905\u0928\u0941\u092c\u0902\u0927 \u0938\u094d\u0915\u0948\u0928"],t5,t5),"welcome.step2Desc",A.c(["en","AI examines the text and evaluates statutory RERA compliance.","hi","\u090f\u0906\u0908 \u092a\u093e\u0920 \u0915\u0940 \u091c\u093e\u0902\u091a \u0915\u0930\u0924\u093e \u0939\u0948 \u0914\u0930 \u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0930\u0947\u0930\u093e \u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0915\u093e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u0915\u0930\u0924\u093e \u0939\u0948\u0964"],t5,t5),"welcome.step3Title",A.c(["en",j7,"hi",j8],t5,t5),"welcome.step3Desc",A.c(["en","Get plain-English explanations and flagged risk highlights.","hi","\u0938\u0930\u0932 \u092d\u093e\u0937\u093e \u0938\u094d\u092a\u0937\u094d\u091f\u0940\u0915\u0930\u0923 \u0914\u0930 \u091a\u093f\u0939\u094d\u0928\u093f\u0924 \u091c\u094b\u0916\u093f\u092e \u0939\u093e\u0907\u0932\u093e\u0907\u091f \u092a\u094d\u0930\u093e\u092a\u094d\u0924 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"welcome.step4Title",A.c(["en","Legal Audit Report","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u0911\u0921\u093f\u091f \u0930\u093f\u092a\u094b\u0930\u094d\u091f"],t5,t5),"welcome.step4Desc",A.c(["en","Generate and download a structured legal risk assessment PDF.","hi","\u090f\u0915 \u0938\u0902\u0930\u091a\u093f\u0924 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928 \u092a\u0940\u0921\u0940\u090f\u092b \u0924\u0948\u092f\u093e\u0930 \u0915\u0930\u0947\u0902 \u0914\u0930 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"welcome.riskEyebrow",A.c(["en",l1,"hi",l2],t5,t5),"welcome.riskTitle",A.c(["en",l3,"hi",l4],t5,t5),"welcome.riskSubtitle",A.c(["en",l5,"hi",l6],t5,t5),"welcome.riskDocExtract",A.c(["en",l7,"hi",l8],t5,t5),"welcome.riskPotentialRisk",A.c(["en",l9,"hi",m0],t5,t5),"welcome.riskClauseTitle",A.c(["en","Clause 7.2 \u2014 Default & Forfeiture of Earnest Deposit","hi","\u0916\u0902\u0921 7.2 \u2014 \u0921\u093f\u092b\u093c\u0949\u0932\u094d\u091f \u0914\u0930 \u092c\u092f\u093e\u0928\u093e \u0930\u093e\u0936\u093f \u0915\u0940 \u091c\u092c\u094d\u0924\u0940"],t5,t5),"welcome.riskClauseBody",A.c(["en",'"In the event of any delay in milestone payment exceeding 15 days, the Promoter shall have the unilateral right to cancel the allotment and forfeit 100% of the Earnest Money Deposit and accrued interest without further notice."',"hi",'"15 \u0926\u093f\u0928\u094b\u0902 \u0938\u0947 \u0905\u0927\u093f\u0915 \u0915\u0947 \u092e\u093e\u0907\u0932\u0938\u094d\u091f\u094b\u0928 \u092d\u0941\u0917\u0924\u093e\u0928 \u092e\u0947\u0902 \u0915\u093f\u0938\u0940 \u092d\u0940 \u0926\u0947\u0930\u0940 \u0915\u0940 \u0938\u094d\u0925\u093f\u0924\u093f \u092e\u0947\u0902, \u092a\u094d\u0930\u092e\u094b\u091f\u0930 \u0915\u094b \u092c\u093f\u0928\u093e \u0915\u093f\u0938\u0940 \u092a\u0942\u0930\u094d\u0935 \u0938\u0942\u091a\u0928\u093e \u0915\u0947 \u0906\u0935\u0902\u091f\u0928 \u0930\u0926\u094d\u0926 \u0915\u0930\u0928\u0947 \u0914\u0930 \u092c\u092f\u093e\u0928\u093e \u0930\u093e\u0936\u093f \u0914\u0930 \u0905\u0930\u094d\u091c\u093f\u0924 \u092c\u094d\u092f\u093e\u091c \u0915\u093e 100% \u091c\u092c\u094d\u0924 \u0915\u0930\u0928\u0947 \u0915\u093e \u090f\u0915\u0924\u0930\u092b\u093e \u0905\u0927\u093f\u0915\u093e\u0930 \u0939\u094b\u0917\u093e\u0964"'],t5,t5),"welcome.riskStatutoryDesc",A.c(["en",m1,"hi",m2],t5,t5),"welcome.riskAssessmentTitle",A.c(["en","AI Legal Risk Assessment","hi","\u090f\u0906\u0908 \u0915\u093e\u0928\u0942\u0928\u0940 \u091c\u094b\u0916\u093f\u092e \u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u0928"],t5,t5),"welcome.riskScoreElevated",A.c(["en",m3,"hi",m4],t5,t5),"welcome.riskHighBadge",A.c(["en","\ud83d\udd34 High Risk","hi","\ud83d\udd34 \u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],t5,t5),"welcome.riskHighDesc",A.c(["en",m5,"hi",m6],t5,t5),"welcome.riskCautionBadge",A.c(["en","\ud83d\udfe1 Caution","hi","\ud83d\udfe1 \u0938\u093e\u0935\u0927\u093e\u0928\u0940"],t5,t5),"welcome.riskCautionDesc",A.c(["en",m7,"hi",m8],t5,t5),"welcome.riskStandardBadge",A.c(["en","\ud83d\udfe2 Standard","hi","\ud83d\udfe2 \u092e\u093e\u0928\u0915"],t5,t5),"welcome.riskStandardDesc",A.c(["en",m9,"hi",n0],t5,t5),"welcome.riskRecommendation",A.c(["en","Recommendation: Demand amendment to restrict forfeiture to max 10% of total consideration as per standard MahaRERA guidelines.","hi","\u0938\u093f\u092b\u093e\u0930\u093f\u0936: \u092e\u093e\u0928\u0915 \u092e\u0939\u093e-\u0930\u0947\u0930\u093e \u0926\u093f\u0936\u093e\u0928\u093f\u0930\u094d\u0926\u0947\u0936\u094b\u0902 \u0915\u0947 \u0905\u0928\u0941\u0938\u093e\u0930 \u091c\u092c\u094d\u0924\u0940 \u0915\u094b \u0915\u0941\u0932 \u092a\u094d\u0930\u0924\u093f\u092b\u0932 \u0915\u0947 \u0905\u0927\u093f\u0915\u0924\u092e 10% \u0924\u0915 \u0938\u0940\u092e\u093f\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u0902\u0936\u094b\u0927\u0928 \u0915\u0940 \u092e\u093e\u0902\u0917 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"welcome.ctaTitle",A.c(["en",n1,"hi",n2],t5,t5),"welcome.ctaSubtitle",A.c(["en",n3,"hi",n4],t5,t5),"welcome.ctaExplore",A.c(["en",n5,"hi","\u0938\u0941\u0935\u093f\u0927\u093e\u090f\u0902 \u0926\u0947\u0916\u0947\u0902"],t5,t5),"welcome.ctaAnalyze",A.c(["en",n6,"hi",n7],t5,t5),"adminAnalytics.badge",A.c(["en","ADMIN","hi","\u090f\u0921\u092e\u093f\u0928"],t5,t5),"adminAnalytics.title",A.c(["en","Admin Analytics","hi","\u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093e\u092a\u0915 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],t5,t5),"adminAnalytics.subtitle",A.c(["en","LawBuddy System Insights","hi","LawBuddy \u0938\u093f\u0938\u094d\u091f\u092e \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f"],t5,t5),"adminAnalytics.refreshTooltip",A.c(["en","Refresh Analytics","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0924\u093e\u091c\u093c\u093e \u0915\u0930\u0947\u0902"],t5,t5),"adminAnalytics.loadingText",A.c(["en",n8,"hi",n9],t5,t5),"adminAnalytics.kpiTotalUsers",A.c(["en","Total Users","hi","\u0915\u0941\u0932 \u0909\u092a\u092f\u094b\u0917\u0915\u0930\u094d\u0924\u093e"],t5,t5),"adminAnalytics.kpiTotalUsersSub",A.c(["en","Registered accounts","hi","\u092a\u0902\u091c\u0940\u0915\u0943\u0924 \u0916\u093e\u0924\u0947"],t5,t5),"adminAnalytics.kpiDocsAnalyzed",A.c(["en","Docs Analyzed","hi","\u0935\u093f\u0936\u094d\u0932\u0947\u0937\u093f\u0924 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],t5,t5),"adminAnalytics.kpiDocsAnalyzedSub",A.c(["en","Completed analyses","hi","\u092a\u0942\u0930\u094d\u0923 \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923"],t5,t5),"adminAnalytics.kpiClausesEvaluated",A.c(["en","Clauses Evaluated","hi","\u092e\u0942\u0932\u094d\u092f\u093e\u0902\u0915\u093f\u0924 \u0916\u0902\u0921"],t5,t5),"adminAnalytics.kpiClausesEvaluatedSub",A.c(["en","Total legal clauses","hi","\u0915\u0941\u0932 \u0915\u093e\u0928\u0942\u0928\u0940 \u0916\u0902\u0921"],t5,t5),"adminAnalytics.kpiAvgPages",A.c(["en","Avg. Pages","hi","\u0914\u0938\u0924 \u092a\u0943\u0937\u094d\u0920"],t5,t5),"adminAnalytics.kpiAvgPagesSub",A.c(["en","Pages per contract","hi","\u092a\u094d\u0930\u0924\u093f \u0905\u0928\u0941\u092c\u0902\u0927 \u092a\u0943\u0937\u094d\u0920"],t5,t5),"adminAnalytics.supportingActivity",A.c(["en","Supporting Activity:","hi","\u0938\u0939\u093e\u092f\u0915 \u0917\u0924\u093f\u0935\u093f\u0927\u093f:"],t5,t5),"adminAnalytics.chatSessions",A.c(["en","Chat Sessions","hi","\u091a\u0948\u091f \u0938\u0924\u094d\u0930"],t5,t5),"adminAnalytics.diligenceChecklists",A.c(["en",o0,"hi",o1],t5,t5),"adminAnalytics.riskSectionTitle",A.c(["en","Risk Classification & Distribution","hi","\u091c\u094b\u0916\u093f\u092e \u0935\u0930\u094d\u0917\u0940\u0915\u0930\u0923 \u0914\u0930 \u0935\u093f\u0924\u0930\u0923"],t5,t5),"adminAnalytics.riskSectionSub",A.c(["en",o2,"hi",o3],t5,t5),"adminAnalytics.docRiskTitle",A.c(["en","Document-Level Risk","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c-\u0938\u094d\u0924\u0930\u0940\u092f \u091c\u094b\u0916\u093f\u092e"],t5,t5),"adminAnalytics.docsCount",A.c(["en","{count} docs","hi",o4],t5,t5),"adminAnalytics.highRiskDocs",A.c(["en","High Risk Documents","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e \u0935\u093e\u0932\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],t5,t5),"adminAnalytics.mediumRiskDocs",A.c(["en","Medium Risk Documents","hi","\u092e\u0927\u094d\u092f\u092e \u091c\u094b\u0916\u093f\u092e \u0935\u093e\u0932\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],t5,t5),"adminAnalytics.lowRiskDocs",A.c(["en","Low Risk Documents","hi","\u0915\u092e \u091c\u094b\u0916\u093f\u092e \u0935\u093e\u0932\u0947 \u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c"],t5,t5),"adminAnalytics.clauseSeverityTitle",A.c(["en",o5,"hi",o6],t5,t5),"adminAnalytics.clausesCount",A.c(["en","{count} clauses","hi","{count} \u0916\u0902\u0921"],t5,t5),"adminAnalytics.highRiskClauses",A.c(["en","HIGH_RISK Clauses","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e \u0935\u093e\u0932\u0947 \u0916\u0902\u0921"],t5,t5),"adminAnalytics.cautionClauses",A.c(["en","CAUTION Clauses","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0916\u0902\u0921"],t5,t5),"adminAnalytics.compliantClauses",A.c(["en","COMPLIANT Clauses","hi","\u0905\u0928\u0941\u092a\u093e\u0932\u0928 \u0935\u093e\u0932\u0947 \u0916\u0902\u0921"],t5,t5),"adminAnalytics.findingCategoriesTitle",A.c(["en",o7,"hi",o8],t5,t5),"adminAnalytics.findingCategoriesSub",A.c(["en",o9,"hi",p0],t5,t5),"adminAnalytics.catClausesCount",A.c(["en",p1,"hi",p2],t5,t5),"adminAnalytics.emptyCategories",A.c(["en",p3,"hi",p4],t5,t5),"adminAnalytics.pipelineTitle",A.c(["en","Ingestion & Extraction Pipeline Insights","hi","\u0907\u0928\u091c\u0947\u0936\u0928 \u0914\u0930 \u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923 \u092a\u093e\u0907\u092a\u0932\u093e\u0907\u0928 \u0905\u0902\u0924\u0930\u094d\u0926\u0943\u0937\u094d\u091f\u093f"],t5,t5),"adminAnalytics.pipelineSub",A.c(["en",p5,"hi",p6],t5,t5),"adminAnalytics.sourceTypesTitle",A.c(["en","Document Source Types","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0938\u094d\u0930\u094b\u0924 \u092a\u094d\u0930\u0915\u093e\u0930"],t5,t5),"adminAnalytics.extractionMethodsTitle",A.c(["en","Extraction Pipeline Methods","hi","\u0928\u093f\u0937\u094d\u0915\u0930\u094d\u0937\u0923 \u092a\u093e\u0907\u092a\u0932\u093e\u0907\u0928 \u0935\u093f\u0927\u093f\u092f\u093e\u0902"],t5,t5),"adminAnalytics.recentActivityTitle",A.c(["en","Recent Analysis Activity Feed","hi","\u0939\u093e\u0932\u093f\u092f\u093e \u0935\u093f\u0936\u094d\u0932\u0947\u0937\u0923 \u0917\u0924\u093f\u0935\u093f\u0927\u093f \u092b\u093c\u0940\u0921"],t5,t5),"adminAnalytics.recentActivitySub",A.c(["en",p7,"hi",p8],t5,t5),"adminAnalytics.emptyRecentScans",A.c(["en",p9,"hi",q0],t5,t5),"adminAnalytics.pagesUnitSingular",A.c(["en","page","hi","\u092a\u0943\u0937\u094d\u0920"],t5,t5),"adminAnalytics.pagesUnitPlural",A.c(["en","pages","hi","\u092a\u0943\u0937\u094d\u0920"],t5,t5),"adminAnalytics.riskBreakdownCompact",A.c(["en","{high}H \u2022 {caution}C \u2022 {compliant}OK","hi","{high}\u0909\u091a\u094d\u091a \u2022 {caution}\u0938\u093e\u0935\u0927\u093e\u0928 \u2022 {compliant}\u0938\u0939\u0940"],t5,t5),"adminAnalytics.justNow",A.c(["en","Just now","hi","\u0905\u092d\u0940"],t5,t5),"adminAnalytics.minutesAgo",A.c(["en","{minutes}m ago","hi","{minutes} \u092e\u093f. \u092a\u0939\u0932\u0947"],t5,t5),"adminAnalytics.hoursAgo",A.c(["en","{hours}h ago","hi","{hours} \u0918\u0902\u091f\u0947 \u092a\u0939\u0932\u0947"],t5,t5),"adminAnalytics.daysAgo",A.c(["en","{days}d ago","hi","{days} \u0926\u093f\u0928 \u092a\u0939\u0932\u0947"],t5,t5),"adminAnalytics.accessRestricted",A.c(["en",q1,"hi",q2],t5,t5),"adminAnalytics.accessRestrictedDesc",A.c(["en",q3,"hi",q4],t5,t5),"adminAnalytics.returnToWorkspace",A.c(["en","Return to Workspace","hi","\u0915\u093e\u0930\u094d\u092f\u0938\u094d\u0925\u093e\u0928 \u092a\u0930 \u0935\u093e\u092a\u0938 \u091c\u093e\u090f\u0902"],t5,t5),"adminAnalytics.loadFailed",A.c(["en",q5,"hi",q6],t5,t5),"adminAnalytics.unexpectedError",A.c(["en","An unexpected network error occurred.","hi","\u090f\u0915 \u0905\u092a\u094d\u0930\u0924\u094d\u092f\u093e\u0936\u093f\u0924 \u0928\u0947\u091f\u0935\u0930\u094d\u0915 \u0924\u094d\u0930\u0941\u091f\u093f \u0939\u0941\u0908\u0964"],t5,t5),"adminAnalytics.retryConnection",A.c(["en","Retry Connection","hi","\u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u0915\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902"],t5,t5),"adminAnalytics.emptyTelemetry",A.c(["en",q7,"hi",q8],t5,t5),"adminAnalytics.emptyTelemetryDesc",A.c(["en",q9,"hi",r0],t5,t5),"adminAnalytics.refreshBtn",A.c(["en","Refresh","hi","\u0924\u093e\u091c\u093c\u093e \u0915\u0930\u0947\u0902"],t5,t5),"docComparison.initializing",A.c(["en","Initializing...","hi","\u0906\u0930\u0902\u092d \u0915\u093f\u092f\u093e \u091c\u093e \u0930\u0939\u093e \u0939\u0948..."],t5,t5),"docComparison.startingComparison",A.c(["en","Starting comparison...","hi","\u0924\u0941\u0932\u0928\u093e \u0936\u0941\u0930\u0942 \u0939\u094b \u0930\u0939\u0940 \u0939\u0948..."],t5,t5),"docComparison.processing",A.c(["en","Processing...","hi","\u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e \u091c\u093e\u0930\u0940 \u0939\u0948..."],t5,t5),"docComparison.timeoutError",A.c(["en","This comparison is taking longer than expected. It may still finish in the background \u2014 check back shortly, or try again.","hi","\u0907\u0938 \u0924\u0941\u0932\u0928\u093e \u092e\u0947\u0902 \u0905\u092a\u0947\u0915\u094d\u0937\u093e \u0938\u0947 \u0905\u0927\u093f\u0915 \u0938\u092e\u092f \u0932\u0917 \u0930\u0939\u093e \u0939\u0948\u0964 \u092f\u0939 \u092a\u0943\u0937\u094d\u0920\u092d\u0942\u092e\u093f \u092e\u0947\u0902 \u0938\u092e\u093e\u092a\u094d\u0924 \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948 \u2014 \u0925\u094b\u0921\u093c\u0940 \u0926\u0947\u0930 \u092c\u093e\u0926 \u091c\u093e\u0902\u091a\u0947\u0902, \u092f\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"docComparison.failedError",A.c(["en","Comparison failed.","hi","\u0924\u0941\u0932\u0928\u093e \u0935\u093f\u092b\u0932 \u0930\u0939\u0940\u0964"],t5,t5),"docComparison.lostConnectionError",A.c(["en",r1,"hi",r2],t5,t5),"docComparison.selectBothError",A.c(["en",r3,"hi",r4],t5,t5),"docComparison.selectDistinctError",A.c(["en",r5,"hi",r6],t5,t5),"docComparison.startError",A.c(["en","Unable to start document comparison. Please check your connection and try again.","hi","\u0926\u0938\u094d\u0924\u093e\u0935\u0947\u091c\u093c \u0924\u0941\u0932\u0928\u093e \u0936\u0941\u0930\u0942 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"docComparison.appBarTitle",A.c(["en","Compare Agreements","hi","\u0938\u092e\u091d\u094c\u0924\u094b\u0902 \u0915\u0940 \u0924\u0941\u0932\u0928\u093e \u0915\u0930\u0947\u0902"],t5,t5),"docComparison.heading",A.c(["en",r7,"hi",r8],t5,t5),"docComparison.subheading",A.c(["en",r9,"hi",s0],t5,t5),"docComparison.processingDesc",A.c(["en",s1,"hi",s2],t5,t5),"docComparison.versionALabel",A.c(["en","Version A (Baseline / Before Negotiation)","hi","\u0938\u0902\u0938\u094d\u0915\u0930\u0923 A (\u092e\u0942\u0932 / \u092c\u093e\u0924\u091a\u0940\u0924 \u0938\u0947 \u092a\u0939\u0932\u0947)"],t5,t5),"docComparison.versionBLabel",A.c(["en","Version B (Revised / After Negotiation)","hi","\u0938\u0902\u0938\u094d\u0915\u0930\u0923 B (\u0938\u0902\u0936\u094b\u0927\u093f\u0924 / \u092c\u093e\u0924\u091a\u0940\u0924 \u0915\u0947 \u092c\u093e\u0926)"],t5,t5),"docComparison.loadDocsError",A.c(["en",s3,"hi",s4],t5,t5),"docComparison.noDocs",A.c(["en",s5,"hi",s6],t5,t5),"docComparison.scanNewBtn",A.c(["en",s7,"hi",s8],t5,t5),"docComparison.chooseVersionHint",A.c(["en",s9,"hi",t0],t5,t5),"docComparison.untitledDoc",A.c(["en",t1,"hi",t2],t5,t5),"docComparison.runAnalysisBtn",A.c(["en",t3,"hi",t4],t5,t5),"docComparison.headerTitle",A.c(["en",r7,"hi",r8],t5,t5),"docComparison.headerSubtitle",A.c(["en",r9,"hi",s0],t5,t5),"docComparison.processingSubtitle",A.c(["en",s1,"hi",s2],t5,t5),"docComparison.connectionLost",A.c(["en",r1,"hi",r2],t5,t5),"docComparison.selectBothPrompt",A.c(["en",r3,"hi",r4],t5,t5),"docComparison.selectDistinctPrompt",A.c(["en",r5,"hi",r6],t5,t5),"docComparison.loadFailed",A.c(["en",s3,"hi",s4],t5,t5),"docComparison.noScannedDocs",A.c(["en",s5,"hi",s6],t5,t5),"docComparison.scanNewAgreement",A.c(["en",s7,"hi",s8],t5,t5),"docComparison.chooseVersion",A.c(["en",s9,"hi",t0],t5,t5),"docComparison.untitledAgreement",A.c(["en",t1,"hi",t2],t5,t5),"docComparison.runAnalysis",A.c(["en",t3,"hi",t4],t5,t5),"chatCitation.openLinkError",A.c(["en","Unable to open citation link. Please try again.","hi","\u0909\u0926\u094d\u0927\u0930\u0923 \u0932\u093f\u0902\u0915 \u0916\u094b\u0932\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"chatCitation.sourcesHeader",A.c(["en","Authoritative Legal Sources ({count})","hi","\u092a\u094d\u0930\u093e\u092e\u093e\u0923\u093f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u0938\u094d\u0930\u094b\u0924 ({count})"],t5,t5),"chatCitation.ragGrounded",A.c(["en","RAG Grounded","hi","RAG \u0906\u0927\u093e\u0930\u093f\u0924"],t5,t5),"chatCitation.statutoryLaw",A.c(["en","Statutory Law","hi","\u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0915\u093e\u0928\u0942\u0928"],t5,t5),"chatCitation.secPrefix",A.c(["en","Sec {section}","hi","\u0927\u093e\u0930\u093e {section}"],t5,t5),"chatCitation.officialLaw",A.c(["en","Official Law","hi","\u0906\u0927\u093f\u0915\u093e\u0930\u093f\u0915 \u0915\u093e\u0928\u0942\u0928"],t5,t5),"chatCitation.officialSource",A.c(["en","Official Source","hi","\u0906\u0927\u093f\u0915\u093e\u0930\u093f\u0915 \u0938\u094d\u0930\u094b\u0924"],t5,t5),"chatCitation.defaultJurisdiction",A.c(["en","India","hi","\u092d\u093e\u0930\u0924"],t5,t5),"chat.loadSessionsError",A.c(["en","Unable to load previous conversations. Please check your connection and try again.","hi","\u092a\u093f\u091b\u0932\u0940 \u092c\u093e\u0924\u091a\u0940\u0924 \u0932\u094b\u0921 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"chat.loadSessionDetailsError",A.c(["en","Unable to load this conversation. Please try again.","hi","\u0907\u0938 \u092c\u093e\u0924\u091a\u0940\u0924 \u0915\u094b \u0932\u094b\u0921 \u0915\u0930\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"chat.defaultAiReply",A.c(["en","I have reviewed your legal request.","hi","\u092e\u0948\u0902\u0928\u0947 \u0906\u092a\u0915\u0947 \u0915\u093e\u0928\u0942\u0928\u0940 \u0905\u0928\u0941\u0930\u094b\u0927 \u0915\u0940 \u0938\u092e\u0940\u0915\u094d\u0937\u093e \u0915\u0930 \u0932\u0940 \u0939\u0948\u0964"],t5,t5),"chat.assistantUnavailable",A.c(["en","The Legal AI Assistant is temporarily unavailable. Please check your internet connection and try again.","hi","\u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u0938\u0939\u093e\u092f\u0915 \u0905\u0938\u094d\u0925\u093e\u092f\u0940 \u0930\u0942\u092a \u0938\u0947 \u0905\u0928\u0941\u092a\u0932\u092c\u094d\u0927 \u0939\u0948\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u0907\u0902\u091f\u0930\u0928\u0947\u091f \u0915\u0928\u0947\u0915\u094d\u0936\u0928 \u091c\u093e\u0902\u091a\u0947\u0902 \u0914\u0930 \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"chat.topBarBadge",A.c(["en","24/7 LEGAL AI ASSISTANT \u2022 RERA SPECIALIST","hi","24/7 \u0915\u093e\u0928\u0942\u0928\u0940 \u090f\u0906\u0908 \u0938\u0939\u093e\u092f\u0915 \u2022 \u0930\u0947\u0930\u093e \u0935\u093f\u0936\u0947\u0937\u091c\u094d\u091e"],t5,t5),"home.defaultUserName",A.c(["en","User","hi","\u0909\u092a\u092f\u094b\u0917\u0915\u0930\u094d\u0924\u093e"],t5,t5),"home.openLinkError",A.c(["en","Unable to open this link. Please try again.","hi","\u0907\u0938 \u0932\u093f\u0902\u0915 \u0915\u094b \u0916\u094b\u0932\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u092a\u0941\u0928\u0903 \u092a\u094d\u0930\u092f\u093e\u0938 \u0915\u0930\u0947\u0902\u0964"],t5,t5),"consent.privacyPreferences",A.c(["en","Privacy preferences","hi","\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902"],t5,t5),"consent.bannerDescription",A.c(["en","We use essential browser storage to keep LawBuddy working and remember your preferences.","hi","\u0939\u092e LawBuddy \u0915\u094b \u091a\u093e\u0932\u0942 \u0930\u0916\u0928\u0947 \u0914\u0930 \u0906\u092a\u0915\u0940 \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u0913\u0902 \u0915\u094b \u092f\u093e\u0926 \u0930\u0916\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0906\u0935\u0936\u094d\u092f\u0915 \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u0938\u094d\u091f\u094b\u0930\u0947\u091c \u0915\u093e \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964"],t5,t5),"consent.customize",A.c(["en","Customize","hi","\u0905\u0928\u0941\u0915\u0942\u0932\u093f\u0924 \u0915\u0930\u0947\u0902"],t5,t5),"consent.necessaryOnly",A.c(["en","Necessary Only","hi","\u0915\u0947\u0935\u0932 \u0906\u0935\u0936\u094d\u092f\u0915"],t5,t5),"consent.acceptPreferences",A.c(["en","Accept Preferences","hi","\u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902 \u0938\u094d\u0935\u0940\u0915\u093e\u0930 \u0915\u0930\u0947\u0902"],t5,t5),"consent.acceptAll",A.c(["en","Accept All","hi","\u0938\u092d\u0940 \u0938\u094d\u0935\u0940\u0915\u093e\u0930 \u0915\u0930\u0947\u0902"],t5,t5),"consent.savePreferences",A.c(["en","Save Preferences","hi","\u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902 \u0938\u0939\u0947\u091c\u0947\u0902"],t5,t5),"consent.privacyStoragePrefTitle",A.c(["en","Privacy & Storage Preferences","hi","\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0914\u0930 \u0938\u0902\u0917\u094d\u0930\u0939\u0923 \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902"],t5,t5),"consent.privacyStoragePrefIntro",A.c(["en","Configure how LawBuddy uses local storage to store data on your device. Strictly necessary tokens cannot be disabled as they are required for account security.","hi","\u0915\u0949\u0928\u094d\u092b\u093c\u093f\u0917\u0930 \u0915\u0930\u0947\u0902 \u0915\u093f LawBuddy \u0906\u092a\u0915\u0947 \u0921\u093f\u0935\u093e\u0907\u0938 \u092a\u0930 \u0921\u0947\u091f\u093e \u0938\u0902\u0917\u094d\u0930\u0939\u0940\u0924 \u0915\u0930\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u0938\u094d\u0925\u093e\u0928\u0940\u092f \u0938\u0902\u0917\u094d\u0930\u0939\u0923 \u0915\u093e \u0909\u092a\u092f\u094b\u0917 \u0915\u0948\u0938\u0947 \u0915\u0930\u0924\u093e \u0939\u0948\u0964 \u0915\u0921\u093c\u093e\u0908 \u0938\u0947 \u0906\u0935\u0936\u094d\u092f\u0915 \u091f\u094b\u0915\u0928 \u0905\u0915\u094d\u0937\u092e \u0928\u0939\u0940\u0902 \u0915\u093f\u090f \u091c\u093e \u0938\u0915\u0924\u0947 \u0915\u094d\u092f\u094b\u0902\u0915\u093f \u0935\u0947 \u0916\u093e\u0924\u093e \u0938\u0941\u0930\u0915\u094d\u0937\u093e \u0915\u0947 \u0932\u093f\u090f \u0906\u0935\u0936\u094d\u092f\u0915 \u0939\u0948\u0902\u0964"],t5,t5),"consent.strictlyNecessaryTitle",A.c(["en","STRICTLY NECESSARY","hi","\u0915\u0921\u093c\u093e\u0908 \u0938\u0947 \u0906\u0935\u0936\u094d\u092f\u0915"],t5,t5),"consent.alwaysOnBadge",A.c(["en","Always On","hi","\u0939\u092e\u0947\u0936\u093e \u091a\u093e\u0932\u0942"],t5,t5),"consent.strictlyNecessaryDesc",A.c(["en","Required for authentication and core LawBuddy functionality.","hi","\u092a\u094d\u0930\u092e\u093e\u0923\u0940\u0915\u0930\u0923 \u0914\u0930 \u092e\u0941\u0916\u094d\u092f LawBuddy \u0915\u093e\u0930\u094d\u092f\u0915\u094d\u0937\u092e\u0924\u093e \u0915\u0947 \u0932\u093f\u090f \u0906\u0935\u0936\u094d\u092f\u0915\u0964"],t5,t5),"consent.functionalPrefTitle",A.c(["en","FUNCTIONAL / PREFERENCES","hi","\u0915\u093e\u0930\u094d\u092f\u093e\u0924\u094d\u092e\u0915 / \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u090f\u0902"],t5,t5),"consent.functionalPrefDesc",A.c(["en","Remember theme and language preferences across sessions.","hi","\u0938\u0924\u094d\u0930\u094b\u0902 \u0915\u0947 \u0926\u094c\u0930\u093e\u0928 \u0925\u0940\u092e \u0914\u0930 \u092d\u093e\u0937\u093e \u092a\u094d\u0930\u093e\u0925\u092e\u093f\u0915\u0924\u093e\u0913\u0902 \u0915\u094b \u092f\u093e\u0926 \u0930\u0916\u0947\u0902\u0964"],t5,t5),"consent.analyticsTitle",A.c(["en","ANALYTICS","hi","\u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938"],t5,t5),"consent.notCurrentlyUsedBadge",A.c(["en","Not currently used","hi","\u0935\u0930\u094d\u0924\u092e\u093e\u0928 \u092e\u0947\u0902 \u0909\u092a\u092f\u094b\u0917 \u0928\u0939\u0940\u0902 \u0915\u093f\u092f\u093e \u0917\u092f\u093e"],t5,t5),"consent.analyticsDesc",A.c(["en","We do not collect usage telemetry or run analytics trackers.","hi","\u0939\u092e \u0909\u092a\u092f\u094b\u0917 \u091f\u0947\u0932\u0940\u092e\u0947\u091f\u094d\u0930\u0940 \u090f\u0915\u0924\u094d\u0930 \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902 \u092f\u093e \u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938 \u091f\u094d\u0930\u0948\u0915\u0930\u094d\u0938 \u0928\u0939\u0940\u0902 \u091a\u0932\u093e\u0924\u0947 \u0939\u0948\u0902\u0964"],t5,t5),"consent.marketingTitle",A.c(["en","MARKETING","hi","\u092e\u093e\u0930\u094d\u0915\u0947\u091f\u093f\u0902\u0917"],t5,t5),"consent.marketingDesc",A.c(["en","We do not display third-party advertisements or tracking pixels.","hi","\u0939\u092e \u0924\u0943\u0924\u0940\u092f-\u092a\u0915\u094d\u0937 \u0935\u093f\u091c\u094d\u091e\u093e\u092a\u0928 \u092f\u093e \u091f\u094d\u0930\u0948\u0915\u093f\u0902\u0917 \u092a\u093f\u0915\u094d\u0938\u0947\u0932 \u092a\u094d\u0930\u0926\u0930\u094d\u0936\u093f\u0924 \u0928\u0939\u0940\u0902 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902\u0964"],t5,t5),"consent.readFullPrivacyPolicy",A.c(["en","Read our full Privacy Policy","hi","\u0939\u092e\u093e\u0930\u0940 \u092a\u0942\u0930\u0940 \u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0928\u0940\u0924\u093f \u092a\u0922\u093c\u0947\u0902"],t5,t5),"welcome.feature1Tag",A.c(["en","OCR & PDF","hi","\u0913\u0938\u0940\u0906\u0930 \u0914\u0930 \u092a\u0940\u0921\u0940\u090f\u092b"],t5,t5),"welcome.feature1Title",A.c(["en","Scan & Extract","hi",j0],t5,t5),"welcome.feature1Desc",A.c(["en",j1,"hi",j2],t5,t5),"welcome.feature2Tag",A.c(["en","AI AUDIT","hi","\u090f\u0906\u0908 \u0911\u0921\u093f\u091f"],t5,t5),"welcome.feature2Title",A.c(["en",j3,"hi",j4],t5,t5),"welcome.feature2Desc",A.c(["en",j5,"hi",j6],t5,t5),"welcome.feature3Tag",A.c(["en","SIMPLIFIED","hi","\u0938\u0930\u0932\u0940\u0915\u0943\u0924"],t5,t5),"welcome.feature3Title",A.c(["en",j7,"hi",j8],t5,t5),"welcome.feature3Desc",A.c(["en",j9,"hi",k0],t5,t5),"welcome.feature4Tag",A.c(["en","STATE-WISE","hi","\u0930\u093e\u091c\u094d\u092f-\u0935\u093e\u0930"],t5,t5),"welcome.feature4Title",A.c(["en",m,"hi",l],t5,t5),"welcome.feature4Desc",A.c(["en",k1,"hi",k2],t5,t5),"welcome.feature5Tag",A.c(["en","24/7 CHAT","hi","24/7 \u091a\u0948\u091f"],t5,t5),"welcome.feature5Title",A.c(["en",k3,"hi",k4],t5,t5),"welcome.feature5Desc",A.c(["en",k5,"hi",k6],t5,t5),"welcome.feature6Tag",A.c(["en","VERIFICATION","hi","\u0938\u0924\u094d\u092f\u093e\u092a\u0928"],t5,t5),"welcome.feature6Title",A.c(["en",b0,"hi",b1],t5,t5),"welcome.feature6Desc",A.c(["en",k7,"hi",k8],t5,t5),"welcome.howItWorksEyebrow",A.c(["en",k9,"hi",l0],t5,t5),"welcome.howItWorksTitle",A.c(["en","How It Works","hi",h9],t5,t5),"welcome.riskSectionEyebrow",A.c(["en",l1,"hi",l2],t5,t5),"welcome.riskSectionTitle",A.c(["en",l3,"hi",l4],t5,t5),"welcome.riskSectionSubtitle",A.c(["en",l5,"hi",l6],t5,t5),"welcome.riskExtractTitle",A.c(["en",l7,"hi",l8],t5,t5),"welcome.riskPotentialDetected",A.c(["en",l9,"hi",m0],t5,t5),"welcome.riskClauseNote",A.c(["en",m1,"hi",m2],t5,t5),"welcome.riskAssessmentScore",A.c(["en",m3,"hi",m4],t5,t5),"welcome.riskTagHigh",A.c(["en","\ud83d\udd34 High Risk","hi","\ud83d\udd34 \u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],t5,t5),"welcome.riskTagCaution",A.c(["en","\ud83d\udfe1 Caution","hi","\ud83d\udfe1 \u0938\u093e\u0935\u0927\u093e\u0928\u0940"],t5,t5),"welcome.riskTagStandard",A.c(["en","\ud83d\udfe2 Standard","hi","\ud83d\udfe2 \u092e\u093e\u0928\u0915"],t5,t5),"welcome.riskItem1",A.c(["en",m5,"hi",m6],t5,t5),"welcome.riskItem2",A.c(["en",m7,"hi",m8],t5,t5),"welcome.riskItem3",A.c(["en",m9,"hi",n0],t5,t5),"welcome.ctaBannerTitle",A.c(["en",n1,"hi",n2],t5,t5),"welcome.ctaBannerSubtitle",A.c(["en",n3,"hi",n4],t5,t5),"welcome.exploreFeatures",A.c(["en",n5,"hi","\u0938\u0941\u0935\u093f\u0927\u093e\u090f\u0902 \u0926\u0947\u0916\u0947\u0902"],t5,t5),"welcome.analyzeDocBtn",A.c(["en",n6,"hi",n7],t5,t5),"time.justNow",A.c(["en","Just now","hi","\u0905\u092d\u0940"],t5,t5),"time.minutesAgo",A.c(["en","{count}m ago","hi","{count} \u092e\u093f. \u092a\u0939\u0932\u0947"],t5,t5),"time.hoursAgo",A.c(["en","{count}h ago","hi",e0],t5,t5),"time.daysAgo",A.c(["en","{count}d ago","hi",e1],t5,t5),"chatCitation.india",A.c(["en","India","hi","\u092d\u093e\u0930\u0924"],t5,t5),"chatCitation.openError",A.c(["en","Could not open citation link. Please check your browser.","hi","\u0909\u0926\u094d\u0927\u0930\u0923 \u0932\u093f\u0902\u0915 \u0916\u094b\u0932\u0928\u0947 \u092e\u0947\u0902 \u0905\u0938\u092e\u0930\u094d\u0925\u0964 \u0915\u0943\u092a\u092f\u093e \u0905\u092a\u0928\u093e \u092c\u094d\u0930\u093e\u0909\u091c\u093c\u0930 \u091c\u093e\u0902\u091a\u0947\u0902\u0964"],t5,t5),"chatCitation.title",A.c(["en","Statutory Legal Citations ({count})","hi","\u0935\u0948\u0927\u093e\u0928\u093f\u0915 \u0915\u093e\u0928\u0942\u0928\u0940 \u0909\u0926\u094d\u0927\u0930\u0923 ({count})"],t5,t5),"adminAnalytics.loading",A.c(["en",n8,"hi",n9],t5,t5),"adminAnalytics.badgeChatSessions",A.c(["en","Chat Sessions","hi","\u091a\u0948\u091f \u0938\u0924\u094d\u0930"],t5,t5),"adminAnalytics.badgeDiligenceChecklists",A.c(["en",o0,"hi",o1],t5,t5),"adminAnalytics.riskSectionSubtitle",A.c(["en",o2,"hi",o3],t5,t5),"adminAnalytics.docRiskTotal",A.c(["en","{count} docs","hi",o4],t5,t5),"adminAnalytics.docRiskHigh",A.c(["en","High Risk","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],t5,t5),"adminAnalytics.docRiskMed",A.c(["en","Medium Risk","hi","\u092e\u0927\u094d\u092f\u092e \u091c\u094b\u0916\u093f\u092e"],t5,t5),"adminAnalytics.docRiskLow",A.c(["en","Low Risk","hi","\u0915\u092e \u091c\u094b\u0916\u093f\u092e"],t5,t5),"adminAnalytics.clauseRiskTitle",A.c(["en",o5,"hi",o6],t5,t5),"adminAnalytics.clauseRiskTotal",A.c(["en","{count} clauses","hi","{count} \u0916\u0902\u0921"],t5,t5),"adminAnalytics.clauseRiskHigh",A.c(["en","High Risk","hi","\u0909\u091a\u094d\u091a \u091c\u094b\u0916\u093f\u092e"],t5,t5),"adminAnalytics.clauseRiskCaution",A.c(["en","Caution","hi","\u0938\u093e\u0935\u0927\u093e\u0928\u0940"],t5,t5),"adminAnalytics.clauseRiskCompliant",A.c(["en","Compliant","hi","\u0905\u0928\u0941\u092a\u093e\u0932\u0928"],t5,t5),"adminAnalytics.issueCategoriesTitle",A.c(["en",o7,"hi",o8],t5,t5),"adminAnalytics.issueCategoriesSubtitle",A.c(["en",o9,"hi",p0],t5,t5),"adminAnalytics.issueCategoryCount",A.c(["en",p1,"hi",p2],t5,t5),"adminAnalytics.noCategories",A.c(["en",p3,"hi",p4],t5,t5),"adminAnalytics.pipelineSubtitle",A.c(["en",p5,"hi",p6],t5,t5),"adminAnalytics.recentActivitySubtitle",A.c(["en",p7,"hi",p8],t5,t5),"adminAnalytics.noRecentActivity",A.c(["en",p9,"hi",q0],t5,t5),"adminAnalytics.unauthorizedTitle",A.c(["en",q1,"hi",q2],t5,t5),"adminAnalytics.unauthorizedDesc",A.c(["en",q3,"hi",q4],t5,t5),"adminAnalytics.errorTitle",A.c(["en",q5,"hi",q6],t5,t5),"adminAnalytics.defaultError",A.c(["en","An unexpected error occurred while loading analytics.","hi","\u090f\u0928\u093e\u0932\u093f\u091f\u093f\u0915\u094d\u0938 \u0932\u094b\u0921 \u0915\u0930\u0924\u0947 \u0938\u092e\u092f \u090f\u0915 \u0905\u092a\u094d\u0930\u0924\u094d\u092f\u093e\u0936\u093f\u0924 \u0924\u094d\u0930\u0941\u091f\u093f \u0939\u0941\u0908\u0964"],t5,t5),"adminAnalytics.emptyTitle",A.c(["en",q7,"hi",q8],t5,t5),"adminAnalytics.emptyDesc",A.c(["en",q9,"hi",r0],t5,t5),"adminAnalytics.refresh",A.c(["en","Refresh","hi","\u0924\u093e\u091c\u093c\u093e \u0915\u0930\u0947\u0902"],t5,t5)],t5,t.GU)})
 s($,"c5h","JY",()=>A.aTX(new A.bnP(),t.hQ,t.jm))
 s($,"c5c","bun",()=>A.bwR(null,t.uK))
 s($,"c_2","bES",()=>A.dV([$.nS(),$.boi()],A.b8("Q3")))
