@@ -23,10 +23,31 @@ void main() {
       expect(shareUrl.contains('share=test-token-xyz'), isTrue);
     });
 
-    // 2. Exception types
+    // 2. Timeout configuration and exception types
+    test('defaultTimeout is configured to 30 seconds', () {
+      expect(ApiService.defaultTimeout, equals(const Duration(seconds: 30)));
+    });
+
+    test('ApiTimeoutException default properties and string representation', () {
+      final exc = ApiTimeoutException();
+      expect(exc.message, equals('Connection timed out. Please check your internet connection and try again.'));
+      expect(exc.code, equals('TIMEOUT'));
+      expect(exc.statusCode, equals(408));
+      expect(exc.toString(), equals('Connection timed out. Please check your internet connection and try again.'));
+    });
+
+    test('ApiTimeoutException custom message', () {
+      final exc = ApiTimeoutException('Custom timeout message');
+      expect(exc.message, equals('Custom timeout message'));
+      expect(exc.code, equals('TIMEOUT'));
+      expect(exc.statusCode, equals(408));
+      expect(exc.toString(), equals('Custom timeout message'));
+    });
+
     test('RateLimitException string representation', () {
       final exc = RateLimitException('Rate limit reached.');
       expect(exc.toString(), equals('Rate limit reached.'));
+      expect(exc.statusCode, equals(429));
     });
 
     // 3. Model deserialization verification for API responses

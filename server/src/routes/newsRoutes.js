@@ -1,6 +1,19 @@
 const express = require('express');
 const router = express.Router();
 
+const RSS_URL = "https://news.google.com/rss/search?q=RERA+real+estate+law+India&hl=en-IN&gl=IN&ceid=IN:en";
+const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes cache TTL
+const RSS_TIMEOUT_MS = 7000; // 7 seconds timeout on external RSS fetch
+
+// Process-local in-memory cache
+let newsCache = {
+    data: null,
+    timestamp: 0
+};
+
+// In-flight refresh promise to coalesce concurrent requests and prevent cache stampedes
+let inFlightRefresh = null;
+
 const WARNING_PATTERNS = [
     /\b(?:warning|warns?|alert|alerts|caution|cautionary|beware)\b/i,
     /\b(?:penalt(?:y|ies)|penaliz(?:e|ed|ing)|fines?|fined|violat(?:ion|ions|ing|ed?)|breach(?:ed|ing)?)\b/i,
@@ -78,33 +91,108 @@ const fallbackNews = [
     }
 ];
 
-router.get('/legal-updates', async (req, res) => {
+/**
+ * Performs network fetch with an AbortController timeout.
+ */
+async function fetchRssFeed(url, timeoutMs = RSS_TIMEOUT_MS) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-        const rssUrl = "https://news.google.com/rss/search?q=RERA+real+estate+law+India&hl=en-IN&gl=IN&ceid=IN:en";
-        const response = await fetch(rssUrl, {
+        const response = await fetch(url, {
+            signal: controller.signal,
             headers: {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         });
-        
         if (!response.ok) {
             throw new Error(`Failed to fetch Google News RSS: ${response.status}`);
         }
-        
         const xmlText = await response.text();
-        let articles = parseRssItems(xmlText);
-        
-        if (articles.length === 0) {
-            return res.json(fallbackNews);
+        return xmlText;
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+/**
+ * Fetches and parses RSS articles, updating the in-memory cache on success.
+ */
+async function refreshLegalNews(rssUrl = RSS_URL, timeoutMs = RSS_TIMEOUT_MS) {
+    const xmlText = await fetchRssFeed(rssUrl, timeoutMs);
+    let articles = parseRssItems(xmlText);
+    
+    if (articles.length === 0) {
+        throw new Error('No articles parsed from Google News RSS');
+    }
+    
+    articles = articles.slice(0, 4);
+    
+    newsCache = {
+        data: articles,
+        timestamp: Date.now()
+    };
+    
+    return articles;
+}
+
+/**
+ * Retrieves legal updates using:
+ * 1. Fresh cache if within TTL
+ * 2. Shared in-flight RSS refresh to prevent stampedes
+ * 3. Stale cache fallback if RSS fetch fails/times out
+ * 4. Fallback static news if cache is completely empty and RSS fails
+ */
+async function getLegalUpdates({ rssUrl = RSS_URL, timeoutMs = RSS_TIMEOUT_MS, ttlMs = CACHE_TTL_MS, forceRefresh = false, fetcher = refreshLegalNews } = {}) {
+    const now = Date.now();
+    const isFresh = newsCache.data && (now - newsCache.timestamp < ttlMs);
+
+    if (!forceRefresh && isFresh) {
+        return newsCache.data;
+    }
+
+    // Single in-flight refresh to prevent cache stampede
+    if (!inFlightRefresh) {
+        inFlightRefresh = fetcher(rssUrl, timeoutMs)
+            .finally(() => {
+                inFlightRefresh = null;
+            });
+    }
+
+    try {
+        const freshArticles = await inFlightRefresh;
+        return freshArticles;
+    } catch (error) {
+        // Stale-cache fallback
+        if (newsCache.data && newsCache.data.length > 0) {
+            console.warn('RSS fetch failed, serving stale cached legal news:', error.message);
+            return newsCache.data;
         }
-        
-        articles = articles.slice(0, 4);
-        
+
+        // Empty cache fallback
+        console.warn('Error fetching live legal news, serving fallback:', error.message);
+        return fallbackNews;
+    }
+}
+
+router.get('/legal-updates', async (req, res) => {
+    try {
+        const articles = await getLegalUpdates();
         res.json(articles);
     } catch (error) {
-        console.warn('Error fetching live legal news, serving fallback:', error.message);
+        console.warn('Unhandled error in /legal-updates, serving fallback:', error.message);
         res.json(fallbackNews);
     }
 });
+
+// Exposed helpers for testing and verification
+router.getLegalUpdates = getLegalUpdates;
+router.getCache = () => newsCache;
+router.setCache = (data, timestamp) => { newsCache = { data, timestamp }; };
+router.resetCache = () => { newsCache = { data: null, timestamp: 0 }; inFlightRefresh = null; };
+router.CACHE_TTL_MS = CACHE_TTL_MS;
+router.RSS_TIMEOUT_MS = RSS_TIMEOUT_MS;
+router.fallbackNews = fallbackNews;
+router.parseRssItems = parseRssItems;
+router.isWarningArticle = isWarningArticle;
 
 module.exports = router;

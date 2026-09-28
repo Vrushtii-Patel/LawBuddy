@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +9,9 @@ import '../models/stamp_duty_config_model.dart';
 import 'token_storage.dart';
 
 class ApiService {
+  /// Centralized request timeout for all standard HTTP calls.
+  static const Duration defaultTimeout = Duration(seconds: 30);
+
   static String get baseUrl {
     const String envApiUrl = String.fromEnvironment('API_URL');
     if (envApiUrl.isNotEmpty) {
@@ -42,7 +46,7 @@ class ApiService {
   // =========================================================================
 
   /// Core HTTP dispatcher handling token retrieval, header construction,
-  /// request execution, and timeout management.
+  /// request execution, and bounded timeout management.
   static Future<http.Response> _sendRequest(
     String method,
     String endpoint, {
@@ -86,15 +90,16 @@ class ApiService {
         throw ArgumentError('Unsupported HTTP method: $method');
     }
 
-    if (timeout != null) {
-      sendFuture = sendFuture.timeout(timeout);
+    final effectiveTimeout = timeout ?? defaultTimeout;
+    try {
+      return await sendFuture.timeout(effectiveTimeout);
+    } on TimeoutException {
+      throw ApiTimeoutException();
     }
-
-    return await sendFuture;
   }
 
   /// Sends a multipart request (e.g. for document upload), handling token injection,
-  /// fields, file bytes, content type, and streaming response conversion.
+  /// fields, file bytes, content type, streaming response conversion, and bounded timeout management.
   static Future<http.Response> _sendMultipartRequest(
     String endpoint, {
     required String fileField,
@@ -104,6 +109,7 @@ class ApiService {
     Map<String, String>? fields,
     String? explicitToken,
     bool requiresAuth = true,
+    Duration? timeout,
   }) async {
     final token = explicitToken ?? (requiresAuth ? await _getToken() : null);
     final url = Uri.parse(endpoint.startsWith('http') ? endpoint : '$baseUrl$endpoint');
@@ -124,9 +130,15 @@ class ApiService {
       request.fields.addAll(fields);
     }
 
-    final streamedResponse = await request.send();
-    return await http.Response.fromStream(streamedResponse);
+    final effectiveTimeout = timeout ?? defaultTimeout;
+    try {
+      final streamedResponse = await request.send().timeout(effectiveTimeout);
+      return await http.Response.fromStream(streamedResponse).timeout(effectiveTimeout);
+    } on TimeoutException {
+      throw ApiTimeoutException();
+    }
   }
+
 
   /// Extracts error message from response body with fallbacks.
   static String _parseErrorMessage(http.Response response, {String fallback = 'An unexpected error occurred'}) {
@@ -233,6 +245,7 @@ class ApiService {
     Map<String, String>? headers,
     String? explicitToken,
     bool requiresAuth = true,
+    Duration? timeout,
   }) async {
     try {
       final response = await _sendRequest(
@@ -242,6 +255,7 @@ class ApiService {
         headers: headers,
         explicitToken: explicitToken,
         requiresAuth: requiresAuth,
+        timeout: timeout,
       );
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
@@ -256,6 +270,7 @@ class ApiService {
     Map<String, String>? headers,
     String? explicitToken,
     bool requiresAuth = true,
+    Duration? timeout,
   }) async {
     try {
       final response = await _sendRequest(
@@ -264,6 +279,7 @@ class ApiService {
         headers: headers,
         explicitToken: explicitToken,
         requiresAuth: requiresAuth,
+        timeout: timeout,
       );
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final decoded = jsonDecode(response.body);
@@ -1042,3 +1058,11 @@ class RateLimitException extends ApiException {
   @override
   String toString() => message;
 }
+
+class ApiTimeoutException extends ApiException {
+  ApiTimeoutException([super.message = 'Connection timed out. Please check your internet connection and try again.'])
+      : super(code: 'TIMEOUT', statusCode: 408);
+
+  @override
+  String toString() => message;
+}
