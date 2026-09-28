@@ -1,31 +1,41 @@
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587', 10),
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+function getTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587', 10),
+    secure: process.env.SMTP_SECURE === 'true' || parseInt(process.env.SMTP_PORT || '587', 10) === 465,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+}
 
 async function sendOTP(email, otp) {
-  // If SMTP is not fully configured, log to console for instant developer convenience
-  const hasSmtpConfig = process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS;
+  const isProduction = process.env.NODE_ENV === 'production';
+  const hasSmtpConfig = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 
   if (!hasSmtpConfig) {
-    console.log('\n========================================');
-    console.log(`🔐 [LawBuddy OTP Verification]`);
-    console.log(`📧 Target Email: ${email}`);
-    console.log(`🔑 6-Digit OTP Code: ${otp}`);
-    console.log('========================================\n');
-    return { success: true, messageId: 'dev-mode-otp' };
+    const isDevConsoleFallback = !isProduction && process.env.OTP_CONSOLE_FALLBACK === 'true';
+
+    if (isDevConsoleFallback) {
+      console.log('\n========================================');
+      console.log(`🔐 [LawBuddy OTP Verification - Dev Mode Fallback]`);
+      console.log(`📧 Target Email: ${email}`);
+      console.log(`🔑 6-Digit OTP Code: ${otp}`);
+      console.log('========================================\n');
+      return { success: true, messageId: 'dev-mode-otp' };
+    }
+
+    console.warn('SMTP is not configured and OTP console fallback is disabled.');
+    return { success: false, error: 'SMTP is not configured' };
   }
 
   try {
+    const transporter = getTransporter();
     const info = await transporter.sendMail({
-      from: process.env.SMTP_FROM,
+      from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: email,
       subject: 'Your LawBuddy Verification Code',
       html: `
@@ -50,19 +60,16 @@ async function sendOTP(email, otp) {
         </div>
       `
     });
-    
+
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('SMTP Error sending OTP email:', error);
-    console.log('\n========================================');
-    console.log(`🔐 [LawBuddy OTP Fallback]`);
-    console.log(`📧 Target Email: ${email}`);
-    console.log(`🔑 6-Digit OTP Code: ${otp}`);
-    console.log('========================================\n');
-    return { success: false, messageId: 'fallback-otp' };
+    const sanitizedError = error && error.message ? error.message : 'Unknown SMTP error';
+    console.error(`Failed to send OTP email: ${sanitizedError}`);
+    return { success: false, error: 'Failed to send OTP email' };
   }
 }
 
 module.exports = {
   sendOTP
 };
+
