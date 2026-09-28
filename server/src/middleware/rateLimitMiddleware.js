@@ -1,6 +1,8 @@
 const { rateLimit, ipKeyGenerator } = require('express-rate-limit');
 const { sanitizeInput } = require('./authMiddleware');
 
+const isTestEnv = () => process.env.NODE_ENV === 'test';
+
 function getNormalizedEmail(req) {
   const raw = req.body?.email || req.body?.identifier || '';
   if (typeof raw === 'string' && raw.trim().length > 0) {
@@ -17,6 +19,7 @@ const otpRequestIpLimiter = rateLimit({
   legacyHeaders: false,
   message: 'Too many OTP requests from this IP. Please try again later.',
   validate: { xForwardedForHeader: false },
+  skip: isTestEnv,
   handler: (req, res, _next, options) => {
     res.status(options.statusCode).json({
       error: options.message
@@ -35,6 +38,7 @@ const otpRequestEmailLimiter = rateLimit({
     return email ? `email_${email}` : `ip_${ipKeyGenerator(req)}`;
   },
   validate: { xForwardedForHeader: false },
+  skip: isTestEnv,
   message: 'Too many OTP requests. Please try again later.',
   handler: (req, res, _next, options) => {
     res.status(options.statusCode).json({
@@ -51,6 +55,7 @@ const otpVerifyIpLimiter = rateLimit({
   legacyHeaders: false,
   message: 'Too many verification attempts from this IP. Please try again later.',
   validate: { xForwardedForHeader: false },
+  skip: isTestEnv,
   handler: (req, res, _next, options) => {
     res.status(options.statusCode).json({
       error: options.message
@@ -69,7 +74,44 @@ const otpVerifyEmailLimiter = rateLimit({
     return email ? `verify_${email}` : `ip_${ipKeyGenerator(req)}`;
   },
   validate: { xForwardedForHeader: false },
+  skip: isTestEnv,
   message: 'Too many verification attempts. Please try again later.',
+  handler: (req, res, _next, options) => {
+    res.status(options.statusCode).json({
+      error: options.message
+    });
+  }
+});
+
+// IP-based limiter for password login attempts (20 attempts per 15 minutes)
+const loginIpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: 'Too many login attempts from this IP. Please try again later.',
+  validate: { xForwardedForHeader: false },
+  skip: isTestEnv,
+  handler: (req, res, _next, options) => {
+    res.status(options.statusCode).json({
+      error: options.message
+    });
+  }
+});
+
+// Email-based limiter for password login attempts (10 attempts per 15 minutes)
+const loginEmailLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    const email = getNormalizedEmail(req);
+    return email ? `login_${email}` : `ip_${ipKeyGenerator(req)}`;
+  },
+  validate: { xForwardedForHeader: false },
+  skip: isTestEnv,
+  message: 'Too many login attempts for this account. Please try again later.',
   handler: (req, res, _next, options) => {
     res.status(options.statusCode).json({
       error: options.message
@@ -81,5 +123,7 @@ module.exports = {
   otpRequestIpLimiter,
   otpRequestEmailLimiter,
   otpVerifyIpLimiter,
-  otpVerifyEmailLimiter
+  otpVerifyEmailLimiter,
+  loginIpLimiter,
+  loginEmailLimiter
 };

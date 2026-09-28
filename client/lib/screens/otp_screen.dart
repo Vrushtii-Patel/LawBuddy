@@ -98,7 +98,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
     if (!_canResend) return;
     final tr = ref.read(localeProvider.notifier).translate;
     
-    final success = await ref.read(authProvider.notifier).resendOtp(widget.email);
+    final success = await ref.read(authProvider.notifier).resendOtp(
+      email: widget.email,
+      purpose: 'signup',
+    );
     if (success && mounted) {
       AppToast.showSuccess(context, tr('auth.otpResentSuccess'));
       _startTimer();
@@ -117,11 +120,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
       return;
     }
 
-    final success = await ref.read(authProvider.notifier).verifyOtp(
+    final success = await ref.read(authProvider.notifier).verifyEmail(
       email: widget.email,
       otp: otp,
-      type: widget.type,
-      fullName: widget.fullName,
     );
     
     if (success && mounted) {

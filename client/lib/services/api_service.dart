@@ -147,6 +147,17 @@ class ApiService {
     return fallback;
   }
 
+  /// Extracts error code from response body if present.
+  static String? _parseErrorCode(http.Response response) {
+    try {
+      final body = jsonDecode(response.body);
+      if (body is Map && body['code'] != null) {
+        return body['code'].toString();
+      }
+    } catch (_) {}
+    return null;
+  }
+
   /// Evaluates the HTTP response for common error statuses (413, 429, 401, 403, 400+) and throws descriptive exceptions.
   static void _handleCommonErrors(
     http.Response response, {
@@ -156,27 +167,36 @@ class ApiService {
     final status = response.statusCode;
     if (status >= 200 && status < 300) return;
 
+    final code = _parseErrorCode(response);
+
     if (customStatusMessages != null && customStatusMessages.containsKey(status)) {
-      throw Exception(customStatusMessages[status]!);
+      throw ApiException(customStatusMessages[status]!, code: code, statusCode: status);
     }
 
     if (status == 429) {
-      throw RateLimitException(defaultErrorMessage != null && defaultErrorMessage.contains('Rate limit')
-          ? defaultErrorMessage
-          : 'Rate limit reached. Please wait a moment before trying again.');
+      final parsedError = _parseErrorMessage(response, fallback: 'Rate limit reached. Please wait a moment before trying again.');
+      throw RateLimitException(
+        defaultErrorMessage != null && defaultErrorMessage.contains('Rate limit')
+            ? defaultErrorMessage
+            : parsedError,
+        code: code,
+        statusCode: status,
+      );
     }
     if (status == 413) {
-      throw Exception('This document is too large. Please upload a smaller file.');
+      throw ApiException('This document is too large. Please upload a smaller file.', code: code, statusCode: status);
     }
     if (status == 401) {
-      throw Exception('Authentication expired. Please log in again.');
+      final parsedError = _parseErrorMessage(response, fallback: 'Authentication expired. Please log in again.');
+      throw ApiException(parsedError, code: code, statusCode: status);
     }
     if (status == 403) {
-      throw Exception('Access Denied: Admin authorization is required to view system analytics.');
+      final parsedError = _parseErrorMessage(response, fallback: 'Access Denied');
+      throw ApiException(parsedError, code: code, statusCode: status);
     }
 
     final parsedError = _parseErrorMessage(response, fallback: defaultErrorMessage ?? 'Request failed ($status)');
-    throw Exception(parsedError);
+    throw ApiException(parsedError, code: code, statusCode: status);
   }
 
   /// Convenience wrapper that sends a request, verifies 2xx status, and decodes JSON.
@@ -688,50 +708,121 @@ class ApiService {
   // AUTHENTICATION API METHODS
   // =========================================================================
 
-  static Future<Map<String, dynamic>> sendOtp({
+  static Future<Map<String, dynamic>> signup({
+    required String fullName,
     required String email,
-    required String type, // 'login' or 'signup'
+    required String password,
+    required bool acceptedTerms,
   }) async {
     final res = await _requestJson(
       'POST',
-      '/auth/send-otp',
-      body: {'email': email, 'type': type},
-      requiresAuth: false,
-      defaultErrorMessage: 'Failed to send OTP',
-    );
-    return res as Map<String, dynamic>;
-  }
-
-  static Future<Map<String, dynamic>> verifyOtp({
-    required String email,
-    required String otp,
-    required String type,
-    String? fullName,
-  }) async {
-    final res = await _requestJson(
-      'POST',
-      '/auth/verify-otp',
+      '/auth/signup',
       body: {
-        'email': email,
-        'otp': otp,
-        'type': type,
-        if (fullName != null && fullName.isNotEmpty) 'full_name': fullName,
+        'full_name': fullName.trim(),
+        'email': email.trim().toLowerCase(),
+        'password': password,
+        'accepted_terms': acceptedTerms,
       },
       requiresAuth: false,
-      defaultErrorMessage: 'Failed to verify OTP',
+      defaultErrorMessage: 'Failed to sign up',
     );
     return res as Map<String, dynamic>;
   }
 
-  static Future<Map<String, dynamic>> resendOtp(String email) async {
+  static Future<Map<String, dynamic>> verifyEmail({
+    required String email,
+    required String otp,
+  }) async {
+    final res = await _requestJson(
+      'POST',
+      '/auth/verify-email',
+      body: {
+        'email': email.trim().toLowerCase(),
+        'otp': otp.trim(),
+      },
+      requiresAuth: false,
+      defaultErrorMessage: 'Failed to verify email',
+    );
+    return res as Map<String, dynamic>;
+  }
+
+  static Future<Map<String, dynamic>> login({
+    required String email,
+    required String password,
+  }) async {
+    final res = await _requestJson(
+      'POST',
+      '/auth/login',
+      body: {
+        'email': email.trim().toLowerCase(),
+        'password': password,
+      },
+      requiresAuth: false,
+      defaultErrorMessage: 'Failed to log in',
+    );
+    return res as Map<String, dynamic>;
+  }
+
+  static Future<Map<String, dynamic>> forgotPassword({
+    required String email,
+  }) async {
+    final res = await _requestJson(
+      'POST',
+      '/auth/forgot-password',
+      body: {
+        'email': email.trim().toLowerCase(),
+      },
+      requiresAuth: false,
+      defaultErrorMessage: 'Failed to request password reset',
+    );
+    return res as Map<String, dynamic>;
+  }
+
+  static Future<Map<String, dynamic>> resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+  }) async {
+    final res = await _requestJson(
+      'POST',
+      '/auth/reset-password',
+      body: {
+        'email': email.trim().toLowerCase(),
+        'otp': otp.trim(),
+        'new_password': newPassword,
+      },
+      requiresAuth: false,
+      defaultErrorMessage: 'Failed to reset password',
+    );
+    return res as Map<String, dynamic>;
+  }
+
+  static Future<Map<String, dynamic>> resendOtp({
+    required String email,
+    required String purpose, // 'signup' | 'reset'
+  }) async {
     final res = await _requestJson(
       'POST',
       '/auth/resend-otp',
-      body: {'email': email},
+      body: {
+        'email': email.trim().toLowerCase(),
+        'purpose': purpose,
+      },
       requiresAuth: false,
       defaultErrorMessage: 'Failed to resend OTP',
     );
     return res as Map<String, dynamic>;
+  }
+
+  static Future<Map<String, dynamic>> logout({String? explicitToken}) async {
+    final res = await _requestJson(
+      'POST',
+      '/auth/logout',
+      explicitToken: explicitToken,
+      requiresAuth: true,
+      defaultErrorMessage: 'Failed to log out',
+    );
+    return (res is Map<String, dynamic>) ? res : {'success': true};
   }
 
   static Future<Map<String, dynamic>> getProfile(String token) async {
@@ -740,6 +831,28 @@ class ApiService {
       '/auth/me',
       explicitToken: token,
       defaultErrorMessage: 'Failed to fetch profile',
+    );
+    return res as Map<String, dynamic>;
+  }
+
+  static Future<Map<String, dynamic>> updateProfile({
+    String? fullName,
+    String? profilePhoto,
+    String? preferredLanguage,
+    String? dateOfBirth,
+  }) async {
+    final body = <String, dynamic>{
+      if (fullName != null) 'full_name': fullName,
+      if (profilePhoto != null) 'profile_photo': profilePhoto,
+      if (preferredLanguage != null) 'preferredLanguage': preferredLanguage,
+      if (dateOfBirth != null) 'dateOfBirth': dateOfBirth,
+    };
+    final res = await _requestJson(
+      'PUT',
+      '/auth/profile',
+      body: body,
+      requiresAuth: true,
+      defaultErrorMessage: 'Failed to update profile',
     );
     return res as Map<String, dynamic>;
   }
@@ -906,9 +1019,19 @@ class ApiService {
   }
 }
 
-class RateLimitException implements Exception {
+class ApiException implements Exception {
   final String message;
-  RateLimitException(this.message);
+  final String? code;
+  final int? statusCode;
+
+  ApiException(this.message, {this.code, this.statusCode});
+
+  @override
+  String toString() => message;
+}
+
+class RateLimitException extends ApiException {
+  RateLimitException(super.message, {super.code, super.statusCode = 429});
 
   @override
   String toString() => message;

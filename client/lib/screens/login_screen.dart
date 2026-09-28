@@ -5,11 +5,15 @@ import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
 import 'signup_screen.dart';
 import 'otp_screen.dart';
+import 'forgot_password_screen.dart';
+import 'home_screen.dart';
 import '../widgets/app_toast.dart';
 import '../theme/app_theme.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+  final String? prefilledEmail;
+
+  const LoginScreen({super.key, this.prefilledEmail});
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -17,10 +21,13 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
-  final _identifierController = TextEditingController();
-  final _focusNode = FocusNode();
-  
-  bool _isEmailMode = true;
+  late final TextEditingController _emailController;
+  final _passwordController = TextEditingController();
+
+  final _emailFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+
+  bool _obscurePassword = true;
   bool _isHoveredButton = false;
 
   late AnimationController _entranceController;
@@ -30,6 +37,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
   @override
   void initState() {
     super.initState();
+    _emailController = TextEditingController(text: widget.prefilledEmail ?? '');
+
     _entranceController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
@@ -53,40 +62,72 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
 
   @override
   void dispose() {
-    _identifierController.dispose();
-    _focusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
     _entranceController.dispose();
     super.dispose();
   }
 
   void _submit() async {
     if (_formKey.currentState!.validate()) {
-      if (!_isEmailMode) {
-        final loc = ref.read(localeProvider.notifier);
-        AppToast.showInfo(context, loc.translate('auth.mobileOtpComingSoon'));
-        return;
-      }
+      final email = _emailController.text.trim().toLowerCase();
+      final password = _passwordController.text;
 
-      final String identifier = _identifierController.text.trim();
-
-      final success = await ref.read(authProvider.notifier).sendOtp(
-        email: identifier,
-        type: 'login',
+      final success = await ref.read(authProvider.notifier).login(
+        email: email,
+        password: password,
       );
 
       if (success && mounted) {
-        Navigator.push(
+        Navigator.pushAndRemoveUntil(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => OtpScreen(email: identifier, type: 'login'),
+            pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return FadeTransition(opacity: animation, child: child);
             },
           ),
+          (route) => false,
         );
       } else if (mounted) {
-        final error = ref.read(authProvider).errorMessage;
-        AppToast.showError(context, error ?? 'Login failed. Please try again.');
+        final authState = ref.read(authProvider);
+        if (authState.errorCode == 'EMAIL_NOT_VERIFIED') {
+          AppToast.showInfo(context, authState.errorMessage ?? 'Please verify your email address to continue.');
+          await ref.read(authProvider.notifier).resendOtp(
+            email: email,
+            purpose: 'signup',
+          );
+          if (mounted) {
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    OtpScreen(email: email, type: 'signup'),
+                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+              ),
+            );
+          }
+        } else if (authState.errorCode == 'PASSWORD_NOT_SET') {
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  ForgotPasswordScreen(prefilledEmail: email, showLegacyBanner: true),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          );
+        } else {
+          AppToast.showError(
+            context,
+            authState.errorMessage ?? 'Invalid email or password',
+          );
+        }
       }
     }
   }
@@ -127,92 +168,89 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
               Expanded(
                 child: Center(
                   child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isDesktop ? 48.0 : 20.0,
-                    vertical: isDesktop ? 32.0 : 20.0,
-                  ),
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: SlideTransition(
-                      position: _slideAnimation,
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: isDesktop ? 1040 : 460,
-                        ),
-                        child: isDesktop
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  // Left: LawBuddy Brand Storytelling
-                                  Expanded(
-                                    flex: 11,
-                                    child: _buildBrandingShowcase(
-                                      primaryText,
-                                      secondaryText,
-                                      cardSurface,
-                                      cardBorder,
-                                      elevatedSurface,
-                                      accentColor,
-                                      isDark,
-                                      tr,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isDesktop ? 48.0 : 20.0,
+                      vertical: isDesktop ? 32.0 : 20.0,
+                    ),
+                    child: FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: SlideTransition(
+                        position: _slideAnimation,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: isDesktop ? 1040 : 480,
+                          ),
+                          child: isDesktop
+                              ? Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    // Left: LawBuddy Brand Storytelling
+                                    Expanded(
+                                      flex: 11,
+                                      child: _buildBrandingShowcase(
+                                        primaryText,
+                                        secondaryText,
+                                        cardSurface,
+                                        cardBorder,
+                                        elevatedSurface,
+                                        accentColor,
+                                        isDark,
+                                        tr,
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 56),
+                                    const SizedBox(width: 56),
 
-                                  // Right: Refined Login Card
-                                  Expanded(
-                                    flex: 10,
-                                    child: _buildAuthCard(
+                                    // Right: Refined Sign In Card
+                                    Expanded(
+                                      flex: 10,
+                                      child: _buildLoginCard(
+                                        context,
+                                        primaryText,
+                                        secondaryText,
+                                        cardSurface,
+                                        cardBorder,
+                                        primaryColor,
+                                        accentColor,
+                                        elevatedSurface,
+                                        isDark,
+                                        true,
+                                        tr,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    _buildMobileBrandHeader(primaryText, secondaryText, accentColor, isDark, tr),
+                                    const SizedBox(height: 24),
+                                    _buildLoginCard(
                                       context,
-                                      cardSurface,
-                                      cardBorder,
                                       primaryText,
                                       secondaryText,
+                                      cardSurface,
+                                      cardBorder,
                                       primaryColor,
                                       accentColor,
                                       elevatedSurface,
                                       isDark,
-                                      true,
+                                      false,
                                       tr,
                                     ),
-                                  ),
-                                ],
-                              )
-                            : Column(
-                                children: [
-                                  _buildMobileBrandHeader(primaryText, secondaryText, accentColor, isDark, tr),
-                                  const SizedBox(height: 24),
-                                  _buildAuthCard(
-                                    context,
-                                    cardSurface,
-                                    cardBorder,
-                                    primaryText,
-                                    secondaryText,
-                                    primaryColor,
-                                    accentColor,
-                                    elevatedSurface,
-                                    isDark,
-                                    false,
-                                    tr,
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
   }
 
-  // ==========================================
-  // TOP APP BAR
-  // ==========================================
   Widget _buildTopBar(BuildContext context, Color primaryText, Color borderColor, bool isDark, String Function(String, [Map<String, String>?]) tr) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -231,7 +269,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Back Button
               InkWell(
                 onTap: () {
                   if (Navigator.canPop(context)) {
@@ -265,9 +302,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     );
   }
 
-  // ==========================================
-  // LEFT: BRANDING & VISUAL STORYTELLING (DESKTOP)
-  // ==========================================
   Widget _buildBrandingShowcase(
     Color primaryText,
     Color secondaryText,
@@ -282,7 +316,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Brand Logo Badge
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -326,10 +359,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
             ),
           ],
         ),
-
         const SizedBox(height: 32),
-
-        // Headline
         Text(
           tr('auth.intelligentProtection'),
           style: GoogleFonts.inter(
@@ -349,12 +379,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
             height: 1.5,
           ),
         ),
-
         const SizedBox(height: 32),
-
-        // 3 Key Pillars
         _buildPillarRow(
-          icon: Icons.shield_outlined,
+          icon: Icons.verified_outlined,
           title: tr('auth.pillarRera'),
           subtitle: tr('auth.pillarReraSub'),
           primaryText: primaryText,
@@ -364,7 +391,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
         ),
         const SizedBox(height: 16),
         _buildPillarRow(
-          icon: Icons.analytics_outlined,
+          icon: Icons.shield_outlined,
           title: tr('auth.pillarAudit'),
           subtitle: tr('auth.pillarAuditSub'),
           primaryText: primaryText,
@@ -382,10 +409,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
           cardBorder: cardBorder,
           accentColor: accentColor,
         ),
-
         const SizedBox(height: 28),
-
-        // Legal Trust Indicator
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
@@ -398,7 +422,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.verified_user_outlined, size: 15, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
+              Icon(Icons.lock_outline_rounded, size: 15, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
@@ -466,10 +490,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     );
   }
 
-  // ==========================================
-  // MOBILE BRAND HEADER
-  // ==========================================
-  Widget _buildMobileBrandHeader(Color primaryText, Color secondaryText, Color accentColor, bool isDark, String Function(String, [Map<String, String>?]) tr) {
+  Widget _buildMobileBrandHeader(
+    Color primaryText,
+    Color secondaryText,
+    Color accentColor,
+    bool isDark,
+    String Function(String, [Map<String, String>?]) tr,
+  ) {
     return Column(
       children: [
         Container(
@@ -508,15 +535,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     );
   }
 
-  // ==========================================
-  // RIGHT / CARD: INTERACTIVE AUTH FORM
-  // ==========================================
-  Widget _buildAuthCard(
+  Widget _buildLoginCard(
     BuildContext context,
-    Color cardSurface,
-    Color cardBorder,
     Color primaryText,
     Color secondaryText,
+    Color cardSurface,
+    Color cardBorder,
     Color primaryColor,
     Color accentColor,
     Color elevatedSurface,
@@ -535,332 +559,269 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: cardBorder, width: 1.0),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Header inside card
-          Text(
-            tr('auth.welcomeBack'),
-            style: GoogleFonts.inter(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              color: primaryText,
-              letterSpacing: -0.3,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            tr('auth.loginToAccount'),
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              color: secondaryText,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 24),
-
-          // Channel Segmented Switch (Email vs Phone)
-          Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: elevatedSurface,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: cardBorder),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      if (!_isEmailMode) {
-                        setState(() {
-                          _isEmailMode = true;
-                          _formKey.currentState?.reset();
-                        });
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(9),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 9),
-                      decoration: BoxDecoration(
-                        color: _isEmailMode ? cardSurface : Colors.transparent,
-                        borderRadius: BorderRadius.circular(9),
-                        border: _isEmailMode ? Border.all(color: cardBorder) : null,
-                      ),
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.email_outlined,
-                            size: 16,
-                            color: _isEmailMode ? primaryColor : secondaryText,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            tr('auth.email'),
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              fontWeight: _isEmailMode ? FontWeight.w700 : FontWeight.w500,
-                              color: _isEmailMode ? primaryText : secondaryText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      if (_isEmailMode) {
-                        setState(() {
-                          _isEmailMode = false;
-                          _formKey.currentState?.reset();
-                        });
-                      }
-                    },
-                    borderRadius: BorderRadius.circular(9),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 9),
-                      decoration: BoxDecoration(
-                        color: !_isEmailMode ? cardSurface : Colors.transparent,
-                        borderRadius: BorderRadius.circular(9),
-                        border: !_isEmailMode ? Border.all(color: cardBorder) : null,
-                      ),
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.phone_iphone_rounded,
-                            size: 16,
-                            color: !_isEmailMode ? primaryColor : secondaryText,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            tr('auth.mobileNumber'),
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              fontWeight: !_isEmailMode ? FontWeight.w700 : FontWeight.w500,
-                              color: !_isEmailMode ? primaryText : secondaryText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Input Form
-          Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (_isEmailMode) ...[
-                  Text(
-                    tr('auth.email'),
-                    style: GoogleFonts.inter(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w600,
-                      color: primaryText,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _identifierController,
-                    focusNode: _focusNode,
-                    keyboardType: TextInputType.emailAddress,
-                    style: TextStyle(color: primaryText, fontSize: 14),
-                    decoration: InputDecoration(
-                      hintText: 'name@example.com',
-                      prefixIcon: Icon(Icons.mail_outline_rounded, size: 19, color: secondaryText),
-                    ),
-                    validator: (val) {
-                      if (val == null || val.trim().isEmpty) {
-                        return tr('auth.emailRequired');
-                      }
-                      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                      if (!emailRegex.hasMatch(val.trim())) {
-                        return tr('auth.enterValidEmail');
-                      }
-                      return null;
-                    },
-                  ),
-                ] else ...[
-                  Text(
-                    tr('auth.mobileNumber'),
-                    style: GoogleFonts.inter(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w600,
-                      color: primaryText,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _identifierController,
-                    focusNode: _focusNode,
-                    keyboardType: TextInputType.phone,
-                    style: TextStyle(color: primaryText, fontSize: 14),
-                    decoration: InputDecoration(
-                      hintText: '9876543210',
-                      prefixIcon: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        margin: const EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            right: BorderSide(color: cardBorder),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              '🇮🇳 +91',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: primaryText,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    validator: (val) {
-                      if (val == null || val.trim().isEmpty) {
-                        return tr('auth.mobileRequired');
-                      }
-                      final digits = val.replaceAll(RegExp(r'\D'), '');
-                      if (digits.length != 10) {
-                        return tr('auth.enterValidPhone');
-                      }
-                      return null;
-                    },
-                  ),
-                ],
-
-                // Disclaimer hint
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.lock_outline_rounded, size: 13, color: secondaryText),
-                    const SizedBox(width: 5),
-                    Expanded(
-                      child: Text(
-                        tr('auth.sendVerificationCode'),
-                        style: GoogleFonts.inter(
-                          fontSize: 11.5,
-                          color: secondaryText,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                // Submit Button
-                MouseRegion(
-                  onEnter: (_) => setState(() => _isHoveredButton = true),
-                  onExit: (_) => setState(() => _isHoveredButton = false),
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : _submit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: primaryColor.withValues(alpha: _isHoveredButton ? 0.92 : 1.0),
-                      foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
-                      minimumSize: const Size(double.infinity, 48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: _isHoveredButton ? 2 : 0,
-                    ),
-                    child: isLoading
-                        ? SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary),
-                            ),
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                tr('auth.sendOtp'),
-                                style: GoogleFonts.inter(
-                                  fontSize: 14.5,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.2,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.arrow_forward_rounded, size: 16),
-                            ],
-                          ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // Divider
-          Divider(color: cardBorder, height: 1),
-
-          const SizedBox(height: 20),
-
-          // Register Link
-          Wrap(
-            alignment: WrapAlignment.center,
-            crossAxisAlignment: WrapCrossAlignment.center,
+      child: AutofillGroup(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                tr('auth.noAccount'),
+                tr('auth.welcomeBack'),
+                style: GoogleFonts.inter(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: primaryText,
+                  letterSpacing: -0.3,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                tr('auth.loginToAccount'),
                 style: GoogleFonts.inter(
                   fontSize: 13,
                   color: secondaryText,
+                  height: 1.4,
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation, secondaryAnimation) => const SignupScreen(),
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                        return FadeTransition(opacity: animation, child: child);
-                      },
-                    ),
-                  );
+              const SizedBox(height: 24),
+
+              // Email Field
+              Text(
+                tr('auth.emailAddress'),
+                style: GoogleFonts.inter(
+                  fontSize: 12.5,
+                  fontWeight: FontWeight.w600,
+                  color: primaryText,
+                ),
+              ),
+              const SizedBox(height: 6),
+              TextFormField(
+                controller: _emailController,
+                focusNode: _emailFocusNode,
+                autofillHints: const [AutofillHints.email],
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: primaryText,
+                ),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: elevatedSurface,
+                  hintText: tr('auth.emailHint'),
+                  hintStyle: GoogleFonts.inter(
+                    fontSize: 13.5,
+                    color: secondaryText.withValues(alpha: 0.7),
+                  ),
+                  prefixIcon: Icon(
+                    Icons.alternate_email_rounded,
+                    color: secondaryText,
+                    size: 18,
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: primaryColor, width: 1.5)),
+                  errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: isDark ? AppColors.darkError : AppColors.lightError)),
+                ),
+                validator: (val) {
+                  if (val == null || val.trim().isEmpty) {
+                    return tr('auth.emailRequired');
+                  }
+                  final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+                  if (!emailRegex.hasMatch(val.trim())) {
+                    return tr('auth.enterValidEmail');
+                  }
+                  return null;
                 },
-                borderRadius: BorderRadius.circular(4),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  child: Text(
-                    tr('auth.signUp'),
+              ),
+              const SizedBox(height: 16),
+
+              // Password Field
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    tr('auth.password'),
                     style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 12.5,
+                      fontWeight: FontWeight.w600,
                       color: primaryText,
-                      decoration: TextDecoration.underline,
-                      decorationColor: primaryText.withValues(alpha: 0.4),
                     ),
                   ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) =>
+                              ForgotPasswordScreen(
+                            prefilledEmail: _emailController.text.trim(),
+                          ),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(opacity: animation, child: child);
+                          },
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(4),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      child: Text(
+                        tr('auth.forgotPassword'),
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              TextFormField(
+                controller: _passwordController,
+                focusNode: _passwordFocusNode,
+                autofillHints: const [AutofillHints.password],
+                obscureText: _obscurePassword,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) {
+                  if (!isLoading) _submit();
+                },
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: primaryText,
                 ),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: elevatedSurface,
+                  hintText: tr('auth.passwordHint'),
+                  hintStyle: GoogleFonts.inter(
+                    fontSize: 13.5,
+                    color: secondaryText.withValues(alpha: 0.7),
+                  ),
+                  prefixIcon: Icon(Icons.lock_outline_rounded, color: secondaryText, size: 18),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      color: secondaryText,
+                      size: 18,
+                    ),
+                    tooltip: _obscurePassword ? tr('auth.showPassword') : tr('auth.hidePassword'),
+                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: primaryColor, width: 1.5)),
+                  errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: isDark ? AppColors.darkError : AppColors.lightError)),
+                ),
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return tr('auth.passwordRequired');
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 24),
+
+              // Submit Button
+              MouseRegion(
+                onEnter: (_) => setState(() => _isHoveredButton = true),
+                onExit: (_) => setState(() => _isHoveredButton = false),
+                child: ElevatedButton(
+                  onPressed: isLoading ? null : _submit,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor.withValues(alpha: _isHoveredButton ? 0.92 : 1.0),
+                    foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                    minimumSize: const Size(double.infinity, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: _isHoveredButton ? 2 : 0,
+                  ),
+                  child: isLoading
+                      ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              tr('auth.logIn'),
+                              style: GoogleFonts.inter(
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.2,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.arrow_forward_rounded, size: 16),
+                          ],
+                        ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+              Divider(color: cardBorder, height: 1),
+              const SizedBox(height: 20),
+
+              // Sign Up Link
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text(
+                    tr('auth.noAccount'),
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      color: secondaryText,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation, secondaryAnimation) =>
+                              const SignupScreen(),
+                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(opacity: animation, child: child);
+                          },
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(4),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      child: Text(
+                        tr('auth.signUp'),
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: primaryText,
+                          decoration: TextDecoration.underline,
+                          decorationColor: primaryText.withValues(alpha: 0.4),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

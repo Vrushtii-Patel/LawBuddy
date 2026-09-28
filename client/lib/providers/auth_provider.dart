@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
@@ -16,28 +17,27 @@ class AuthState {
   final AuthStatus status;
   final UserModel? user;
   final String? errorMessage;
+  final String? errorCode;
 
   AuthState({
     this.status = AuthStatus.initial,
     this.user,
     this.errorMessage,
+    this.errorCode,
   });
 
-  // `clearError` is a separate flag (rather than relying on passing
-  // `errorMessage: null`) because `errorMessage ?? this.errorMessage` can
-  // never actually null out the field — `null` just falls back to the old
-  // value. Pass `clearError: true` whenever the previous error should be
-  // dropped (e.g. after a successful call), instead of `errorMessage: null`.
   AuthState copyWith({
     AuthStatus? status,
     UserModel? user,
     String? errorMessage,
+    String? errorCode,
     bool clearError = false,
   }) {
     return AuthState(
       status: status ?? this.status,
       user: user ?? this.user,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      errorCode: clearError ? null : (errorCode ?? this.errorCode),
     );
   }
 }
@@ -45,6 +45,10 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState()) {
     checkAuthStatus();
+  }
+
+  void clearError() {
+    state = state.copyWith(clearError: true);
   }
 
   Future<void> checkAuthStatus() async {
@@ -71,49 +75,52 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<bool> sendOtp({
+  Future<bool> signup({
+    required String fullName,
     required String email,
-    required String type,
+    required String password,
+    required bool acceptedTerms,
   }) async {
     state = state.copyWith(status: AuthStatus.loading);
     try {
-      await ApiService.sendOtp(
+      await ApiService.signup(
+        fullName: fullName,
         email: email,
-        type: type,
+        password: password,
+        acceptedTerms: acceptedTerms,
       );
       state = state.copyWith(status: AuthStatus.unauthenticated, clearError: true);
       return true;
     } catch (e) {
+      final message = _extractErrorMessage(e);
+      final code = _extractErrorCode(e);
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
-        errorMessage: e.toString().replaceAll('Exception: ', ''),
+        errorMessage: message,
+        errorCode: code,
       );
       return false;
     }
   }
 
-  Future<bool> verifyOtp({
+  Future<bool> verifyEmail({
     required String email,
     required String otp,
-    required String type,
-    String? fullName,
   }) async {
     state = state.copyWith(status: AuthStatus.loading);
     try {
-      final data = await ApiService.verifyOtp(
+      final data = await ApiService.verifyEmail(
         email: email,
         otp: otp,
-        type: type,
-        fullName: fullName,
       );
-      
+
       final user = UserModel.fromJson(data['user']);
       final String token = data['token'];
-      
+
       await TokenStorage.saveToken(token);
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userId', user.userId); // Kept for legacy compatibility if needed
-      
+      await prefs.setString('userId', user.userId);
+
       state = state.copyWith(
         status: AuthStatus.authenticated,
         user: user,
@@ -121,22 +128,146 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
       return true;
     } catch (e) {
+      final message = _extractErrorMessage(e);
+      final code = _extractErrorCode(e);
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
-        errorMessage: e.toString().replaceAll('Exception: ', ''),
+        errorMessage: message,
+        errorCode: code,
       );
       return false;
     }
   }
 
-  Future<bool> resendOtp(String email) async {
+  Future<bool> login({
+    required String email,
+    required String password,
+  }) async {
+    state = state.copyWith(status: AuthStatus.loading);
     try {
-      await ApiService.resendOtp(email);
+      final data = await ApiService.login(
+        email: email,
+        password: password,
+      );
+
+      final user = UserModel.fromJson(data['user']);
+      final String token = data['token'];
+
+      await TokenStorage.saveToken(token);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userId', user.userId);
+
+      state = state.copyWith(
+        status: AuthStatus.authenticated,
+        user: user,
+        clearError: true,
+      );
       return true;
     } catch (e) {
+      final message = _extractErrorMessage(e);
+      final code = _extractErrorCode(e);
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
-        errorMessage: e.toString().replaceAll('Exception: ', ''),
+        errorMessage: message,
+        errorCode: code,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> forgotPassword({
+    required String email,
+  }) async {
+    state = state.copyWith(status: AuthStatus.loading);
+    try {
+      await ApiService.forgotPassword(email: email);
+      state = state.copyWith(status: AuthStatus.unauthenticated, clearError: true);
+      return true;
+    } catch (e) {
+      final message = _extractErrorMessage(e);
+      final code = _extractErrorCode(e);
+      state = state.copyWith(
+        status: AuthStatus.unauthenticated,
+        errorMessage: message,
+        errorCode: code,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> resetPassword({
+    required String email,
+    required String otp,
+    required String newPassword,
+  }) async {
+    state = state.copyWith(status: AuthStatus.loading);
+    try {
+      await ApiService.resetPassword(
+        email: email,
+        otp: otp,
+        newPassword: newPassword,
+      );
+      state = state.copyWith(status: AuthStatus.unauthenticated, clearError: true);
+      return true;
+    } catch (e) {
+      final message = _extractErrorMessage(e);
+      final code = _extractErrorCode(e);
+      state = state.copyWith(
+        status: AuthStatus.unauthenticated,
+        errorMessage: message,
+        errorCode: code,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> resendOtp({
+    required String email,
+    required String purpose, // 'signup' | 'reset'
+  }) async {
+    try {
+      await ApiService.resendOtp(email: email, purpose: purpose);
+      return true;
+    } catch (e) {
+      final message = _extractErrorMessage(e);
+      final code = _extractErrorCode(e);
+      state = state.copyWith(
+        status: state.status,
+        errorMessage: message,
+        errorCode: code,
+      );
+      return false;
+    }
+  }
+
+  Future<bool> updateProfile({
+    String? fullName,
+    String? profilePhoto,
+    String? preferredLanguage,
+    String? dateOfBirth,
+  }) async {
+    state = state.copyWith(status: AuthStatus.loading);
+    try {
+      final data = await ApiService.updateProfile(
+        fullName: fullName,
+        profilePhoto: profilePhoto,
+        preferredLanguage: preferredLanguage,
+        dateOfBirth: dateOfBirth,
+      );
+      final updatedUser = UserModel.fromJson(data['user']);
+      state = state.copyWith(
+        status: AuthStatus.authenticated,
+        user: updatedUser,
+        clearError: true,
+      );
+      return true;
+    } catch (e) {
+      final message = _extractErrorMessage(e);
+      final code = _extractErrorCode(e);
+      state = state.copyWith(
+        status: AuthStatus.authenticated,
+        errorMessage: message,
+        errorCode: code,
       );
       return false;
     }
@@ -152,21 +283,42 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> logout() async {
     state = state.copyWith(status: AuthStatus.loading);
     try {
-      await TokenStorage.deleteToken();
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('userId');
+      final token = await TokenStorage.getToken();
+      if (token != null && token.isNotEmpty) {
+        try {
+          await ApiService.logout(explicitToken: token);
+        } catch (e) {
+          debugPrint('Remote logout warning (continuing local logout): $e');
+        }
+      }
+    } catch (e) {
+      debugPrint('Error retrieving token during logout: $e');
+    } finally {
+      try {
+        await TokenStorage.deleteToken();
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('userId');
+      } catch (_) {}
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
         user: null,
         clearError: true,
       );
-    } catch (e) {
-      state = state.copyWith(
-        status: AuthStatus.unauthenticated,
-        user: null,
-        errorMessage: 'Failed to logout',
-      );
     }
+  }
+
+  String _extractErrorMessage(dynamic error) {
+    if (error is ApiException) {
+      return error.message;
+    }
+    return error.toString().replaceAll('Exception: ', '');
+  }
+
+  String? _extractErrorCode(dynamic error) {
+    if (error is ApiException) {
+      return error.code;
+    }
+    return null;
   }
 }
 

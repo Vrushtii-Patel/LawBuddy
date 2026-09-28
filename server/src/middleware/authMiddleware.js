@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = require('../config/jwt');
+const User = require('../models/User');
 
 function isValidEmail(email) {
   if (!email || typeof email !== 'string') return false;
@@ -19,38 +20,7 @@ function sanitizeInput(str) {
   return str.trim();
 }
 
-function requireAuth(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Authentication required' });
-  }
-
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(401).json({ error: 'Invalid or expired token' });
-  }
-}
-
-function optionalAuth(req, res, next) {
-  const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.split(' ')[1];
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      req.user = decoded;
-    } catch (err) {
-      // invalid token, proceed without req.user
-    }
-  }
-  next();
-}
-
-async function requireAdmin(req, res, next) {
-  // First ensure user is authenticated
+async function requireAuth(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Authentication required' });
@@ -65,10 +35,80 @@ async function requireAdmin(req, res, next) {
   }
 
   try {
-    const User = require('../models/User');
     const user = await User.findOne({ userId: decoded.userId });
     if (!user) {
       return res.status(401).json({ error: 'User account not found' });
+    }
+
+    const payloadTokenVersion = decoded.tokenVersion !== undefined ? decoded.tokenVersion : 0;
+    const currentTokenVersion = user.tokenVersion || 0;
+    if (payloadTokenVersion !== currentTokenVersion) {
+      return res.status(401).json({ error: 'Token has been revoked. Please log in again.' });
+    }
+
+    req.user = {
+      userId: user.userId,
+      email: user.email,
+      role: user.role || 'user',
+      tokenVersion: currentTokenVersion
+    };
+    next();
+  } catch (err) {
+    console.error('requireAuth authorization error:', err);
+    return res.status(500).json({ error: 'Internal server error during authentication' });
+  }
+}
+
+async function optionalAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      const user = await User.findOne({ userId: decoded.userId });
+      if (user) {
+        const payloadTokenVersion = decoded.tokenVersion !== undefined ? decoded.tokenVersion : 0;
+        const currentTokenVersion = user.tokenVersion || 0;
+        if (payloadTokenVersion === currentTokenVersion) {
+          req.user = {
+            userId: user.userId,
+            email: user.email,
+            role: user.role || 'user',
+            tokenVersion: currentTokenVersion
+          };
+        }
+      }
+    } catch (err) {
+      // invalid or expired token, proceed without req.user
+    }
+  }
+  next();
+}
+
+async function requireAdmin(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  let decoded;
+  try {
+    decoded = jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  try {
+    const user = await User.findOne({ userId: decoded.userId });
+    if (!user) {
+      return res.status(401).json({ error: 'User account not found' });
+    }
+
+    const payloadTokenVersion = decoded.tokenVersion !== undefined ? decoded.tokenVersion : 0;
+    const currentTokenVersion = user.tokenVersion || 0;
+    if (payloadTokenVersion !== currentTokenVersion) {
+      return res.status(401).json({ error: 'Token has been revoked. Please log in again.' });
     }
 
     if (user.role !== 'admin') {

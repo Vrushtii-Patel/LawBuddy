@@ -253,7 +253,12 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                         children: [
                           Expanded(
                             child: InkWell(
-                              onTap: () => ref.read(localeProvider.notifier).setLanguage(AppLanguage.english),
+                              onTap: () async {
+                                await ref.read(localeProvider.notifier).setLanguage(AppLanguage.english);
+                                if (ref.read(authProvider).user != null) {
+                                  await ref.read(authProvider.notifier).updateProfile(preferredLanguage: 'en');
+                                }
+                              },
                               borderRadius: const BorderRadius.horizontal(left: Radius.circular(12)),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(vertical: 9),
@@ -275,7 +280,12 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                           ),
                           Expanded(
                             child: InkWell(
-                              onTap: () => ref.read(localeProvider.notifier).setLanguage(AppLanguage.hindi),
+                              onTap: () async {
+                                await ref.read(localeProvider.notifier).setLanguage(AppLanguage.hindi);
+                                if (ref.read(authProvider).user != null) {
+                                  await ref.read(authProvider.notifier).updateProfile(preferredLanguage: 'hi');
+                                }
+                              },
                               borderRadius: const BorderRadius.horizontal(right: Radius.circular(12)),
                               child: Container(
                                 padding: const EdgeInsets.symmetric(vertical: 9),
@@ -641,10 +651,10 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
                         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         final newName = _nameController.text.trim();
                         if (newName.isNotEmpty) {
-                           ref.read(authProvider.notifier).updateUserName(newName);
+                          await ref.read(authProvider.notifier).updateProfile(fullName: newName);
                         }
                         setState(() => _isEditing = false);
                       },
@@ -689,6 +699,69 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
                 child: Text(
                   (user?.email != null && user!.email!.isNotEmpty) ? user.email! : 'user@lawbuddy.in',
                   style: TextStyle(color: colorScheme.onSurface, fontSize: 13),
+                ),
+              ),
+              const SizedBox(height: 14),
+
+              // Date of Birth
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    currentLanguage == AppLanguage.hindi ? 'जन्म तिथि' : 'Date of Birth',
+                    style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12, fontWeight: FontWeight.w600),
+                  ),
+                  if (user?.dateOfBirth != null)
+                    InkWell(
+                      onTap: () async {
+                        await ref.read(authProvider.notifier).updateProfile(dateOfBirth: '');
+                      },
+                      child: Text(
+                        currentLanguage == AppLanguage.hindi ? 'साफ़ करें' : 'Clear',
+                        style: TextStyle(color: colorScheme.error, fontSize: 12, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              InkWell(
+                onTap: () async {
+                  final now = DateTime.now();
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: user?.dateOfBirth ?? DateTime(2000, 1, 1),
+                    firstDate: DateTime(1900, 1, 1),
+                    lastDate: DateTime(now.year, now.month, now.day),
+                  );
+                  if (picked != null) {
+                    final isoDate = '${picked.year.toString().padLeft(4, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
+                    await ref.read(authProvider.notifier).updateProfile(dateOfBirth: isoDate);
+                  }
+                },
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: colorScheme.outline),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        user?.dateOfBirth != null
+                            ? '${user!.dateOfBirth!.year}-${user.dateOfBirth!.month.toString().padLeft(2, '0')}-${user.dateOfBirth!.day.toString().padLeft(2, '0')}'
+                            : (currentLanguage == AppLanguage.hindi ? 'जन्म तिथि चुनें (वैकल्पिक)' : 'Select Date of Birth (Optional)'),
+                        style: TextStyle(
+                          color: user?.dateOfBirth != null ? colorScheme.onSurface : colorScheme.onSurfaceVariant,
+                          fontSize: 13,
+                        ),
+                      ),
+                      Icon(Icons.calendar_today_rounded, size: 16, color: colorScheme.primary),
+                    ],
+                  ),
                 ),
               ),
             ],

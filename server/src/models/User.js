@@ -13,8 +13,8 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    required: true,
     unique: true,
-    sparse: true,
     lowercase: true,
     trim: true
   },
@@ -29,7 +29,26 @@ const userSchema = new mongoose.Schema({
     trim: true
   },
   password: {
-    type: String,
+    type: String
+  },
+  passwordHash: {
+    type: String
+  },
+  dateOfBirth: {
+    type: Date
+  },
+  preferredLanguage: {
+    type: String
+  },
+  termsAcceptedAt: {
+    type: Date
+  },
+  termsVersion: {
+    type: String
+  },
+  tokenVersion: {
+    type: Number,
+    default: 0
   },
   created_at: {
     type: Date,
@@ -55,5 +74,12 @@ const userSchema = new mongoose.Schema({
 }, {
   timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
+
+// TTL cleanup: unverified users (emailVerified: false) are automatically deleted 24h (86400s) after creation.
+// Verified accounts (emailVerified: true) including legacy users are strictly excluded and never deleted.
+userSchema.index(
+  { created_at: 1 },
+  { expireAfterSeconds: 86400, partialFilterExpression: { emailVerified: false } }
+);
 
 module.exports = mongoose.model('User', userSchema);

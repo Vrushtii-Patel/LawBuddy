@@ -119,10 +119,15 @@ void main() {
       expect(ApiService.deleteChatSession, isA<Function>());
 
       // Auth methods
-      expect(ApiService.sendOtp, isA<Function>());
-      expect(ApiService.verifyOtp, isA<Function>());
+      expect(ApiService.signup, isA<Function>());
+      expect(ApiService.verifyEmail, isA<Function>());
+      expect(ApiService.login, isA<Function>());
+      expect(ApiService.forgotPassword, isA<Function>());
+      expect(ApiService.resetPassword, isA<Function>());
       expect(ApiService.resendOtp, isA<Function>());
+      expect(ApiService.logout, isA<Function>());
       expect(ApiService.getProfile, isA<Function>());
+      expect(ApiService.updateProfile, isA<Function>());
 
       // Stamp duty methods
       expect(ApiService.saveStampDutyCalculation, isA<Function>());

@@ -7,6 +7,11 @@ const otpSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
   },
+  purpose: {
+    type: String,
+    required: true,
+    enum: ['signup', 'reset']
+  },
   otpHash: {
     type: String,
     required: true,
@@ -22,8 +27,10 @@ const otpSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 600 // TTL index: Automatically remove documents 10 mins after createdAt just as a fallback
+    expires: 600 // TTL fallback: Automatically remove documents 10 mins after creation
   }
 });
+
+otpSchema.index({ email: 1, purpose: 1 });
 
 module.exports = mongoose.model('Otp', otpSchema);

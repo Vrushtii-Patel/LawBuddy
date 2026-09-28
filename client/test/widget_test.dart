@@ -724,24 +724,22 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 700));
 
-    // Fill valid form fields
+    // Fill valid form fields (name, email, password, confirmPassword)
     final textFields = find.byType(TextFormField);
-    expect(textFields, findsNWidgets(2));
+    expect(textFields, findsNWidgets(4));
 
     await tester.enterText(textFields.at(0), 'Test Legal User');
     await tester.enterText(textFields.at(1), 'testuser@example.com');
+    await tester.enterText(textFields.at(2), 'ValidPass123');
+    await tester.enterText(textFields.at(3), 'ValidPass123');
     await tester.pump();
 
-    // Find submit button and tap WITHOUT checking consent
+    // Submit button is disabled when consent is missing
     final submitButton = find.byType(ElevatedButton);
     expect(submitButton, findsOneWidget);
 
-    await tester.ensureVisible(submitButton);
-    await tester.tap(submitButton);
-    await tester.pump();
-
-    // Error message must appear
-    expect(find.text('Please accept the Terms of Use and Privacy Policy.'), findsOneWidget);
+    final ElevatedButton buttonWidget = tester.widget(submitButton);
+    expect(buttonWidget.onPressed, isNull);
   });
 
   testWidgets('SignupScreen allows checking consent and clears error', (WidgetTester tester) async {
