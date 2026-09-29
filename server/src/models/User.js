@@ -28,9 +28,6 @@ const userSchema = new mongoose.Schema({
     sparse: true,
     trim: true
   },
-  password: {
-    type: String
-  },
   passwordHash: {
     type: String
   },

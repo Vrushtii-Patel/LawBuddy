@@ -93,7 +93,6 @@ router.post('/signup', otpRequestIpLimiter, otpRequestEmailLimiter, async (req, 
     if (existingUser && !existingUser.emailVerified) {
       existingUser.full_name = cleanName;
       existingUser.passwordHash = passwordHash;
-      existingUser.password = undefined;
       existingUser.termsAcceptedAt = new Date();
       existingUser.termsVersion = '1.0';
       existingUser.updated_at = new Date();
@@ -226,14 +225,14 @@ router.post('/login', loginIpLimiter, loginEmailLimiter, async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
-    if (!user.passwordHash && !user.password) {
+    if (!user.passwordHash) {
       return res.status(403).json({
         error: 'Password has not been set for this account. Please reset your password to log in.',
         code: 'PASSWORD_NOT_SET'
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.passwordHash || user.password);
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
@@ -362,7 +361,6 @@ router.post('/reset-password', otpVerifyIpLimiter, otpVerifyEmailLimiter, async 
 
     const passwordHash = await bcrypt.hash(new_password, 12);
     user.passwordHash = passwordHash;
-    user.password = undefined;
     user.emailVerified = true;
     user.tokenVersion = (user.tokenVersion || 0) + 1;
     user.updated_at = new Date();
