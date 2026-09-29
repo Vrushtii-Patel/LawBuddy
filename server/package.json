@@ -5,12 +5,20 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "node tests/test_stamp_duty_verification.js && node tests/test_stamp_duty.js && node tests/test_version_aware_caching.js && node tests/test_cross_reference.js && node tests/test_document_bin.js && node tests/test_checklist_bin.js && node tests/test_job_sweep.js",
-    "test:stamp-duty": "node tests/test_stamp_duty_verification.js",
+    "test": "node tests/test_stamp_duty.js && node tests/test_version_aware_caching.js && node tests/test_cross_reference.js && node tests/test_document_bin.js && node tests/test_checklist_bin.js && node tests/test_job_sweep.js && node tests/test_backend_regression.js && node tests/test_auth_refactor.js && node tests/test_news_caching.js && node tests/test_email_service_security.js && node tests/test_gemini_retry.js && node tests/test_document_routes_helpers.js",
+    "test:regression": "npm test",
+    "test:unit": "npm test",
+    "test:verify": "node tests/test_stamp_duty_verification.js",
+    "test:stamp-duty": "node tests/test_stamp_duty.js",
     "test:caching": "node tests/test_version_aware_caching.js",
     "test:cross-ref": "node tests/test_cross_reference.js",
     "test:job-sweep": "node tests/test_job_sweep.js",
-    "test:bin": "node tests/test_document_bin.js && node tests/test_checklist_bin.js"
+    "test:bin": "node tests/test_document_bin.js && node tests/test_checklist_bin.js",
+    "test:auth": "node tests/test_auth_refactor.js",
+    "test:news": "node tests/test_news_caching.js",
+    "test:email": "node tests/test_email_service_security.js",
+    "test:retry": "node tests/test_gemini_retry.js",
+    "test:helpers": "node tests/test_document_routes_helpers.js"
   },
   "keywords": [],
   "author": "",

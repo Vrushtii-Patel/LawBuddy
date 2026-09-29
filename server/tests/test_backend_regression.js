@@ -135,6 +135,9 @@ async function runRegressionTests() {
     });
     const validToken = createAuthToken(testUser);
 
+    const originalExecuteJobPipeline = scanJobService.executeJobPipeline;
+    scanJobService.executeJobPipeline = async () => {};
+
     let passedCount = 0;
     let failedCount = 0;
 
@@ -430,11 +433,13 @@ async function runRegressionTests() {
         });
 
     } finally {
+        scanJobService.executeJobPipeline = originalExecuteJobPipeline;
         // Clean up test documents & user
         await Document.deleteMany({ userId: testUser });
         await ScanJob.deleteMany({ userId: testUser });
         await User.deleteMany({ userId: testUser });
-        server.close();
+        await new Promise(res => server.close(res));
+        await mongoose.disconnect();
     }
 
     console.log('\n===============================================================');

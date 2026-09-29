@@ -1,17 +1,41 @@
-name: Deploy Flutter Web to GitHub Pages
+name: CI/CD Pipeline & GitHub Pages Deployment
 
 on:
   push:
     branches:
       - main
       - master
-      - Jiya
 
 jobs:
-  build-and-deploy:
+  backend-ci:
+    name: Backend CI (Node.js & Express)
     runs-on: ubuntu-latest
-    
-    # We need these permissions to deploy to GitHub Pages
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: './server/package-lock.json'
+
+      - name: Install server dependencies
+        working-directory: ./server
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: ./server
+        run: npm test
+
+  flutter-ci-and-deploy:
+    name: Flutter Web CI & Deploy
+    needs: [backend-ci]
+    runs-on: ubuntu-latest
+
+    # Permissions required to publish build artifacts to GitHub Pages
     permissions:
       contents: write
 
@@ -28,9 +52,17 @@ jobs:
         working-directory: ./client
         run: flutter pub get
 
+      - name: Analyze code
+        working-directory: ./client
+        run: flutter analyze
+
+      - name: Run client tests
+        working-directory: ./client
+        run: flutter test
+
       - name: Build Web App
         working-directory: ./client
-        # We pass the API_URL from GitHub Secrets to the build
+        # API_URL is supplied via repository secrets; base-href configured for GitHub Pages repository root
         run: flutter build web --release --dart-define=API_URL=${{ secrets.API_URL }} --base-href="/Final-year-project/"
 
       - name: Deploy to GitHub Pages
