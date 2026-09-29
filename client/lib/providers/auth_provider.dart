@@ -29,13 +29,14 @@ class AuthState {
   AuthState copyWith({
     AuthStatus? status,
     UserModel? user,
+    bool clearUser = false,
     String? errorMessage,
     String? errorCode,
     bool clearError = false,
   }) {
     return AuthState(
       status: status ?? this.status,
-      user: user ?? this.user,
+      user: clearUser ? null : (user ?? this.user),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       errorCode: clearError ? null : (errorCode ?? this.errorCode),
     );
@@ -43,7 +44,14 @@ class AuthState {
 }
 
 class AuthNotifier extends StateNotifier<AuthState> {
+  bool _isLoggingOut = false;
+
   AuthNotifier() : super(AuthState()) {
+    ApiService.onUnauthorized = () {
+      if (!_isLoggingOut) {
+        logout();
+      }
+    };
     checkAuthStatus();
   }
 
@@ -65,11 +73,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
           clearError: true,
         );
       } else {
-        state = state.copyWith(status: AuthStatus.unauthenticated);
+        state = state.copyWith(status: AuthStatus.unauthenticated, clearUser: true);
       }
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
+        clearUser: true,
         clearError: true,
       );
     }
@@ -281,6 +290,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   Future<void> logout() async {
+    if (_isLoggingOut) return;
+    _isLoggingOut = true;
     state = state.copyWith(status: AuthStatus.loading);
     try {
       final token = await TokenStorage.getToken();
@@ -299,9 +310,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.remove('userId');
       } catch (_) {}
+      _isLoggingOut = false;
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
-        user: null,
+        clearUser: true,
         clearError: true,
       );
     }

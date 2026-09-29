@@ -140,6 +140,10 @@ class ApiService {
   }
 
 
+  /// Centralized unauthorized callback hook triggered when any authenticated
+  /// request receives an HTTP 401 status.
+  static VoidCallback? onUnauthorized;
+
   /// Extracts error message from response body with fallbacks.
   static String _parseErrorMessage(http.Response response, {String fallback = 'An unexpected error occurred'}) {
     try {
@@ -175,11 +179,24 @@ class ApiService {
     http.Response response, {
     String? defaultErrorMessage,
     Map<int, String>? customStatusMessages,
+    bool requiresAuth = true,
   }) {
     final status = response.statusCode;
     if (status >= 200 && status < 300) return;
 
     final code = _parseErrorCode(response);
+
+    if (status == 401) {
+      if (requiresAuth) {
+        try {
+          onUnauthorized?.call();
+        } catch (cbErr) {
+          debugPrint('Error in onUnauthorized callback: $cbErr');
+        }
+      }
+      final parsedError = _parseErrorMessage(response, fallback: 'Authentication expired. Please log in again.');
+      throw ApiException(parsedError, code: code, statusCode: status);
+    }
 
     if (customStatusMessages != null && customStatusMessages.containsKey(status)) {
       throw ApiException(customStatusMessages[status]!, code: code, statusCode: status);
@@ -197,10 +214,6 @@ class ApiService {
     }
     if (status == 413) {
       throw ApiException('This document is too large. Please upload a smaller file.', code: code, statusCode: status);
-    }
-    if (status == 401) {
-      final parsedError = _parseErrorMessage(response, fallback: 'Authentication expired. Please log in again.');
-      throw ApiException(parsedError, code: code, statusCode: status);
     }
     if (status == 403) {
       final parsedError = _parseErrorMessage(response, fallback: 'Access Denied');
@@ -233,7 +246,12 @@ class ApiService {
       timeout: timeout,
     );
 
-    _handleCommonErrors(response, defaultErrorMessage: defaultErrorMessage, customStatusMessages: customStatusMessages);
+    _handleCommonErrors(
+      response,
+      defaultErrorMessage: defaultErrorMessage,
+      customStatusMessages: customStatusMessages,
+      requiresAuth: requiresAuth,
+    );
     return jsonDecode(response.body);
   }
 
@@ -257,6 +275,9 @@ class ApiService {
         requiresAuth: requiresAuth,
         timeout: timeout,
       );
+      if (response.statusCode == 401 && requiresAuth) {
+        _handleCommonErrors(response, requiresAuth: requiresAuth);
+      }
       return response.statusCode >= 200 && response.statusCode < 300;
     } catch (e) {
       debugPrint('API $method $endpoint error: $e');
@@ -281,6 +302,9 @@ class ApiService {
         requiresAuth: requiresAuth,
         timeout: timeout,
       );
+      if (response.statusCode == 401 && requiresAuth) {
+        _handleCommonErrors(response, requiresAuth: requiresAuth);
+      }
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final decoded = jsonDecode(response.body);
         if (decoded is List) return decoded;
@@ -426,6 +450,9 @@ class ApiService {
   static Future<Map<String, dynamic>?> getActiveScanJob() async {
     try {
       final response = await _sendRequest('GET', '/scans/active');
+      if (response.statusCode == 401) {
+        _handleCommonErrors(response, requiresAuth: true);
+      }
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data is Map && data['activeJob'] != null) {
@@ -467,6 +494,9 @@ class ApiService {
   static Future<Uint8List?> fetchDocumentFile(String documentId) async {
     try {
       final response = await _sendRequest('GET', '/documents/$documentId/file');
+      if (response.statusCode == 401) {
+        _handleCommonErrors(response, requiresAuth: true);
+      }
       if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
         return response.bodyBytes;
       }
@@ -526,6 +556,10 @@ class ApiService {
           if (totalClauseCount != null) 'totalClauseCount': totalClauseCount,
         },
       );
+
+      if (response.statusCode == 401) {
+        _handleCommonErrors(response, requiresAuth: true);
+      }
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
@@ -645,8 +679,7 @@ class ApiService {
   }
 
   static Future<bool> deleteChecklist(String type) async {
-    final response = await _sendRequest('DELETE', '/checklists/$type');
-    return response.statusCode == 200;
+    return _requestBoolSafe('DELETE', '/checklists/$type');
   }
 
   static Future<List<dynamic>> fetchBinChecklists() async {
@@ -673,7 +706,10 @@ class ApiService {
 
   static Future<void> syncChecklistsWithDocument(String documentId) async {
     try {
-      await _sendRequest('POST', '/checklists/sync/$documentId');
+      final response = await _sendRequest('POST', '/checklists/sync/$documentId');
+      if (response.statusCode == 401) {
+        _handleCommonErrors(response, requiresAuth: true);
+      }
     } catch (e) {
       debugPrint('Checklist sync error: $e');
     }
@@ -681,7 +717,10 @@ class ApiService {
 
   static Future<void> syncAllChecklists() async {
     try {
-      await _sendRequest('POST', '/checklists/sync');
+      final response = await _sendRequest('POST', '/checklists/sync');
+      if (response.statusCode == 401) {
+        _handleCommonErrors(response, requiresAuth: true);
+      }
     } catch (e) {
       debugPrint('Checklist sync all error: $e');
     }
@@ -886,6 +925,9 @@ class ApiService {
   static Future<Map<String, dynamic>> saveStampDutyCalculation(Map<String, dynamic> data) async {
     try {
       final response = await _sendRequest('POST', '/stamp-duty', body: data);
+      if (response.statusCode == 401) {
+        _handleCommonErrors(response, requiresAuth: true);
+      }
       if (response.statusCode == 201 || response.statusCode == 200) {
         return jsonDecode(response.body);
       }
@@ -909,6 +951,7 @@ class ApiService {
       final response = await _sendRequest(
         'GET',
         '/stamp-duty-config',
+        requiresAuth: false,
         timeout: const Duration(seconds: 8),
       );
 
@@ -963,6 +1006,11 @@ class ApiService {
       final Map<String, dynamic> data = jsonDecode(response.body);
       return AdminAnalyticsData.fromJson(data);
     } else if (response.statusCode == 401) {
+      try {
+        onUnauthorized?.call();
+      } catch (cbErr) {
+        debugPrint('Error in onUnauthorized callback: $cbErr');
+      }
       throw Exception('Authentication expired. Please log in again.');
     } else if (response.statusCode == 403) {
       throw Exception('Access Denied: Admin authorization is required to view system analytics.');
@@ -1003,6 +1051,9 @@ class ApiService {
   static Future<Map<String, dynamic>?> getActiveComparison() async {
     try {
       final response = await _sendRequest('GET', '/comparisons/active');
+      if (response.statusCode == 401) {
+        _handleCommonErrors(response, requiresAuth: true);
+      }
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return data['activeComparison'];
