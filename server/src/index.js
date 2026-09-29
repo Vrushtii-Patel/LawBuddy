@@ -77,9 +77,9 @@ async function startServer() {
     }
   }
 
-const documentCleanupService = require('./services/documentCleanupService');
+  const documentCleanupService = require('./services/documentCleanupService');
 
-// Ensure clean collection indexes & background recovery
+  // Ensure clean collection indexes & background recovery
   try {
     const Checklist = require('./models/Checklist');
     await Checklist.syncIndexes();
@@ -110,12 +110,24 @@ const documentCleanupService = require('./services/documentCleanupService');
   const autoPurgeInterval = setInterval(() => {
     Promise.all([
       documentCleanupService.purgeExpiredBinnedDocuments(),
-      documentCleanupService.purgeExpiredBinnedChecklists()
+      documentCleanupService.purgeExpiredBinnedChecklists(),
+      documentCleanupService.sweepAbandonedJobs()
     ]).catch(err => {
       console.warn('[Periodic Auto-Purge] Error:', err.message);
     });
   }, 60 * 60 * 1000);
   if (autoPurgeInterval.unref) autoPurgeInterval.unref();
+
+  // Sweep abandoned/failed jobs BEFORE startup recovery, so long-dead jobs are
+  // deleted instead of being resumed.
+  try {
+    const swept = await documentCleanupService.sweepAbandonedJobs();
+    if (swept.scanJobs || swept.orphanedCompletedJobs || swept.comparisons || swept.files) {
+      console.log(`✓ Job sweep on startup: ${swept.scanJobs} failed/stuck scan job(s), ${swept.orphanedCompletedJobs} orphaned completed job(s), ${swept.comparisons} comparison(s), ${swept.files} file(s) removed.`);
+    }
+  } catch (sweepErr) {
+    console.warn('Startup job sweep warning:', sweepErr.message);
+  }
 
   scanJobService.recoverUnfinishedScanJobs().catch(recErr => {
     console.warn('Startup scan recovery warning:', recErr.message);

@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const Document = require('../models/Document');
 const ScanJob = require('../models/ScanJob');
+const DocumentComparison = require('../models/DocumentComparison');
 const Checklist = require('../models/Checklist');
 const crossReferenceService = require('./crossReferenceService');
 
@@ -156,10 +157,138 @@ async function purgeExpiredBinnedChecklists(userId = null, retentionDays = 30) {
     return purgedCount;
 }
 
+// =========================================================================
+// ORPHANED / ABANDONED JOB SWEEP
+// =========================================================================
+
+const DEFAULT_ABANDONED_JOB_RETENTION_DAYS = (() => {
+    const fromEnv = parseInt(process.env.ABANDONED_JOB_RETENTION_DAYS || '', 10);
+    return Number.isFinite(fromEnv) && fromEnv > 0 ? fromEnv : 7;
+})();
+
+const SWEEP_BATCH_LIMIT = 500;
+
+// Hashes are used to build a path on disk, so only accept plain file-name characters.
+const SAFE_HASH_RE = /^[A-Za-z0-9_-]+$/;
+
+/**
+ * Deletes uploads/scan_files/<hash>.dat only when nothing references it any more:
+ * no Document (including binned ones) and no remaining ScanJob with the same fileHash.
+ * Files are content-addressed, so the same upload by different users shares one file.
+ * Call this AFTER the ScanJob rows being removed have been deleted.
+ * Returns true if a file was removed.
+ */
+async function removeFileIfUnreferenced(fileHash) {
+    if (!fileHash || !SAFE_HASH_RE.test(fileHash)) return false;
+
+    const [docRefs, jobRefs] = await Promise.all([
+        Document.countDocuments({ fileHash }),
+        ScanJob.countDocuments({ fileHash })
+    ]);
+    if (docRefs > 0 || jobRefs > 0) return false;
+
+    const filePath = path.resolve(UPLOADS_DIR, `${fileHash}.dat`);
+    if (!filePath.startsWith(path.resolve(UPLOADS_DIR) + path.sep)) return false;
+    if (!fs.existsSync(filePath)) return false;
+
+    fs.unlinkSync(filePath);
+    return true;
+}
+
+/**
+ * Sweeps scan/comparison jobs that will never produce (or no longer have) a document:
+ *
+ *  1. ScanJobs that are not COMPLETED (FAILED, or stuck in a pending status) and have not
+ *     been touched for `retentionDays`.
+ *  2. COMPLETED ScanJobs older than `retentionDays` whose Document no longer exists.
+ *  3. DocumentComparisons that are not COMPLETED and have not been touched for `retentionDays`.
+ *
+ * For scan jobs, the uploaded file is removed too, but only if no Document or other ScanJob
+ * still references the same hash. Comparisons own no files (they point at Documents' files).
+ * Works in bounded batches so a large backlog cannot stall the server; the next run continues.
+ *
+ * @param {number} retentionDays - Age (by updatedAt) before a job is considered abandoned
+ * @returns {Promise<{scanJobs:number, orphanedCompletedJobs:number, comparisons:number, files:number}>}
+ */
+async function sweepAbandonedJobs(retentionDays = DEFAULT_ABANDONED_JOB_RETENTION_DAYS) {
+    const threshold = new Date(Date.now() - retentionDays * 24 * 60 * 60 * 1000);
+    const result = { scanJobs: 0, orphanedCompletedJobs: 0, comparisons: 0, files: 0 };
+    const affectedHashes = new Set();
+
+    // 1. Failed / stuck scan jobs
+    try {
+        const stale = await ScanJob.find({
+            status: { $ne: 'COMPLETED' },
+            updatedAt: { $lt: threshold }
+        }).select('_id fileHash').limit(SWEEP_BATCH_LIMIT).lean();
+
+        if (stale.length > 0) {
+            const del = await ScanJob.deleteMany({ _id: { $in: stale.map(j => j._id) } });
+            result.scanJobs = del.deletedCount || 0;
+            stale.forEach(j => j.fileHash && affectedHashes.add(j.fileHash));
+        }
+    } catch (err) {
+        console.warn('[JobSweep] Warning: failed/stuck ScanJob sweep error:', err.message);
+    }
+
+    // 2. Completed scan jobs whose Document has been deleted
+    try {
+        const completed = await ScanJob.find({
+            status: 'COMPLETED',
+            documentId: { $ne: null },
+            updatedAt: { $lt: threshold }
+        }).select('_id fileHash documentId').limit(SWEEP_BATCH_LIMIT).lean();
+
+        if (completed.length > 0) {
+            const existing = await Document.find({
+                _id: { $in: completed.map(j => j.documentId) }
+            }).select('_id').lean();
+            const existingIds = new Set(existing.map(d => String(d._id)));
+
+            const orphans = completed.filter(j => !existingIds.has(String(j.documentId)));
+            if (orphans.length > 0) {
+                const del = await ScanJob.deleteMany({ _id: { $in: orphans.map(j => j._id) } });
+                result.orphanedCompletedJobs = del.deletedCount || 0;
+                orphans.forEach(j => j.fileHash && affectedHashes.add(j.fileHash));
+            }
+        }
+    } catch (err) {
+        console.warn('[JobSweep] Warning: orphaned completed ScanJob sweep error:', err.message);
+    }
+
+    // 3. Failed / stuck comparisons (no files of their own)
+    try {
+        const staleCmp = await DocumentComparison.find({
+            status: { $ne: 'COMPLETED' },
+            updatedAt: { $lt: threshold }
+        }).select('_id').limit(SWEEP_BATCH_LIMIT).lean();
+
+        if (staleCmp.length > 0) {
+            const del = await DocumentComparison.deleteMany({ _id: { $in: staleCmp.map(c => c._id) } });
+            result.comparisons = del.deletedCount || 0;
+        }
+    } catch (err) {
+        console.warn('[JobSweep] Warning: DocumentComparison sweep error:', err.message);
+    }
+
+    // 4. Files left without any reference (checked after the rows above are gone)
+    for (const hash of affectedHashes) {
+        try {
+            if (await removeFileIfUnreferenced(hash)) result.files++;
+        } catch (err) {
+            console.warn(`[JobSweep] Warning: file cleanup failed for hash ${hash}:`, err.message);
+        }
+    }
+
+    return result;
+}
+
 module.exports = {
     permanentlyDeleteDocument,
     permanentlyDeleteChecklist,
     purgeExpiredBinnedDocuments,
     purgeExpiredBinnedChecklists,
+    sweepAbandonedJobs,
+    removeFileIfUnreferenced,
     UPLOADS_DIR
 };
