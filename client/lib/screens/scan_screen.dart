@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
@@ -31,6 +32,13 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
   String _statusMessage = '';
   Map<String, dynamic>? _activeScanJob;
   Map<String, dynamic>? _currentJob;
+
+  // Polling-timeout prompt state. The single polling loop in
+  // _pollJobUntilComplete awaits _timeoutDecision, so "Keep waiting" resumes
+  // the SAME loop (never a second one) and the backend job is never touched.
+  bool _pollTimedOut = false;
+  bool _pollConnectionIssue = false;
+  Completer<bool>? _timeoutDecision;
 
   // Animations
   AnimationController? _radarController;
@@ -70,6 +78,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
   @override
   void dispose() {
+    if (_timeoutDecision != null && !_timeoutDecision!.isCompleted) {
+      _timeoutDecision!.complete(false);
+    }
     _radarController?.dispose();
     _entryController?.dispose();
     _textController.dispose();
@@ -149,25 +160,65 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       return;
     }
 
+    bool isTerminal(Map<String, dynamic> j) => j['status'] == 'COMPLETED' || j['status'] == 'FAILED';
+
+    const maxPolls = 120; // ~3 minutes per waiting window (1.5s interval)
     int polls = 0;
-    const maxPolls = 120; // 3 minutes max
+    int errorStreak = 0;
+    bool userChoseCheckLater = false;
 
-    while (mounted && job['status'] != 'COMPLETED' && job['status'] != 'FAILED' && polls < maxPolls) {
-      polls++;
-      await Future.delayed(const Duration(milliseconds: 1500));
-      if (!mounted) return;
+    while (mounted && !isTerminal(job)) {
+      while (mounted && !isTerminal(job) && polls < maxPolls) {
+        polls++;
+        await Future.delayed(const Duration(milliseconds: 1500));
+        if (!mounted) return;
 
-      try {
-        job = await ApiService.getScanJob(jobId);
-        if (mounted) {
-          setState(() {
-            _currentJob = job;
-            _statusMessage = _formatStepMessage(job['status'], job['currentStep']);
-          });
+        try {
+          job = await ApiService.getScanJob(jobId);
+          errorStreak = 0;
+          if (mounted) {
+            setState(() {
+              _currentJob = job;
+              _statusMessage = _formatStepMessage(job['status'], job['currentStep']);
+            });
+          }
+        } catch (pollErr) {
+          errorStreak++;
+          debugPrint('Polling transient error: $pollErr');
         }
-      } catch (pollErr) {
-        debugPrint('Polling transient error: $pollErr');
       }
+
+      if (!mounted || isTerminal(job)) break;
+
+      // Waiting window elapsed but the job is still running. This is NOT a
+      // failure: ask the user, and only touch local polling state.
+      final keepWaiting = await _askToKeepWaiting(connectionIssue: errorStreak >= 3);
+      if (!keepWaiting) {
+        userChoseCheckLater = true;
+        break;
+      }
+      polls = 0;
+      errorStreak = 0;
+    }
+
+    if (!mounted) return;
+
+    if (userChoseCheckLater) {
+      // Leave the backend job untouched. It keeps running and, once done, is
+      // saved as a normal document; until then it shows up as the
+      // "Unfinished Scan" banner (GET /scans/active) when the screen reopens.
+      setState(() {
+        _isProcessing = false;
+        _activeScanJob = job;
+      });
+      AppToast.showInfo(
+        context,
+        'Your scan is saved and still running. Find it in your documents when it finishes, or resume it here.',
+      );
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+      }
+      return;
     }
 
     if (!mounted) return;
@@ -215,6 +266,39 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         _isProcessing = false;
         _activeScanJob = job;
       });
+    }
+  }
+
+  /// Shows the in-screen timeout card and waits for the user's choice.
+  /// Returns true for "Keep waiting", false for "Check later" (or if the
+  /// screen is disposed). Completing the completer only once makes repeated
+  /// taps harmless, so a second polling loop can never start.
+  Future<bool> _askToKeepWaiting({required bool connectionIssue}) {
+    final completer = Completer<bool>();
+    _timeoutDecision = completer;
+    if (mounted) {
+      setState(() {
+        _pollTimedOut = true;
+        _pollConnectionIssue = connectionIssue;
+      });
+    } else {
+      completer.complete(false);
+    }
+    return completer.future.whenComplete(() {
+      _timeoutDecision = null;
+      if (mounted) {
+        setState(() {
+          _pollTimedOut = false;
+          _pollConnectionIssue = false;
+        });
+      }
+    });
+  }
+
+  void _resolveTimeoutPrompt(bool keepWaiting) {
+    final c = _timeoutDecision;
+    if (c != null && !c.isCompleted) {
+      c.complete(keepWaiting);
     }
   }
 
@@ -1221,6 +1305,117 @@ The Developer represents that necessary zoning approvals are under application w
   // ==========================================
   // PROCESSING / ANALYZING STATE
   // ==========================================
+  // ==========================================
+  // POLLING TIMEOUT CARD
+  // ==========================================
+  Widget _buildTimeoutCard(bool isDark) {
+    final primary = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final border = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final surface = isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface;
+
+    final body = _pollConnectionIssue
+        ? "We're having trouble reaching the server, so we can't confirm progress right now. Your scan was already submitted and isn't affected."
+        : 'Your document is still being processed. You can keep waiting or check back later.';
+    final badge = _pollConnectionIssue ? 'Connection issue' : 'Processing';
+    final badgeColor = _pollConnectionIssue ? Colors.orange : primary;
+
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 440),
+      child: Semantics(
+        container: true,
+        liveRegion: true,
+        label: 'Analysis is taking longer than expected. $body',
+        child: Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: border),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.schedule_rounded, size: 20, color: textPrimary),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Analysis is taking longer than expected',
+                      style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700, color: textPrimary),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(body, style: GoogleFonts.inter(fontSize: 13, height: 1.4, color: textSecondary)),
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text('Scan status',
+                              style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: textPrimary)),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: badgeColor.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(badge,
+                              style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: badgeColor)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      "Your document and scan progress are saved. You don't need to upload it again.",
+                      style: GoogleFonts.inter(fontSize: 12, height: 1.4, color: textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 14),
+              ElevatedButton(
+                onPressed: () => _resolveTimeoutPrompt(true),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primary,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                ),
+                child: Text('Keep waiting', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700)),
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton(
+                onPressed: () => _resolveTimeoutPrompt(false),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: textPrimary,
+                  side: BorderSide(color: border),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                ),
+                child: Text('Check later', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildProcessingState(bool isDark, LocaleNotifier loc) {
     final accentColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
     final cautionColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
@@ -1384,6 +1579,12 @@ The Developer represents that necessary zoning approvals are under application w
                 ),
               ),
             ),
+
+            // Timeout prompt after ~3 minutes of polling (scan is NOT failed)
+            if (_pollTimedOut) ...[
+              const SizedBox(height: 20),
+              _buildTimeoutCard(isDark),
+            ],
 
             // Automatic Retry Alert Banner (if transient AI rate limit encountered)
             if (isRetrying) ...[
