@@ -5,11 +5,19 @@ on:
     branches:
       - main
       - master
+      - Jiya
+  workflow_dispatch:
 
 jobs:
   backend-ci:
     name: Backend CI (Node.js & Express)
     runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
 
     steps:
       - name: Checkout repository
@@ -28,6 +36,11 @@ jobs:
 
       - name: Run backend tests
         working-directory: ./server
+        env:
+          NODE_ENV: test
+          MONGODB_URI: mongodb://localhost:27017/lawbuddy_test
+          JWT_SECRET: test_jwt_secret_super_secure_key_1234567890
+          ALLOW_DEV_EMAIL_FALLBACK: 'true'
         run: npm test
 
   flutter-ci-and-deploy:
