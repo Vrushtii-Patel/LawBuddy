@@ -41,14 +41,16 @@ class HomeChecklistCard extends ConsumerWidget {
         }
       }
     }
-    final double checklistProgress = totalTasks > 0 ? (completedTasks / totalTasks) : 0.0;
+    final double checklistProgress =
+        totalTasks > 0 ? (completedTasks / totalTasks) : 0.0;
 
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadii.rounded16,
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
@@ -70,10 +72,17 @@ class HomeChecklistCard extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.18),
-                        borderRadius: BorderRadius.circular(8),
+                        color: (isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightAccent)
+                            .withValues(alpha: 0.18),
+                        borderRadius: AppRadii.rounded8,
                       ),
-                      child: Icon(Icons.checklist_rounded, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary, size: 17),
+                      child: Icon(Icons.checklist_rounded,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
+                          size: 17),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -84,19 +93,23 @@ class HomeChecklistCard extends ConsumerWidget {
                             loc.translate('home.dueDiligenceSection'),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                           Text(
                             activeTitle,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11.5,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                         ],
@@ -108,9 +121,9 @@ class HomeChecklistCard extends ConsumerWidget {
               const SizedBox(width: 8),
               Text(
                 '${(checklistProgress * 100).toInt()}%',
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 16,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w700,
                   color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                 ),
               ),
@@ -128,7 +141,10 @@ class HomeChecklistCard extends ConsumerWidget {
               child: FractionallySizedBox(
                 alignment: Alignment.centerLeft,
                 widthFactor: checklistProgress > 0 ? checklistProgress : 0.0,
-                child: Container(color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
+                child: Container(
+                    color: isDark
+                        ? AppColors.darkSecondary
+                        : AppColors.lightSecondary),
               ),
             ),
           ),
@@ -139,12 +155,16 @@ class HomeChecklistCard extends ConsumerWidget {
             for (final it in pendingItems)
               Container(
                 margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
-                  borderRadius: BorderRadius.circular(10),
+                  color: isDark
+                      ? AppColors.darkElevatedSurface
+                      : AppColors.lightElevatedSurface,
+                  borderRadius: AppRadii.rounded8,
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color:
+                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Row(
@@ -152,18 +172,25 @@ class HomeChecklistCard extends ConsumerWidget {
                     Icon(
                       Icons.radio_button_unchecked_rounded,
                       size: 15,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightPrimary,
                     ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        (it['task'] ?? it['title'] ?? loc.translate('home.defaultTaskTitle')).toString(),
+                        (it['task'] ??
+                                it['title'] ??
+                                loc.translate('home.defaultTaskTitle'))
+                            .toString(),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12.5,
                           fontWeight: FontWeight.w500,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                     ),
@@ -172,10 +199,14 @@ class HomeChecklistCard extends ConsumerWidget {
               ),
           ] else ...[
             Text(
-              totalTasks > 0 ? loc.translate('home.allTasksDone') : loc.translate('home.noActiveChecklists'),
-              style: GoogleFonts.inter(
+              totalTasks > 0
+                  ? loc.translate('home.allTasksDone')
+                  : loc.translate('home.noActiveChecklists'),
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 12,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -189,11 +220,14 @@ class HomeChecklistCard extends ConsumerWidget {
               icon: const Icon(Icons.arrow_forward_rounded, size: 14),
               label: Text(
                 loc.translate('home.openChecklist'),
-                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700),
+                style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12, fontWeight: FontWeight.w600),
               ),
               style: TextButton.styleFrom(
-                foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                foregroundColor:
+                    isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               ),
             ),
           ),

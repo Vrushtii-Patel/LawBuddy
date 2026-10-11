@@ -48,16 +48,20 @@ class SidebarNavItemState extends State<SidebarNavItem> {
     if (isActive) {
       itemColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
     } else if (_isHovered) {
-      itemColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+      itemColor =
+          isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     } else {
-      itemColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+      itemColor =
+          isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     }
 
     Color bgColor;
     if (isActive) {
-      bgColor = (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.12);
+      bgColor = (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+          .withValues(alpha: 0.12);
     } else if (_isHovered) {
-      bgColor = (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.06);
+      bgColor = (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+          .withValues(alpha: 0.06);
     } else {
       bgColor = Colors.transparent;
     }
@@ -75,7 +79,7 @@ class SidebarNavItemState extends State<SidebarNavItem> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
             decoration: BoxDecoration(
               color: bgColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: AppRadii.rounded12,
               border: Border(
                 left: BorderSide(
                   color: isActive
@@ -98,7 +102,7 @@ class SidebarNavItemState extends State<SidebarNavItem> {
                     widget.label,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 13,
                       fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
                       color: itemColor,
@@ -152,9 +156,10 @@ class WorkspaceMetricCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadii.rounded16,
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
@@ -178,19 +183,21 @@ class WorkspaceMetricCard extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: item.accentColor.withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: AppRadii.rounded8,
                 ),
                 child: Icon(item.icon, color: item.accentColor, size: 16),
               ),
               const SizedBox(width: 8),
               Text(
                 item.value,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  height: 1.0,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                  letterSpacing: -0.5,
+                  fontWeight: FontWeight.w700,
+                  height: 1.1,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                  letterSpacing: -0.4,
                 ),
               ),
             ],
@@ -204,11 +211,13 @@ class WorkspaceMetricCard extends StatelessWidget {
                 item.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  height: 1.2,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  fontWeight: FontWeight.w600,
+                  height: 1.25,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 3),
@@ -216,11 +225,13 @@ class WorkspaceMetricCard extends StatelessWidget {
                 item.subtitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.inter(
-                  fontSize: 10.5,
-                  fontWeight: FontWeight.w500,
-                  height: 1.2,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w400,
+                  height: 1.3,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ],
@@ -284,7 +295,9 @@ class RecentDocItem {
     if (rLower.contains('high') || rLower.contains('red')) {
       riskColor = AppColors.lightError;
       riskIcon = Icons.error_outline_rounded;
-    } else if (rLower.contains('medium') || rLower.contains('yellow') || rLower.contains('caution')) {
+    } else if (rLower.contains('medium') ||
+        rLower.contains('yellow') ||
+        rLower.contains('caution')) {
       riskColor = AppColors.lightCaution;
       riskIcon = Icons.warning_amber_rounded;
     }
@@ -337,8 +350,22 @@ String formatRelativeTime(dynamic dateValue) {
       } else if (diff.inDays < 7 && diff.inDays > 1) {
         return '${diff.inDays}d ago';
       } else {
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        final monthName = (dt.month >= 1 && dt.month <= 12) ? months[dt.month - 1] : '';
+        const months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec'
+        ];
+        final monthName =
+            (dt.month >= 1 && dt.month <= 12) ? months[dt.month - 1] : '';
         return '${dt.day} $monthName ${dt.year}';
       }
     }
@@ -469,7 +496,8 @@ Future<void> handleReraDetails(
       builder: (dialogContext) {
         final loc = ref.read(localeProvider.notifier);
         return AlertDialog(
-          backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          backgroundColor:
+              isDark ? AppColors.darkSurface : AppColors.lightSurface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
             side: BorderSide(
@@ -478,15 +506,19 @@ Future<void> handleReraDetails(
           ),
           title: Row(
             children: [
-              Icon(Icons.shield_outlined, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+              Icon(Icons.shield_outlined,
+                  color:
+                      isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   loc.translate('home.reraAdvisoryDetails'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 17,
-                    fontWeight: FontWeight.w800,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    fontWeight: FontWeight.w700,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -494,18 +526,23 @@ Future<void> handleReraDetails(
           ),
           content: Text(
             '$alertTitle\n\n$alertDesc\n\n${loc.translate('home.reraStatutoryNote')}',
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 13.5,
               height: 1.5,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.pop(dialogContext),
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                backgroundColor:
+                    isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                foregroundColor: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
               child: Text(loc.translate('common.understood')),
             ),

@@ -118,9 +118,10 @@ Widget _buildSidebarContent(
   ref.watch(localeProvider);
   final loc = ref.read(localeProvider.notifier);
 
-  final String userName = (user?.fullName != null && user!.fullName.trim().isNotEmpty)
-      ? user.fullName.trim()
-      : loc.translate('home.defaultUserName');
+  final String userName =
+      (user?.fullName != null && user!.fullName.trim().isNotEmpty)
+          ? user.fullName.trim()
+          : loc.translate('home.defaultUserName');
   final String initial = userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
 
   return Column(
@@ -152,19 +153,23 @@ Widget _buildSidebarContent(
                 children: [
                   Text(
                     'LawBuddy',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 16.5,
-                      fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      fontWeight: FontWeight.w700,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                       letterSpacing: -0.3,
                     ),
                   ),
                   Text(
                     'REAL ESTATE AI TECH',
-                    style: GoogleFonts.inter(
-                      fontSize: 8,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 8.5,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightPrimary,
                       letterSpacing: 1.1,
                     ),
                   ),
@@ -186,7 +191,8 @@ Widget _buildSidebarContent(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
           children: [
             // SECTION: OVERVIEW
-            _buildSidebarSectionLabel(loc.translate('sidebar.overview'), isDark),
+            _buildSidebarSectionLabel(
+                loc.translate('sidebar.overview'), isDark),
             SidebarNavItem(
               icon: Icons.dashboard_rounded,
               label: loc.translate('sidebar.dashboard'),
@@ -199,7 +205,8 @@ Widget _buildSidebarContent(
             const SizedBox(height: 14),
 
             // SECTION: WORKSPACE
-            _buildSidebarSectionLabel(loc.translate('sidebar.workspace'), isDark),
+            _buildSidebarSectionLabel(
+                loc.translate('sidebar.workspace'), isDark),
             SidebarNavItem(
               icon: Icons.folder_open_rounded,
               label: loc.translate('sidebar.documents'),
@@ -233,7 +240,8 @@ Widget _buildSidebarContent(
             const SizedBox(height: 14),
 
             // SECTION: LEGAL TOOLS
-            _buildSidebarSectionLabel(loc.translate('sidebar.legalTools'), isDark),
+            _buildSidebarSectionLabel(
+                loc.translate('sidebar.legalTools'), isDark),
             SidebarNavItem(
               icon: Icons.compare_arrows_rounded,
               label: loc.translate('sidebar.documentComparison'),
@@ -267,7 +275,8 @@ Widget _buildSidebarContent(
             const SizedBox(height: 14),
 
             // SECTION: LEGAL INFORMATION
-            _buildSidebarSectionLabel(loc.translate('sidebar.legalInfo'), isDark),
+            _buildSidebarSectionLabel(
+                loc.translate('sidebar.legalInfo'), isDark),
             SidebarNavItem(
               icon: Icons.shield_outlined,
               label: loc.translate('sidebar.reraCompliance'),
@@ -282,7 +291,8 @@ Widget _buildSidebarContent(
             // SECTION: ADMINISTRATION (Visible to admin users)
             if (user?.isAdmin == true || user?.role == 'admin') ...[
               const SizedBox(height: 14),
-              _buildSidebarSectionLabel(loc.translate('sidebar.administration'), isDark),
+              _buildSidebarSectionLabel(
+                  loc.translate('sidebar.administration'), isDark),
               SidebarNavItem(
                 icon: Icons.admin_panel_settings_rounded,
                 label: loc.translate('sidebar.adminAnalytics'),
@@ -337,16 +347,22 @@ Widget _buildSidebarContent(
               },
               borderRadius: BorderRadius.circular(10),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Row(
                   children: [
                     CircleAvatar(
                       radius: 14,
-                      backgroundColor: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.15),
+                      backgroundColor: (isDark
+                              ? AppColors.darkAccent
+                              : AppColors.lightPrimary)
+                          .withValues(alpha: 0.15),
                       child: Text(
                         initial,
                         style: TextStyle(
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                           fontWeight: FontWeight.w700,
                           fontSize: 11,
                         ),
@@ -362,17 +378,21 @@ Widget _buildSidebarContent(
                             userName,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            style: GoogleFonts.plusJakartaSans(
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                               fontSize: 12.5,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(
                             loc.translate('sidebar.profile'),
-                            style: GoogleFonts.inter(
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
-                              fontSize: 10.5,
+                            style: GoogleFonts.plusJakartaSans(
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
+                              fontSize: 11,
                             ),
                           ),
                         ],
@@ -394,24 +414,27 @@ Widget _buildSidebarSectionLabel(String text, bool isDark) {
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
     child: Text(
       text,
-      style: GoogleFonts.inter(
-        fontSize: 9.5,
+      style: GoogleFonts.plusJakartaSans(
+        fontSize: 10,
         fontWeight: FontWeight.w700,
         color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        letterSpacing: 1.1,
+        letterSpacing: 0.8,
       ),
     ),
   );
 }
 
-void _openReraDetailsModal(BuildContext context, WidgetRef ref, List<dynamic> legalNews) {
+void _openReraDetailsModal(
+    BuildContext context, WidgetRef ref, List<dynamic> legalNews) {
   final reraAlert = legalNews.firstWhere(
-    (n) => (n['isWarning'] == true || (n['title'] ?? '').toString().toLowerCase().contains('rera')),
+    (n) => (n['isWarning'] == true ||
+        (n['title'] ?? '').toString().toLowerCase().contains('rera')),
     orElse: () => null,
   );
 
   final String alertTitle = reraAlert != null
-      ? (reraAlert['title'] ?? 'RERA: The regulator that was supposed to protect homebuyers — but has it become part of the problem?')
+      ? (reraAlert['title'] ??
+          'RERA: The regulator that was supposed to protect homebuyers — but has it become part of the problem?')
       : 'RERA: The regulator that was supposed to protect homebuyers — but has it become part of the problem?';
 
   final String alertDesc = reraAlert != null

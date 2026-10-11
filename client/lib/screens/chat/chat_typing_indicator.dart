@@ -11,13 +11,16 @@ class TypingIndicator extends ConsumerStatefulWidget {
   ConsumerState<TypingIndicator> createState() => _TypingIndicatorState();
 }
 
-class _TypingIndicatorState extends ConsumerState<TypingIndicator> with SingleTickerProviderStateMixin {
+class _TypingIndicatorState extends ConsumerState<TypingIndicator>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))..repeat();
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1200))
+      ..repeat();
   }
 
   @override
@@ -42,7 +45,8 @@ class _TypingIndicatorState extends ConsumerState<TypingIndicator> with SingleTi
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: cardBg,
-          borderRadius: BorderRadius.circular(14).copyWith(bottomLeft: const Radius.circular(2)),
+          borderRadius: BorderRadius.circular(14)
+              .copyWith(bottomLeft: const Radius.circular(2)),
           border: Border.all(color: borderColor),
         ),
         child: Row(
@@ -51,10 +55,14 @@ class _TypingIndicatorState extends ConsumerState<TypingIndicator> with SingleTi
             Container(
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.15),
+                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                    .withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: Icon(Icons.auto_awesome, size: 13, color: isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+              child: Icon(Icons.auto_awesome,
+                  size: 13,
+                  color:
+                      isDark ? AppColors.darkAccent : AppColors.lightPrimary),
             ),
             const SizedBox(width: 10),
             Column(
@@ -66,8 +74,10 @@ class _TypingIndicatorState extends ConsumerState<TypingIndicator> with SingleTi
                   children: [
                     Text(
                       loc.translate('chat.typingTitle'),
-                      style: GoogleFonts.inter(
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
@@ -78,17 +88,23 @@ class _TypingIndicatorState extends ConsumerState<TypingIndicator> with SingleTi
                         return AnimatedBuilder(
                           animation: _controller,
                           builder: (context, child) {
-                            final progress = (_controller.value * 3 - index) % 3;
-                            final offset = progress >= 0 && progress <= 1 ? -4.0 * (0.5 - (progress - 0.5).abs()) : 0.0;
+                            final progress =
+                                (_controller.value * 3 - index) % 3;
+                            final offset = progress >= 0 && progress <= 1
+                                ? -4.0 * (0.5 - (progress - 0.5).abs())
+                                : 0.0;
                             return Transform.translate(
                               offset: Offset(0, offset),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 1.5),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 1.5),
                                 child: Container(
                                   width: 4,
                                   height: 4,
                                   decoration: BoxDecoration(
-                                    color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                    color: isDark
+                                        ? AppColors.darkAccent
+                                        : AppColors.lightPrimary,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -102,8 +118,10 @@ class _TypingIndicatorState extends ConsumerState<TypingIndicator> with SingleTi
                 ),
                 Text(
                   loc.translate('chat.typingSubtitle'),
-                  style: GoogleFonts.inter(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  style: GoogleFonts.plusJakartaSans(
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     fontSize: 10.5,
                   ),
                 ),

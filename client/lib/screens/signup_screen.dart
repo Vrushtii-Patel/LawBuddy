@@ -18,7 +18,8 @@ class SignupScreen extends ConsumerStatefulWidget {
   ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerProviderStateMixin {
+class _SignupScreenState extends ConsumerState<SignupScreen>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -84,11 +85,16 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
 
   bool get _isFormValid {
     final nameValid = _nameController.text.trim().isNotEmpty;
-    final emailValid = RegExp(r'^[^@]+@[^@]+\.[^@]+$').hasMatch(_emailController.text.trim());
+    final emailValid =
+        RegExp(r'^[^@]+@[^@]+\.[^@]+$').hasMatch(_emailController.text.trim());
     final passwordValid = _passwordValidation.isValid;
     final confirmValid = _confirmPasswordController.text.isNotEmpty &&
         _confirmPasswordController.text == _passwordController.text;
-    return nameValid && emailValid && passwordValid && confirmValid && _termsAccepted;
+    return nameValid &&
+        emailValid &&
+        passwordValid &&
+        confirmValid &&
+        _termsAccepted;
   }
 
   void _submit() async {
@@ -105,11 +111,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
       final password = _passwordController.text;
 
       final success = await ref.read(authProvider.notifier).signup(
-        fullName: name,
-        email: email,
-        password: password,
-        acceptedTerms: _termsAccepted,
-      );
+            fullName: name,
+            email: email,
+            password: password,
+            acceptedTerms: _termsAccepted,
+          );
 
       if (success && mounted) {
         Navigator.push(
@@ -120,7 +126,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
               type: 'signup',
               fullName: name,
             ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
               return FadeTransition(opacity: animation, child: child);
             },
           ),
@@ -138,7 +145,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                   PageRouteBuilder(
                     pageBuilder: (context, animation, secondaryAnimation) =>
                         LoginScreen(prefilledEmail: email),
-                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                    transitionsBuilder:
+                        (context, animation, secondaryAnimation, child) {
                       return FadeTransition(opacity: animation, child: child);
                     },
                   ),
@@ -151,7 +159,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
             ),
           );
         } else {
-          AppToast.showError(context, authState.errorMessage ?? 'Signup failed. Please try again.');
+          AppToast.showError(context,
+              authState.errorMessage ?? 'Signup failed. Please try again.');
         }
       }
     }
@@ -166,14 +175,21 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 920;
 
-    final Color bgSurface = isDark ? AppColors.darkBackground : AppColors.lightBackground;
-    final Color cardSurface = isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final Color cardBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final Color primaryText = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final Color secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final Color bgSurface =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final Color cardSurface =
+        isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final Color cardBorder =
+        isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final Color primaryText =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final Color secondaryText =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final Color primaryColor = AppColors.lightPrimary;
-    final Color accentColor = isDark ? AppColors.darkAccent : AppColors.lightAccent;
-    final Color elevatedSurface = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
+    final Color accentColor =
+        isDark ? AppColors.darkAccent : AppColors.lightAccent;
+    final Color elevatedSurface =
+        isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -246,7 +262,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                                 )
                               : Column(
                                   children: [
-                                    _buildMobileBrandHeader(primaryText, secondaryText, accentColor, isDark, tr),
+                                    _buildMobileBrandHeader(primaryText,
+                                        secondaryText, accentColor, isDark, tr),
                                     const SizedBox(height: 24),
                                     _buildSignupCard(
                                       context,
@@ -308,15 +325,17 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                 },
                 borderRadius: BorderRadius.circular(10),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.arrow_back_rounded, size: 18, color: primaryText),
+                      Icon(Icons.arrow_back_rounded,
+                          size: 18, color: primaryText),
                       const SizedBox(width: 6),
                       Text(
                         tr('common.back'),
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: primaryText,
@@ -370,7 +389,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
               children: [
                 Text(
                   tr('common.appName'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.5,
@@ -379,7 +398,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                 ),
                 Text(
                   tr('common.appSubtitle'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                     letterSpacing: 0.2,
@@ -393,7 +412,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
         const SizedBox(height: 32),
         Text(
           tr('auth.signupHeroTitle'),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 32,
             fontWeight: FontWeight.w800,
             color: primaryText,
@@ -404,7 +423,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
         const SizedBox(height: 14),
         Text(
           tr('auth.signupHeroSub'),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 15,
             color: secondaryText,
             height: 1.5,
@@ -444,24 +463,33 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.12),
+            color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
+                .withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.3),
+              color:
+                  (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
+                      .withValues(alpha: 0.3),
             ),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.verified_user_outlined, size: 15, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
+              Icon(Icons.verified_user_outlined,
+                  size: 15,
+                  color: isDark
+                      ? AppColors.darkSecondary
+                      : AppColors.lightSecondary),
               const SizedBox(width: 8),
               Flexible(
                 child: Text(
                   tr('auth.bankGradeSecurity'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                    color: isDark
+                        ? AppColors.darkSecondary
+                        : AppColors.lightSecondary,
                   ),
                 ),
               ),
@@ -499,7 +527,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
             children: [
               Text(
                 title,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 13.5,
                   fontWeight: FontWeight.w700,
                   color: primaryText,
@@ -508,7 +536,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12,
                   color: secondaryText,
                   height: 1.35,
@@ -546,7 +574,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
         const SizedBox(height: 12),
         Text(
           tr('common.appName'),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 22,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.5,
@@ -557,7 +585,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
         Text(
           tr('auth.mobileSubtitle'),
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 13,
             color: secondaryText,
           ),
@@ -599,7 +627,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
             children: [
               Text(
                 tr('auth.createAccount'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: primaryText,
@@ -609,7 +637,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
               const SizedBox(height: 6),
               Text(
                 tr('auth.createAccountSub'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 13,
                   color: secondaryText,
                   height: 1.4,
@@ -620,7 +648,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
               // Full Name
               Text(
                 tr('auth.fullName'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
                   color: primaryText,
@@ -635,7 +663,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
                 onChanged: (_) => setState(() {}),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: primaryText,
@@ -644,16 +672,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                   filled: true,
                   fillColor: elevatedSurface,
                   hintText: tr('auth.nameHint'),
-                  hintStyle: GoogleFonts.inter(
+                  hintStyle: GoogleFonts.plusJakartaSans(
                     fontSize: 13.5,
                     color: secondaryText.withValues(alpha: 0.7),
                   ),
-                  prefixIcon: Icon(Icons.person_outline_rounded, color: secondaryText, size: 18),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: primaryColor, width: 1.5)),
-                  errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: isDark ? AppColors.darkError : AppColors.lightError)),
+                  prefixIcon: Icon(Icons.person_outline_rounded,
+                      color: secondaryText, size: 18),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: cardBorder)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: cardBorder)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: primaryColor, width: 1.5)),
+                  errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                          color: isDark
+                              ? AppColors.darkError
+                              : AppColors.lightError)),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -667,7 +708,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
               // Email Address
               Text(
                 tr('auth.emailAddress'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
                   color: primaryText,
@@ -681,7 +722,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 onChanged: (_) => setState(() {}),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: primaryText,
@@ -690,16 +731,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                   filled: true,
                   fillColor: elevatedSurface,
                   hintText: tr('auth.emailHint'),
-                  hintStyle: GoogleFonts.inter(
+                  hintStyle: GoogleFonts.plusJakartaSans(
                     fontSize: 13.5,
                     color: secondaryText.withValues(alpha: 0.7),
                   ),
-                  prefixIcon: Icon(Icons.alternate_email_rounded, color: secondaryText, size: 18),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: primaryColor, width: 1.5)),
-                  errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: isDark ? AppColors.darkError : AppColors.lightError)),
+                  prefixIcon: Icon(Icons.alternate_email_rounded,
+                      color: secondaryText, size: 18),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: cardBorder)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: cardBorder)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: primaryColor, width: 1.5)),
+                  errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                          color: isDark
+                              ? AppColors.darkError
+                              : AppColors.lightError)),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -717,7 +771,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
               // Password
               Text(
                 tr('auth.password'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
                   color: primaryText,
@@ -735,7 +789,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                     _hasInteractedWithPassword = true;
                   });
                 },
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: primaryText,
@@ -744,25 +798,43 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                   filled: true,
                   fillColor: elevatedSurface,
                   hintText: tr('auth.passwordHint'),
-                  hintStyle: GoogleFonts.inter(
+                  hintStyle: GoogleFonts.plusJakartaSans(
                     fontSize: 13.5,
                     color: secondaryText.withValues(alpha: 0.7),
                   ),
-                  prefixIcon: Icon(Icons.lock_outline_rounded, color: secondaryText, size: 18),
+                  prefixIcon: Icon(Icons.lock_outline_rounded,
+                      color: secondaryText, size: 18),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      _obscurePassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       color: secondaryText,
                       size: 18,
                     ),
-                    tooltip: _obscurePassword ? tr('auth.showPassword') : tr('auth.hidePassword'),
-                    onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                    tooltip: _obscurePassword
+                        ? tr('auth.showPassword')
+                        : tr('auth.hidePassword'),
+                    onPressed: () =>
+                        setState(() => _obscurePassword = !_obscurePassword),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: primaryColor, width: 1.5)),
-                  errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: isDark ? AppColors.darkError : AppColors.lightError)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: cardBorder)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: cardBorder)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: primaryColor, width: 1.5)),
+                  errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                          color: isDark
+                              ? AppColors.darkError
+                              : AppColors.lightError)),
                 ),
                 validator: (val) {
                   if (val == null || val.isEmpty) {
@@ -780,14 +852,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
               // Live Password Checklist
               PasswordChecklistWidget(
                 validation: _passwordValidation,
-                isVisible: _hasInteractedWithPassword || _passwordController.text.isNotEmpty,
+                isVisible: _hasInteractedWithPassword ||
+                    _passwordController.text.isNotEmpty,
               ),
               const SizedBox(height: 16),
 
               // Confirm Password
               Text(
                 tr('auth.confirmPassword'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
                   color: primaryText,
@@ -806,7 +879,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                     _submit();
                   }
                 },
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: primaryText,
@@ -815,25 +888,43 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                   filled: true,
                   fillColor: elevatedSurface,
                   hintText: tr('auth.confirmPasswordHint'),
-                  hintStyle: GoogleFonts.inter(
+                  hintStyle: GoogleFonts.plusJakartaSans(
                     fontSize: 13.5,
                     color: secondaryText.withValues(alpha: 0.7),
                   ),
-                  prefixIcon: Icon(Icons.lock_reset_rounded, color: secondaryText, size: 18),
+                  prefixIcon: Icon(Icons.lock_reset_rounded,
+                      color: secondaryText, size: 18),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscureConfirmPassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      _obscureConfirmPassword
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       color: secondaryText,
                       size: 18,
                     ),
-                    tooltip: _obscureConfirmPassword ? tr('auth.showPassword') : tr('auth.hidePassword'),
-                    onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                    tooltip: _obscureConfirmPassword
+                        ? tr('auth.showPassword')
+                        : tr('auth.hidePassword'),
+                    onPressed: () => setState(() =>
+                        _obscureConfirmPassword = !_obscureConfirmPassword),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
-                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: cardBorder)),
-                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: primaryColor, width: 1.5)),
-                  errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: isDark ? AppColors.darkError : AppColors.lightError)),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: cardBorder)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: cardBorder)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: primaryColor, width: 1.5)),
+                  errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                          color: isDark
+                              ? AppColors.darkError
+                              : AppColors.lightError)),
                 ),
                 validator: (val) {
                   if (val == null || val.isEmpty) {
@@ -870,11 +961,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                 child: ElevatedButton(
                   onPressed: (isLoading || !_isFormValid) ? null : _submit,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor.withValues(alpha: _isHoveredButton ? 0.92 : 1.0),
-                    foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                    backgroundColor: primaryColor.withValues(
+                        alpha: _isHoveredButton ? 0.92 : 1.0),
+                    foregroundColor: isDark
+                        ? AppColors.darkErrorText
+                        : AppColors.lightTextPrimary,
                     minimumSize: const Size(double.infinity, 48),
                     disabledBackgroundColor: elevatedSurface,
-                    disabledForegroundColor: secondaryText.withValues(alpha: 0.5),
+                    disabledForegroundColor:
+                        secondaryText.withValues(alpha: 0.5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -887,7 +982,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                              isDark
+                                  ? AppColors.darkErrorText
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                         )
@@ -896,7 +993,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                           children: [
                             Text(
                               tr('auth.createAccount'),
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 14.5,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 0.2,
@@ -920,7 +1017,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                 children: [
                   Text(
                     tr('auth.alreadyHaveAccount'),
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 13,
                       color: secondaryText,
                     ),
@@ -930,20 +1027,25 @@ class _SignupScreenState extends ConsumerState<SignupScreen> with SingleTickerPr
                       Navigator.pushReplacement(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (context, animation, secondaryAnimation) =>
-                              LoginScreen(prefilledEmail: _emailController.text.trim()),
-                          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                            return FadeTransition(opacity: animation, child: child);
+                          pageBuilder: (context, animation,
+                                  secondaryAnimation) =>
+                              LoginScreen(
+                                  prefilledEmail: _emailController.text.trim()),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            return FadeTransition(
+                                opacity: animation, child: child);
                           },
                         ),
                       );
                     },
                     borderRadius: BorderRadius.circular(4),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 4, vertical: 2),
                       child: Text(
                         tr('auth.logIn'),
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
                           color: primaryText,

@@ -50,7 +50,8 @@ class _BinScreenState extends ConsumerState<BinScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Failed to load Recycle Bin. Please check your connection.';
+          _errorMessage =
+              'Failed to load Recycle Bin. Please check your connection.';
         });
       }
     }
@@ -69,10 +70,13 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     messenger.clearSnackBars();
 
     final screenWidth = MediaQuery.of(context).size.width;
-    final toastWidth = screenWidth > 540 ? 460.0 : (screenWidth - 32.0).clamp(280.0, 540.0);
+    final toastWidth =
+        screenWidth > 540 ? 460.0 : (screenWidth - 32.0).clamp(280.0, 540.0);
 
-    final effectiveBg = backgroundColor ?? (isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface);
-    final effectiveBorder = borderColor ?? (isDark ? AppColors.darkBorder : AppColors.lightBorder);
+    final effectiveBg = backgroundColor ??
+        (isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface);
+    final effectiveBorder =
+        borderColor ?? (isDark ? AppColors.darkBorder : AppColors.lightBorder);
 
     messenger.showSnackBar(
       SnackBar(
@@ -110,7 +114,8 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     if (mounted) {
       if (success) {
         setState(() {
-          _binnedDocs.removeWhere((d) => (d['_id'] ?? d['id']).toString() == docId);
+          _binnedDocs
+              .removeWhere((d) => (d['_id'] ?? d['id']).toString() == docId);
         });
 
         _showToast(
@@ -120,12 +125,17 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.16),
+                  color: (isDark
+                          ? AppColors.darkSecondary
+                          : AppColors.lightSecondary)
+                      .withValues(alpha: 0.16),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.restore_page_rounded,
-                  color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                  color: isDark
+                      ? AppColors.darkSecondary
+                      : AppColors.lightSecondary,
                   size: 18,
                 ),
               ),
@@ -136,7 +146,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -145,8 +157,11 @@ class _BinScreenState extends ConsumerState<BinScreen> {
         );
       } else {
         _showToast(
-          backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
-          borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+          backgroundColor:
+              isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+          borderColor: isDark
+              ? const Color(0xFFEF4444).withValues(alpha: 0.5)
+              : const Color(0xFFFCA5A5),
           content: Row(
             children: [
               Icon(
@@ -161,7 +176,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                    color: isDark
+                        ? const Color(0xFFFEE2E2)
+                        : const Color(0xFF991B1B),
                   ),
                 ),
               ),
@@ -176,19 +193,25 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final confirmed = await _showPermanentDeleteConfirmationDialog(title: title, isChecklist: false);
+    final confirmed = await _showPermanentDeleteConfirmationDialog(
+        title: title, isChecklist: false);
     if (confirmed != true) return;
 
     final success = await ApiService.permanentlyDeleteDocument(docId);
     if (mounted) {
       if (success) {
         setState(() {
-          _binnedDocs.removeWhere((d) => (d['_id'] ?? d['id']).toString() == docId);
+          _binnedDocs
+              .removeWhere((d) => (d['_id'] ?? d['id']).toString() == docId);
         });
 
-        final toastBg = isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2);
-        final toastBorder = isDark ? const Color(0xFFEF4444).withValues(alpha: 0.6) : const Color(0xFFFCA5A5);
-        final toastAccent = isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626);
+        final toastBg =
+            isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2);
+        final toastBorder = isDark
+            ? const Color(0xFFEF4444).withValues(alpha: 0.6)
+            : const Color(0xFFFCA5A5);
+        final toastAccent =
+            isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626);
 
         _showToast(
           duration: const Duration(seconds: 4),
@@ -219,7 +242,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                    color: isDark
+                        ? const Color(0xFFFEE2E2)
+                        : const Color(0xFF991B1B),
                   ),
                 ),
               ),
@@ -228,8 +253,11 @@ class _BinScreenState extends ConsumerState<BinScreen> {
         );
       } else {
         _showToast(
-          backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
-          borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+          backgroundColor:
+              isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+          borderColor: isDark
+              ? const Color(0xFFEF4444).withValues(alpha: 0.5)
+              : const Color(0xFFFCA5A5),
           content: Row(
             children: [
               Icon(
@@ -244,7 +272,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                    color: isDark
+                        ? const Color(0xFFFEE2E2)
+                        : const Color(0xFF991B1B),
                   ),
                 ),
               ),
@@ -263,14 +293,18 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     if (mounted) {
       if (success) {
         setState(() {
-          _binnedChecklists.removeWhere((c) => 
-            (c['_id'] ?? c['id']).toString() == idOrType || (c['type'] ?? '').toString() == idOrType
-          );
+          _binnedChecklists.removeWhere((c) =>
+              (c['_id'] ?? c['id']).toString() == idOrType ||
+              (c['type'] ?? '').toString() == idOrType);
         });
 
-        final toastBg = isDark ? const Color(0xFF13271F) : const Color(0xFFECFDF5);
-        final toastBorder = isDark ? const Color(0xFF10B981).withValues(alpha: 0.6) : const Color(0xFF6EE7B7);
-        final toastAccent = isDark ? const Color(0xFF34D399) : const Color(0xFF059669);
+        final toastBg =
+            isDark ? const Color(0xFF13271F) : const Color(0xFFECFDF5);
+        final toastBorder = isDark
+            ? const Color(0xFF10B981).withValues(alpha: 0.6)
+            : const Color(0xFF6EE7B7);
+        final toastAccent =
+            isDark ? const Color(0xFF34D399) : const Color(0xFF059669);
 
         _showToast(
           duration: const Duration(seconds: 4),
@@ -301,7 +335,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? const Color(0xFFF0FDF4) : const Color(0xFF064E3B),
+                    color: isDark
+                        ? const Color(0xFFF0FDF4)
+                        : const Color(0xFF064E3B),
                   ),
                 ),
               ),
@@ -310,8 +346,11 @@ class _BinScreenState extends ConsumerState<BinScreen> {
         );
       } else {
         _showToast(
-          backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
-          borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+          backgroundColor:
+              isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+          borderColor: isDark
+              ? const Color(0xFFEF4444).withValues(alpha: 0.5)
+              : const Color(0xFFFCA5A5),
           content: Row(
             children: [
               Icon(
@@ -326,7 +365,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                    color: isDark
+                        ? const Color(0xFFFEE2E2)
+                        : const Color(0xFF991B1B),
                   ),
                 ),
               ),
@@ -337,20 +378,22 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     }
   }
 
-  Future<void> _permanentlyDeleteChecklist(String idOrType, String title) async {
+  Future<void> _permanentlyDeleteChecklist(
+      String idOrType, String title) async {
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final confirmed = await _showPermanentDeleteConfirmationDialog(title: title, isChecklist: true);
+    final confirmed = await _showPermanentDeleteConfirmationDialog(
+        title: title, isChecklist: true);
     if (confirmed != true) return;
 
     final success = await ApiService.permanentlyDeleteChecklist(idOrType);
     if (mounted) {
       if (success) {
         setState(() {
-          _binnedChecklists.removeWhere((c) => 
-            (c['_id'] ?? c['id']).toString() == idOrType || (c['type'] ?? '').toString() == idOrType
-          );
+          _binnedChecklists.removeWhere((c) =>
+              (c['_id'] ?? c['id']).toString() == idOrType ||
+              (c['type'] ?? '').toString() == idOrType);
         });
         _showToast(
           duration: const Duration(seconds: 4),
@@ -359,7 +402,8 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.16),
+                  color: (isDark ? AppColors.darkError : AppColors.lightError)
+                      .withValues(alpha: 0.16),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -375,7 +419,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -397,7 +443,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   'Failed to permanently delete checklist.',
                   style: TextStyle(
                     fontSize: 13,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -419,7 +467,8 @@ class _BinScreenState extends ConsumerState<BinScreen> {
       context: context,
       builder: (dialogCtx) {
         return AlertDialog(
-          backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          backgroundColor:
+              isDark ? AppColors.darkSurface : AppColors.lightSurface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
@@ -431,7 +480,8 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.15),
+                  color: (isDark ? AppColors.darkError : AppColors.lightError)
+                      .withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -449,7 +499,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -461,10 +513,12 @@ class _BinScreenState extends ConsumerState<BinScreen> {
             children: [
               Text(
                 'Are you sure you want to permanently delete "$title"?',
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -472,10 +526,12 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                 isChecklist
                     ? tr('bin.permanentConfirmChecklistMessage')
                     : tr('bin.permanentConfirmMessage'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 13,
                   height: 1.4,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ],
@@ -485,23 +541,28 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               onPressed: () => Navigator.pop(dialogCtx, false),
               child: Text(
                 tr('recentDocs.cancel'),
-                style: GoogleFonts.inter(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                style: GoogleFonts.plusJakartaSans(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+                backgroundColor:
+                    isDark ? AppColors.darkError : AppColors.lightError,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               ),
               onPressed: () => Navigator.pop(dialogCtx, true),
               child: Text(
                 tr('bin.deletePermanently'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 13,
                 ),
@@ -549,12 +610,14 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     final isDesktop = MediaQuery.of(context).size.width >= 960;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color:
+                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
           tooltip: 'Back',
           onPressed: () => Navigator.of(context).maybePop(),
@@ -564,10 +627,12 @@ class _BinScreenState extends ConsumerState<BinScreen> {
           style: GoogleFonts.plusJakartaSans(
             fontWeight: FontWeight.w700,
             letterSpacing: -0.3,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color:
+                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
         ),
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor:
+            isDark ? AppColors.darkSurface : AppColors.lightSurface,
         elevation: 0,
         actions: const [
           UserProfileButton(),
@@ -584,7 +649,8 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     );
   }
 
-  Widget _buildBody(BuildContext context, bool isDark, String Function(String, [Map<String, String>?]) tr, bool isDesktop) {
+  Widget _buildBody(BuildContext context, bool isDark,
+      String Function(String, [Map<String, String>?]) tr, bool isDesktop) {
     if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -598,13 +664,17 @@ class _BinScreenState extends ConsumerState<BinScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.error_outline_rounded, size: 48, color: isDark ? AppColors.darkError : AppColors.lightError),
+              Icon(Icons.error_outline_rounded,
+                  size: 48,
+                  color: isDark ? AppColors.darkError : AppColors.lightError),
               const SizedBox(height: 16),
               Text(
                 _errorMessage!,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                style: GoogleFonts.plusJakartaSans(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                   fontSize: 14,
                 ),
               ),
@@ -614,8 +684,10 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                 icon: const Icon(Icons.refresh_rounded, size: 18),
                 label: const Text('Retry'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                  foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                  backgroundColor:
+                      isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                  foregroundColor:
+                      isDark ? AppColors.darkBackground : Colors.white,
                 ),
               ),
             ],
@@ -624,7 +696,8 @@ class _BinScreenState extends ConsumerState<BinScreen> {
       );
     }
 
-    final currentItems = _selectedTabIndex == 0 ? _binnedDocs : _binnedChecklists;
+    final currentItems =
+        _selectedTabIndex == 0 ? _binnedDocs : _binnedChecklists;
 
     return Center(
       child: ConstrainedBox(
@@ -648,9 +721,11 @@ class _BinScreenState extends ConsumerState<BinScreen> {
             if (currentItems.isEmpty)
               _buildEmptyTabState(isDark, tr)
             else if (_selectedTabIndex == 0)
-              ..._binnedDocs.map((doc) => _buildBinnedDocCard(context, doc as Map<String, dynamic>, isDark, tr))
+              ..._binnedDocs.map((doc) => _buildBinnedDocCard(
+                  context, doc as Map<String, dynamic>, isDark, tr))
             else
-              ..._binnedChecklists.map((chk) => _buildBinnedChecklistCard(context, chk as Map<String, dynamic>, isDark, tr)),
+              ..._binnedChecklists.map((chk) => _buildBinnedChecklistCard(
+                  context, chk as Map<String, dynamic>, isDark, tr)),
 
             const SizedBox(height: 32),
           ],
@@ -659,7 +734,8 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     );
   }
 
-  Widget _buildSegmentedTabControl(bool isDark, String Function(String, [Map<String, String>?]) tr) {
+  Widget _buildSegmentedTabControl(
+      bool isDark, String Function(String, [Map<String, String>?]) tr) {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
@@ -732,37 +808,51 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               size: 16,
               color: isSelected
                   ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                  : (isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary),
             ),
             const SizedBox(width: 8),
             Text(
               label,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                 color: isSelected
-                    ? (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary)
-                    : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                    ? (isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary)
+                    : (isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary),
               ),
             ),
             if (count > 0) ...[
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.15)
-                      : (isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.05)),
+                      ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                          .withValues(alpha: 0.15)
+                      : (isDark
+                          ? Colors.white10
+                          : Colors.black.withValues(alpha: 0.05)),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   '$count',
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: isSelected
-                        ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                        : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                        ? (isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightPrimary)
+                        : (isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary),
                   ),
                 ),
               ),
@@ -773,14 +863,16 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     );
   }
 
-  Widget _buildAutoPurgeNoticeBanner(bool isDark, String Function(String, [Map<String, String>?]) tr) {
+  Widget _buildAutoPurgeNoticeBanner(
+      bool isDark, String Function(String, [Map<String, String>?]) tr) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: (isDark ? const Color(0xFF1E2638) : const Color(0xFFEBF3FF)),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.3),
+          color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+              .withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -798,19 +890,23 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               children: [
                 Text(
                   '30-Day Auto-Purge Policy',
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   tr('bin.autoPurgeNote'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 11.5,
                     height: 1.4,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ],
@@ -821,7 +917,8 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     );
   }
 
-  Widget _buildEmptyTabState(bool isDark, String Function(String, [Map<String, String>?]) tr) {
+  Widget _buildEmptyTabState(
+      bool isDark, String Function(String, [Map<String, String>?]) tr) {
     final isDocs = _selectedTabIndex == 0;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
@@ -833,16 +930,22 @@ class _BinScreenState extends ConsumerState<BinScreen> {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated),
+              color: (isDark
+                  ? AppColors.darkSurfaceElevated
+                  : AppColors.lightSurfaceElevated),
               shape: BoxShape.circle,
               border: Border.all(
                 color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
               ),
             ),
             child: Icon(
-              isDocs ? Icons.delete_outline_rounded : Icons.checklist_rtl_rounded,
+              isDocs
+                  ? Icons.delete_outline_rounded
+                  : Icons.checklist_rtl_rounded,
               size: 36,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           const SizedBox(height: 18),
@@ -851,19 +954,25 @@ class _BinScreenState extends ConsumerState<BinScreen> {
             style: GoogleFonts.plusJakartaSans(
               fontSize: 17,
               fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           const SizedBox(height: 8),
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 420),
             child: Text(
-              isDocs ? tr('bin.emptySubtitle') : tr('bin.emptyChecklistsSubtitle'),
+              isDocs
+                  ? tr('bin.emptySubtitle')
+                  : tr('bin.emptyChecklistsSubtitle'),
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 height: 1.5,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
           ),
@@ -886,9 +995,12 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     final riskLevel = (doc['riskLevel'] ?? 'Low Risk').toString();
 
     Color riskColor;
-    if (riskLevel.toLowerCase().contains('high') || riskLevel.toLowerCase().contains('red')) {
+    if (riskLevel.toLowerCase().contains('high') ||
+        riskLevel.toLowerCase().contains('red')) {
       riskColor = AppColors.highRisk(isDark);
-    } else if (riskLevel.toLowerCase().contains('medium') || riskLevel.toLowerCase().contains('caution') || riskLevel.toLowerCase().contains('yellow')) {
+    } else if (riskLevel.toLowerCase().contains('medium') ||
+        riskLevel.toLowerCase().contains('caution') ||
+        riskLevel.toLowerCase().contains('yellow')) {
       riskColor = AppColors.caution(isDark);
     } else {
       riskColor = AppColors.compliant(isDark);
@@ -915,15 +1027,22 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+                  color: isDark
+                      ? AppColors.darkSurfaceElevated
+                      : AppColors.lightSurfaceElevated,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color:
+                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Icon(
-                  sourceType.contains('Photo') ? Icons.image_rounded : Icons.description_rounded,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  sourceType.contains('Photo')
+                      ? Icons.image_rounded
+                      : Icons.description_rounded,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                   size: 22,
                 ),
               ),
@@ -937,7 +1056,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -947,27 +1068,33 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                       children: [
                         Text(
                           _formatDeletedRelativeTime(deletedAt),
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           '•',
-                          style: TextStyle(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          style: TextStyle(
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder),
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
                           decoration: BoxDecoration(
                             color: riskColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             riskLevel,
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 10.5,
                               fontWeight: FontWeight.w700,
                               color: riskColor,
@@ -997,18 +1124,22 @@ class _BinScreenState extends ConsumerState<BinScreen> {
             children: [
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+                  foregroundColor:
+                      isDark ? AppColors.darkError : AppColors.lightError,
                   side: BorderSide(
-                    color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.5),
+                    color: (isDark ? AppColors.darkError : AppColors.lightError)
+                        .withValues(alpha: 0.5),
                   ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 ),
                 onPressed: () => _permanentlyDeleteDocument(docId, title),
                 icon: const Icon(Icons.delete_forever_rounded, size: 16),
                 label: Text(
                   tr('bin.deletePermanently'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
                   ),
@@ -1017,17 +1148,21 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                  foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                  backgroundColor:
+                      isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                  foregroundColor:
+                      isDark ? AppColors.darkBackground : Colors.white,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
                 onPressed: () => _restoreDocument(docId, title),
                 icon: const Icon(Icons.restore_from_trash_rounded, size: 16),
                 label: Text(
                   tr('bin.restore'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 12,
                   ),
@@ -1074,10 +1209,13 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+                  color: isDark
+                      ? AppColors.darkSurfaceElevated
+                      : AppColors.lightSurfaceElevated,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color:
+                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Icon(
@@ -1096,7 +1234,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -1106,30 +1246,41 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                       children: [
                         Text(
                           _formatDeletedRelativeTime(deletedAt),
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           '•',
-                          style: TextStyle(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                          style: TextStyle(
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder),
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2),
                           decoration: BoxDecoration(
-                            color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.12),
+                            color: (isDark
+                                    ? AppColors.darkAccent
+                                    : AppColors.lightPrimary)
+                                .withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             '${items.length} tasks',
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 10.5,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                              color: isDark
+                                  ? AppColors.darkAccent
+                                  : AppColors.lightPrimary,
                             ),
                           ),
                         ),
@@ -1156,18 +1307,23 @@ class _BinScreenState extends ConsumerState<BinScreen> {
             children: [
               OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+                  foregroundColor:
+                      isDark ? AppColors.darkError : AppColors.lightError,
                   side: BorderSide(
-                    color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.5),
+                    color: (isDark ? AppColors.darkError : AppColors.lightError)
+                        .withValues(alpha: 0.5),
                   ),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 ),
-                onPressed: () => _permanentlyDeleteChecklist(type.isNotEmpty ? type : chkId, title),
+                onPressed: () => _permanentlyDeleteChecklist(
+                    type.isNotEmpty ? type : chkId, title),
                 icon: const Icon(Icons.delete_forever_rounded, size: 16),
                 label: Text(
                   tr('bin.deletePermanently'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
                   ),
@@ -1176,17 +1332,22 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                  foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                  backgroundColor:
+                      isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                  foregroundColor:
+                      isDark ? AppColors.darkBackground : Colors.white,
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
-                onPressed: () => _restoreChecklist(type.isNotEmpty ? type : chkId, title),
+                onPressed: () =>
+                    _restoreChecklist(type.isNotEmpty ? type : chkId, title),
                 icon: const Icon(Icons.restore_from_trash_rounded, size: 16),
                 label: Text(
                   tr('bin.restore'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 12,
                   ),
@@ -1204,12 +1365,18 @@ class _BinScreenState extends ConsumerState<BinScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: daysRemaining <= 3
-            ? (isDark ? AppColors.darkError.withValues(alpha: 0.15) : AppColors.lightError.withValues(alpha: 0.1))
-            : (isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated),
+            ? (isDark
+                ? AppColors.darkError.withValues(alpha: 0.15)
+                : AppColors.lightError.withValues(alpha: 0.1))
+            : (isDark
+                ? AppColors.darkSurfaceElevated
+                : AppColors.lightSurfaceElevated),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: daysRemaining <= 3
-              ? (isDark ? AppColors.darkError.withValues(alpha: 0.4) : AppColors.lightError.withValues(alpha: 0.4))
+              ? (isDark
+                  ? AppColors.darkError.withValues(alpha: 0.4)
+                  : AppColors.lightError.withValues(alpha: 0.4))
               : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
         ),
       ),
@@ -1221,17 +1388,21 @@ class _BinScreenState extends ConsumerState<BinScreen> {
             size: 13,
             color: daysRemaining <= 3
                 ? (isDark ? AppColors.darkError : AppColors.lightError)
-                : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                : (isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary),
           ),
           const SizedBox(width: 4),
           Text(
             '$daysRemaining d left',
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 11,
               fontWeight: FontWeight.w700,
               color: daysRemaining <= 3
                   ? (isDark ? AppColors.darkError : AppColors.lightError)
-                  : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                  : (isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary),
             ),
           ),
         ],

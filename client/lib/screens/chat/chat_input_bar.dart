@@ -55,7 +55,8 @@ class _ChatInputState extends ConsumerState<ChatInput> {
         : (isDark ? AppColors.darkBorder : AppColors.lightBorder);
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: widget.isMobile ? 16 : 32, vertical: 12),
+      margin: EdgeInsets.symmetric(
+          horizontal: widget.isMobile ? 16 : 32, vertical: 12),
       decoration: BoxDecoration(
         color: dockBg,
         borderRadius: BorderRadius.circular(16),
@@ -71,12 +72,17 @@ class _ChatInputState extends ConsumerState<ChatInput> {
           Container(
             padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: _isFocused ? 0.15 : 0.08),
+              color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                  .withValues(alpha: _isFocused ? 0.15 : 0.08),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.balance_rounded,
-              color: _isFocused ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary) : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+              color: _isFocused
+                  ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                  : (isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary),
               size: 16,
             ),
           ),
@@ -85,16 +91,22 @@ class _ChatInputState extends ConsumerState<ChatInput> {
             child: TextField(
               controller: widget.controller,
               focusNode: widget.focusNode,
-              style: GoogleFonts.inter(
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              style: GoogleFonts.plusJakartaSans(
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
                 fontSize: 14,
               ),
               minLines: 1,
               maxLines: 4,
               decoration: InputDecoration(
-                hintText: ref.watch(localeProvider.notifier).translate('chat.inputHint'),
-                hintStyle: GoogleFonts.inter(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                hintText: ref
+                    .watch(localeProvider.notifier)
+                    .translate('chat.inputHint'),
+                hintStyle: GoogleFonts.plusJakartaSans(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                   fontSize: 13.5,
                 ),
                 border: InputBorder.none,
@@ -113,8 +125,12 @@ class _ChatInputState extends ConsumerState<ChatInput> {
             button: true,
             enabled: !widget.isLoading,
             label: widget.isLoading
-                ? ref.watch(localeProvider.notifier).translate('a11y.chatSending')
-                : ref.watch(localeProvider.notifier).translate('a11y.chatSendMessage'),
+                ? ref
+                    .watch(localeProvider.notifier)
+                    .translate('a11y.chatSending')
+                : ref
+                    .watch(localeProvider.notifier)
+                    .translate('a11y.chatSendMessage'),
             child: GestureDetector(
               onTap: widget.isLoading ? null : widget.onSend,
               child: Container(
@@ -131,13 +147,17 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                           height: 18,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkBackground
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                       )
                     : Icon(
                         Icons.arrow_upward_rounded,
-                        color: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkBackground
+                            : AppColors.lightTextPrimary,
                         size: 22,
                       ),
               ),

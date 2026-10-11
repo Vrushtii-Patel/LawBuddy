@@ -22,11 +22,15 @@ class PasswordChecklistWidget extends ConsumerWidget {
     ref.watch(localeProvider);
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryText = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final validColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
+    final primaryText =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryText =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final validColor =
+        isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
     final cardBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final elevatedSurface = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
+    final elevatedSurface =
+        isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -97,7 +101,8 @@ class PasswordChecklistWidget extends ConsumerWidget {
             shape: BoxShape.circle,
             color: isValid ? validColor : Colors.transparent,
             border: Border.all(
-              color: isValid ? validColor : secondaryText.withValues(alpha: 0.5),
+              color:
+                  isValid ? validColor : secondaryText.withValues(alpha: 0.5),
               width: 1.5,
             ),
           ),
@@ -113,7 +118,7 @@ class PasswordChecklistWidget extends ConsumerWidget {
         Expanded(
           child: Text(
             label,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
               fontWeight: isValid ? FontWeight.w600 : FontWeight.w400,
               color: isValid ? primaryText : secondaryText,

@@ -17,7 +17,8 @@ class HeroDocumentScanVisual extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<HeroDocumentScanVisual> createState() => _HeroDocumentScanVisualState();
+  ConsumerState<HeroDocumentScanVisual> createState() =>
+      _HeroDocumentScanVisualState();
 }
 
 class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
@@ -55,7 +56,8 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           transform: Matrix4.translationValues(0, _isHovered ? -4 : 0, 0),
-          constraints: BoxConstraints(maxWidth: isDesktop ? 540 : (isTablet ? 460 : 360)),
+          constraints: BoxConstraints(
+              maxWidth: isDesktop ? 540 : (isTablet ? 460 : 360)),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
@@ -75,10 +77,14 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                   Container(
                     padding: EdgeInsets.all(isDesktop ? 22 : 18),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface,
+                      color: isDark
+                          ? AppColors.darkElevatedSurface
+                          : AppColors.lightSurface,
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: isDark ? AppColors.darkBorder.withValues(alpha: 0.5) : AppColors.lightBorder,
+                        color: isDark
+                            ? AppColors.darkBorder.withValues(alpha: 0.5)
+                            : AppColors.lightBorder,
                         width: 1.0,
                       ),
                     ),
@@ -97,13 +103,19 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                                   Container(
                                     padding: const EdgeInsets.all(6),
                                     decoration: BoxDecoration(
-                                      color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.15 : 0.12),
+                                      color: (isDark
+                                              ? AppColors.darkAccent
+                                              : AppColors.lightPrimary)
+                                          .withValues(
+                                              alpha: isDark ? 0.15 : 0.12),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Icon(
                                       Icons.description_outlined,
                                       size: 16,
-                                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                      color: isDark
+                                          ? AppColors.darkAccent
+                                          : AppColors.lightPrimary,
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -112,11 +124,13 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                                       loc.translate('welcome.heroDocTitle'),
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 1,
-                                      style: GoogleFonts.inter(
+                                      style: GoogleFonts.plusJakartaSans(
                                         fontSize: 11.5,
                                         fontWeight: FontWeight.w700,
                                         letterSpacing: 0.5,
-                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                        color: isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.lightTextPrimary,
                                       ),
                                     ),
                                   ),
@@ -130,12 +144,22 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                               builder: (context, child) {
                                 final pulse = 0.6 + 0.4 * _scanController.value;
                                 return Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.12 : 0.08),
+                                    color: (isDark
+                                            ? AppColors.darkAccent
+                                            : AppColors.lightPrimary)
+                                        .withValues(
+                                            alpha: isDark ? 0.12 : 0.08),
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: (isDark ? 0.35 : 0.25) * pulse),
+                                      color: (isDark
+                                              ? AppColors.darkAccent
+                                              : AppColors.lightPrimary)
+                                          .withValues(
+                                              alpha: (isDark ? 0.35 : 0.25) *
+                                                  pulse),
                                     ),
                                   ),
                                   child: Row(
@@ -146,16 +170,20 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                                         height: 6,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                          color: isDark
+                                              ? AppColors.darkAccent
+                                              : AppColors.lightPrimary,
                                         ),
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
                                         loc.translate('welcome.heroScanActive'),
-                                        style: GoogleFonts.inter(
+                                        style: GoogleFonts.plusJakartaSans(
                                           fontSize: 9.5,
                                           fontWeight: FontWeight.w600,
-                                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                          color: isDark
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.lightTextSecondary,
                                         ),
                                       ),
                                     ],
@@ -173,8 +201,12 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                           borderRadius: BorderRadius.circular(4),
                           child: LinearProgressIndicator(
                             minHeight: 3,
-                            backgroundColor: isDark ? AppColors.darkBorder.withValues(alpha: 0.4) : AppColors.lightBorder,
-                            valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                            backgroundColor: isDark
+                                ? AppColors.darkBorder.withValues(alpha: 0.4)
+                                : AppColors.lightBorder,
+                            valueColor: AlwaysStoppedAnimation<Color>(isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightPrimary),
                           ),
                         ),
 
@@ -188,29 +220,40 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                               child: Text(
                                 loc.translate('welcome.heroClauseTitle'),
                                 overflow: TextOverflow.ellipsis,
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 11.5,
                                   fontWeight: FontWeight.w600,
-                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                  color: isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary,
                                 ),
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.14 : 0.08),
+                                color: (isDark
+                                        ? AppColors.darkAccent
+                                        : AppColors.lightPrimary)
+                                    .withValues(alpha: isDark ? 0.14 : 0.08),
                                 borderRadius: BorderRadius.circular(6),
                                 border: Border.all(
-                                  color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.35 : 0.2),
+                                  color: (isDark
+                                          ? AppColors.darkAccent
+                                          : AppColors.lightPrimary)
+                                      .withValues(alpha: isDark ? 0.35 : 0.2),
                                   width: 1,
                                 ),
                               ),
                               child: Text(
                                 loc.translate('welcome.heroClauseBadge'),
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w600,
-                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
                                 ),
                               ),
                             ),
@@ -223,19 +266,25 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkSurface : AppColors.lightError.withValues(alpha: 0.08),
+                            color: isDark
+                                ? AppColors.darkSurface
+                                : AppColors.lightError.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: isDark ? AppColors.darkError : AppColors.lightError.withValues(alpha: 0.4),
+                              color: isDark
+                                  ? AppColors.darkError
+                                  : AppColors.lightError.withValues(alpha: 0.4),
                               width: 1.2,
                             ),
                           ),
                           child: Text(
                             loc.translate('welcome.heroClauseBody'),
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 12,
                               height: 1.45,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightError,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightError,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -247,10 +296,14 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkSurface : AppColors.lightElevatedSurface,
+                            color: isDark
+                                ? AppColors.darkSurface
+                                : AppColors.lightElevatedSurface,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: isDark ? AppColors.darkBorder.withValues(alpha: 0.45) : AppColors.lightBorder,
+                              color: isDark
+                                  ? AppColors.darkBorder.withValues(alpha: 0.45)
+                                  : AppColors.lightBorder,
                               width: 1,
                             ),
                           ),
@@ -258,33 +311,51 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Flexible(
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 3.5),
                                       decoration: BoxDecoration(
-                                        color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: isDark ? 1.0 : 0.12),
+                                        color: (isDark
+                                                ? AppColors.darkError
+                                                : AppColors.lightError)
+                                            .withValues(
+                                                alpha: isDark ? 1.0 : 0.12),
                                         borderRadius: BorderRadius.circular(6),
-                                        border: isDark ? null : Border.all(color: AppColors.lightError.withValues(alpha: 0.25)),
+                                        border: isDark
+                                            ? null
+                                            : Border.all(
+                                                color: AppColors.lightError
+                                                    .withValues(alpha: 0.25)),
                                       ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Icon(
-                                            isDark ? Icons.warning_amber_rounded : Icons.shield_outlined,
+                                            isDark
+                                                ? Icons.warning_amber_rounded
+                                                : Icons.shield_outlined,
                                             size: 13,
-                                            color: isDark ? AppColors.darkErrorText : AppColors.lightError,
+                                            color: isDark
+                                                ? AppColors.darkErrorText
+                                                : AppColors.lightError,
                                           ),
                                           const SizedBox(width: 4),
                                           Flexible(
                                             child: Text(
-                                              loc.translate('welcome.heroRiskDetected'),
+                                              loc.translate(
+                                                  'welcome.heroRiskDetected'),
                                               overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.inter(
+                                              style:
+                                                  GoogleFonts.plusJakartaSans(
                                                 fontSize: 10.5,
                                                 fontWeight: FontWeight.w700,
-                                                color: isDark ? AppColors.darkErrorText : AppColors.lightError,
+                                                color: isDark
+                                                    ? AppColors.darkErrorText
+                                                    : AppColors.lightError,
                                               ),
                                             ),
                                           ),
@@ -294,17 +365,25 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                                   ),
                                   const SizedBox(width: 8),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3.5),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 7, vertical: 3.5),
                                     decoration: BoxDecoration(
-                                      color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: isDark ? 0.2 : 0.1),
+                                      color: (isDark
+                                              ? AppColors.darkError
+                                              : AppColors.lightError)
+                                          .withValues(
+                                              alpha: isDark ? 0.2 : 0.1),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
-                                      loc.translate('welcome.heroRiskScore', {'score': '84/100'}),
-                                      style: GoogleFonts.inter(
+                                      loc.translate('welcome.heroRiskScore',
+                                          {'score': '84/100'}),
+                                      style: GoogleFonts.plusJakartaSans(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w700,
-                                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightError,
+                                        color: isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.lightError,
                                       ),
                                     ),
                                   ),
@@ -316,17 +395,25 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                                 child: LinearProgressIndicator(
                                   value: 0.68,
                                   minHeight: 6,
-                                  backgroundColor: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: isDark ? 0.2 : 0.15),
-                                  valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkError : AppColors.lightError),
+                                  backgroundColor: (isDark
+                                          ? AppColors.darkError
+                                          : AppColors.lightError)
+                                      .withValues(alpha: isDark ? 0.2 : 0.15),
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      isDark
+                                          ? AppColors.darkError
+                                          : AppColors.lightError),
                                 ),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 loc.translate('welcome.heroPlainEnglish'),
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 11,
                                   height: 1.4,
-                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
                                 ),
                               ),
                             ],

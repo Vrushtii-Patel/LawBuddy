@@ -15,10 +15,13 @@ class TermsOfUseScreen extends ConsumerWidget {
     final currentLanguage = ref.watch(localeProvider);
     final isHindi = currentLanguage == AppLanguage.hindi;
 
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
     final cardColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final primaryTextColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final primaryTextColor =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryTextColor =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final accentColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
 
@@ -41,12 +44,13 @@ class TermsOfUseScreen extends ConsumerWidget {
                 color: accentColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(Icons.description_outlined, color: accentColor, size: 18),
+              child: Icon(Icons.description_outlined,
+                  color: accentColor, size: 18),
             ),
             const SizedBox(width: 8),
             Text(
               'LawBuddy',
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
                 color: primaryTextColor,
@@ -73,15 +77,17 @@ class TermsOfUseScreen extends ConsumerWidget {
               children: [
                 // Header Badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: accentColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+                    border:
+                        Border.all(color: accentColor.withValues(alpha: 0.3)),
                   ),
                   child: Text(
                     isHindi ? 'उपयोग की शर्तें' : 'TERMS OF SERVICE',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.8,
@@ -94,7 +100,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                 // Main Title
                 Text(
                   isHindi ? 'उपयोग की शर्तें' : 'Terms of Use',
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: isDesktop ? 34 : 26,
                     fontWeight: FontWeight.w800,
                     color: primaryTextColor,
@@ -105,8 +111,10 @@ class TermsOfUseScreen extends ConsumerWidget {
 
                 // Last Updated
                 Text(
-                  isHindi ? 'अंतिम अद्यतन: 15 सितंबर 2026' : 'Last Updated: 15 September 2026',
-                  style: GoogleFonts.inter(
+                  isHindi
+                      ? 'अंतिम अद्यतन: 15 सितंबर 2026'
+                      : 'Last Updated: 15 September 2026',
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: accentColor,
@@ -120,7 +128,8 @@ class TermsOfUseScreen extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: accentColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: accentColor.withValues(alpha: 0.4)),
+                    border:
+                        Border.all(color: accentColor.withValues(alpha: 0.4)),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,8 +141,10 @@ class TermsOfUseScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              isHindi ? 'महत्वपूर्ण सूचना: विधिक सलाह अस्वीकरण' : 'Important Notice: No Legal Advice',
-                              style: GoogleFonts.inter(
+                              isHindi
+                                  ? 'महत्वपूर्ण सूचना: विधिक सलाह अस्वीकरण'
+                                  : 'Important Notice: No Legal Advice',
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 13.5,
                                 fontWeight: FontWeight.w700,
                                 color: primaryTextColor,
@@ -144,7 +155,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                               isHindi
                                   ? 'LawBuddy केवल सूचनात्मक और दस्तावेज़ विश्लेषण सहायता के उद्देश्य से AI-संचालित विश्लेषण प्रदान करता है। यह किसी अधिकृत वकील या विधिक पेशेवर की सलाह का विकल्प नहीं है।'
                                   : 'LawBuddy provides AI-powered document analysis and assistive legal information for informational and educational purposes only. It does not constitute legal advice and does not establish an attorney-client relationship.',
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 12.5,
                                 height: 1.5,
                                 color: secondaryTextColor,
@@ -187,7 +198,9 @@ class TermsOfUseScreen extends ConsumerWidget {
                 ),
                 _buildSection(
                   number: '3',
-                  title: isHindi ? 'उपयोगकर्ता की जिम्मेदारियां' : 'User Responsibilities & Data Accuracy',
+                  title: isHindi
+                      ? 'उपयोगकर्ता की जिम्मेदारियां'
+                      : 'User Responsibilities & Data Accuracy',
                   content: isHindi
                       ? 'उपयोगकर्ता यह सुनिश्चित करने के लिए जिम्मेदार हैं कि उनके द्वारा अपलोड किए गए दस्तावेज़ वैध हैं और उनके पास उनका अधिकार है। महत्वपूर्ण संपत्ति लेन-देन के लिए हमेशा मूल दस्तावेजों का वकील से सत्यापन करवाएं।'
                       : 'Users are responsible for ensuring they possess the right to upload submitted documents. Users must independently verify critical contractual details, financial figures, stamp duty requirements, and title records with certified legal counsel or local registrar offices.',
@@ -213,7 +226,8 @@ class TermsOfUseScreen extends ConsumerWidget {
                 ),
                 _buildSection(
                   number: '5',
-                  title: isHindi ? 'दायित्व की सीमा' : 'Limitation of Liability',
+                  title:
+                      isHindi ? 'दायित्व की सीमा' : 'Limitation of Liability',
                   content: isHindi
                       ? 'LawBuddy और इसके डेवलपर्स किसी भी वित्तीय या कानूनी निर्णय, संपत्ति विवाद, या AI व्याख्याओं के आधार पर किए गए कार्यों के लिए उत्तरदायी नहीं होंगे।'
                       : 'To the maximum extent permitted under applicable law, LawBuddy and its developers shall not be liable for any direct, indirect, incidental, or consequential damages resulting from reliance on AI summaries or analysis generated by the platform.',
@@ -246,13 +260,16 @@ class TermsOfUseScreen extends ConsumerWidget {
                     icon: const Icon(Icons.arrow_back_rounded, size: 18),
                     label: Text(
                       isHindi ? 'वापस जाएं' : 'Return to App',
-                      style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                      style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w600),
                     ),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: primaryTextColor,
                       side: BorderSide(color: borderColor),
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ),
@@ -299,7 +316,7 @@ class TermsOfUseScreen extends ConsumerWidget {
                 alignment: Alignment.center,
                 child: Text(
                   number,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
                     color: accentColor,
@@ -310,7 +327,7 @@ class TermsOfUseScreen extends ConsumerWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: primaryTextColor,
@@ -322,7 +339,7 @@ class TermsOfUseScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           Text(
             content,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 13.5,
               height: 1.6,
               color: secondaryTextColor,

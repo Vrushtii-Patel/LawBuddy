@@ -75,7 +75,8 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: itemAccent.withValues(alpha: isDark ? 0.15 : 0.1),
+                          color:
+                              itemAccent.withValues(alpha: isDark ? 0.15 : 0.1),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: itemAccent.withValues(alpha: 0.3),
@@ -84,18 +85,27 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                         child: Icon(widget.icon, color: itemAccent, size: 20),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3.5),
                         decoration: BoxDecoration(
-                          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.1),
+                          color: (isDark
+                                  ? AppColors.darkAccent
+                                  : AppColors.lightAccent)
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.25),
+                            color: (isDark
+                                    ? AppColors.darkAccent
+                                    : AppColors.lightAccent)
+                                .withValues(alpha: 0.25),
                           ),
                         ),
                         child: Text(
                           widget.category,
-                          style: GoogleFonts.inter(
-                            color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                          style: GoogleFonts.plusJakartaSans(
+                            color: isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightAccent,
                             fontSize: 9.5,
                             fontWeight: FontWeight.w800,
                             letterSpacing: 0.6,
@@ -109,10 +119,12 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                   // Title
                   Text(
                     widget.title,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                       letterSpacing: -0.3,
                     ),
                   ),
@@ -121,10 +133,12 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                   // Description
                   Text(
                     widget.description,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       height: 1.4,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
                 ],
@@ -137,16 +151,19 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                 children: [
                   Text(
                     loc.translate('chat.askLegalAi'),
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightPrimary,
                     ),
                   ),
                   const SizedBox(width: 5),
                   Icon(
                     Icons.arrow_forward_rounded,
-                    color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    color:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                     size: 14,
                   ),
                 ],
@@ -193,7 +210,9 @@ class _HoverableChipState extends State<HoverableChip> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
           decoration: BoxDecoration(
             color: _isHovered
-                ? (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface)
+                ? (isDark
+                    ? AppColors.darkElevatedSurface
+                    : AppColors.lightElevatedSurface)
                 : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
@@ -214,8 +233,10 @@ class _HoverableChipState extends State<HoverableChip> {
               const SizedBox(width: 6),
               Text(
                 widget.label,
-                style: GoogleFonts.inter(
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                style: GoogleFonts.plusJakartaSans(
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),

@@ -23,12 +23,14 @@ class HomeReraAwarenessCard extends ConsumerWidget {
     final loc = ref.read(localeProvider.notifier);
 
     final reraAlert = legalNews.firstWhere(
-      (n) => (n['isWarning'] == true || (n['title'] ?? '').toString().toLowerCase().contains('rera')),
+      (n) => (n['isWarning'] == true ||
+          (n['title'] ?? '').toString().toLowerCase().contains('rera')),
       orElse: () => null,
     );
 
     final String alertTitle = reraAlert != null
-        ? (reraAlert['title'] ?? 'RERA: Promoter Escrow & Statutory Handover Compliance Under Section 18')
+        ? (reraAlert['title'] ??
+            'RERA: Promoter Escrow & Statutory Handover Compliance Under Section 18')
         : 'RERA: Promoter Escrow & Statutory Handover Compliance Under Section 18';
 
     final String alertDesc = reraAlert != null
@@ -40,7 +42,7 @@ class HomeReraAwarenessCard extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadii.rounded16,
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           width: 1,
@@ -70,32 +72,46 @@ class HomeReraAwarenessCard extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8),
+                        color: (isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
+                            .withValues(alpha: 0.12),
+                        borderRadius: AppRadii.rounded8,
                         border: Border.all(
-                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.25),
+                          color: (isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary)
+                              .withValues(alpha: 0.25),
                         ),
                       ),
                       child: Icon(
                         Icons.shield_outlined,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                         size: 18,
                       ),
                     ),
                     const SizedBox(width: 10),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 7, vertical: 2.5),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(5),
+                        color: (isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
+                            .withValues(alpha: 0.12),
+                        borderRadius: AppRadii.rounded8,
                       ),
                       child: Text(
                         loc.translate('home.reraAlert'),
-                        style: GoogleFonts.inter(
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 9.5,
-                          letterSpacing: 0.8,
+                        style: GoogleFonts.plusJakartaSans(
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 10,
+                          letterSpacing: 0.6,
                         ),
                       ),
                     ),
@@ -106,8 +122,10 @@ class HomeReraAwarenessCard extends ConsumerWidget {
                   alertTitle,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.inter(
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  style: GoogleFonts.plusJakartaSans(
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                   ),
@@ -117,38 +135,53 @@ class HomeReraAwarenessCard extends ConsumerWidget {
                   alertDesc,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.inter(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  style: GoogleFonts.plusJakartaSans(
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     fontSize: 12,
-                    height: 1.35,
+                    height: 1.4,
                   ),
                 ),
                 const SizedBox(height: 12),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: OutlinedButton(
-                    onPressed: () => handleReraDetails(context, ref, alertLink, alertTitle, alertDesc),
+                    onPressed: () => handleReraDetails(
+                        context, ref, alertLink, alertTitle, alertDesc),
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
-                      foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      foregroundColor: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: AppRadii.rounded8),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           loc.translate('common.viewDetails'),
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                            fontWeight: FontWeight.w600,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary,
                           ),
                         ),
                         const SizedBox(width: 4),
-                        Icon(Icons.arrow_forward_rounded, size: 13, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+                        Icon(Icons.arrow_forward_rounded,
+                            size: 13,
+                            color: isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary),
                       ],
                     ),
                   ),
@@ -163,15 +196,21 @@ class HomeReraAwarenessCard extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                  color:
+                      (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                          .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.25),
+                    color: (isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.25),
                   ),
                 ),
                 child: Icon(
                   Icons.shield_outlined,
-                  color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  color:
+                      isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                   size: 22,
                 ),
               ),
@@ -184,18 +223,24 @@ class HomeReraAwarenessCard extends ConsumerWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 2.5),
                           decoration: BoxDecoration(
-                            color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(5),
+                            color: (isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary)
+                                .withValues(alpha: 0.12),
+                            borderRadius: AppRadii.rounded8,
                           ),
                           child: Text(
                             loc.translate('home.reraAlert'),
-                            style: GoogleFonts.inter(
-                              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                              fontWeight: FontWeight.w800,
-                              fontSize: 9.5,
-                              letterSpacing: 0.8,
+                            style: GoogleFonts.plusJakartaSans(
+                              color: isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 10,
+                              letterSpacing: 0.6,
                             ),
                           ),
                         ),
@@ -206,8 +251,10 @@ class HomeReraAwarenessCard extends ConsumerWidget {
                       alertTitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                       ),
@@ -217,10 +264,12 @@ class HomeReraAwarenessCard extends ConsumerWidget {
                       alertDesc,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                         fontSize: 12,
-                        height: 1.35,
+                        height: 1.4,
                       ),
                     ),
                   ],
@@ -228,28 +277,39 @@ class HomeReraAwarenessCard extends ConsumerWidget {
               ),
               const SizedBox(width: 16),
               OutlinedButton(
-                onPressed: () => handleReraDetails(context, ref, alertLink, alertTitle, alertDesc),
+                onPressed: () => handleReraDetails(
+                    context, ref, alertLink, alertTitle, alertDesc),
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(
-                    color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    color:
+                        isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                   ),
-                  foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  foregroundColor:
+                      isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape:
+                      RoundedRectangleBorder(borderRadius: AppRadii.rounded8),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       loc.translate('common.viewDetails'),
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        fontWeight: FontWeight.w600,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
                     ),
                     const SizedBox(width: 4),
-                    Icon(Icons.arrow_forward_rounded, size: 13, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+                    Icon(Icons.arrow_forward_rounded,
+                        size: 13,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary),
                   ],
                 ),
               ),

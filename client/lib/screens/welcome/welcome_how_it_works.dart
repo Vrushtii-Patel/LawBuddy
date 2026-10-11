@@ -51,7 +51,8 @@ class _StepCardState extends State<StepCard> {
           boxShadow: [
             if (_isHovered)
               BoxShadow(
-                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.15),
+                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                    .withValues(alpha: 0.15),
                 blurRadius: 16,
                 offset: const Offset(0, 6),
               ),
@@ -64,12 +65,13 @@ class _StepCardState extends State<StepCard> {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
               decoration: BoxDecoration(
-                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                    .withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 widget.number,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12,
                   fontWeight: FontWeight.w800,
                   color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
@@ -79,19 +81,23 @@ class _StepCardState extends State<StepCard> {
             const SizedBox(height: 12),
             Text(
               widget.title,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               widget.description,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 height: 1.45,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -136,7 +142,7 @@ class WelcomeHowItWorksSection extends ConsumerWidget {
             children: [
               Text(
                 loc.translate('welcome.howItWorksEyebrow'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
                   color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
@@ -146,36 +152,73 @@ class WelcomeHowItWorksSection extends ConsumerWidget {
               const SizedBox(height: 8),
               Text(
                 loc.translate('welcome.howItWorksTitle'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: isDesktop ? 30 : 22,
                   fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 36),
-
               isDesktop
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(child: StepCard(number: '01', title: step1Title, description: step1Desc, isDark: isDark)),
+                        Expanded(
+                            child: StepCard(
+                                number: '01',
+                                title: step1Title,
+                                description: step1Desc,
+                                isDark: isDark)),
                         _buildStepArrow(isDark),
-                        Expanded(child: StepCard(number: '02', title: step2Title, description: step2Desc, isDark: isDark)),
+                        Expanded(
+                            child: StepCard(
+                                number: '02',
+                                title: step2Title,
+                                description: step2Desc,
+                                isDark: isDark)),
                         _buildStepArrow(isDark),
-                        Expanded(child: StepCard(number: '03', title: step3Title, description: step3Desc, isDark: isDark)),
+                        Expanded(
+                            child: StepCard(
+                                number: '03',
+                                title: step3Title,
+                                description: step3Desc,
+                                isDark: isDark)),
                         _buildStepArrow(isDark),
-                        Expanded(child: StepCard(number: '04', title: step4Title, description: step4Desc, isDark: isDark)),
+                        Expanded(
+                            child: StepCard(
+                                number: '04',
+                                title: step4Title,
+                                description: step4Desc,
+                                isDark: isDark)),
                       ],
                     )
                   : Column(
                       children: [
-                        StepCard(number: '01', title: step1Title, description: step1Desc, isDark: isDark),
+                        StepCard(
+                            number: '01',
+                            title: step1Title,
+                            description: step1Desc,
+                            isDark: isDark),
                         const SizedBox(height: 14),
-                        StepCard(number: '02', title: step2Title, description: step2Desc, isDark: isDark),
+                        StepCard(
+                            number: '02',
+                            title: step2Title,
+                            description: step2Desc,
+                            isDark: isDark),
                         const SizedBox(height: 14),
-                        StepCard(number: '03', title: step3Title, description: step3Desc, isDark: isDark),
+                        StepCard(
+                            number: '03',
+                            title: step3Title,
+                            description: step3Desc,
+                            isDark: isDark),
                         const SizedBox(height: 14),
-                        StepCard(number: '04', title: step4Title, description: step4Desc, isDark: isDark),
+                        StepCard(
+                            number: '04',
+                            title: step4Title,
+                            description: step4Desc,
+                            isDark: isDark),
                       ],
                     ),
             ],

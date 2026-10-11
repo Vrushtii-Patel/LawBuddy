@@ -43,9 +43,10 @@ class HomeRecentActivityCard extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadii.rounded16,
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
@@ -64,10 +65,15 @@ class HomeRecentActivityCard extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.14),
-                  borderRadius: BorderRadius.circular(8),
+                  color:
+                      (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                          .withValues(alpha: 0.14),
+                  borderRadius: AppRadii.rounded8,
                 ),
-                child: Icon(Icons.history_rounded, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary, size: 17),
+                child: Icon(Icons.history_rounded,
+                    color:
+                        isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                    size: 17),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -78,19 +84,23 @@ class HomeRecentActivityCard extends ConsumerWidget {
                       loc.translate('home.recentActivity'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     Text(
                       loc.translate('home.recentActivitySub'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11.5,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -99,14 +109,16 @@ class HomeRecentActivityCard extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 16),
-
           for (int i = 0; i < activities.length; i++) ...[
             Container(
-              margin: EdgeInsets.only(bottom: i < activities.length - 1 ? 8 : 0),
+              margin:
+                  EdgeInsets.only(bottom: i < activities.length - 1 ? 8 : 0),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
-                borderRadius: BorderRadius.circular(12),
+                color: isDark
+                    ? AppColors.darkElevatedSurface
+                    : AppColors.lightElevatedSurface,
+                borderRadius: AppRadii.rounded12,
                 border: Border.all(
                   color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
@@ -117,8 +129,9 @@ class HomeRecentActivityCard extends ConsumerWidget {
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: (activities[i]['color'] as Color).withValues(alpha: isDark ? 0.15 : 0.12),
-                      borderRadius: BorderRadius.circular(8),
+                      color: (activities[i]['color'] as Color)
+                          .withValues(alpha: isDark ? 0.15 : 0.12),
+                      borderRadius: AppRadii.rounded8,
                     ),
                     child: Icon(
                       activities[i]['icon'] as IconData,
@@ -135,18 +148,22 @@ class HomeRecentActivityCard extends ConsumerWidget {
                           activities[i]['title'] as String,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w600,
-                            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
                           activities[i]['time'] as String,
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 11,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ],

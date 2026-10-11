@@ -7,7 +7,8 @@ import '../privacy_policy_screen.dart';
 import '../terms_of_use_screen.dart';
 import '../../widgets/cookie_consent_banner.dart';
 
-void showLegalDisclaimerDialog(BuildContext context, bool isDark, [WidgetRef? ref]) {
+void showLegalDisclaimerDialog(BuildContext context, bool isDark,
+    [WidgetRef? ref]) {
   String tr(String key, [Map<String, String>? params]) {
     if (ref != null) {
       return ref.read(localeProvider.notifier).translate(key, params);
@@ -18,7 +19,9 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark, [WidgetRef? re
   showDialog(
     context: context,
     builder: (ctx) => AlertDialog(
-      backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+      backgroundColor: isDark
+          ? AppColors.darkSurfaceElevated
+          : AppColors.lightSurfaceElevated,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
@@ -30,7 +33,8 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark, [WidgetRef? re
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.15),
+              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                  .withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -42,10 +46,12 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark, [WidgetRef? re
           const SizedBox(width: 12),
           Text(
             tr('welcome.disclaimerTitle'),
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
         ],
@@ -58,10 +64,12 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark, [WidgetRef? re
           children: [
             Text(
               tr('welcome.disclaimerContent'),
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13.5,
                 height: 1.5,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
             const SizedBox(height: 18),
@@ -73,30 +81,44 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark, [WidgetRef? re
                   onPressed: () {
                     Navigator.of(ctx).pop();
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+                      MaterialPageRoute(
+                          builder: (_) => const PrivacyPolicyScreen()),
                     );
                   },
                   icon: const Icon(Icons.shield_outlined, size: 14),
                   label: Text(tr('welcome.privacyPolicy')),
                   style: OutlinedButton.styleFrom(
-                    textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
-                    foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    textStyle: GoogleFonts.plusJakartaSans(
+                        fontSize: 12, fontWeight: FontWeight.w600),
+                    foregroundColor: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                    side: BorderSide(
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder),
                   ),
                 ),
                 OutlinedButton.icon(
                   onPressed: () {
                     Navigator.of(ctx).pop();
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
+                      MaterialPageRoute(
+                          builder: (_) => const TermsOfUseScreen()),
                     );
                   },
                   icon: const Icon(Icons.description_outlined, size: 14),
                   label: Text(tr('welcome.termsOfUse')),
                   style: OutlinedButton.styleFrom(
-                    textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
-                    foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    textStyle: GoogleFonts.plusJakartaSans(
+                        fontSize: 12, fontWeight: FontWeight.w600),
+                    foregroundColor: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                    side: BorderSide(
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder),
                   ),
                 ),
                 OutlinedButton.icon(
@@ -107,9 +129,15 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark, [WidgetRef? re
                   icon: const Icon(Icons.tune_rounded, size: 14),
                   label: Text(tr('welcome.storagePreferences')),
                   style: OutlinedButton.styleFrom(
-                    textStyle: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
-                    foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                    side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                    textStyle: GoogleFonts.plusJakartaSans(
+                        fontSize: 12, fontWeight: FontWeight.w600),
+                    foregroundColor: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                    side: BorderSide(
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder),
                   ),
                 ),
               ],
@@ -121,11 +149,15 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark, [WidgetRef? re
         FilledButton(
           onPressed: () => Navigator.of(ctx).pop(),
           style: FilledButton.styleFrom(
-            backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-            foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            backgroundColor:
+                isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+            foregroundColor:
+                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
-          child: Text(tr('common.understood'), style: GoogleFonts.inter(fontWeight: FontWeight.w600)),
+          child: Text(tr('common.understood'),
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
         ),
       ],
     ),
@@ -166,7 +198,9 @@ class WelcomeHeader extends ConsumerWidget {
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         border: Border(
           bottom: BorderSide(
-            color: isDark ? AppColors.darkBorder.withValues(alpha: 0.40) : AppColors.lightBorder,
+            color: isDark
+                ? AppColors.darkBorder.withValues(alpha: 0.40)
+                : AppColors.lightBorder,
             width: 1,
           ),
         ),
@@ -189,7 +223,9 @@ class WelcomeHeader extends ConsumerWidget {
                         width: 34,
                         height: 34,
                         decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Icon(
@@ -208,10 +244,12 @@ class WelcomeHeader extends ConsumerWidget {
                               loc.translate('common.appName'),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 15.5,
                                 fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                                 letterSpacing: -0.3,
                               ),
                             ),
@@ -220,7 +258,10 @@ class WelcomeHeader extends ConsumerWidget {
                               width: 20,
                               height: 1.5,
                               decoration: BoxDecoration(
-                                color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.65),
+                                color: (isDark
+                                        ? AppColors.darkAccent
+                                        : AppColors.lightAccent)
+                                    .withValues(alpha: 0.65),
                                 borderRadius: BorderRadius.circular(1),
                               ),
                             ),
@@ -229,10 +270,12 @@ class WelcomeHeader extends ConsumerWidget {
                               loc.translate('welcome.headerTagline'),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 8,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                color: isDark
+                                    ? AppColors.darkAccent
+                                    : AppColors.lightPrimary,
                                 letterSpacing: 1.0,
                               ),
                             ),
@@ -254,20 +297,31 @@ class WelcomeHeader extends ConsumerWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _buildNavButton(loc.translate('welcome.navFeatures'), onFeaturesTap, isDark),
-                        _buildNavButton(loc.translate('welcome.navHowItWorks'), onHowItWorksTap, isDark),
-                        _buildNavButton(loc.translate('welcome.navRiskSystem'), onRiskSystemTap, isDark),
-                        _buildNavButton(loc.translate('welcome.privacyPolicy'), () {
+                        _buildNavButton(loc.translate('welcome.navFeatures'),
+                            onFeaturesTap, isDark),
+                        _buildNavButton(loc.translate('welcome.navHowItWorks'),
+                            onHowItWorksTap, isDark),
+                        _buildNavButton(loc.translate('welcome.navRiskSystem'),
+                            onRiskSystemTap, isDark),
+                        _buildNavButton(loc.translate('welcome.privacyPolicy'),
+                            () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+                            MaterialPageRoute(
+                                builder: (_) => const PrivacyPolicyScreen()),
                           );
                         }, isDark),
-                        _buildNavButton(loc.translate('welcome.termsOfUse'), () {
+                        _buildNavButton(loc.translate('welcome.termsOfUse'),
+                            () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
+                            MaterialPageRoute(
+                                builder: (_) => const TermsOfUseScreen()),
                           );
                         }, isDark),
-                        _buildNavButton(loc.translate('welcome.navDisclaimer'), () => showLegalDisclaimerDialog(context, isDark, ref), isDark),
+                        _buildNavButton(
+                            loc.translate('welcome.navDisclaimer'),
+                            () =>
+                                showLegalDisclaimerDialog(context, isDark, ref),
+                            isDark),
                       ],
                     ),
                   ),
@@ -281,16 +335,23 @@ class WelcomeHeader extends ConsumerWidget {
                     onPressed: onLoginTap,
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(0, 36),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 8),
                       side: BorderSide(
-                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
                       ),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      foregroundColor: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                     child: Text(
                       loc.translate('welcome.signIn'),
-                      style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+                      style: GoogleFonts.plusJakartaSans(
+                          fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                   ),
                   if (!isDesktop) ...[
@@ -298,13 +359,19 @@ class WelcomeHeader extends ConsumerWidget {
                     PopupMenuButton<String>(
                       icon: Icon(
                         Icons.menu_rounded,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
-                      color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+                      color: isDark
+                          ? AppColors.darkSurfaceElevated
+                          : AppColors.lightSurfaceElevated,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                         side: BorderSide(
-                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                       ),
                       onSelected: (value) {
@@ -320,12 +387,14 @@ class WelcomeHeader extends ConsumerWidget {
                             break;
                           case 'privacy':
                             Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+                              MaterialPageRoute(
+                                  builder: (_) => const PrivacyPolicyScreen()),
                             );
                             break;
                           case 'terms':
                             Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => const TermsOfUseScreen()),
+                              MaterialPageRoute(
+                                  builder: (_) => const TermsOfUseScreen()),
                             );
                             break;
                           case 'disclaimer':
@@ -337,14 +406,33 @@ class WelcomeHeader extends ConsumerWidget {
                         }
                       },
                       itemBuilder: (context) => [
-                        PopupMenuItem(value: 'features', child: Text(loc.translate('welcome.navFeatures'))),
-                        PopupMenuItem(value: 'howItWorks', child: Text(loc.translate('welcome.navHowItWorks'))),
-                        PopupMenuItem(value: 'riskSystem', child: Text(loc.translate('welcome.navRiskSystem'))),
+                        PopupMenuItem(
+                            value: 'features',
+                            child: Text(loc.translate('welcome.navFeatures'))),
+                        PopupMenuItem(
+                            value: 'howItWorks',
+                            child:
+                                Text(loc.translate('welcome.navHowItWorks'))),
+                        PopupMenuItem(
+                            value: 'riskSystem',
+                            child:
+                                Text(loc.translate('welcome.navRiskSystem'))),
                         const PopupMenuDivider(),
-                        PopupMenuItem(value: 'privacy', child: Text(loc.translate('welcome.privacyPolicy'))),
-                        PopupMenuItem(value: 'terms', child: Text(loc.translate('welcome.termsOfUse'))),
-                        PopupMenuItem(value: 'disclaimer', child: Text(loc.translate('welcome.disclaimerTitle'))),
-                        PopupMenuItem(value: 'storage', child: Text(loc.translate('welcome.storagePreferences'))),
+                        PopupMenuItem(
+                            value: 'privacy',
+                            child:
+                                Text(loc.translate('welcome.privacyPolicy'))),
+                        PopupMenuItem(
+                            value: 'terms',
+                            child: Text(loc.translate('welcome.termsOfUse'))),
+                        PopupMenuItem(
+                            value: 'disclaimer',
+                            child:
+                                Text(loc.translate('welcome.disclaimerTitle'))),
+                        PopupMenuItem(
+                            value: 'storage',
+                            child: Text(
+                                loc.translate('welcome.storagePreferences'))),
                       ],
                     ),
                   ],
@@ -364,11 +452,14 @@ class WelcomeHeader extends ConsumerWidget {
         onPressed: onTap,
         style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          foregroundColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          foregroundColor: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextSecondary,
         ),
         child: Text(
           label,
-          style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w500),
+          style: GoogleFonts.plusJakartaSans(
+              fontSize: 13, fontWeight: FontWeight.w500),
         ),
       ),
     );

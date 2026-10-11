@@ -25,10 +25,11 @@ class OtpScreen extends ConsumerStatefulWidget {
   ConsumerState<OtpScreen> createState() => _OtpScreenState();
 }
 
-class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProviderStateMixin {
+class _OtpScreenState extends ConsumerState<OtpScreen>
+    with SingleTickerProviderStateMixin {
   final _pinController = TextEditingController();
   final _focusNode = FocusNode();
-  
+
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -42,7 +43,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
   void initState() {
     super.initState();
     _startTimer();
-    
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 350),
@@ -52,7 +53,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
 
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
 
@@ -97,11 +99,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
   void _resendOtp() async {
     if (!_canResend) return;
     final tr = ref.read(localeProvider.notifier).translate;
-    
+
     final success = await ref.read(authProvider.notifier).resendOtp(
-      email: widget.email,
-      purpose: 'signup',
-    );
+          email: widget.email,
+          purpose: 'signup',
+        );
     if (success && mounted) {
       AppToast.showSuccess(context, tr('auth.otpResentSuccess'));
       _startTimer();
@@ -114,17 +116,17 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
   void _verifyOtp() async {
     final otp = _pinController.text.trim();
     final tr = ref.read(localeProvider.notifier).translate;
-    
+
     if (otp.length != 6) {
       AppToast.showError(context, tr('auth.enterComplete6Digit'));
       return;
     }
 
     final success = await ref.read(authProvider.notifier).verifyEmail(
-      email: widget.email,
-      otp: otp,
-    );
-    
+          email: widget.email,
+          otp: otp,
+        );
+
     if (success && mounted) {
       // Show success briefly
       AppToast.showSuccess(context, tr('auth.verificationSuccess'));
@@ -134,8 +136,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
           Navigator.pushAndRemoveUntil(
             context,
             PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  const HomeScreen(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
@@ -163,9 +167,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
     final defaultPinTheme = PinTheme(
       width: 54,
       height: 60,
-      textStyle: TextStyle(fontSize: 22, color: colorScheme.onSurface, fontWeight: FontWeight.w700),
+      textStyle: TextStyle(
+          fontSize: 22,
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.w700),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+        color: isDark
+            ? AppColors.darkSurfaceElevated
+            : AppColors.lightSurfaceElevated,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colorScheme.outline),
       ),
@@ -179,16 +188,20 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration!.copyWith(
-        color: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
+        color: isDark
+            ? AppColors.darkSurfaceElevated
+            : AppColors.lightSurfaceElevated,
         border: Border.all(color: colorScheme.outline),
       ),
     );
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: colorScheme.onSurface, size: 18),
+          icon: Icon(Icons.arrow_back_ios_new_rounded,
+              color: colorScheme.onSurface, size: 18),
           onPressed: () => Navigator.pop(context),
           tooltip: tr('common.back'),
         ),
@@ -200,7 +213,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 480),
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
               child: FadeTransition(
                 opacity: _fadeAnimation,
                 child: SlideTransition(
@@ -208,7 +222,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
                   child: Container(
                     padding: const EdgeInsets.all(32.0),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                      color: isDark
+                          ? AppColors.darkSurface
+                          : AppColors.lightSurface,
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(color: colorScheme.outline),
                     ),
@@ -223,7 +239,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
                               shape: BoxShape.circle,
                               color: colorScheme.primary.withValues(alpha: 0.1),
                               border: Border.all(
-                                color: colorScheme.primary.withValues(alpha: 0.25),
+                                color:
+                                    colorScheme.primary.withValues(alpha: 0.25),
                               ),
                             ),
                             child: Icon(
@@ -237,7 +254,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
                         Text(
                           tr('auth.verifyYourEmail'),
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 24,
                             fontWeight: FontWeight.w800,
                             color: colorScheme.onSurface,
@@ -248,14 +265,13 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
                         Text(
                           tr('auth.enter6Digit', {'email': widget.email}),
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 14,
                             color: colorScheme.onSurfaceVariant,
                             height: 1.4,
                           ),
                         ),
                         const SizedBox(height: 28),
-                        
                         Center(
                           child: Pinput(
                             length: 6,
@@ -264,59 +280,74 @@ class _OtpScreenState extends ConsumerState<OtpScreen> with SingleTickerProvider
                             defaultPinTheme: defaultPinTheme,
                             focusedPinTheme: focusedPinTheme,
                             submittedPinTheme: submittedPinTheme,
-                            pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                            pinputAutovalidateMode:
+                                PinputAutovalidateMode.onSubmit,
                             showCursor: true,
                             onCompleted: (pin) => _verifyOtp(),
                           ),
                         ),
-                        
                         const SizedBox(height: 24),
-                        
                         Text(
-                          _start > 0 ? tr('auth.codeExpiresIn', {'time': _formattedTime}) : tr('auth.codeExpired'),
+                          _start > 0
+                              ? tr('auth.codeExpiresIn',
+                                  {'time': _formattedTime})
+                              : tr('auth.codeExpired'),
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: _start > 0 ? colorScheme.onSurfaceVariant : colorScheme.error,
+                            color: _start > 0
+                                ? colorScheme.onSurfaceVariant
+                                : colorScheme.error,
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        
                         const SizedBox(height: 24),
-                        
                         ElevatedButton(
-                          onPressed: authState.status == AuthStatus.loading || _start == 0 ? null : _verifyOtp,
+                          onPressed: authState.status == AuthStatus.loading ||
+                                  _start == 0
+                              ? null
+                              : _verifyOtp,
                           child: authState.status == AuthStatus.loading
                               ? SizedBox(
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        colorScheme.onPrimary),
                                   ),
                                 )
                               : Text(
                                   tr('auth.verify'),
-                                  style: const TextStyle(fontWeight: FontWeight.w700),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700),
                                 ),
                         ),
-
                         const SizedBox(height: 24),
-                        
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               tr('auth.didntReceiveCode'),
-                              style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 13),
+                              style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant,
+                                  fontSize: 13),
                             ),
                             const SizedBox(width: 4),
                             GestureDetector(
                               onTap: _canResend ? _resendOtp : null,
                               child: Text(
-                                _canResend ? tr('auth.resend') : tr('auth.waitCooldown', {'seconds': '$_resendCooldown'}),
+                                _canResend
+                                    ? tr('auth.resend')
+                                    : tr('auth.waitCooldown',
+                                        {'seconds': '$_resendCooldown'}),
                                 style: TextStyle(
-                                  color: _canResend ? (isDark ? AppColors.darkAccent : AppColors.lightAccent) : colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                                  color: _canResend
+                                      ? (isDark
+                                          ? AppColors.darkAccent
+                                          : AppColors.lightAccent)
+                                      : colorScheme.onSurfaceVariant
+                                          .withValues(alpha: 0.5),
                                   fontWeight: FontWeight.w700,
                                   fontSize: 13,
                                 ),

@@ -20,7 +20,8 @@ class ResetPasswordScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() =>
+      _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
@@ -153,9 +154,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
     final tr = ref.read(localeProvider.notifier).translate;
 
     final success = await ref.read(authProvider.notifier).resendOtp(
-      email: widget.email,
-      purpose: 'reset',
-    );
+          email: widget.email,
+          purpose: 'reset',
+        );
 
     if (success && mounted) {
       AppToast.showSuccess(context, tr('auth.otpResentSuccess'));
@@ -173,10 +174,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
       final newPassword = _newPasswordController.text;
 
       final success = await ref.read(authProvider.notifier).resetPassword(
-        email: widget.email,
-        otp: code,
-        newPassword: newPassword,
-      );
+            email: widget.email,
+            otp: code,
+            newPassword: newPassword,
+          );
 
       if (success && mounted) {
         AppToast.showSuccess(context, tr('auth.passwordResetSuccess'));
@@ -185,7 +186,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 LoginScreen(prefilledEmail: widget.email),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
               return FadeTransition(opacity: animation, child: child);
             },
           ),
@@ -193,7 +195,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         );
       } else if (mounted) {
         final error = ref.read(authProvider).errorMessage;
-        AppToast.showError(context, error ?? 'Failed to reset password. Please check your code.');
+        AppToast.showError(context,
+            error ?? 'Failed to reset password. Please check your code.');
         _backToCodeStep();
       }
     }
@@ -208,13 +211,19 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 920;
 
-    final Color bgSurface = isDark ? AppColors.darkBackground : AppColors.lightBackground;
-    final Color cardSurface = isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final Color cardBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final Color primaryText = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final Color secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final Color bgSurface =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final Color cardSurface =
+        isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    final Color cardBorder =
+        isDark ? AppColors.darkBorder : AppColors.lightBorder;
+    final Color primaryText =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final Color secondaryText =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final Color primaryColor = AppColors.lightPrimary;
-    final Color elevatedSurface = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
+    final Color elevatedSurface =
+        isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
 
     final authState = ref.watch(authProvider);
     final isLoading = authState.status == AuthStatus.loading;
@@ -223,7 +232,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
     final defaultPinTheme = PinTheme(
       width: 44,
       height: 48,
-      textStyle: GoogleFonts.inter(
+      textStyle: GoogleFonts.plusJakartaSans(
         fontSize: 18,
         fontWeight: FontWeight.w700,
         color: primaryText,
@@ -369,7 +378,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         // Header
         Text(
           tr('auth.verifyResetCodeTitle'),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 22,
             fontWeight: FontWeight.w800,
             color: primaryText,
@@ -379,7 +388,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         const SizedBox(height: 6),
         Text(
           tr('auth.enterCodeSentTo', {'email': widget.email}),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 13,
             color: secondaryText,
             height: 1.4,
@@ -390,7 +399,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         // 6-digit Code field
         Text(
           '6-Digit Code',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 12.5,
             fontWeight: FontWeight.w600,
             color: primaryText,
@@ -425,7 +434,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                 tr('auth.waitCooldown', {
                   'seconds': _resendCooldown.toString(),
                 }),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12,
                   color: secondaryText,
                   fontWeight: FontWeight.w500,
@@ -442,7 +451,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                   ),
                   child: Text(
                     tr('auth.resend'),
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w700,
                       color: primaryColor,
@@ -474,7 +483,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
             children: [
               Text(
                 tr('auth.continueToPassword'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14.5,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.2,
@@ -492,7 +501,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
           child: Text(
             tr('auth.legacyAccountNotice'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 11.5,
               color: secondaryText.withValues(alpha: 0.8),
             ),
@@ -538,7 +547,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         // Header
         Text(
           tr('auth.resetPasswordTitle'),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 22,
             fontWeight: FontWeight.w800,
             color: primaryText,
@@ -548,7 +557,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         const SizedBox(height: 6),
         Text(
           tr('auth.resetPasswordSub'),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 13,
             color: secondaryText,
             height: 1.4,
@@ -577,8 +586,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        tr('auth.codeVerifiedBadge', {'code': _codeController.text.trim()}),
-                        style: GoogleFonts.inter(
+                        tr('auth.codeVerifiedBadge',
+                            {'code': _codeController.text.trim()}),
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w600,
                           color: primaryText,
@@ -594,10 +604,11 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                 onTap: _backToCodeStep,
                 borderRadius: BorderRadius.circular(4),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   child: Text(
                     tr('auth.changeCode'),
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: primaryColor,
@@ -613,7 +624,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         // New Password
         Text(
           tr('auth.newPassword'),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 12.5,
             fontWeight: FontWeight.w600,
             color: primaryText,
@@ -631,7 +642,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
               _hasInteractedWithPassword = true;
             });
           },
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: primaryText,
@@ -640,7 +651,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
             filled: true,
             fillColor: elevatedSurface,
             hintText: tr('auth.newPasswordHint'),
-            hintStyle: GoogleFonts.inter(
+            hintStyle: GoogleFonts.plusJakartaSans(
               fontSize: 13.5,
               color: secondaryText.withValues(alpha: 0.7),
             ),
@@ -714,7 +725,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         // Confirm New Password
         Text(
           tr('auth.confirmNewPassword'),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 12.5,
             fontWeight: FontWeight.w600,
             color: primaryText,
@@ -731,7 +742,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
           onFieldSubmitted: (_) {
             if (_isPasswordFormValid && !isLoading) _submit();
           },
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: primaryText,
@@ -740,7 +751,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
             filled: true,
             fillColor: elevatedSurface,
             hintText: tr('auth.confirmPasswordHint'),
-            hintStyle: GoogleFonts.inter(
+            hintStyle: GoogleFonts.plusJakartaSans(
               fontSize: 13.5,
               color: secondaryText.withValues(alpha: 0.7),
             ),
@@ -809,15 +820,13 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
           child: ElevatedButton(
             onPressed: (isLoading || !_isPasswordFormValid) ? null : _submit,
             style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor
-                  .withValues(alpha: _isHoveredButton ? 0.92 : 1.0),
-              foregroundColor: isDark
-                  ? AppColors.darkErrorText
-                  : AppColors.lightTextPrimary,
+              backgroundColor:
+                  primaryColor.withValues(alpha: _isHoveredButton ? 0.92 : 1.0),
+              foregroundColor:
+                  isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
               minimumSize: const Size(double.infinity, 48),
               disabledBackgroundColor: elevatedSurface,
-              disabledForegroundColor:
-                  secondaryText.withValues(alpha: 0.5),
+              disabledForegroundColor: secondaryText.withValues(alpha: 0.5),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -841,7 +850,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                     children: [
                       Text(
                         tr('auth.resetPasswordButton'),
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 14.5,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.2,
@@ -890,15 +899,17 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                 },
                 borderRadius: BorderRadius.circular(10),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.arrow_back_rounded, size: 18, color: primaryText),
+                      Icon(Icons.arrow_back_rounded,
+                          size: 18, color: primaryText),
                       const SizedBox(width: 6),
                       Text(
                         tr('common.back'),
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: primaryText,

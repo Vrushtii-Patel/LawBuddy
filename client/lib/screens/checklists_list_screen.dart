@@ -18,10 +18,12 @@ class ChecklistsListScreen extends ConsumerStatefulWidget {
   const ChecklistsListScreen({super.key});
 
   @override
-  ConsumerState<ChecklistsListScreen> createState() => _ChecklistsListScreenState();
+  ConsumerState<ChecklistsListScreen> createState() =>
+      _ChecklistsListScreenState();
 }
 
-class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> with TickerProviderStateMixin {
+class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
+    with TickerProviderStateMixin {
   List<dynamic> _checklists = [];
   bool _isLoading = true;
   String? _error;
@@ -40,7 +42,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
       _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(parent: _entryController!, curve: Curves.easeOutCubic),
       );
-      _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.03), end: Offset.zero).animate(
+      _slideAnimation =
+          Tween<Offset>(begin: const Offset(0, 0.03), end: Offset.zero).animate(
         CurvedAnimation(parent: _entryController!, curve: Curves.easeOutCubic),
       );
       _entryController!.forward();
@@ -79,7 +82,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
       debugPrint('Error fetching checklists: $e');
       if (mounted) {
         setState(() {
-          _error = 'Unable to load checklists. Please check your connection and try again.';
+          _error =
+              'Unable to load checklists. Please check your connection and try again.';
           _isLoading = false;
         });
       }
@@ -99,10 +103,13 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
     messenger.clearSnackBars();
 
     final screenWidth = MediaQuery.of(context).size.width;
-    final toastWidth = screenWidth > 540 ? 460.0 : (screenWidth - 32.0).clamp(280.0, 540.0);
+    final toastWidth =
+        screenWidth > 540 ? 460.0 : (screenWidth - 32.0).clamp(280.0, 540.0);
 
-    final effectiveBg = backgroundColor ?? (isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface);
-    final effectiveBorder = borderColor ?? (isDark ? AppColors.darkBorder : AppColors.lightBorder);
+    final effectiveBg = backgroundColor ??
+        (isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface);
+    final effectiveBorder =
+        borderColor ?? (isDark ? AppColors.darkBorder : AppColors.lightBorder);
 
     messenger.showSnackBar(
       SnackBar(
@@ -152,11 +159,14 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+          backgroundColor: isDark
+              ? AppColors.darkElevatedSurface
+              : AppColors.lightElevatedSurface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.3),
+              color: (isDark ? AppColors.darkError : AppColors.lightError)
+                  .withValues(alpha: 0.3),
             ),
           ),
           title: Text(
@@ -164,14 +174,18 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
             style: GoogleFonts.plusJakartaSans(
               fontWeight: FontWeight.w700,
               fontSize: 18,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           content: Text(
             '${tr('checklists.deleteConfirm')}\n\n"$title"',
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 14,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           actions: [
@@ -179,24 +193,29 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               onPressed: () => Navigator.pop(ctx, false),
               child: Text(
                 tr('common.cancel'),
-                style: GoogleFonts.inter(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                style: GoogleFonts.plusJakartaSans(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+                backgroundColor:
+                    isDark ? AppColors.darkError : AppColors.lightError,
                 foregroundColor: Colors.white,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
               ),
               onPressed: () => Navigator.pop(ctx, true),
               child: Text(
                 tr('common.delete'),
-                style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
               ),
             ),
           ],
@@ -220,12 +239,17 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.16),
+                  color: (isDark
+                          ? AppColors.darkSecondary
+                          : AppColors.lightSecondary)
+                      .withValues(alpha: 0.16),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.delete_sweep_rounded,
-                  color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                  color: isDark
+                      ? AppColors.darkSecondary
+                      : AppColors.lightSecondary,
                   size: 18,
                 ),
               ),
@@ -236,7 +260,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -244,12 +270,17 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
           ),
           action: TextButton(
             style: TextButton.styleFrom(
-              backgroundColor: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.18),
-              foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              backgroundColor:
+                  (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                      .withValues(alpha: 0.18),
+              foregroundColor: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
             ),
             onPressed: () {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -263,7 +294,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               style: TextStyle(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
           ),
@@ -273,8 +306,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
       debugPrint('Error deleting checklist: $e');
       if (mounted) {
         _showToast(
-          backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
-          borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+          backgroundColor:
+              isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+          borderColor: isDark
+              ? const Color(0xFFEF4444).withValues(alpha: 0.5)
+              : const Color(0xFFFCA5A5),
           content: Row(
             children: [
               Icon(
@@ -289,7 +325,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                    color: isDark
+                        ? const Color(0xFFFEE2E2)
+                        : const Color(0xFF991B1B),
                   ),
                 ),
               ),
@@ -312,7 +350,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+              backgroundColor: isDark
+                  ? AppColors.darkElevatedSurface
+                  : AppColors.lightElevatedSurface,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
                 side: BorderSide(
@@ -324,33 +364,43 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 style: GoogleFonts.plusJakartaSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               content: TextField(
                 controller: controller,
                 autofocus: true,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
                 decoration: InputDecoration(
                   labelText: tr('checklists.titleLabel'),
                   labelStyle: TextStyle(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                   filled: true,
-                  fillColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  fillColor:
+                      isDark ? AppColors.darkSurface : AppColors.lightSurface,
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color:
+                          isDark ? AppColors.darkBorder : AppColors.lightBorder,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide(
-                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightPrimary,
                       width: 1.5,
                     ),
                   ),
@@ -361,19 +411,25 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   onPressed: () => Navigator.pop(dialogCtx),
                   child: Text(
                     tr('common.cancel'),
-                    style: GoogleFonts.inter(
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    style: GoogleFonts.plusJakartaSans(
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                    foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                    backgroundColor:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    foregroundColor:
+                        isDark ? AppColors.darkBackground : Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 18, vertical: 10),
                   ),
                   onPressed: isSaving
                       ? null
@@ -385,10 +441,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                           }
                           setDialogState(() => isSaving = true);
                           try {
-                            final success = await ApiService.renameChecklist(type, newTitle);
+                            final success = await ApiService.renameChecklist(
+                                type, newTitle);
                             if (success.isNotEmpty && mounted) {
                               setState(() {
-                                final idx = _checklists.indexWhere((c) => c['type'] == type);
+                                final idx = _checklists
+                                    .indexWhere((c) => c['type'] == type);
                                 if (idx != -1) {
                                   _checklists[idx]['title'] = newTitle;
                                 }
@@ -400,12 +458,17 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                                     Container(
                                       padding: const EdgeInsets.all(6),
                                       decoration: BoxDecoration(
-                                        color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.16),
+                                        color: (isDark
+                                                ? AppColors.darkSecondary
+                                                : AppColors.lightSecondary)
+                                            .withValues(alpha: 0.16),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Icon(
                                         Icons.check_rounded,
-                                        color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                                        color: isDark
+                                            ? AppColors.darkSecondary
+                                            : AppColors.lightSecondary,
                                         size: 18,
                                       ),
                                     ),
@@ -416,7 +479,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                                         style: TextStyle(
                                           fontSize: 13.5,
                                           fontWeight: FontWeight.w600,
-                                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                          color: isDark
+                                              ? AppColors.darkTextPrimary
+                                              : AppColors.lightTextPrimary,
                                         ),
                                       ),
                                     ),
@@ -429,13 +494,20 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                             setDialogState(() => isSaving = false);
                             if (dialogCtx.mounted) {
                               _showToast(
-                                backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
-                                borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+                                backgroundColor: isDark
+                                    ? const Color(0xFF2A1515)
+                                    : const Color(0xFFFEF2F2),
+                                borderColor: isDark
+                                    ? const Color(0xFFEF4444)
+                                        .withValues(alpha: 0.5)
+                                    : const Color(0xFFFCA5A5),
                                 content: Row(
                                   children: [
                                     Icon(
                                       Icons.error_outline_rounded,
-                                      color: isDark ? AppColors.darkError : AppColors.lightError,
+                                      color: isDark
+                                          ? AppColors.darkError
+                                          : AppColors.lightError,
                                       size: 18,
                                     ),
                                     const SizedBox(width: 10),
@@ -445,7 +517,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
-                                          color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                                          color: isDark
+                                              ? const Color(0xFFFEE2E2)
+                                              : const Color(0xFF991B1B),
                                         ),
                                       ),
                                     ),
@@ -459,11 +533,13 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                       ? const SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
                         )
                       : Text(
                           tr('common.save'),
-                          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+                          style: GoogleFonts.plusJakartaSans(
+                              fontWeight: FontWeight.w700),
                         ),
                 ),
               ],
@@ -475,26 +551,35 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
   }
 
   Map<String, dynamic>? _findDuplicateChecklist(String prompt) {
-    final cleanPrompt = prompt.trim().toLowerCase().replaceAll(RegExp(r'[^\w\s]'), '').replaceAll(RegExp(r'\s+'), ' ');
+    final cleanPrompt = prompt
+        .trim()
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^\w\s]'), '')
+        .replaceAll(RegExp(r'\s+'), ' ');
     if (cleanPrompt.isEmpty) return null;
 
     for (final item in _checklists) {
       if (item is! Map) continue;
       final mapItem = Map<String, dynamic>.from(item);
       final rawTitle = (mapItem['title'] ?? '').toString().trim().toLowerCase();
-      final cleanTitle = rawTitle.replaceAll(RegExp(r'[^\w\s]'), '').replaceAll(RegExp(r'\s+'), ' ');
+      final cleanTitle = rawTitle
+          .replaceAll(RegExp(r'[^\w\s]'), '')
+          .replaceAll(RegExp(r'\s+'), ' ');
       final rawType = (mapItem['type'] ?? '').toString().trim().toLowerCase();
-      final cleanType = rawType.replaceAll(RegExp(r'[^\w\s]'), '').replaceAll(RegExp(r'\s+'), ' ');
+      final cleanType = rawType
+          .replaceAll(RegExp(r'[^\w\s]'), '')
+          .replaceAll(RegExp(r'\s+'), ' ');
 
       if (cleanTitle.isEmpty && cleanType.isEmpty) continue;
 
       if (cleanTitle == cleanPrompt || cleanType == cleanPrompt) {
         return mapItem;
       }
-      
+
       // Match partial keywords if length >= 4
       if (cleanPrompt.length >= 4 && cleanTitle.length >= 4) {
-        if (cleanTitle.contains(cleanPrompt) || cleanPrompt.contains(cleanTitle)) {
+        if (cleanTitle.contains(cleanPrompt) ||
+            cleanPrompt.contains(cleanTitle)) {
           return mapItem;
         }
       }
@@ -511,7 +596,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final title = (existing['title'] ?? tr('checklists.untitled')).toString();
     final items = (existing['items'] as List?) ?? [];
-    final completedCount = items.where((it) => it is Map && it['completed'] == true).length;
+    final completedCount =
+        items.where((it) => it is Map && it['completed'] == true).length;
     final totalCount = items.length;
 
     return showDialog<_DuplicateChecklistAction>(
@@ -519,7 +605,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
       barrierDismissible: true,
       builder: (dialogCtx) {
         return AlertDialog(
-          backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+          backgroundColor: isDark
+              ? AppColors.darkElevatedSurface
+              : AppColors.lightElevatedSurface,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
@@ -550,7 +638,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   style: GoogleFonts.plusJakartaSans(
                     fontWeight: FontWeight.w700,
                     fontSize: 17,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
               ),
@@ -564,9 +654,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               children: [
                 Text(
                   tr('checklists.alreadyExistsDesc', {'title': title}),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -574,10 +666,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                    color:
+                        isDark ? AppColors.darkSurface : AppColors.lightSurface,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color:
+                          isDark ? AppColors.darkBorder : AppColors.lightBorder,
                     ),
                   ),
                   child: Row(
@@ -585,12 +679,17 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
+                          color: (isDark
+                                  ? AppColors.darkAccent
+                                  : AppColors.lightAccent)
+                              .withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
                           Icons.checklist_rounded,
-                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                          color: isDark
+                              ? AppColors.darkAccent
+                              : AppColors.lightPrimary,
                           size: 18,
                         ),
                       ),
@@ -606,15 +705,21 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                               style: GoogleFonts.plusJakartaSans(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 13.5,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                               ),
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              totalCount > 0 ? '$completedCount of $totalCount items completed' : 'Active case',
-                              style: GoogleFonts.inter(
+                              totalCount > 0
+                                  ? '$completedCount of $totalCount items completed'
+                                  : 'Active case',
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 11.5,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                           ],
@@ -626,22 +731,28 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 const SizedBox(height: 14),
                 Text(
                   tr('checklists.alreadyExistsPrompt'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 12.5,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ],
             ),
           ),
-          actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          actionsPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(dialogCtx, _DuplicateChecklistAction.cancel),
+              onPressed: () =>
+                  Navigator.pop(dialogCtx, _DuplicateChecklistAction.cancel),
               child: Text(
                 tr('common.cancel'),
-                style: GoogleFonts.inter(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                style: GoogleFonts.plusJakartaSans(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -651,28 +762,38 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 side: BorderSide(
                   color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
-                foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                foregroundColor: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               ),
-              onPressed: () => Navigator.pop(dialogCtx, _DuplicateChecklistAction.stillCreate),
+              onPressed: () => Navigator.pop(
+                  dialogCtx, _DuplicateChecklistAction.stillCreate),
               child: Text(
                 tr('checklists.stillCreate'),
-                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                backgroundColor:
+                    isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                foregroundColor:
+                    isDark ? AppColors.darkBackground : Colors.white,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               ),
-              onPressed: () => Navigator.pop(dialogCtx, _DuplicateChecklistAction.viewExisting),
+              onPressed: () => Navigator.pop(
+                  dialogCtx, _DuplicateChecklistAction.viewExisting),
               child: Text(
                 tr('checklists.viewExisting'),
-                style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+                style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700),
               ),
             ),
           ],
@@ -681,7 +802,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
     );
   }
 
-  void _showCreateChecklistDialog(BuildContext context, [String? initialPrompt]) {
+  void _showCreateChecklistDialog(BuildContext context,
+      [String? initialPrompt]) {
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final controller = TextEditingController(text: initialPrompt ?? '');
@@ -693,7 +815,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+              backgroundColor: isDark
+                  ? AppColors.darkElevatedSurface
+                  : AppColors.lightElevatedSurface,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
                 side: BorderSide(
@@ -705,15 +829,22 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
+                      color: (isDark
+                              ? AppColors.darkAccent
+                              : AppColors.lightAccent)
+                          .withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+                        color: (isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightAccent)
+                            .withValues(alpha: 0.3),
                       ),
                     ),
                     child: Icon(
                       Icons.auto_awesome_rounded,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      color:
+                          isDark ? AppColors.darkAccent : AppColors.lightAccent,
                       size: 20,
                     ),
                   ),
@@ -724,7 +855,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                       style: GoogleFonts.plusJakartaSans(
                         fontWeight: FontWeight.w700,
                         fontSize: 17,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                   ),
@@ -738,9 +871,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   children: [
                     Text(
                       tr('checklists.createPromptDesc'),
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 13,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                         height: 1.4,
                       ),
                     ),
@@ -749,28 +884,39 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                       controller: controller,
                       autofocus: true,
                       maxLines: 3,
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 14,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                       decoration: InputDecoration(
                         hintText: tr('checklists.createHint'),
                         hintStyle: TextStyle(
-                          color: (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary).withValues(alpha: 0.6),
+                          color: (isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary)
+                              .withValues(alpha: 0.6),
                           fontSize: 13,
                         ),
                         filled: true,
-                        fillColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                        fillColor: isDark
+                            ? AppColors.darkSurface
+                            : AppColors.lightSurface,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
-                            color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                            color: isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightPrimary,
                             width: 1.5,
                           ),
                         ),
@@ -779,10 +925,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     const SizedBox(height: 14),
                     Text(
                       tr('checklists.quickPresets'),
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -790,10 +938,14 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                       spacing: 6,
                       runSpacing: 6,
                       children: [
-                        _buildPresetChip('Resale Apartment', controller, isDark),
-                        _buildPresetChip('RERA Builder Flat', controller, isDark),
-                        _buildPresetChip('Commercial Lease', controller, isDark),
-                        _buildPresetChip('Open Plot Purchase', controller, isDark),
+                        _buildPresetChip(
+                            'Resale Apartment', controller, isDark),
+                        _buildPresetChip(
+                            'RERA Builder Flat', controller, isDark),
+                        _buildPresetChip(
+                            'Commercial Lease', controller, isDark),
+                        _buildPresetChip(
+                            'Open Plot Purchase', controller, isDark),
                       ],
                     ),
                   ],
@@ -804,19 +956,25 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                   onPressed: () => Navigator.pop(dialogCtx),
                   child: Text(
                     tr('common.cancel'),
-                    style: GoogleFonts.inter(
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    style: GoogleFonts.plusJakartaSans(
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                    foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                    backgroundColor:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    foregroundColor:
+                        isDark ? AppColors.darkBackground : Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 11),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 11),
                   ),
                   onPressed: isSubmitting
                       ? null
@@ -827,16 +985,20 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                           // Check if a checklist with similar prompt or title already exists
                           final duplicate = _findDuplicateChecklist(prompt);
                           if (duplicate != null) {
-                            final action = await _showDuplicateWarningDialog(dialogCtx, duplicate, prompt);
+                            final action = await _showDuplicateWarningDialog(
+                                dialogCtx, duplicate, prompt);
                             if (!dialogCtx.mounted) return;
-                            if (action == null || action == _DuplicateChecklistAction.cancel) {
+                            if (action == null ||
+                                action == _DuplicateChecklistAction.cancel) {
                               return;
-                            } else if (action == _DuplicateChecklistAction.viewExisting) {
+                            } else if (action ==
+                                _DuplicateChecklistAction.viewExisting) {
                               Navigator.pop(dialogCtx);
                               if (mounted) {
                                 _navigateTo(ChecklistScreen(
                                   type: (duplicate['type'] ?? '').toString(),
-                                  initialTitle: (duplicate['title'] ?? '').toString(),
+                                  initialTitle:
+                                      (duplicate['title'] ?? '').toString(),
                                 ));
                               }
                               return;
@@ -846,13 +1008,15 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
 
                           setDialogState(() => isSubmitting = true);
                           try {
-                            final res = await ApiService.generateChecklist(prompt);
+                            final res =
+                                await ApiService.generateChecklist(prompt);
                             if (dialogCtx.mounted) Navigator.pop(dialogCtx);
                             if (mounted) {
                               _loadChecklists();
                               _navigateTo(ChecklistScreen(
                                 type: (res['type'] ?? prompt).toString(),
-                                initialTitle: (res['title'] ?? prompt).toString(),
+                                initialTitle:
+                                    (res['title'] ?? prompt).toString(),
                               ));
                             }
                           } catch (e) {
@@ -860,13 +1024,20 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                             setDialogState(() => isSubmitting = false);
                             if (dialogCtx.mounted) {
                               _showToast(
-                                backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
-                                borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+                                backgroundColor: isDark
+                                    ? const Color(0xFF2A1515)
+                                    : const Color(0xFFFEF2F2),
+                                borderColor: isDark
+                                    ? const Color(0xFFEF4444)
+                                        .withValues(alpha: 0.5)
+                                    : const Color(0xFFFCA5A5),
                                 content: Row(
                                   children: [
                                     Icon(
                                       Icons.error_outline_rounded,
-                                      color: isDark ? AppColors.darkError : AppColors.lightError,
+                                      color: isDark
+                                          ? AppColors.darkError
+                                          : AppColors.lightError,
                                       size: 18,
                                     ),
                                     const SizedBox(width: 10),
@@ -876,7 +1047,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
-                                          color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                                          color: isDark
+                                              ? const Color(0xFFFEE2E2)
+                                              : const Color(0xFF991B1B),
                                         ),
                                       ),
                                     ),
@@ -890,11 +1063,13 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                       ? const SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
                         )
                       : Text(
                           tr('checklists.generateBtn'),
-                          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+                          style: GoogleFonts.plusJakartaSans(
+                              fontWeight: FontWeight.w700),
                         ),
                 ),
               ],
@@ -905,7 +1080,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
     );
   }
 
-  Widget _buildPresetChip(String text, TextEditingController controller, bool isDark) {
+  Widget _buildPresetChip(
+      String text, TextEditingController controller, bool isDark) {
     return InkWell(
       onTap: () => controller.text = text,
       borderRadius: BorderRadius.circular(8),
@@ -920,9 +1096,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         ),
         child: Text(
           text,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 11,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -940,17 +1118,20 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
     final isDesktop = size.width >= 960;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showCreateChecklistDialog(context),
         backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        foregroundColor: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+        foregroundColor:
+            isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
         elevation: 2,
         hoverElevation: 4,
         icon: const Icon(Icons.add_rounded, size: 20),
         label: Text(
           tr('checklists.newBtn'),
-          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, letterSpacing: 0.3),
+          style: GoogleFonts.plusJakartaSans(
+              fontWeight: FontWeight.w700, letterSpacing: 0.3),
         ),
       ),
       body: Container(
@@ -968,7 +1149,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 child: FadeTransition(
                   opacity: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
                   child: SlideTransition(
-                    position: _slideAnimation ?? const AlwaysStoppedAnimation(Offset.zero),
+                    position: _slideAnimation ??
+                        const AlwaysStoppedAnimation(Offset.zero),
                     child: Center(
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 920),
@@ -978,7 +1160,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                                 ? _buildErrorState(tr, isDark)
                                 : _checklists.isEmpty
                                     ? _buildEmptyState(tr, isDark, isDesktop)
-                                    : _buildChecklistCollection(tr, isDark, isDesktop),
+                                    : _buildChecklistCollection(
+                                        tr, isDark, isDesktop),
                       ),
                     ),
                   ),
@@ -994,7 +1177,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
   // ==========================================
   // TOP BAR
   // ==========================================
-  Widget _buildTopBar(BuildContext context, bool isDark, String Function(String, [Map<String, String>?]) tr) {
+  Widget _buildTopBar(BuildContext context, bool isDark,
+      String Function(String, [Map<String, String>?]) tr) {
     final isDesktopOrTablet = MediaQuery.of(context).size.width >= 700;
     return Container(
       height: 50,
@@ -1013,14 +1197,18 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 children: [
                   Icon(
                     Icons.arrow_back_rounded,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                     size: 18,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     tr('common.back'),
-                    style: GoogleFonts.inter(
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    style: GoogleFonts.plusJakartaSans(
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
@@ -1034,12 +1222,16 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
           if (isDesktopOrTablet)
             Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                  color:
+                      (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                          .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color:
+                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Row(
@@ -1050,16 +1242,20 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                       height: 6,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightAccent,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'PROPERTY DUE DILIGENCE ENGINE',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightAccent,
                         letterSpacing: 0.9,
                       ),
                     ),
@@ -1081,7 +1277,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
   // ==========================================
   // HERO INTRO BANNER
   // ==========================================
-  Widget _buildHeroIntro(String Function(String, [Map<String, String>?]) tr, bool isDark) {
+  Widget _buildHeroIntro(
+      String Function(String, [Map<String, String>?]) tr, bool isDark) {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(22),
@@ -1099,15 +1296,21 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
+              color:
+                  (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
+                      .withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.3),
+                color: (isDark
+                        ? AppColors.darkSecondary
+                        : AppColors.lightSecondary)
+                    .withValues(alpha: 0.3),
               ),
             ),
             child: Icon(
               Icons.verified_user_rounded,
-              color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+              color:
+                  isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
               size: 26,
             ),
           ),
@@ -1120,18 +1323,24 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
+                        color: (isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightAccent)
+                            .withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
                         tr('checklists.heroTitle'),
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.8,
-                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                          color: isDark
+                              ? AppColors.darkAccent
+                              : AppColors.lightAccent,
                         ),
                       ),
                     ),
@@ -1144,16 +1353,20 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.3,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   tr('checklists.heroSub'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     height: 1.4,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ],
@@ -1191,25 +1404,34 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.2,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(width: 10),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
                   decoration: BoxDecoration(
-                    color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                    color: (isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                      color:
+                          isDark ? AppColors.darkBorder : AppColors.lightBorder,
                     ),
                   ),
                   child: Text(
                     '${_checklists.length}',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightPrimary,
                     ),
                   ),
                 ),
@@ -1273,7 +1495,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               fontSize: 20,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.3,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -1282,10 +1506,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
             child: Text(
               tr('checklists.emptySub'),
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 height: 1.5,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
           ),
@@ -1297,13 +1523,16 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
             icon: const Icon(Icons.auto_awesome_rounded, size: 18),
             label: Text(
               tr('checklists.newChecklist'),
-              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700, letterSpacing: 0.2),
+              style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w700, letterSpacing: 0.2),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+              backgroundColor:
+                  isDark ? AppColors.darkAccent : AppColors.lightPrimary,
               foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
             ),
           ),
@@ -1321,15 +1550,19 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.2,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   tr('checklists.quickStartSub'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ],
@@ -1339,34 +1572,42 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
 
           _buildStarterCard(
             title: tr('checklists.template1'),
-            subtitle: 'Title deed chain, society NOC, Khata extract & encumbrance check',
+            subtitle:
+                'Title deed chain, society NOC, Khata extract & encumbrance check',
             icon: Icons.apartment_rounded,
             isDark: isDark,
-            onTap: () => _showCreateChecklistDialog(context, 'Buying a resale apartment in a co-operative housing society'),
+            onTap: () => _showCreateChecklistDialog(context,
+                'Buying a resale apartment in a co-operative housing society'),
           ),
           const SizedBox(height: 10),
           _buildStarterCard(
             title: tr('checklists.template2'),
-            subtitle: 'RERA registration, builder-buyer agreement, milestone approvals & CC',
+            subtitle:
+                'RERA registration, builder-buyer agreement, milestone approvals & CC',
             icon: Icons.domain_rounded,
             isDark: isDark,
-            onTap: () => _showCreateChecklistDialog(context, 'Buying an under-construction flat from a RERA registered builder'),
+            onTap: () => _showCreateChecklistDialog(context,
+                'Buying an under-construction flat from a RERA registered builder'),
           ),
           const SizedBox(height: 10),
           _buildStarterCard(
             title: tr('checklists.template3'),
-            subtitle: 'Lock-in period, security deposit, stamp duty, sub-letting & usage clauses',
+            subtitle:
+                'Lock-in period, security deposit, stamp duty, sub-letting & usage clauses',
             icon: Icons.store_mall_directory_rounded,
             isDark: isDark,
-            onTap: () => _showCreateChecklistDialog(context, 'Commercial property lease due diligence and agreement clauses'),
+            onTap: () => _showCreateChecklistDialog(context,
+                'Commercial property lease due diligence and agreement clauses'),
           ),
           const SizedBox(height: 10),
           _buildStarterCard(
             title: tr('checklists.template4'),
-            subtitle: 'Title clearance, 7/12 extract, zoning & mutation entries',
+            subtitle:
+                'Title clearance, 7/12 extract, zoning & mutation entries',
             icon: Icons.landscape_rounded,
             isDark: isDark,
-            onTap: () => _showCreateChecklistDialog(context, 'Agricultural or open plot land purchase due diligence and title verification'),
+            onTap: () => _showCreateChecklistDialog(context,
+                'Agricultural or open plot land purchase due diligence and title verification'),
           ),
           const SizedBox(height: 80),
         ],
@@ -1379,10 +1620,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+            .withValues(alpha: 0.12),
         shape: BoxShape.circle,
         border: Border.all(
-          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+              .withValues(alpha: 0.3),
         ),
       ),
       child: Center(
@@ -1395,10 +1638,13 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
                 width: 34,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+                  color: isDark
+                      ? AppColors.darkElevatedSurface
+                      : AppColors.lightElevatedSurface,
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color:
+                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
               ),
@@ -1454,9 +1700,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         Container(
           height: 90,
           decoration: BoxDecoration(
-            color: (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+            color: (isDark
+                ? AppColors.darkElevatedSurface
+                : AppColors.lightElevatedSurface),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            border: Border.all(
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
           ),
         ),
         const SizedBox(height: 16),
@@ -1465,9 +1714,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
             height: 140,
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+              color: (isDark
+                  ? AppColors.darkElevatedSurface
+                  : AppColors.lightElevatedSurface),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              border: Border.all(
+                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
             ),
           ),
         ],
@@ -1487,10 +1739,13 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
         margin: const EdgeInsets.all(24),
         padding: const EdgeInsets.all(28),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+          color: isDark
+              ? AppColors.darkElevatedSurface
+              : AppColors.lightElevatedSurface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.3),
+            color: (isDark ? AppColors.darkError : AppColors.lightError)
+                .withValues(alpha: 0.3),
           ),
         ),
         child: Column(
@@ -1499,10 +1754,13 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.12),
+                color: (isDark ? AppColors.darkError : AppColors.lightError)
+                    .withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.warning_amber_rounded, size: 36, color: isDark ? AppColors.darkError : AppColors.lightError),
+              child: Icon(Icons.warning_amber_rounded,
+                  size: 36,
+                  color: isDark ? AppColors.darkError : AppColors.lightError),
             ),
             const SizedBox(height: 16),
             Text(
@@ -1510,29 +1768,39 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen> wit
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               _error ?? 'An unexpected error occurred.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: _loadChecklists,
               icon: const Icon(Icons.refresh_rounded, size: 18),
-              label: Text(tr('common.retry'), style: GoogleFonts.inter(fontWeight: FontWeight.w700)),
+              label: Text(tr('common.retry'),
+                  style:
+                      GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                foregroundColor: isDark ? AppColors.darkBackground : Colors.white,
+                backgroundColor:
+                    isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                foregroundColor:
+                    isDark ? AppColors.darkBackground : Colors.white,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
               ),
             ),
           ],
@@ -1571,7 +1839,9 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
 
   @override
   Widget build(BuildContext context) {
-    final title = (widget.checklist['title'] ?? widget.tr('checklists.untitled')).toString();
+    final title =
+        (widget.checklist['title'] ?? widget.tr('checklists.untitled'))
+            .toString();
     final items = widget.checklist['items'] as List<dynamic>? ?? [];
     final totalCount = items.length;
     final completedCount = items.where((i) => i['isCompleted'] == true).length;
@@ -1583,7 +1853,12 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
         ? (widget.isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
         : (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary);
 
-    final flaggedCount = items.where((i) => i['isCompleted'] != true && (i['status'] == 'FLAGGED' || ((i['linkedIssues'] as List<dynamic>?)?.isNotEmpty == true))).length;
+    final flaggedCount = items
+        .where((i) =>
+            i['isCompleted'] != true &&
+            (i['status'] == 'FLAGGED' ||
+                ((i['linkedIssues'] as List<dynamic>?)?.isNotEmpty == true)))
+        .length;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -1596,16 +1871,25 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
           margin: const EdgeInsets.only(bottom: 14),
           transform: Matrix4.translationValues(0, _isHovered ? -2.0 : 0, 0),
           decoration: BoxDecoration(
-            color: widget.isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            color:
+                widget.isDark ? AppColors.darkSurface : AppColors.lightSurface,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: _isHovered
                   ? accentColor.withValues(alpha: 0.8)
                   : (isAllDone
-                      ? (widget.isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.5)
+                      ? (widget.isDark
+                              ? AppColors.darkSecondary
+                              : AppColors.lightSecondary)
+                          .withValues(alpha: 0.5)
                       : (flaggedCount > 0
-                          ? (widget.isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.4)
-                          : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder))),
+                          ? (widget.isDark
+                                  ? AppColors.darkCaution
+                                  : AppColors.lightCaution)
+                              .withValues(alpha: 0.4)
+                          : (widget.isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder))),
               width: 1.0,
             ),
           ),
@@ -1621,14 +1905,17 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: accentColor.withValues(alpha: widget.isDark ? 0.15 : 0.1),
+                        color: accentColor.withValues(
+                            alpha: widget.isDark ? 0.15 : 0.1),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: accentColor.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Icon(
-                        isAllDone ? Icons.verified_user_rounded : Icons.folder_shared_rounded,
+                        isAllDone
+                            ? Icons.verified_user_rounded
+                            : Icons.folder_shared_rounded,
                         color: accentColor,
                         size: 22,
                       ),
@@ -1642,7 +1929,7 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                             children: [
                               Text(
                                 widget.tr('checklists.verificationBadge'),
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 0.8,
@@ -1652,9 +1939,13 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                               if (flaggedCount > 0) ...[
                                 const SizedBox(width: 8),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: (widget.isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.15),
+                                    color: (widget.isDark
+                                            ? AppColors.darkCaution
+                                            : AppColors.lightCaution)
+                                        .withValues(alpha: 0.15),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Row(
@@ -1663,15 +1954,21 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                                       Icon(
                                         Icons.warning_amber_rounded,
                                         size: 11,
-                                        color: widget.isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                                        color: widget.isDark
+                                            ? AppColors.darkCaution
+                                            : AppColors.lightCaution,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        widget.tr('checklists.flaggedCountBadge', {'count': flaggedCount.toString()}),
-                                        style: GoogleFonts.inter(
+                                        widget.tr(
+                                            'checklists.flaggedCountBadge',
+                                            {'count': flaggedCount.toString()}),
+                                        style: GoogleFonts.plusJakartaSans(
                                           fontSize: 9,
                                           fontWeight: FontWeight.w800,
-                                          color: widget.isDark ? AppColors.darkCaution : AppColors.lightCaution,
+                                          color: widget.isDark
+                                              ? AppColors.darkCaution
+                                              : AppColors.lightCaution,
                                         ),
                                       ),
                                     ],
@@ -1689,7 +1986,9 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
                               letterSpacing: -0.2,
-                              color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: widget.isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                         ],
@@ -1699,13 +1998,19 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                       icon: Icon(
                         Icons.more_vert_rounded,
                         size: 20,
-                        color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: widget.isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
-                      color: widget.isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+                      color: widget.isDark
+                          ? AppColors.darkElevatedSurface
+                          : AppColors.lightElevatedSurface,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                         side: BorderSide(
-                          color: widget.isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          color: widget.isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                       ),
                       onSelected: (val) {
@@ -1723,15 +2028,19 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                               Icon(
                                 Icons.edit_outlined,
                                 size: 17,
-                                color: widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                color: widget.isDark
+                                    ? AppColors.darkAccent
+                                    : AppColors.lightPrimary,
                               ),
                               const SizedBox(width: 10),
                               Text(
                                 widget.tr('checklists.renameChecklist'),
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                  color: widget.isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary,
                                 ),
                               ),
                             ],
@@ -1745,14 +2054,18 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                               Icon(
                                 Icons.delete_outline_rounded,
                                 size: 17,
-                                color: widget.isDark ? AppColors.darkError : AppColors.lightError,
+                                color: widget.isDark
+                                    ? AppColors.darkError
+                                    : AppColors.lightError,
                               ),
                               const SizedBox(width: 10),
                               Text(
                                 widget.tr('checklists.deleteChecklist'),
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 13,
-                                  color: widget.isDark ? AppColors.darkError : AppColors.lightError,
+                                  color: widget.isDark
+                                      ? AppColors.darkError
+                                      : AppColors.lightError,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -1769,7 +2082,9 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                 Divider(
                   height: 1,
                   thickness: 0.8,
-                  color: widget.isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  color: widget.isDark
+                      ? AppColors.darkBorder
+                      : AppColors.lightBorder,
                 ),
                 const SizedBox(height: 12),
 
@@ -1779,10 +2094,12 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                   children: [
                     Text(
                       widget.tr('checklists.dueDiligenceProgress'),
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: widget.isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                     Text(
@@ -1803,7 +2120,9 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                   child: LinearProgressIndicator(
                     value: ratio,
                     minHeight: 6,
-                    backgroundColor: widget.isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+                    backgroundColor: widget.isDark
+                        ? AppColors.darkElevatedSurface
+                        : AppColors.lightElevatedSurface,
                     valueColor: AlwaysStoppedAnimation<Color>(accentColor),
                   ),
                 ),
@@ -1815,16 +2134,20 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                   children: [
                     Text(
                       '$completedCount of $totalCount completed',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: widget.isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: accentColor.withValues(alpha: widget.isDark ? 0.15 : 0.1),
+                        color: accentColor.withValues(
+                            alpha: widget.isDark ? 0.15 : 0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: accentColor.withValues(alpha: 0.3),
@@ -1834,7 +2157,9 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            isAllDone ? Icons.check_circle_rounded : Icons.pending_outlined,
+                            isAllDone
+                                ? Icons.check_circle_rounded
+                                : Icons.pending_outlined,
                             size: 12,
                             color: accentColor,
                           ),
@@ -1843,7 +2168,7 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                             isAllDone
                                 ? widget.tr('checklists.completed')
                                 : widget.tr('checklists.inProgress'),
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
                               color: accentColor,
@@ -1901,12 +2226,17 @@ class _HoverStarterCardState extends State<_HoverStarterCard> {
           transform: Matrix4.translationValues(0, _isHovered ? -2.0 : 0, 0),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: widget.isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            color:
+                widget.isDark ? AppColors.darkSurface : AppColors.lightSurface,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: _isHovered
-                  ? (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                  : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  ? (widget.isDark
+                      ? AppColors.darkAccent
+                      : AppColors.lightPrimary)
+                  : (widget.isDark
+                      ? AppColors.darkBorder
+                      : AppColors.lightBorder),
               width: 1.0,
             ),
           ),
@@ -1915,15 +2245,23 @@ class _HoverStarterCardState extends State<_HoverStarterCard> {
               Container(
                 padding: const EdgeInsets.all(9),
                 decoration: BoxDecoration(
-                  color: (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.1),
+                  color: (widget.isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightPrimary)
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.25),
+                    color: (widget.isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.25),
                   ),
                 ),
                 child: Icon(
                   widget.icon,
-                  color: widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                  color: widget.isDark
+                      ? AppColors.darkAccent
+                      : AppColors.lightPrimary,
                   size: 18,
                 ),
               ),
@@ -1937,15 +2275,19 @@ class _HoverStarterCardState extends State<_HoverStarterCard> {
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: widget.isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: widget.isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       widget.subtitle,
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
-                        color: widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: widget.isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -1956,8 +2298,12 @@ class _HoverStarterCardState extends State<_HoverStarterCard> {
                 Icons.arrow_forward_rounded,
                 size: 16,
                 color: _isHovered
-                    ? (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                    : (widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                    ? (widget.isDark
+                        ? AppColors.darkAccent
+                        : AppColors.lightPrimary)
+                    : (widget.isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary),
               ),
             ],
           ),
@@ -2001,13 +2347,21 @@ class _HoverGlassButtonState extends State<_HoverGlassButton> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color: _isHovered
-                ? (widget.isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface)
-                : (widget.isDark ? AppColors.darkSurface : AppColors.lightSurface),
+                ? (widget.isDark
+                    ? AppColors.darkElevatedSurface
+                    : AppColors.lightElevatedSurface)
+                : (widget.isDark
+                    ? AppColors.darkSurface
+                    : AppColors.lightSurface),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: _isHovered
-                  ? (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                  : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  ? (widget.isDark
+                      ? AppColors.darkAccent
+                      : AppColors.lightPrimary)
+                  : (widget.isDark
+                      ? AppColors.darkBorder
+                      : AppColors.lightBorder),
             ),
           ),
           child: widget.child,

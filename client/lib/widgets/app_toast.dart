@@ -19,10 +19,13 @@ class AppToast {
     messenger.clearSnackBars();
 
     final screenWidth = MediaQuery.of(context).size.width;
-    final toastWidth = screenWidth > 540 ? 460.0 : (screenWidth - 32.0).clamp(280.0, 540.0);
+    final toastWidth =
+        screenWidth > 540 ? 460.0 : (screenWidth - 32.0).clamp(280.0, 540.0);
 
-    final effectiveBg = backgroundColor ?? (isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface);
-    final effectiveBorder = borderColor ?? (isDark ? AppColors.darkBorder : AppColors.lightBorder);
+    final effectiveBg = backgroundColor ??
+        (isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface);
+    final effectiveBorder =
+        borderColor ?? (isDark ? AppColors.darkBorder : AppColors.lightBorder);
 
     messenger.showSnackBar(
       SnackBar(
@@ -60,7 +63,8 @@ class AppToast {
     IconData icon = Icons.check_rounded,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accentColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
+    final accentColor =
+        isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
 
     show(
       context,
@@ -84,10 +88,12 @@ class AppToast {
           Expanded(
             child: Text(
               message,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
           ),
@@ -109,8 +115,11 @@ class AppToast {
       context,
       duration: duration,
       action: action,
-      backgroundColor: isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
-      borderColor: isDark ? const Color(0xFFEF4444).withValues(alpha: 0.5) : const Color(0xFFFCA5A5),
+      backgroundColor:
+          isDark ? const Color(0xFF2A1515) : const Color(0xFFFEF2F2),
+      borderColor: isDark
+          ? const Color(0xFFEF4444).withValues(alpha: 0.5)
+          : const Color(0xFFFCA5A5),
       content: Row(
         children: [
           Icon(
@@ -122,10 +131,11 @@ class AppToast {
           Expanded(
             child: Text(
               message,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
+                color:
+                    isDark ? const Color(0xFFFEE2E2) : const Color(0xFF991B1B),
               ),
             ),
           ),
@@ -166,10 +176,12 @@ class AppToast {
           Expanded(
             child: Text(
               message,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w600,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
           ),

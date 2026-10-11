@@ -65,7 +65,8 @@ class _FeatureCardState extends State<FeatureCard> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: widget.accentColor.withValues(alpha: isDark ? 0.2 : 0.1),
+                    color: widget.accentColor
+                        .withValues(alpha: isDark ? 0.2 : 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -76,18 +77,21 @@ class _FeatureCardState extends State<FeatureCard> {
                 ),
                 if (widget.tag != null)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                     decoration: BoxDecoration(
-                      color: widget.accentColor.withValues(alpha: isDark ? 0.16 : 0.08),
+                      color: widget.accentColor
+                          .withValues(alpha: isDark ? 0.16 : 0.08),
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(
-                        color: widget.accentColor.withValues(alpha: isDark ? 0.35 : 0.25),
+                        color: widget.accentColor
+                            .withValues(alpha: isDark ? 0.35 : 0.25),
                         width: 1,
                       ),
                     ),
                     child: Text(
                       widget.tag!,
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.8,
@@ -100,19 +104,23 @@ class _FeatureCardState extends State<FeatureCard> {
             const SizedBox(height: 16),
             Text(
               widget.title,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               widget.description,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13.5,
                 height: 1.5,
-                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                color: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -195,7 +203,7 @@ class WelcomeFeaturesSection extends ConsumerWidget {
             children: [
               Text(
                 loc.translate('welcome.featuresEyebrow'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
                   color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
@@ -206,24 +214,27 @@ class WelcomeFeaturesSection extends ConsumerWidget {
               Text(
                 loc.translate('welcome.featuresTitle'),
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: isDesktop ? 34.0 : 26.0,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -0.8,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 10),
               Text(
                 loc.translate('welcome.featuresSubtitle'),
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: isDesktop ? 15.0 : 13.5,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
               const SizedBox(height: 36),
-
               if (isDesktop)
                 Column(
                   children: [

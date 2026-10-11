@@ -11,7 +11,8 @@ class CookieConsentBanner extends ConsumerStatefulWidget {
   const CookieConsentBanner({super.key});
 
   @override
-  ConsumerState<CookieConsentBanner> createState() => _CookieConsentBannerState();
+  ConsumerState<CookieConsentBanner> createState() =>
+      _CookieConsentBannerState();
 }
 
 class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
@@ -41,11 +42,15 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 768;
 
-    final bgColor = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurface;
-    final primaryTextColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final bgColor =
+        isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurface;
+    final primaryTextColor =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryTextColor =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final primaryBtnColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryBtnColor =
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
     ref.watch(localeProvider);
     final loc = ref.read(localeProvider.notifier);
@@ -72,44 +77,46 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 liveRegion: true,
                 container: true,
                 child: Material(
-                elevation: isDesktop ? 4 : 8,
-                shadowColor: Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
-                borderRadius: BorderRadius.circular(isDesktop ? 12 : 0),
-                color: bgColor,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isDesktop ? 20 : 16,
-                    vertical: isDesktop ? 10 : 12,
+                  elevation: isDesktop ? 4 : 8,
+                  shadowColor:
+                      Colors.black.withValues(alpha: isDark ? 0.35 : 0.08),
+                  borderRadius: BorderRadius.circular(isDesktop ? 12 : 0),
+                  color: bgColor,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isDesktop ? 20 : 16,
+                      vertical: isDesktop ? 10 : 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: bgColor,
+                      borderRadius: BorderRadius.circular(isDesktop ? 12 : 0),
+                      border: isDesktop
+                          ? Border.all(color: borderColor, width: 1)
+                          : Border(
+                              top: BorderSide(color: borderColor, width: 1)),
+                    ),
+                    child: isDesktop
+                        ? _buildDesktopLayout(
+                            context,
+                            ref,
+                            loc,
+                            isDark,
+                            primaryTextColor,
+                            secondaryTextColor,
+                            borderColor,
+                            primaryBtnColor,
+                          )
+                        : _buildMobileLayout(
+                            context,
+                            ref,
+                            loc,
+                            isDark,
+                            primaryTextColor,
+                            secondaryTextColor,
+                            borderColor,
+                            primaryBtnColor,
+                          ),
                   ),
-                  decoration: BoxDecoration(
-                    color: bgColor,
-                    borderRadius: BorderRadius.circular(isDesktop ? 12 : 0),
-                    border: isDesktop
-                        ? Border.all(color: borderColor, width: 1)
-                        : Border(top: BorderSide(color: borderColor, width: 1)),
-                  ),
-                  child: isDesktop
-                      ? _buildDesktopLayout(
-                          context,
-                          ref,
-                          loc,
-                          isDark,
-                          primaryTextColor,
-                          secondaryTextColor,
-                          borderColor,
-                          primaryBtnColor,
-                        )
-                      : _buildMobileLayout(
-                          context,
-                          ref,
-                          loc,
-                          isDark,
-                          primaryTextColor,
-                          secondaryTextColor,
-                          borderColor,
-                          primaryBtnColor,
-                        ),
-                ),
                 ),
               ),
             ),
@@ -148,7 +155,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
             children: [
               Text(
                 loc.translate('consent.privacyPreferences'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: primaryTextColor,
@@ -158,7 +165,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               const SizedBox(height: 2),
               Text(
                 loc.translate('consent.bannerDescription'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   height: 1.3,
                   color: secondaryTextColor,
@@ -177,29 +184,35 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               onPressed: () => showPrivacyPreferencesDialog(context),
               style: TextButton.styleFrom(
                 foregroundColor: secondaryTextColor,
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 minimumSize: const Size(0, 32),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               child: Text(
                 loc.translate('consent.customize'),
-                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+                style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(width: 8),
             OutlinedButton(
-              onPressed: () => ref.read(consentProvider.notifier).necessaryOnly(),
+              onPressed: () =>
+                  ref.read(consentProvider.notifier).necessaryOnly(),
               style: OutlinedButton.styleFrom(
                 foregroundColor: primaryTextColor,
                 side: BorderSide(color: borderColor),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 minimumSize: const Size(0, 32),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
               ),
               child: Text(
                 loc.translate('consent.necessaryOnly'),
-                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+                style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(width: 8),
@@ -207,15 +220,20 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               onPressed: () => ref.read(consentProvider.notifier).acceptAll(),
               style: FilledButton.styleFrom(
                 backgroundColor: primaryBtnColor,
-                foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                foregroundColor: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 minimumSize: const Size(0, 36),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
               ),
               child: Text(
                 loc.translate('consent.acceptPreferences'),
-                style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+                style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -246,12 +264,13 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 color: primaryBtnColor.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: Icon(Icons.shield_outlined, color: primaryBtnColor, size: 14),
+              child:
+                  Icon(Icons.shield_outlined, color: primaryBtnColor, size: 14),
             ),
             const SizedBox(width: 8),
             Text(
               loc.translate('consent.privacyPreferences'),
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 color: primaryTextColor,
@@ -268,7 +287,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               ),
               child: Text(
                 loc.translate('consent.customize'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w600,
                   decoration: TextDecoration.underline,
@@ -280,7 +299,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
         const SizedBox(height: 4),
         Text(
           loc.translate('consent.bannerDescription'),
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 11.5,
             height: 1.35,
             color: secondaryTextColor,
@@ -291,17 +310,20 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed: () => ref.read(consentProvider.notifier).necessaryOnly(),
+                onPressed: () =>
+                    ref.read(consentProvider.notifier).necessaryOnly(),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: primaryTextColor,
                   side: BorderSide(color: borderColor),
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   minimumSize: const Size(0, 40),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
                 child: Text(
                   loc.translate('consent.necessaryOnly'),
-                  style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -311,14 +333,18 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 onPressed: () => ref.read(consentProvider.notifier).acceptAll(),
                 style: FilledButton.styleFrom(
                   backgroundColor: primaryBtnColor,
-                  foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  foregroundColor: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   minimumSize: const Size(0, 40),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
                 child: Text(
                   loc.translate('consent.acceptPreferences'),
-                  style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -350,10 +376,12 @@ class _PrivacyPreferencesDialog extends ConsumerStatefulWidget {
   const _PrivacyPreferencesDialog();
 
   @override
-  ConsumerState<_PrivacyPreferencesDialog> createState() => _PrivacyPreferencesDialogState();
+  ConsumerState<_PrivacyPreferencesDialog> createState() =>
+      _PrivacyPreferencesDialogState();
 }
 
-class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDialog> {
+class _PrivacyPreferencesDialogState
+    extends ConsumerState<_PrivacyPreferencesDialog> {
   late bool _functionalEnabled;
 
   @override
@@ -369,9 +397,12 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
     final loc = ref.read(localeProvider.notifier);
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurface;
-    final primaryTextColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final bgColor =
+        isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurface;
+    final primaryTextColor =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryTextColor =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final accentColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
@@ -395,7 +426,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
           Expanded(
             child: Text(
               loc.translate('consent.privacyStoragePrefTitle'),
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
                 color: primaryTextColor,
@@ -414,7 +445,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
             children: [
               Text(
                 loc.translate('consent.privacyStoragePrefIntro'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 12.5,
                   height: 1.5,
                   color: secondaryTextColor,
@@ -484,13 +515,15 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
                   onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+                      MaterialPageRoute(
+                          builder: (_) => const PrivacyPolicyScreen()),
                     );
                   },
-                  icon: Icon(Icons.arrow_outward_rounded, size: 14, color: accentColor),
+                  icon: Icon(Icons.arrow_outward_rounded,
+                      size: 14, color: accentColor),
                   label: Text(
                     loc.translate('consent.readFullPrivacyPolicy'),
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: accentColor,
@@ -507,7 +540,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
           onPressed: () => Navigator.of(context).pop(),
           child: Text(
             loc.translate('common.cancel'),
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               color: secondaryTextColor,
               fontWeight: FontWeight.w600,
             ),
@@ -521,26 +554,33 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
           style: OutlinedButton.styleFrom(
             side: BorderSide(color: borderColor),
             foregroundColor: primaryTextColor,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           child: Text(
             loc.translate('consent.acceptAll'),
-            style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 12.5),
+            style: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.w600, fontSize: 12.5),
           ),
         ),
         FilledButton(
           onPressed: () {
-            ref.read(consentProvider.notifier).saveCustom(functional: _functionalEnabled);
+            ref
+                .read(consentProvider.notifier)
+                .saveCustom(functional: _functionalEnabled);
             Navigator.of(context).pop();
           },
           style: FilledButton.styleFrom(
             backgroundColor: accentColor,
-            foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            foregroundColor:
+                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           child: Text(
             loc.translate('consent.savePreferences'),
-            style: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 12.5),
+            style: GoogleFonts.plusJakartaSans(
+                fontWeight: FontWeight.w700, fontSize: 12.5),
           ),
         ),
       ],
@@ -573,7 +613,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
             children: [
               Text(
                 title,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.6,
@@ -585,12 +625,14 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
                 decoration: BoxDecoration(
                   color: isStatusActive
                       ? accentColor.withValues(alpha: 0.15)
-                      : (isDark ? Colors.white10 : Colors.black.withValues(alpha: 0.05)),
+                      : (isDark
+                          ? Colors.white10
+                          : Colors.black.withValues(alpha: 0.05)),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   statusBadge,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 10.5,
                     fontWeight: FontWeight.w700,
                     color: isStatusActive ? accentColor : secondaryTextColor,
@@ -602,7 +644,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
           const SizedBox(height: 6),
           Text(
             description,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
               height: 1.4,
               color: secondaryTextColor,
@@ -639,7 +681,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
             children: [
               Text(
                 title,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.6,
@@ -656,7 +698,7 @@ class _PrivacyPreferencesDialogState extends ConsumerState<_PrivacyPreferencesDi
           const SizedBox(height: 2),
           Text(
             description,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
               height: 1.4,
               color: secondaryTextColor,

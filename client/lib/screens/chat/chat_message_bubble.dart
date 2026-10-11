@@ -24,7 +24,8 @@ class AnimatedMessageBubble extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<AnimatedMessageBubble> createState() => _AnimatedMessageBubbleState();
+  ConsumerState<AnimatedMessageBubble> createState() =>
+      _AnimatedMessageBubbleState();
 }
 
 class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
@@ -84,7 +85,8 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
         return;
       }
 
-      final int stepSize = (_tokens.length > 350 && _tickCount % 4 == 0) ? 2 : 1;
+      final int stepSize =
+          (_tokens.length > 350 && _tickCount % 4 == 0) ? 2 : 1;
       final nextIndex = math.min(_tokenIndex + stepSize, _tokens.length);
       _tokenIndex = nextIndex;
       _tickCount++;
@@ -123,7 +125,8 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final disableAnimations = MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final disableAnimations =
+        MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     if (disableAnimations && _isRevealing) {
       _finishTyping();
     }
@@ -141,7 +144,8 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
     setState(() => _copied = true);
 
     final loc = ref.read(localeProvider.notifier);
-    AppToast.showSuccess(context, loc.translate('chat.copiedToClipboard'), duration: const Duration(seconds: 2));
+    AppToast.showSuccess(context, loc.translate('chat.copiedToClipboard'),
+        duration: const Duration(seconds: 2));
 
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) setState(() => _copied = false);
@@ -159,25 +163,29 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
     final rawContent = isUser ? (widget.message['text'] ?? '') : _displayedText;
-    final contentToRender = (_isRevealing && _showCursor) ? '$rawContent ▌' : rawContent;
+    final contentToRender =
+        (_isRevealing && _showCursor) ? '$rawContent ▌' : rawContent;
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 820),
         child: Column(
-          crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment:
+              isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             Container(
               margin: const EdgeInsets.only(bottom: 6, top: 12),
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 color: isError
-                    ? (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.12)
+                    ? (isDark ? AppColors.darkError : AppColors.lightError)
+                        .withValues(alpha: 0.12)
                     : (isUser ? userBgColor : aiBgColor),
                 border: Border.all(
                   color: isError
-                      ? (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.5)
+                      ? (isDark ? AppColors.darkError : AppColors.lightError)
+                          .withValues(alpha: 0.5)
                       : (isUser ? Colors.transparent : borderColor),
                   width: 1.0,
                 ),
@@ -203,12 +211,13 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                                   color: Colors.white.withValues(alpha: 0.2),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
-                                child: const Icon(Icons.person_rounded, size: 13, color: Colors.white),
+                                child: const Icon(Icons.person_rounded,
+                                    size: 13, color: Colors.white),
                               ),
                               const SizedBox(width: 6),
                               Text(
                                 'You',
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.plusJakartaSans(
                                   color: Colors.white,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -220,7 +229,9 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                             icon: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 200),
                               child: Icon(
-                                _copied ? Icons.check_rounded : Icons.copy_rounded,
+                                _copied
+                                    ? Icons.check_rounded
+                                    : Icons.copy_rounded,
                                 key: ValueKey<bool>(_copied),
                                 size: 14,
                                 color: _copied ? Colors.white : Colors.white70,
@@ -229,7 +240,8 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                             tooltip: 'Copy message',
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
-                            onPressed: () => _copyToClipboard(context, widget.message['text'] ?? ''),
+                            onPressed: () => _copyToClipboard(
+                                context, widget.message['text'] ?? ''),
                           ),
                         ],
                       ),
@@ -245,20 +257,29 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                               Container(
                                 padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.12),
+                                  color: (isDark
+                                          ? AppColors.darkAccent
+                                          : AppColors.lightPrimary)
+                                      .withValues(alpha: 0.12),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Icon(
-                                  _isRevealing ? Icons.auto_awesome : Icons.gavel_rounded,
+                                  _isRevealing
+                                      ? Icons.auto_awesome
+                                      : Icons.gavel_rounded,
                                   size: 14,
-                                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                  color: isDark
+                                      ? AppColors.darkAccent
+                                      : AppColors.lightPrimary,
                                 ),
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 'Legal AI Advisor',
-                                style: GoogleFonts.inter(
-                                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                style: GoogleFonts.plusJakartaSans(
+                                  color: isDark
+                                      ? AppColors.darkAccent
+                                      : AppColors.lightPrimary,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.2,
@@ -267,9 +288,13 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                               const SizedBox(width: 8),
                               if (_isRevealing)
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 7, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+                                    color: (isDark
+                                            ? AppColors.darkAccent
+                                            : AppColors.lightAccent)
+                                        .withValues(alpha: 0.12),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Row(
@@ -280,14 +305,20 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                                         height: 8,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 1.5,
-                                          valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkAccent : AppColors.lightAccent),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  isDark
+                                                      ? AppColors.darkAccent
+                                                      : AppColors.lightAccent),
                                         ),
                                       ),
                                       const SizedBox(width: 5),
                                       Text(
                                         'ANALYZING',
-                                        style: GoogleFonts.inter(
-                                          color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                                        style: GoogleFonts.plusJakartaSans(
+                                          color: isDark
+                                              ? AppColors.darkAccent
+                                              : AppColors.lightAccent,
                                           fontSize: 9,
                                           fontWeight: FontWeight.w700,
                                           letterSpacing: 0.4,
@@ -298,15 +329,21 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                                 )
                               else
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
-                                    color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.12),
+                                    color: (isDark
+                                            ? AppColors.darkSecondary
+                                            : AppColors.lightSecondary)
+                                        .withValues(alpha: 0.12),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
                                     'PROPERTY LAW',
-                                    style: GoogleFonts.inter(
-                                      color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                                    style: GoogleFonts.plusJakartaSans(
+                                      color: isDark
+                                          ? AppColors.darkSecondary
+                                          : AppColors.lightSecondary,
                                       fontSize: 9,
                                       fontWeight: FontWeight.w700,
                                       letterSpacing: 0.3,
@@ -327,24 +364,39 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                                       onTap: _finishTyping,
                                       borderRadius: BorderRadius.circular(6),
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 3),
                                         decoration: BoxDecoration(
-                                          color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.1),
-                                          borderRadius: BorderRadius.circular(6),
+                                          color: (isDark
+                                                  ? AppColors.darkAccent
+                                                  : AppColors.lightPrimary)
+                                              .withValues(alpha: 0.1),
+                                          borderRadius:
+                                              BorderRadius.circular(6),
                                           border: Border.all(
-                                            color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.3),
+                                            color: (isDark
+                                                    ? AppColors.darkAccent
+                                                    : AppColors.lightPrimary)
+                                                .withValues(alpha: 0.3),
                                             width: 0.8,
                                           ),
                                         ),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(Icons.fast_forward_rounded, size: 12, color: isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                                            Icon(Icons.fast_forward_rounded,
+                                                size: 12,
+                                                color: isDark
+                                                    ? AppColors.darkAccent
+                                                    : AppColors.lightPrimary),
                                             const SizedBox(width: 4),
                                             Text(
                                               'Show full answer',
-                                              style: GoogleFonts.inter(
-                                                color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                              style:
+                                                  GoogleFonts.plusJakartaSans(
+                                                color: isDark
+                                                    ? AppColors.darkAccent
+                                                    : AppColors.lightPrimary,
                                                 fontSize: 10.5,
                                                 fontWeight: FontWeight.w600,
                                               ),
@@ -359,16 +411,25 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                                 icon: AnimatedSwitcher(
                                   duration: const Duration(milliseconds: 200),
                                   child: Icon(
-                                    _copied ? Icons.check_rounded : Icons.copy_rounded,
+                                    _copied
+                                        ? Icons.check_rounded
+                                        : Icons.copy_rounded,
                                     key: ValueKey<bool>(_copied),
                                     size: 15,
-                                    color: _copied ? (isDark ? AppColors.darkSecondary : AppColors.lightSecondary) : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                                    color: _copied
+                                        ? (isDark
+                                            ? AppColors.darkSecondary
+                                            : AppColors.lightSecondary)
+                                        : (isDark
+                                            ? AppColors.darkTextSecondary
+                                            : AppColors.lightTextSecondary),
                                   ),
                                 ),
                                 tooltip: 'Copy response',
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(),
-                                onPressed: () => _copyToClipboard(context, _fullText),
+                                onPressed: () =>
+                                    _copyToClipboard(context, _fullText),
                               ),
                             ],
                           ),
@@ -379,68 +440,105 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                     data: contentToRender,
                     selectable: true,
                     styleSheet: MarkdownStyleSheet(
-                      p: GoogleFonts.inter(
-                        color: isUser ? Colors.white : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                      p: GoogleFonts.plusJakartaSans(
+                        color: isUser
+                            ? Colors.white
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                         fontSize: 14.5,
                         height: 1.65,
                         letterSpacing: -0.1,
                       ),
                       pPadding: const EdgeInsets.only(bottom: 10),
-                      h1: GoogleFonts.inter(
-                        color: isUser ? Colors.white : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                      h1: GoogleFonts.plusJakartaSans(
+                        color: isUser
+                            ? Colors.white
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                         fontWeight: FontWeight.w800,
                         fontSize: 19,
                         height: 1.4,
                         letterSpacing: -0.4,
                       ),
                       h1Padding: const EdgeInsets.only(top: 14, bottom: 8),
-                      h2: GoogleFonts.inter(
-                        color: isUser ? Colors.white : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                      h2: GoogleFonts.plusJakartaSans(
+                        color: isUser
+                            ? Colors.white
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                         fontWeight: FontWeight.w700,
                         fontSize: 16.5,
                         height: 1.4,
                         letterSpacing: -0.2,
                       ),
                       h2Padding: const EdgeInsets.only(top: 12, bottom: 6),
-                      h3: GoogleFonts.inter(
-                        color: isUser ? Colors.white : (isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                      h3: GoogleFonts.plusJakartaSans(
+                        color: isUser
+                            ? Colors.white
+                            : (isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightPrimary),
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
                         height: 1.35,
                       ),
                       h3Padding: const EdgeInsets.only(top: 10, bottom: 4),
-                      strong: GoogleFonts.inter(
+                      strong: GoogleFonts.plusJakartaSans(
                         color: isUser
                             ? Colors.white
-                            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                         fontWeight: FontWeight.w700,
                       ),
-                      em: GoogleFonts.inter(
-                        color: isUser ? Colors.white70 : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
+                      em: GoogleFonts.plusJakartaSans(
+                        color: isUser
+                            ? Colors.white70
+                            : (isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary),
                         fontStyle: FontStyle.italic,
                       ),
-                      listBullet: GoogleFonts.inter(
-                        color: isUser ? Colors.white70 : (isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                      listBullet: GoogleFonts.plusJakartaSans(
+                        color: isUser
+                            ? Colors.white70
+                            : (isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightPrimary),
                         fontWeight: FontWeight.w800,
                         fontSize: 14,
                       ),
                       listBulletPadding: const EdgeInsets.only(right: 6),
                       listIndent: 22,
-                      blockquote: GoogleFonts.inter(
-                        color: isUser ? Colors.white70 : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                      blockquote: GoogleFonts.plusJakartaSans(
+                        color: isUser
+                            ? Colors.white70
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                         fontSize: 13.5,
                         height: 1.55,
                         fontStyle: FontStyle.italic,
                       ),
-                      blockquotePadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      blockquotePadding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 10),
                       blockquoteDecoration: BoxDecoration(
                         color: isUser
                             ? Colors.white.withValues(alpha: 0.1)
-                            : (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+                            : (isDark
+                                ? AppColors.darkElevatedSurface
+                                : AppColors.lightElevatedSurface),
                         borderRadius: BorderRadius.circular(8),
                         border: Border(
                           left: BorderSide(
-                            color: isUser ? Colors.white70 : (isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                            color: isUser
+                                ? Colors.white70
+                                : (isDark
+                                    ? AppColors.darkAccent
+                                    : AppColors.lightPrimary),
                             width: 3.5,
                           ),
                         ),
@@ -448,10 +546,14 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                       code: GoogleFonts.firaCode(
                         backgroundColor: isUser
                             ? Colors.white.withValues(alpha: 0.2)
-                            : (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+                            : (isDark
+                                ? AppColors.darkElevatedSurface
+                                : AppColors.lightElevatedSurface),
                         color: isUser
                             ? Colors.white
-                            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                       ),
@@ -459,29 +561,48 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                       codeblockDecoration: BoxDecoration(
                         color: isUser
                             ? Colors.black.withValues(alpha: 0.2)
-                            : (isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface),
+                            : (isDark
+                                ? AppColors.darkElevatedSurface
+                                : AppColors.lightElevatedSurface),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          color: isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder,
                         ),
                       ),
                       tableBorder: TableBorder.all(
-                        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      tableHead: GoogleFonts.inter(
-                        color: isUser ? Colors.white : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                      tableHead: GoogleFonts.plusJakartaSans(
+                        color: isUser
+                            ? Colors.white
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                         fontWeight: FontWeight.w700,
                         fontSize: 13.5,
                       ),
-                      tableBody: GoogleFonts.inter(
-                        color: isUser ? Colors.white : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+                      tableBody: GoogleFonts.plusJakartaSans(
+                        color: isUser
+                            ? Colors.white
+                            : (isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary),
                         fontSize: 13,
                       ),
-                      tableCellsPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      tableCellsPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                     ),
                   ),
-                  if (!isUser && !isError && !_isRevealing && widget.message['sources'] != null && (widget.message['sources'] as List).isNotEmpty)
+                  if (!isUser &&
+                      !isError &&
+                      !_isRevealing &&
+                      widget.message['sources'] != null &&
+                      (widget.message['sources'] as List).isNotEmpty)
                     LegalSourcesCitationCard(
                       sources: widget.message['sources'] as List,
                       isDark: isDark,
@@ -494,23 +615,30 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: Text(
                   widget.message['time'],
-                  style: GoogleFonts.inter(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  style: GoogleFonts.plusJakartaSans(
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                     fontSize: 11,
                   ),
                 ),
               ),
-            if (!isUser && !_isRevealing && widget.message['suggestions'] != null && (widget.message['suggestions'] as List).isNotEmpty)
+            if (!isUser &&
+                !_isRevealing &&
+                widget.message['suggestions'] != null &&
+                (widget.message['suggestions'] as List).isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 10.0, bottom: 8.0),
                 child: Wrap(
                   spacing: 8.0,
                   runSpacing: 8.0,
-                  children: (widget.message['suggestions'] as List).map((s) => HoverableChip(
-                    label: s.toString(),
-                    isDark: isDark,
-                    onTap: () => widget.onSuggestionTap(s.toString()),
-                  )).toList(),
+                  children: (widget.message['suggestions'] as List)
+                      .map((s) => HoverableChip(
+                            label: s.toString(),
+                            isDark: isDark,
+                            onTap: () => widget.onSuggestionTap(s.toString()),
+                          ))
+                      .toList(),
                 ),
               ),
           ],

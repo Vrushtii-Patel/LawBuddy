@@ -9,7 +9,8 @@ class DualDirectionMarquee extends ConsumerStatefulWidget {
   const DualDirectionMarquee({super.key, required this.isDark});
 
   @override
-  ConsumerState<DualDirectionMarquee> createState() => _DualDirectionMarqueeState();
+  ConsumerState<DualDirectionMarquee> createState() =>
+      _DualDirectionMarqueeState();
 }
 
 class _DualDirectionMarqueeState extends ConsumerState<DualDirectionMarquee>
@@ -59,7 +60,9 @@ class _DualDirectionMarqueeState extends ConsumerState<DualDirectionMarquee>
             text: track1Text,
             moveLeft: true,
             isDark: isDark,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
           const SizedBox(height: 10),
           // Line 2: Moving Right (Opposite Direction)
@@ -67,7 +70,9 @@ class _DualDirectionMarqueeState extends ConsumerState<DualDirectionMarquee>
             text: track2Text,
             moveLeft: false,
             isDark: isDark,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
         ],
       ),
@@ -107,7 +112,7 @@ class _DualDirectionMarqueeState extends ConsumerState<DualDirectionMarquee>
                           children: List.generate(6, (_) {
                             return Text(
                               text,
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 11.5,
                                 fontWeight: FontWeight.w700,
                                 letterSpacing: 2.0,

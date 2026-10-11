@@ -47,8 +47,10 @@ class FormConsentCheckbox extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final primaryText = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final primaryText =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryText =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final primaryColor = AppColors.lightPrimary;
     final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
     final cardBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
@@ -72,7 +74,8 @@ class FormConsentCheckbox extends StatelessWidget {
                     value: value,
                     onChanged: onChanged,
                     activeColor: primaryColor,
-                    checkColor: isDark ? AppColors.darkBackground : Colors.white,
+                    checkColor:
+                        isDark ? AppColors.darkBackground : Colors.white,
                     side: BorderSide(
                       color: hasError ? errorColor : cardBorder,
                       width: 1.5,
@@ -88,7 +91,7 @@ class FormConsentCheckbox extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2.0),
                     child: Text.rich(
                       TextSpan(
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 12.5,
                           height: 1.45,
                           color: hasError ? errorColor : secondaryText,
@@ -97,12 +100,13 @@ class FormConsentCheckbox extends StatelessWidget {
                           const TextSpan(text: 'I agree to the '),
                           TextSpan(
                             text: 'Terms of Use',
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 12.5,
                               fontWeight: FontWeight.w700,
                               color: primaryText,
                               decoration: TextDecoration.underline,
-                              decorationColor: primaryText.withValues(alpha: 0.5),
+                              decorationColor:
+                                  primaryText.withValues(alpha: 0.5),
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => _openTerms(context),
@@ -110,12 +114,13 @@ class FormConsentCheckbox extends StatelessWidget {
                           const TextSpan(text: ' and acknowledge the '),
                           TextSpan(
                             text: 'Privacy Policy',
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 12.5,
                               fontWeight: FontWeight.w700,
                               color: primaryText,
                               decoration: TextDecoration.underline,
-                              decorationColor: primaryText.withValues(alpha: 0.5),
+                              decorationColor:
+                                  primaryText.withValues(alpha: 0.5),
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => _openPrivacy(context),
@@ -140,8 +145,9 @@ class FormConsentCheckbox extends StatelessWidget {
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
-                    errorMessage ?? 'Please agree to the Terms of Use and Privacy Policy.',
-                    style: GoogleFonts.inter(
+                    errorMessage ??
+                        'Please agree to the Terms of Use and Privacy Policy.',
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 11.5,
                       fontWeight: FontWeight.w500,
                       color: errorColor,
@@ -191,10 +197,13 @@ class FormConsentAcknowledgement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryText = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final primaryText =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryText =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final borderCol = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final bgCol = (isDark ? AppColors.darkSurface : AppColors.lightSurface).withValues(alpha: 0.6);
+    final bgCol = (isDark ? AppColors.darkSurface : AppColors.lightSurface)
+        .withValues(alpha: 0.6);
 
     String mainText = '';
     switch (type) {
@@ -236,7 +245,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
           Expanded(
             child: Text.rich(
               TextSpan(
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   height: 1.4,
                   color: secondaryText,
@@ -246,7 +255,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
                   if (showPrivacy) ...[
                     TextSpan(
                       text: 'Privacy Policy',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,
                         color: primaryText,
@@ -261,7 +270,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
                   if (showTerms) ...[
                     TextSpan(
                       text: 'Terms of Use',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,
                         color: primaryText,

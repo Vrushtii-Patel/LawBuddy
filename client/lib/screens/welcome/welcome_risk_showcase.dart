@@ -93,7 +93,9 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+        color: isDark
+            ? AppColors.darkElevatedSurface
+            : AppColors.lightElevatedSurface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -111,17 +113,23 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.article_outlined, size: 16, color: isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                  Icon(Icons.article_outlined,
+                      size: 16,
+                      color: isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightPrimary),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(
                       loc.translate('welcome.riskExtractTitle'),
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.8,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ),
@@ -138,7 +146,7 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
                 ),
                 child: Text(
                   loc.translate('welcome.riskPotentialDetected'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     color: errorColor,
@@ -150,10 +158,12 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
           const SizedBox(height: 16),
           Text(
             loc.translate('welcome.riskClauseTitle'),
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 14.5,
               fontWeight: FontWeight.w700,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
           const SizedBox(height: 10),
@@ -169,7 +179,7 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
             ),
             child: Text(
               loc.translate('welcome.riskClauseBody'),
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 12.5,
                 height: 1.5,
                 color: errorColor,
@@ -186,10 +196,12 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
               Expanded(
                 child: Text(
                   loc.translate('welcome.riskClauseNote'),
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
                     height: 1.45,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ),
@@ -202,13 +214,17 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
 
   Widget _buildRiskScorePanel(bool isDark, LocaleNotifier loc) {
     final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
-    final cautionColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
-    final successColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
+    final cautionColor =
+        isDark ? AppColors.darkCaution : AppColors.lightCaution;
+    final successColor =
+        isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+        color: isDark
+            ? AppColors.darkElevatedSurface
+            : AppColors.lightElevatedSurface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
@@ -225,10 +241,12 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
             children: [
               Text(
                 loc.translate('welcome.riskAssessmentTitle'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               AnimatedBuilder(
@@ -236,14 +254,16 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
                 builder: (context, _) {
                   final score = _scoreAnim.value.round();
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: errorColor.withValues(alpha: isDark ? 0.2 : 0.1),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      loc.translate('welcome.riskAssessmentScore', {'score': score.toString()}),
-                      style: GoogleFonts.inter(
+                      loc.translate('welcome.riskAssessmentScore',
+                          {'score': score.toString()}),
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         color: errorColor,
@@ -271,33 +291,43 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
             },
           ),
           const SizedBox(height: 16),
-          _buildRiskItemRow(loc.translate('welcome.riskTagHigh'), loc.translate('welcome.riskItem1'), errorColor, isDark),
+          _buildRiskItemRow(loc.translate('welcome.riskTagHigh'),
+              loc.translate('welcome.riskItem1'), errorColor, isDark),
           const SizedBox(height: 8),
-          _buildRiskItemRow(loc.translate('welcome.riskTagCaution'), loc.translate('welcome.riskItem2'), cautionColor, isDark),
+          _buildRiskItemRow(loc.translate('welcome.riskTagCaution'),
+              loc.translate('welcome.riskItem2'), cautionColor, isDark),
           const SizedBox(height: 8),
-          _buildRiskItemRow(loc.translate('welcome.riskTagStandard'), loc.translate('welcome.riskItem3'), successColor, isDark),
+          _buildRiskItemRow(loc.translate('welcome.riskTagStandard'),
+              loc.translate('welcome.riskItem3'), successColor, isDark),
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.12 : 0.08),
+              color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                  .withValues(alpha: isDark ? 0.12 : 0.08),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: isDark ? 0.3 : 0.2),
+                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                    .withValues(alpha: isDark ? 0.3 : 0.2),
               ),
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.lightbulb_outline_rounded, size: 16, color: isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                Icon(Icons.lightbulb_outline_rounded,
+                    size: 16,
+                    color:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     loc.translate('welcome.riskRecommendation'),
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 11.5,
                       height: 1.4,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                 ),
@@ -317,7 +347,7 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
           width: 80,
           child: Text(
             tag,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 11.5,
               fontWeight: FontWeight.w700,
               color: color,
@@ -327,10 +357,12 @@ class _RiskSystemShowcaseState extends ConsumerState<RiskSystemShowcase>
         Expanded(
           child: Text(
             text,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 12,
               height: 1.35,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
         ),
@@ -365,7 +397,7 @@ class WelcomeRiskSystemSection extends ConsumerWidget {
             children: [
               Text(
                 loc.translate('welcome.riskSectionEyebrow'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
                   color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
@@ -376,20 +408,24 @@ class WelcomeRiskSystemSection extends ConsumerWidget {
               Text(
                 loc.translate('welcome.riskSectionTitle'),
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: isDesktop ? 30 : 22,
                   fontWeight: FontWeight.w800,
                   letterSpacing: -0.5,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
               const SizedBox(height: 10),
               Text(
                 loc.translate('welcome.riskSectionSubtitle'),
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 14.5,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
               const SizedBox(height: 36),

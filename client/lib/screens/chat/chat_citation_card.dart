@@ -17,10 +17,12 @@ class LegalSourcesCitationCard extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<LegalSourcesCitationCard> createState() => _LegalSourcesCitationCardState();
+  ConsumerState<LegalSourcesCitationCard> createState() =>
+      _LegalSourcesCitationCardState();
 }
 
-class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationCard> {
+class _LegalSourcesCitationCardState
+    extends ConsumerState<LegalSourcesCitationCard> {
   bool _isExpanded = false;
 
   Future<void> _launchSourceUrl(String? urlStr) async {
@@ -28,7 +30,8 @@ class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationC
     try {
       final uri = Uri.parse(urlStr);
       if (await canLaunchUrl(uri)) {
-        final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+        final launched =
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
         if (launched) return;
       }
       _showErrorSnackBar();
@@ -41,7 +44,8 @@ class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationC
   void _showErrorSnackBar() {
     if (!mounted) return;
     final loc = ref.read(localeProvider.notifier);
-    AppToast.showError(context, loc.translate('chatCitation.openError'), duration: const Duration(seconds: 3));
+    AppToast.showError(context, loc.translate('chatCitation.openError'),
+        duration: const Duration(seconds: 3));
   }
 
   @override
@@ -50,9 +54,11 @@ class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationC
     final loc = ref.read(localeProvider.notifier);
     final isDark = widget.isDark;
     final primaryColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
-    final secondaryColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
+    final secondaryColor =
+        isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final surfaceColor = isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface;
+    final surfaceColor =
+        isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface;
 
     return Container(
       margin: const EdgeInsets.only(top: 14),
@@ -74,23 +80,27 @@ class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationC
                   Icon(Icons.verified_outlined, size: 15, color: primaryColor),
                   const SizedBox(width: 7),
                   Text(
-                    loc.translate('chatCitation.title', {'count': widget.sources.length.toString()}),
-                    style: GoogleFonts.inter(
+                    loc.translate('chatCitation.title',
+                        {'count': widget.sources.length.toString()}),
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: primaryColor.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       loc.translate('chatCitation.ragGrounded'),
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 9.5,
                         fontWeight: FontWeight.w700,
                         color: primaryColor,
@@ -100,9 +110,13 @@ class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationC
                   ),
                   const SizedBox(width: 6),
                   Icon(
-                    _isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                    _isExpanded
+                        ? Icons.keyboard_arrow_up_rounded
+                        : Icons.keyboard_arrow_down_rounded,
                     size: 16,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ],
               ),
@@ -116,26 +130,38 @@ class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationC
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: widget.sources.map((src) {
                   final map = src is Map ? src : {};
-                  final doc = (map['document'] ?? loc.translate('chatCitation.statutoryLaw')).toString();
-                  final sec = map['section'] != null ? 'Sec ${map['section']}' : map['rule']?.toString();
-                  final authority = (map['authority'] ?? loc.translate('chatCitation.officialLaw')).toString();
-                  final jurisdiction = (map['jurisdiction'] ?? loc.translate('chatCitation.india')).toString();
+                  final doc = (map['document'] ??
+                          loc.translate('chatCitation.statutoryLaw'))
+                      .toString();
+                  final sec = map['section'] != null
+                      ? 'Sec ${map['section']}'
+                      : map['rule']?.toString();
+                  final authority = (map['authority'] ??
+                          loc.translate('chatCitation.officialLaw'))
+                      .toString();
+                  final jurisdiction = (map['jurisdiction'] ??
+                          loc.translate('chatCitation.india'))
+                      .toString();
                   final url = map['sourceUrl'] as String?;
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 6),
                     padding: const EdgeInsets.all(9),
                     decoration: BoxDecoration(
-                      color: isDark ? Colors.black26 : Colors.white.withValues(alpha: 0.6),
+                      color: isDark
+                          ? Colors.black26
+                          : Colors.white.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(7),
-                      border: Border.all(color: borderColor.withValues(alpha: 0.6)),
+                      border:
+                          Border.all(color: borderColor.withValues(alpha: 0.6)),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 2),
-                          child: Icon(Icons.menu_book_rounded, size: 14, color: secondaryColor),
+                          child: Icon(Icons.menu_book_rounded,
+                              size: 14, color: secondaryColor),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
@@ -149,22 +175,26 @@ class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationC
                                 children: [
                                   Text(
                                     doc,
-                                    style: GoogleFonts.inter(
+                                    style: GoogleFonts.plusJakartaSans(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w700,
-                                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                      color: isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.lightTextPrimary,
                                     ),
                                   ),
                                   if (sec != null)
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 1.5),
                                       decoration: BoxDecoration(
-                                        color: secondaryColor.withValues(alpha: 0.15),
+                                        color: secondaryColor.withValues(
+                                            alpha: 0.15),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       child: Text(
                                         sec,
-                                        style: GoogleFonts.inter(
+                                        style: GoogleFonts.plusJakartaSans(
                                           fontSize: 10.5,
                                           fontWeight: FontWeight.w700,
                                           color: secondaryColor,
@@ -178,9 +208,11 @@ class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationC
                                 children: [
                                   Text(
                                     '$jurisdiction • $authority',
-                                    style: GoogleFonts.inter(
+                                    style: GoogleFonts.plusJakartaSans(
                                       fontSize: 10.5,
-                                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                      color: isDark
+                                          ? AppColors.darkTextSecondary
+                                          : AppColors.lightTextSecondary,
                                     ),
                                   ),
                                   if (url != null && url.isNotEmpty) ...[
@@ -191,16 +223,19 @@ class _LegalSourcesCitationCardState extends ConsumerState<LegalSourcesCitationC
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            loc.translate('chatCitation.officialSource'),
-                                            style: GoogleFonts.inter(
+                                            loc.translate(
+                                                'chatCitation.officialSource'),
+                                            style: GoogleFonts.plusJakartaSans(
                                               fontSize: 10.5,
                                               fontWeight: FontWeight.w600,
                                               color: primaryColor,
-                                              decoration: TextDecoration.underline,
+                                              decoration:
+                                                  TextDecoration.underline,
                                             ),
                                           ),
                                           const SizedBox(width: 2),
-                                          Icon(Icons.open_in_new_rounded, size: 10, color: primaryColor),
+                                          Icon(Icons.open_in_new_rounded,
+                                              size: 10, color: primaryColor),
                                         ],
                                       ),
                                     ),

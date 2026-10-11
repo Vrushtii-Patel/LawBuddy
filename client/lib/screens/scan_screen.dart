@@ -24,10 +24,11 @@ class ScanScreen extends ConsumerStatefulWidget {
   ConsumerState<ScanScreen> createState() => _ScanScreenState();
 }
 
-class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStateMixin {
+class _ScanScreenState extends ConsumerState<ScanScreen>
+    with TickerProviderStateMixin {
   final ImagePicker _picker = ImagePicker();
   final TextEditingController _textController = TextEditingController();
-  
+
   bool _isProcessing = false;
   String _statusMessage = '';
   Map<String, dynamic>? _activeScanJob;
@@ -46,7 +47,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
   Animation<double>? _fadeAnimation;
   Animation<Offset>? _slideAnimation;
 
-  bool get _isMobile => !kIsWeb && (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS);
+  bool get _isMobile =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
 
   void _initControllers() {
     if (_entryController == null) {
@@ -57,7 +61,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(parent: _entryController!, curve: Curves.easeOutCubic),
       );
-      _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.03), end: Offset.zero).animate(
+      _slideAnimation =
+          Tween<Offset>(begin: const Offset(0, 0.03), end: Offset.zero).animate(
         CurvedAnimation(parent: _entryController!, curve: Curves.easeOutCubic),
       );
       _entryController!.forward();
@@ -114,13 +119,19 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       setState(() {
         _isProcessing = false;
       });
-      final errorMsg = e is Exception ? e.toString().replaceFirst('Exception: ', '') : 'Unable to resume scan. Please try scanning the document again.';
-      AppToast.showError(context, errorMsg.isNotEmpty ? errorMsg : 'Unable to resume scan. Please try scanning the document again.');
+      final errorMsg = e is Exception
+          ? e.toString().replaceFirst('Exception: ', '')
+          : 'Unable to resume scan. Please try scanning the document again.';
+      AppToast.showError(
+          context,
+          errorMsg.isNotEmpty
+              ? errorMsg
+              : 'Unable to resume scan. Please try scanning the document again.');
     }
   }
 
   Future<void> _pollJobUntilComplete(
-    String jobId, 
+    String jobId,
     Map<String, dynamic> initialStatus, {
     String? originalInputText,
     String? fileData,
@@ -145,13 +156,26 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
           context,
           MaterialPageRoute(
             builder: (_) => AnalysisScreen(
-              originalText: job['extractedText'] ?? doc['originalText'] ?? originalInputText ?? 'Property Agreement',
+              originalText: job['extractedText'] ??
+                  doc['originalText'] ??
+                  originalInputText ??
+                  'Property Agreement',
               analysis: job['analysis'] ?? doc['analysis'] ?? [],
-              documentTitle: job['title'] ?? doc['title'] ?? customTitle ?? 'Scanned Property Agreement',
-              sourceType: job['sourceType'] ?? doc['sourceType'] ?? sourceType ?? 'PDF Document',
+              documentTitle: job['title'] ??
+                  doc['title'] ??
+                  customTitle ??
+                  'Scanned Property Agreement',
+              sourceType: job['sourceType'] ??
+                  doc['sourceType'] ??
+                  sourceType ??
+                  'PDF Document',
               fileData: fileData ?? job['fileData'] ?? doc['fileData'],
-              mimeType: job['mimeType'] ?? doc['mimeType'] ?? mimeType ?? 'application/pdf',
-              documentId: (job['documentId'] ?? doc['_id'] ?? doc['id'])?.toString(),
+              mimeType: job['mimeType'] ??
+                  doc['mimeType'] ??
+                  mimeType ??
+                  'application/pdf',
+              documentId:
+                  (job['documentId'] ?? doc['_id'] ?? doc['id'])?.toString(),
               initialFileBytes: initialFileBytes,
             ),
           ),
@@ -160,7 +184,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       return;
     }
 
-    bool isTerminal(Map<String, dynamic> j) => j['status'] == 'COMPLETED' || j['status'] == 'FAILED';
+    bool isTerminal(Map<String, dynamic> j) =>
+        j['status'] == 'COMPLETED' || j['status'] == 'FAILED';
 
     const maxPolls = 120; // ~3 minutes per waiting window (1.5s interval)
     int polls = 0;
@@ -179,7 +204,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
           if (mounted) {
             setState(() {
               _currentJob = job;
-              _statusMessage = _formatStepMessage(job['status'], job['currentStep']);
+              _statusMessage =
+                  _formatStepMessage(job['status'], job['currentStep']);
             });
           }
         } catch (pollErr) {
@@ -192,7 +218,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
       // Waiting window elapsed but the job is still running. This is NOT a
       // failure: ask the user, and only touch local polling state.
-      final keepWaiting = await _askToKeepWaiting(connectionIssue: errorStreak >= 3);
+      final keepWaiting =
+          await _askToKeepWaiting(connectionIssue: errorStreak >= 3);
       if (!keepWaiting) {
         userChoseCheckLater = true;
         break;
@@ -229,13 +256,26 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         context,
         MaterialPageRoute(
           builder: (_) => AnalysisScreen(
-            originalText: job['extractedText'] ?? doc['originalText'] ?? originalInputText ?? 'Property Agreement',
+            originalText: job['extractedText'] ??
+                doc['originalText'] ??
+                originalInputText ??
+                'Property Agreement',
             analysis: job['analysis'] ?? doc['analysis'] ?? [],
-            documentTitle: job['title'] ?? doc['title'] ?? customTitle ?? 'Scanned Property Agreement',
-            sourceType: job['sourceType'] ?? doc['sourceType'] ?? sourceType ?? 'PDF Document',
+            documentTitle: job['title'] ??
+                doc['title'] ??
+                customTitle ??
+                'Scanned Property Agreement',
+            sourceType: job['sourceType'] ??
+                doc['sourceType'] ??
+                sourceType ??
+                'PDF Document',
             fileData: fileData ?? job['fileData'] ?? doc['fileData'],
-            mimeType: job['mimeType'] ?? doc['mimeType'] ?? mimeType ?? 'application/pdf',
-            documentId: (job['documentId'] ?? doc['_id'] ?? doc['id'])?.toString(),
+            mimeType: job['mimeType'] ??
+                doc['mimeType'] ??
+                mimeType ??
+                'application/pdf',
+            documentId:
+                (job['documentId'] ?? doc['_id'] ?? doc['id'])?.toString(),
             initialFileBytes: initialFileBytes,
           ),
         ),
@@ -250,15 +290,22 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
         'Scan paused: ${job['errorInfo']?['message'] ?? 'Please retry.'}',
         action: TextButton(
           style: TextButton.styleFrom(
-            backgroundColor: (Theme.of(context).brightness == Brightness.dark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.18),
-            foregroundColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            backgroundColor: (Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkPrimary
+                    : AppColors.lightPrimary)
+                .withValues(alpha: 0.18),
+            foregroundColor: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           onPressed: () => _resumeOrRetryActiveJob(jobId),
-          child: const Text('Retry', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
+          child: const Text('Retry',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
         ),
       );
     } else {
@@ -347,30 +394,34 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       String extractedText = '';
 
       if (_isMobile) {
-        final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+        final textRecognizer =
+            TextRecognizer(script: TextRecognitionScript.latin);
         try {
           final inputImage = InputImage.fromFilePath(image.path);
-          final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+          final RecognizedText recognizedText =
+              await textRecognizer.processImage(inputImage);
           extractedText = recognizedText.text;
         } catch (mlKitErr) {
-          debugPrint('MLKit local OCR error, falling back to server vision: $mlKitErr');
+          debugPrint(
+              'MLKit local OCR error, falling back to server vision: $mlKitErr');
         } finally {
           textRecognizer.close();
         }
       }
 
       final Uint8List bytes = await image.readAsBytes();
-      final String mimeType = image.mimeType ?? (image.name.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg');
+      final String mimeType = image.mimeType ??
+          (image.name.toLowerCase().endsWith('.png')
+              ? 'image/png'
+              : 'image/jpeg');
 
       if (extractedText.trim().length > 10) {
-        await _analyzeText(
-          extractedText, 
-          title: image.name.isNotEmpty ? image.name : 'Photo Scan Document', 
-          sourceType: 'Photo Scan', 
-          fileBytes: bytes,
-          fileName: image.name.isNotEmpty ? image.name : 'photo_scan.jpg',
-          mimeType: mimeType
-        );
+        await _analyzeText(extractedText,
+            title: image.name.isNotEmpty ? image.name : 'Photo Scan Document',
+            sourceType: 'Photo Scan',
+            fileBytes: bytes,
+            fileName: image.name.isNotEmpty ? image.name : 'photo_scan.jpg',
+            mimeType: mimeType);
         return;
       }
 
@@ -389,7 +440,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
           jobId,
           startRes,
           mimeType: mimeType,
-          customTitle: image.name.isNotEmpty ? image.name : 'Scanned Property Agreement',
+          customTitle:
+              image.name.isNotEmpty ? image.name : 'Scanned Property Agreement',
           sourceType: 'Photo Scan',
           initialFileBytes: bytes,
         );
@@ -399,7 +451,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     } catch (e) {
       debugPrint('Error processing photo scan: $e');
       if (!mounted) return;
-      AppToast.showError(context, 'Unable to process the photo scan. Please ensure the image is clear and try again.');
+      AppToast.showError(context,
+          'Unable to process the photo scan. Please ensure the image is clear and try again.');
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -447,18 +500,17 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
             extractedText = PdfTextExtractor(document).extractText();
             document.dispose();
           } catch (pdfErr) {
-            debugPrint('Syncfusion PDF extraction error, falling back to server: $pdfErr');
+            debugPrint(
+                'Syncfusion PDF extraction error, falling back to server: $pdfErr');
           }
 
           if (extractedText.trim().length > 10) {
-            await _analyzeText(
-              extractedText, 
-              title: fileName, 
-              sourceType: 'PDF Document', 
-              fileBytes: uint8bytes,
-              fileName: fileName,
-              mimeType: 'application/pdf'
-            );
+            await _analyzeText(extractedText,
+                title: fileName,
+                sourceType: 'PDF Document',
+                fileBytes: uint8bytes,
+                fileName: fileName,
+                mimeType: 'application/pdf');
             return;
           }
 
@@ -486,7 +538,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
           }
         } else {
           // It's an image picked through document picker
-          final String mimeType = ext == 'png' ? 'image/png' : (ext == 'webp' ? 'image/webp' : 'image/jpeg');
+          final String mimeType = ext == 'png'
+              ? 'image/png'
+              : (ext == 'webp' ? 'image/webp' : 'image/jpeg');
           final startRes = await ApiService.startScanJob(
             fileBytes: uint8bytes,
             fileName: fileName,
@@ -513,7 +567,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
     } catch (e) {
       debugPrint('Error reading document file: $e');
       if (!mounted) return;
-      AppToast.showError(context, e is Exception ? e.toString().replaceFirst('Exception: ', '') : 'Unable to read the selected file.');
+      AppToast.showError(
+          context,
+          e is Exception
+              ? e.toString().replaceFirst('Exception: ', '')
+              : 'Unable to read the selected file.');
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -525,7 +583,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
 
   Future<void> _analyzeText(
     String text, {
-    String? title, 
+    String? title,
     String? sourceType,
     Uint8List? fileBytes,
     String? fileName,
@@ -569,7 +627,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen> with TickerProviderStat
       setState(() {
         _isProcessing = false;
       });
-      AppToast.showError(context, 'Unable to complete document analysis. Please check your connection and try again.');
+      AppToast.showError(context,
+          'Unable to complete document analysis. Please check your connection and try again.');
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -609,7 +668,8 @@ The Developer represents that necessary zoning approvals are under application w
     final isDesktop = size.width >= 960;
 
     return Scaffold(
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       body: Container(
         color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
         child: SafeArea(
@@ -627,9 +687,11 @@ The Developer represents that necessary zoning approvals are under application w
                   child: _isProcessing
                       ? _buildProcessingState(isDark, loc)
                       : FadeTransition(
-                          opacity: _fadeAnimation ?? const AlwaysStoppedAnimation(1.0),
+                          opacity: _fadeAnimation ??
+                              const AlwaysStoppedAnimation(1.0),
                           child: SlideTransition(
-                            position: _slideAnimation ?? const AlwaysStoppedAnimation(Offset.zero),
+                            position: _slideAnimation ??
+                                const AlwaysStoppedAnimation(Offset.zero),
                             child: SingleChildScrollView(
                               physics: const BouncingScrollPhysics(),
                               padding: EdgeInsets.symmetric(
@@ -638,9 +700,11 @@ The Developer represents that necessary zoning approvals are under application w
                               ),
                               child: Center(
                                 child: ConstrainedBox(
-                                  constraints: const BoxConstraints(maxWidth: 1040),
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 1040),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
                                     children: [
                                       // HERO HEADER
                                       _buildHeroHeader(isDark, loc, isDesktop),
@@ -653,7 +717,8 @@ The Developer represents that necessary zoning approvals are under application w
                                       ],
 
                                       // 3 ACTION CARDS (CAMERA, GALLERY, PDF)
-                                      _buildUploadOptionsGrid(isDark, loc, isDesktop),
+                                      _buildUploadOptionsGrid(
+                                          isDark, loc, isDesktop),
                                       const SizedBox(height: 36),
 
                                       // STYLISH DIVIDER
@@ -661,7 +726,8 @@ The Developer represents that necessary zoning approvals are under application w
                                       const SizedBox(height: 32),
 
                                       // DIRECT TEXT INPUT STUDIO
-                                      _buildDirectTextInputCard(isDark, loc, isDesktop),
+                                      _buildDirectTextInputCard(
+                                          isDark, loc, isDesktop),
                                       const SizedBox(height: 48),
 
                                       // SECURITY & PRIVACY FOOTER
@@ -695,12 +761,16 @@ The Developer represents that necessary zoning approvals are under application w
     final isFailed = status == 'FAILED';
 
     final Color cardBorderColor = isFailed
-        ? (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.4)
-        : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.4);
+        ? (isDark ? AppColors.darkError : AppColors.lightError)
+            .withValues(alpha: 0.4)
+        : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+            .withValues(alpha: 0.4);
 
     final Color cardBgColor = isFailed
-        ? (isDark ? AppColors.darkError : AppColors.lightError).withValues(alpha: 0.08)
-        : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.08);
+        ? (isDark ? AppColors.darkError : AppColors.lightError)
+            .withValues(alpha: 0.08)
+        : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+            .withValues(alpha: 0.08);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -715,11 +785,18 @@ The Developer represents that necessary zoning approvals are under application w
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: (isFailed ? Colors.orange : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)).withValues(alpha: 0.15),
+              color: (isFailed
+                      ? Colors.orange
+                      : (isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary))
+                  .withValues(alpha: 0.15),
             ),
             child: Icon(
               isFailed ? Icons.warning_amber_rounded : Icons.sync_rounded,
-              color: isFailed ? Colors.orange : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+              color: isFailed
+                  ? Colors.orange
+                  : (isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
               size: 22,
             ),
           ),
@@ -732,22 +809,26 @@ The Developer represents that necessary zoning approvals are under application w
                   children: [
                     Text(
                       'Unfinished Scan in Progress',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: (isFailed ? Colors.orange : Colors.blue).withValues(alpha: 0.15),
+                        color: (isFailed ? Colors.orange : Colors.blue)
+                            .withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         status,
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                           color: isFailed ? Colors.orange : Colors.blue,
@@ -759,9 +840,11 @@ The Developer represents that necessary zoning approvals are under application w
                 const SizedBox(height: 4),
                 Text(
                   '$title • $currentStep',
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 12,
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -773,20 +856,25 @@ The Developer represents that necessary zoning approvals are under application w
           ElevatedButton(
             onPressed: () => _resumeOrRetryActiveJob(jobId),
             style: ElevatedButton.styleFrom(
-              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              backgroundColor:
+                  isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
               elevation: 0,
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(isFailed ? Icons.refresh_rounded : Icons.play_arrow_rounded, size: 16),
+                Icon(
+                    isFailed ? Icons.refresh_rounded : Icons.play_arrow_rounded,
+                    size: 16),
                 const SizedBox(width: 6),
                 Text(
                   isFailed ? 'Retry' : 'Resume',
-                  style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w700),
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12, fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -796,7 +884,9 @@ The Developer represents that necessary zoning approvals are under application w
             icon: Icon(
               Icons.close_rounded,
               size: 18,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
             tooltip: 'Dismiss',
             onPressed: () {
@@ -832,14 +922,18 @@ The Developer represents that necessary zoning approvals are under application w
                 children: [
                   Icon(
                     Icons.arrow_back_rounded,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                     size: 18,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     loc.translate('common.back'),
-                    style: GoogleFonts.inter(
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    style: GoogleFonts.plusJakartaSans(
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
@@ -853,12 +947,16 @@ The Developer represents that necessary zoning approvals are under application w
           if (isDesktopOrTablet)
             Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                  color:
+                      (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                          .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color:
+                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Row(
@@ -869,16 +967,20 @@ The Developer represents that necessary zoning approvals are under application w
                       height: 6,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightAccent,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       'AI CONTRACT VERIFICATION STUDIO',
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightAccent,
                         letterSpacing: 0.9,
                       ),
                     ),
@@ -908,10 +1010,12 @@ The Developer represents that necessary zoning approvals are under application w
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
-            color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+            color: (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+                .withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.25),
+              color: (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+                  .withValues(alpha: 0.25),
             ),
           ),
           child: Row(
@@ -928,10 +1032,12 @@ The Developer represents that necessary zoning approvals are under application w
               const SizedBox(width: 7),
               Text(
                 'RERA COMPLIANCE • LEGAL OCR • RISK DETECTION',
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                   letterSpacing: 0.8,
                 ),
               ),
@@ -944,10 +1050,11 @@ The Developer represents that necessary zoning approvals are under application w
         Text(
           loc.translate('scan.title'),
           textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: isDesktop ? 30 : 22,
             fontWeight: FontWeight.w800,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            color:
+                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
             letterSpacing: -0.5,
           ),
         ),
@@ -959,10 +1066,12 @@ The Developer represents that necessary zoning approvals are under application w
           child: Text(
             loc.translate('scan.subtitle'),
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: isDesktop ? 14.5 : 13.5,
               height: 1.45,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ),
@@ -974,17 +1083,30 @@ The Developer represents that necessary zoning approvals are under application w
           spacing: 8,
           runSpacing: 8,
           children: [
-            _buildFormatPill('Physical Deed Photos', Icons.camera_alt_outlined, isDark ? AppColors.darkAccent : AppColors.lightPrimary, isDark),
-            _buildFormatPill('Gallery Scans & PNGs', Icons.image_outlined, isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary, isDark),
-            _buildFormatPill('PDF Agreements', Icons.picture_as_pdf_outlined, isDark ? AppColors.darkAccent : AppColors.lightPrimary, isDark),
-            _buildFormatPill('Direct Clause Paste', Icons.notes_outlined, isDark ? AppColors.darkSecondary : AppColors.lightSecondary, isDark),
+            _buildFormatPill('Physical Deed Photos', Icons.camera_alt_outlined,
+                isDark ? AppColors.darkAccent : AppColors.lightPrimary, isDark),
+            _buildFormatPill(
+                'Gallery Scans & PNGs',
+                Icons.image_outlined,
+                isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
+                isDark),
+            _buildFormatPill('PDF Agreements', Icons.picture_as_pdf_outlined,
+                isDark ? AppColors.darkAccent : AppColors.lightPrimary, isDark),
+            _buildFormatPill(
+                'Direct Clause Paste',
+                Icons.notes_outlined,
+                isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                isDark),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildFormatPill(String label, IconData icon, Color color, bool isDark) {
+  Widget _buildFormatPill(
+      String label, IconData icon, Color color, bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -1001,10 +1123,12 @@ The Developer represents that necessary zoning approvals are under application w
           const SizedBox(width: 5),
           Text(
             label,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ],
@@ -1015,7 +1139,8 @@ The Developer represents that necessary zoning approvals are under application w
   // ==========================================
   // UPLOAD OPTIONS GRID (CAMERA, GALLERY, PDF)
   // ==========================================
-  Widget _buildUploadOptionsGrid(bool isDark, LocaleNotifier loc, bool isDesktop) {
+  Widget _buildUploadOptionsGrid(
+      bool isDark, LocaleNotifier loc, bool isDesktop) {
     final uploadCards = [
       _UploadActionCardData(
         title: loc.translate('scan.takePhoto'),
@@ -1101,7 +1226,7 @@ The Developer represents that necessary zoning approvals are under application w
             ),
             child: Text(
               loc.translate('scan.orPasteClauses'),
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 10.5,
                 fontWeight: FontWeight.w800,
                 color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
@@ -1123,7 +1248,8 @@ The Developer represents that necessary zoning approvals are under application w
   // ==========================================
   // DIRECT TEXT INPUT STUDIO
   // ==========================================
-  Widget _buildDirectTextInputCard(bool isDark, LocaleNotifier loc, bool isDesktop) {
+  Widget _buildDirectTextInputCard(
+      bool isDark, LocaleNotifier loc, bool isDesktop) {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
@@ -1147,16 +1273,24 @@ The Developer represents that necessary zoning approvals are under application w
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+                        color: (isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightAccent)
+                            .withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.25),
+                          color: (isDark
+                                  ? AppColors.darkAccent
+                                  : AppColors.lightAccent)
+                              .withValues(alpha: 0.25),
                         ),
                       ),
                       child: Icon(
                         Icons.edit_note_rounded,
                         size: 20,
-                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightAccent,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -1166,17 +1300,21 @@ The Developer represents that necessary zoning approvals are under application w
                         children: [
                           Text(
                             loc.translate('scan.documentContent'),
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                           Text(
                             loc.translate('scan.pastePrompt'),
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 12,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                         ],
@@ -1196,19 +1334,25 @@ The Developer represents that necessary zoning approvals are under application w
                 ),
                 label: Text(
                   'Load Sample Agreement',
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 11.5,
                     fontWeight: FontWeight.w700,
-                    color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    color:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                   ),
                 ),
                 style: TextButton.styleFrom(
-                  backgroundColor: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.1),
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  backgroundColor:
+                      (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                          .withValues(alpha: 0.1),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                     side: BorderSide(
-                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightPrimary,
                     ),
                   ),
                 ),
@@ -1241,13 +1385,17 @@ The Developer represents that necessary zoning approvals are under application w
               if (_textController.text.isNotEmpty)
                 TextButton.icon(
                   onPressed: () => setState(() => _textController.clear()),
-                  icon: Icon(Icons.clear_rounded, size: 14, color: isDark ? AppColors.darkError : AppColors.lightError),
+                  icon: Icon(Icons.clear_rounded,
+                      size: 14,
+                      color:
+                          isDark ? AppColors.darkError : AppColors.lightError),
                   label: Text(
                     'Clear',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? AppColors.darkError : AppColors.lightError,
+                      color:
+                          isDark ? AppColors.darkError : AppColors.lightError,
                     ),
                   ),
                 )
@@ -1261,7 +1409,8 @@ The Developer represents that necessary zoning approvals are under application w
                 onPressed: () {
                   final text = _textController.text.trim();
                   if (text.isEmpty) {
-                    AppToast.showError(context, loc.translate('scan.emptyError'));
+                    AppToast.showError(
+                        context, loc.translate('scan.emptyError'));
                     return;
                   }
                   _analyzeText(text);
@@ -1284,17 +1433,21 @@ The Developer represents that necessary zoning approvals are under application w
         Icon(
           Icons.lock_outline_rounded,
           size: 14,
-          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          color: isDark
+              ? AppColors.darkTextSecondary
+              : AppColors.lightTextSecondary,
         ),
         const SizedBox(width: 6),
         Flexible(
           child: Text(
             'End-to-End Encrypted • Legal Documents Are Processed Confidentially Under Indian Privacy Norms',
             textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
         ),
@@ -1310,10 +1463,13 @@ The Developer represents that necessary zoning approvals are under application w
   // ==========================================
   Widget _buildTimeoutCard(bool isDark) {
     final primary = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final textPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final border = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final surface = isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface;
+    final surface =
+        isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface;
 
     final body = _pollConnectionIssue
         ? "We're having trouble reaching the server, so we can't confirm progress right now. Your scan was already submitted and isn't affected."
@@ -1344,13 +1500,18 @@ The Developer represents that necessary zoning approvals are under application w
                   Expanded(
                     child: Text(
                       'Analysis is taking longer than expected',
-                      style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700, color: textPrimary),
+                      style: GoogleFonts.plusJakartaSans(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: textPrimary),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 10),
-              Text(body, style: GoogleFonts.inter(fontSize: 13, height: 1.4, color: textSecondary)),
+              Text(body,
+                  style: GoogleFonts.plusJakartaSans(
+                      fontSize: 13, height: 1.4, color: textSecondary)),
               const SizedBox(height: 14),
               Container(
                 padding: const EdgeInsets.all(12),
@@ -1365,23 +1526,31 @@ The Developer represents that necessary zoning approvals are under application w
                       children: [
                         Expanded(
                           child: Text('Scan status',
-                              style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: textPrimary)),
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: textPrimary)),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: badgeColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(badge,
-                              style: GoogleFonts.inter(fontSize: 11, fontWeight: FontWeight.w700, color: badgeColor)),
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: badgeColor)),
                         ),
                       ],
                     ),
                     const SizedBox(height: 6),
                     Text(
                       "Your document and scan progress are saved. You don't need to upload it again.",
-                      style: GoogleFonts.inter(fontSize: 12, height: 1.4, color: textSecondary),
+                      style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12, height: 1.4, color: textSecondary),
                     ),
                   ],
                 ),
@@ -1394,9 +1563,12 @@ The Developer represents that necessary zoning approvals are under application w
                   foregroundColor: Colors.white,
                   elevation: 0,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24)),
                 ),
-                child: Text('Keep waiting', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700)),
+                child: Text('Keep waiting',
+                    style: GoogleFonts.plusJakartaSans(
+                        fontSize: 14, fontWeight: FontWeight.w700)),
               ),
               const SizedBox(height: 8),
               OutlinedButton(
@@ -1405,9 +1577,12 @@ The Developer represents that necessary zoning approvals are under application w
                   foregroundColor: textPrimary,
                   side: BorderSide(color: border),
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24)),
                 ),
-                child: Text('Check later', style: GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w600)),
+                child: Text('Check later',
+                    style: GoogleFonts.plusJakartaSans(
+                        fontSize: 14, fontWeight: FontWeight.w600)),
               ),
             ],
           ),
@@ -1418,9 +1593,11 @@ The Developer represents that necessary zoning approvals are under application w
 
   Widget _buildProcessingState(bool isDark, LocaleNotifier loc) {
     final accentColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
-    final cautionColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
+    final cautionColor =
+        isDark ? AppColors.darkCaution : AppColors.lightCaution;
 
-    final String status = (_currentJob?['status'] as String?) ?? 'OCR_PROCESSING';
+    final String status =
+        (_currentJob?['status'] as String?) ?? 'OCR_PROCESSING';
     final bool isRetrying = status == 'RETRYING';
 
     if (_radarController != null && !_radarController!.isAnimating) {
@@ -1453,7 +1630,8 @@ The Developer represents that necessary zoning approvals are under application w
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: accentColor.withValues(alpha: 0.12 + (0.08 * pulse)),
+                          color: accentColor.withValues(
+                              alpha: 0.12 + (0.08 * pulse)),
                           width: 1.5,
                         ),
                       ),
@@ -1465,9 +1643,11 @@ The Developer represents that necessary zoning approvals are under application w
                       height: 82,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: accentColor.withValues(alpha: isDark ? 0.06 : 0.08),
+                        color:
+                            accentColor.withValues(alpha: isDark ? 0.06 : 0.08),
                         border: Border.all(
-                          color: accentColor.withValues(alpha: 0.35 + (0.15 * pulse)),
+                          color: accentColor.withValues(
+                              alpha: 0.35 + (0.15 * pulse)),
                           width: 1.5,
                         ),
                       ),
@@ -1479,10 +1659,12 @@ The Developer represents that necessary zoning approvals are under application w
                             Icon(
                               Icons.document_scanner_rounded,
                               size: 34,
-                              color: accentColor.withValues(alpha: 0.85 + (0.15 * pulse)),
+                              color: accentColor.withValues(
+                                  alpha: 0.85 + (0.15 * pulse)),
                               shadows: [
                                 Shadow(
-                                  color: accentColor.withValues(alpha: 0.25 + (0.25 * pulse)),
+                                  color: accentColor.withValues(
+                                      alpha: 0.25 + (0.25 * pulse)),
                                   blurRadius: 6 + (4 * pulse),
                                 ),
                               ],
@@ -1523,7 +1705,8 @@ The Developer represents that necessary zoning approvals are under application w
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: accentColor.withValues(alpha: 0.45),
+                                      color:
+                                          accentColor.withValues(alpha: 0.45),
                                       blurRadius: 3,
                                       spreadRadius: 0.5,
                                     ),
@@ -1545,10 +1728,12 @@ The Developer represents that necessary zoning approvals are under application w
             Text(
               loc.translate('scan.analyzingTitle'),
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
                 letterSpacing: -0.3,
               ),
             ),
@@ -1563,19 +1748,26 @@ The Developer represents that necessary zoning approvals are under application w
                 final slideIn = Tween<Offset>(
                   begin: const Offset(0, 0.15),
                   end: Offset.zero,
-                ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+                ).animate(CurvedAnimation(
+                    parent: animation, curve: Curves.easeOutCubic));
                 return FadeTransition(
                   opacity: animation,
                   child: SlideTransition(position: slideIn, child: child),
                 );
               },
               child: Text(
-                _statusMessage.isNotEmpty ? _statusMessage : loc.translate('scan.pleaseWait'),
-                key: ValueKey<String>(_statusMessage.isNotEmpty ? _statusMessage : loc.translate('scan.pleaseWait')),
+                _statusMessage.isNotEmpty
+                    ? _statusMessage
+                    : loc.translate('scan.pleaseWait'),
+                key: ValueKey<String>(_statusMessage.isNotEmpty
+                    ? _statusMessage
+                    : loc.translate('scan.pleaseWait')),
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 13,
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ),
@@ -1592,20 +1784,24 @@ The Developer represents that necessary zoning approvals are under application w
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 440),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
                     color: cautionColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: cautionColor.withValues(alpha: 0.3)),
+                    border:
+                        Border.all(color: cautionColor.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.sync_problem_rounded, size: 18, color: cautionColor),
+                      Icon(Icons.sync_problem_rounded,
+                          size: 18, color: cautionColor),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          _currentJob?['currentStep'] ?? loc.translate('scan.retryingStatus'),
-                          style: GoogleFonts.inter(
+                          _currentJob?['currentStep'] ??
+                              loc.translate('scan.retryingStatus'),
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: cautionColor,
@@ -1703,27 +1899,38 @@ class _UploadActionCardState extends State<_UploadActionCard> {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: item.accentColor.withValues(alpha: isDark ? 0.15 : 0.1),
+                          color: item.accentColor
+                              .withValues(alpha: isDark ? 0.15 : 0.1),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: item.accentColor.withValues(alpha: 0.3),
                           ),
                         ),
-                        child: Icon(item.icon, color: item.accentColor, size: 20),
+                        child:
+                            Icon(item.icon, color: item.accentColor, size: 20),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3.5),
                         decoration: BoxDecoration(
-                          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.1),
+                          color: (isDark
+                                  ? AppColors.darkAccent
+                                  : AppColors.lightAccent)
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.25),
+                            color: (isDark
+                                    ? AppColors.darkAccent
+                                    : AppColors.lightAccent)
+                                .withValues(alpha: 0.25),
                           ),
                         ),
                         child: Text(
                           item.badgeText,
-                          style: GoogleFonts.inter(
-                            color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                          style: GoogleFonts.plusJakartaSans(
+                            color: isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightAccent,
                             fontSize: 9.5,
                             fontWeight: FontWeight.w800,
                             letterSpacing: 0.6,
@@ -1737,10 +1944,12 @@ class _UploadActionCardState extends State<_UploadActionCard> {
                   // Title
                   Text(
                     item.title,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                       letterSpacing: -0.3,
                     ),
                   ),
@@ -1749,10 +1958,12 @@ class _UploadActionCardState extends State<_UploadActionCard> {
                   // Description
                   Text(
                     item.description,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       height: 1.4,
-                      color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
                 ],
@@ -1765,16 +1976,19 @@ class _UploadActionCardState extends State<_UploadActionCard> {
                 children: [
                   Text(
                     item.actionLabel,
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      color: isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightPrimary,
                     ),
                   ),
                   const SizedBox(width: 5),
                   Icon(
                     Icons.arrow_forward_rounded,
-                    color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    color:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                     size: 14,
                   ),
                 ],
@@ -1830,7 +2044,9 @@ class _StudioTextFieldState extends State<_StudioTextField> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 180),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
+        color: isDark
+            ? AppColors.darkElevatedSurface
+            : AppColors.lightElevatedSurface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: _isFocused
@@ -1844,15 +2060,18 @@ class _StudioTextFieldState extends State<_StudioTextField> {
         focusNode: _focusNode,
         minLines: 8,
         maxLines: 16,
-        style: GoogleFonts.inter(
-          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+        style: GoogleFonts.plusJakartaSans(
+          color:
+              isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           fontSize: 14,
           height: 1.5,
         ),
         decoration: InputDecoration(
           hintText: widget.hintText ?? 'Paste agreement text here...',
-          hintStyle: GoogleFonts.inter(
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+          hintStyle: GoogleFonts.plusJakartaSans(
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
             fontSize: 13.5,
           ),
           filled: false,
@@ -1900,8 +2119,9 @@ class _AnalyzeSubmitButtonState extends State<_AnalyzeSubmitButton> {
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                .withValues(alpha: _isHovered ? 0.9 : 1.0),
+            color:
+                (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                    .withValues(alpha: _isHovered ? 0.9 : 1.0),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -1914,8 +2134,9 @@ class _AnalyzeSubmitButtonState extends State<_AnalyzeSubmitButton> {
               const SizedBox(width: 8),
               Text(
                 widget.label,
-                style: GoogleFonts.inter(
-                  color: widget.isDark ? AppColors.darkBackground : Colors.white,
+                style: GoogleFonts.plusJakartaSans(
+                  color:
+                      widget.isDark ? AppColors.darkBackground : Colors.white,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.2,
@@ -1969,13 +2190,21 @@ class _HoverGlassButtonState extends State<_HoverGlassButton> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
             color: _isHovered
-                ? (widget.isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface)
-                : (widget.isDark ? AppColors.darkSurface : AppColors.lightSurface),
+                ? (widget.isDark
+                    ? AppColors.darkElevatedSurface
+                    : AppColors.lightElevatedSurface)
+                : (widget.isDark
+                    ? AppColors.darkSurface
+                    : AppColors.lightSurface),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: _isHovered
-                  ? (widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                  : (widget.isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                  ? (widget.isDark
+                      ? AppColors.darkAccent
+                      : AppColors.lightPrimary)
+                  : (widget.isDark
+                      ? AppColors.darkBorder
+                      : AppColors.lightBorder),
             ),
           ),
           child: widget.child,

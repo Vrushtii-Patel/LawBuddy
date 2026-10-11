@@ -19,7 +19,8 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
     required this.isDark,
   });
 
-  Future<void> _launchNewsUrl(BuildContext context, WidgetRef ref, String? link) async {
+  Future<void> _launchNewsUrl(
+      BuildContext context, WidgetRef ref, String? link) async {
     if (link == null || link.trim().isEmpty) {
       _showErrorSnackBar(context, ref);
       return;
@@ -27,7 +28,8 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
     try {
       final uri = Uri.parse(link.trim());
       if (await canLaunchUrl(uri)) {
-        final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+        final launched =
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
         if (launched) return;
       }
       if (context.mounted) {
@@ -43,7 +45,8 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
 
   void _showErrorSnackBar(BuildContext context, WidgetRef ref) {
     final loc = ref.read(localeProvider.notifier);
-    AppToast.showError(context, loc.translate('home.openLinkError'), duration: const Duration(seconds: 3));
+    AppToast.showError(context, loc.translate('home.openLinkError'),
+        duration: const Duration(seconds: 3));
   }
 
   @override
@@ -56,9 +59,10 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadii.rounded16,
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
@@ -80,10 +84,17 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(8),
+                        color: (isDark
+                                ? AppColors.darkSecondary
+                                : AppColors.lightSecondary)
+                            .withValues(alpha: 0.14),
+                        borderRadius: AppRadii.rounded8,
                       ),
-                      child: Icon(Icons.feed_outlined, color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary, size: 17),
+                      child: Icon(Icons.feed_outlined,
+                          color: isDark
+                              ? AppColors.darkSecondary
+                              : AppColors.lightSecondary,
+                          size: 17),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -94,19 +105,23 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
                             loc.translate('home.legalIntelligence'),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
                             ),
                           ),
                           Text(
                             loc.translate('home.legalIntelligenceSub'),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11.5,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                         ],
@@ -119,13 +134,18 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkSecondary : AppColors.lightSecondary).withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(10),
+                  color: (isDark
+                          ? AppColors.darkSecondary
+                          : AppColors.lightSecondary)
+                      .withValues(alpha: 0.15),
+                  borderRadius: AppRadii.rounded12,
                 ),
                 child: Text(
                   loc.translate('common.live'),
-                  style: GoogleFonts.inter(
-                    color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+                  style: GoogleFonts.plusJakartaSans(
+                    color: isDark
+                        ? AppColors.darkSecondary
+                        : AppColors.lightSecondary,
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                   ),
@@ -134,14 +154,14 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 14),
-
           if (isLoadingNews && legalNews.isEmpty)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
                 ),
               ),
             )
@@ -150,8 +170,10 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
               padding: const EdgeInsets.all(12.0),
               child: Text(
                 loc.translate('home.noLegalUpdates'),
-                style: GoogleFonts.inter(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                style: GoogleFonts.plusJakartaSans(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                   fontSize: 12,
                 ),
               ),
@@ -159,21 +181,27 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
           else ...[
             for (int i = 0; i < news.take(2).length; i++) ...[
               Container(
-                margin: EdgeInsets.only(bottom: i < news.take(2).length - 1 ? 8 : 0),
+                margin: EdgeInsets.only(
+                    bottom: i < news.take(2).length - 1 ? 8 : 0),
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
-                  borderRadius: BorderRadius.circular(12),
+                  color: isDark
+                      ? AppColors.darkElevatedSurface
+                      : AppColors.lightElevatedSurface,
+                  borderRadius: AppRadii.rounded12,
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color:
+                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
-                    onTap: () => _launchNewsUrl(context, ref, news[i]['link']?.toString()),
-                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => _launchNewsUrl(
+                        context, ref, news[i]['link']?.toString()),
+                    borderRadius: AppRadii.rounded12,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 10),
                       child: Row(
                         children: [
                           Expanded(
@@ -181,11 +209,14 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  (news[i]['title'] ?? 'Legal Notice').toString(),
+                                  (news[i]['title'] ?? 'Legal Notice')
+                                      .toString(),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.inter(
-                                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    color: isDark
+                                        ? AppColors.darkTextPrimary
+                                        : AppColors.lightTextPrimary,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12.5,
                                   ),
@@ -193,8 +224,10 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
                                 const SizedBox(height: 2),
                                 Text(
                                   '${news[i]['source'] ?? 'Legal News'} • ${formatRelativeTime(news[i]['pubDate'])}',
-                                  style: GoogleFonts.inter(
-                                    color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    color: isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary,
                                     fontSize: 11,
                                   ),
                                 ),
@@ -205,7 +238,9 @@ class HomeLegalUpdatesCard extends ConsumerWidget {
                           Icon(
                             Icons.open_in_new_rounded,
                             size: 14,
-                            color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                            color: isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightPrimary,
                           ),
                         ],
                       ),

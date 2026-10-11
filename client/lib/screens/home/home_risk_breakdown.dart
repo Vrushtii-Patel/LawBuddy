@@ -35,10 +35,12 @@ class HomeRiskBreakdownCard extends ConsumerWidget {
         const SizedBox(width: 6),
         Text(
           '$label ($count)',
-          style: GoogleFonts.inter(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 11.5,
             fontWeight: FontWeight.w600,
-            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
           ),
         ),
       ],
@@ -51,24 +53,35 @@ class HomeRiskBreakdownCard extends ConsumerWidget {
     final loc = ref.read(localeProvider.notifier);
 
     final int total = recentDocs.length;
-    final int highRisk = recentDocs.where((d) => (d.riskLabel).toLowerCase().contains('high')).length;
-    final int mediumRisk = recentDocs.where((d) => (d.riskLabel).toLowerCase().contains('medium') || (d.riskLabel).toLowerCase().contains('caution')).length;
-    final int lowRisk = total - highRisk - mediumRisk > 0 ? (total - highRisk - mediumRisk) : 0;
+    final int highRisk = recentDocs
+        .where((d) => (d.riskLabel).toLowerCase().contains('high'))
+        .length;
+    final int mediumRisk = recentDocs
+        .where((d) =>
+            (d.riskLabel).toLowerCase().contains('medium') ||
+            (d.riskLabel).toLowerCase().contains('caution'))
+        .length;
+    final int lowRisk =
+        total - highRisk - mediumRisk > 0 ? (total - highRisk - mediumRisk) : 0;
 
     final double highPct = total > 0 ? (highRisk / total) : 0.0;
     final double medPct = total > 0 ? (mediumRisk / total) : 0.0;
-    final double lowPct = total > 0 ? (lowRisk / total) : (total == 0 ? 1.0 : 0.0);
+    final double lowPct =
+        total > 0 ? (lowRisk / total) : (total == 0 ? 1.0 : 0.0);
 
     final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
-    final cautionColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
-    final successColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
+    final cautionColor =
+        isDark ? AppColors.darkCaution : AppColors.lightCaution;
+    final successColor =
+        isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
 
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: AppRadii.rounded16,
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.0,
         ),
         boxShadow: [
           BoxShadow(
@@ -88,9 +101,10 @@ class HomeRiskBreakdownCard extends ConsumerWidget {
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   color: errorColor.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: AppRadii.rounded8,
                 ),
-                child: Icon(Icons.pie_chart_outline_rounded, color: errorColor, size: 17),
+                child: Icon(Icons.pie_chart_outline_rounded,
+                    color: errorColor, size: 17),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -101,19 +115,23 @@ class HomeRiskBreakdownCard extends ConsumerWidget {
                       loc.translate('home.riskDistribution'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     Text(
                       loc.translate('home.riskDistributionSub'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11.5,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
@@ -203,7 +221,9 @@ class HomeRiskBreakdownCard extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  highRisk > 0 ? Icons.warning_amber_rounded : Icons.verified_user_outlined,
+                  highRisk > 0
+                      ? Icons.warning_amber_rounded
+                      : Icons.verified_user_outlined,
                   size: 15,
                   color: highRisk > 0 ? errorColor : successColor,
                 ),
@@ -213,10 +233,12 @@ class HomeRiskBreakdownCard extends ConsumerWidget {
                     highRisk > 0
                         ? '$highRisk high-risk clauses flagged across analyzed documents'
                         : 'All analyzed documents within normal legal risk parameters',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 11.5,
                       fontWeight: FontWeight.w600,
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                   ),
                 ),

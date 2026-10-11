@@ -35,7 +35,7 @@ class HomeLatestDocCard extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppRadii.rounded20,
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           width: 1,
@@ -61,13 +61,23 @@ class HomeLatestDocCard extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8),
+                        color: (isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
+                            .withValues(alpha: 0.12),
+                        borderRadius: AppRadii.rounded8,
                         border: Border.all(
-                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.25),
+                          color: (isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary)
+                              .withValues(alpha: 0.25),
                         ),
                       ),
-                      child: Icon(Icons.analytics_outlined, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary, size: 18),
+                      child: Icon(Icons.analytics_outlined,
+                          color: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
+                          size: 18),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -78,20 +88,24 @@ class HomeLatestDocCard extends ConsumerWidget {
                             loc.translate('home.latestAnalysisReview'),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(
+                            style: GoogleFonts.plusJakartaSans(
                               fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                              letterSpacing: -0.3,
+                              fontWeight: FontWeight.w700,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                              letterSpacing: -0.2,
                             ),
                           ),
                           Text(
                             loc.translate('home.latestAnalysisSub'),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11.5,
+                              color: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                           ),
                         ],
@@ -105,26 +119,33 @@ class HomeLatestDocCard extends ConsumerWidget {
                 TextButton(
                   onPressed: () => onNavigate(const RecentDocumentsScreen()),
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     minimumSize: Size.zero,
-                    foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    foregroundColor:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        loc.translate('home.viewAll', {'count': recentDocs.length.toString()}),
-                        style: GoogleFonts.inter(
+                        loc.translate('home.viewAll',
+                            {'count': recentDocs.length.toString()}),
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 12.5,
-                          fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? AppColors.darkAccent
+                              : AppColors.lightPrimary,
                         ),
                       ),
                       const SizedBox(width: 4),
                       Icon(
                         Icons.arrow_forward_rounded,
                         size: 13,
-                        color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightPrimary,
                       ),
                     ],
                   ),
@@ -141,13 +162,15 @@ class HomeLatestDocCard extends ConsumerWidget {
               child: Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
                 ),
               ),
             )
           else if (!hasDocs || latestDoc == null)
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -155,46 +178,63 @@ class HomeLatestDocCard extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.1),
+                        color: (isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
+                            .withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.description_outlined,
                         size: 26,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
                     ),
                     const SizedBox(height: 12),
                     Text(
                       loc.translate('home.noAgreementsScanned'),
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       loc.translate('home.uploadOrScanAgreement'),
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                     const SizedBox(height: 14),
                     ElevatedButton.icon(
                       onPressed: () => onNavigate(const ScanScreen()),
-                      icon: const Icon(Icons.document_scanner_outlined, size: 15),
+                      icon:
+                          const Icon(Icons.document_scanner_outlined, size: 15),
                       label: Text(
                         loc.translate('home.scanNewDocument'),
-                        style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w700),
+                        style: GoogleFonts.plusJakartaSans(
+                            fontSize: 12.5, fontWeight: FontWeight.w600),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                        foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        backgroundColor: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
+                        foregroundColor: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: AppRadii.rounded12),
                       ),
                     ),
                   ],
@@ -205,8 +245,10 @@ class HomeLatestDocCard extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
-                borderRadius: BorderRadius.circular(14),
+                color: isDark
+                    ? AppColors.darkElevatedSurface
+                    : AppColors.lightElevatedSurface,
+                borderRadius: AppRadii.rounded16,
                 border: Border.all(
                   color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
@@ -221,25 +263,29 @@ class HomeLatestDocCard extends ConsumerWidget {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 3.5),
                             decoration: BoxDecoration(
-                              color: latestDoc.riskColor.withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(20),
+                              color:
+                                  latestDoc.riskColor.withValues(alpha: 0.12),
+                              borderRadius: AppRadii.rounded20,
                               border: Border.all(
-                                color: latestDoc.riskColor.withValues(alpha: 0.4),
+                                color:
+                                    latestDoc.riskColor.withValues(alpha: 0.4),
                               ),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(latestDoc.riskIcon, size: 12, color: latestDoc.riskColor),
+                                Icon(latestDoc.riskIcon,
+                                    size: 12, color: latestDoc.riskColor),
                                 const SizedBox(width: 4),
                                 Text(
                                   latestDoc.riskLabel,
-                                  style: GoogleFonts.inter(
+                                  style: GoogleFonts.plusJakartaSans(
                                     color: latestDoc.riskColor,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 10.5,
+                                    fontSize: 11,
                                   ),
                                 ),
                               ],
@@ -251,9 +297,11 @@ class HomeLatestDocCard extends ConsumerWidget {
                               '${latestDoc.sourceType} • ${latestDoc.dateText}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 11.5,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                           ),
@@ -264,20 +312,25 @@ class HomeLatestDocCard extends ConsumerWidget {
                         latestDoc.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         latestDoc.analysis.isNotEmpty
-                            ? loc.translate('home.clausesEvaluated', {'count': latestDoc.analysis.length.toString()})
+                            ? loc.translate('home.clausesEvaluated',
+                                {'count': latestDoc.analysis.length.toString()})
                             : loc.translate('home.assessmentComplete'),
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 12,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                     ],
@@ -285,7 +338,8 @@ class HomeLatestDocCard extends ConsumerWidget {
 
                   final actionButton = ElevatedButton.icon(
                     onPressed: () {
-                      if (latestDoc.analysis.isNotEmpty && latestDoc.originalText.isNotEmpty) {
+                      if (latestDoc.analysis.isNotEmpty &&
+                          latestDoc.originalText.isNotEmpty) {
                         onNavigate(
                           AnalysisScreen(
                             originalText: latestDoc.originalText,
@@ -304,13 +358,20 @@ class HomeLatestDocCard extends ConsumerWidget {
                     icon: const Icon(Icons.visibility_outlined, size: 15),
                     label: Text(
                       loc.translate('home.viewFullAnalysis'),
-                      style: GoogleFonts.inter(fontSize: 12.5, fontWeight: FontWeight.w700),
+                      style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12.5, fontWeight: FontWeight.w600),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                      foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      backgroundColor: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary,
+                      foregroundColor: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: AppRadii.rounded12),
                     ),
                   );
 

@@ -39,7 +39,8 @@ class WelcomeHeroSection extends ConsumerWidget {
     return AnimatedBuilder(
       animation: scrollController,
       builder: (context, _) {
-        final scrollOffset = scrollController.hasClients ? scrollController.offset : 0.0;
+        final scrollOffset =
+            scrollController.hasClients ? scrollController.offset : 0.0;
         final clampedScroll = scrollOffset.clamp(0.0, 450.0);
         final scrollProgress = clampedScroll / 450.0;
 
@@ -48,7 +49,8 @@ class WelcomeHeroSection extends ConsumerWidget {
         final titleShiftMid = scrollProgress * 8.0;
         final titleShiftThird = scrollProgress * 4.0;
         final docShift = scrollProgress * -14.0;
-        final sideWordInward = (1.0 - scrollProgress) * (isDesktop ? 30.0 : 14.0);
+        final sideWordInward =
+            (1.0 - scrollProgress) * (isDesktop ? 30.0 : 14.0);
 
         return Container(
           padding: EdgeInsets.symmetric(
@@ -68,12 +70,19 @@ class WelcomeHeroSection extends ConsumerWidget {
                     children: [
                       // Eyebrow Badge
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 6),
                         decoration: BoxDecoration(
-                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.2 : 0.08),
+                          color: (isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary)
+                              .withValues(alpha: isDark ? 0.2 : 0.08),
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                            color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.35 : 0.20),
+                            color: (isDark
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary)
+                                .withValues(alpha: isDark ? 0.35 : 0.20),
                           ),
                         ),
                         child: Row(
@@ -84,21 +93,27 @@ class WelcomeHeroSection extends ConsumerWidget {
                               height: 7,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                color: isDark
+                                    ? AppColors.darkAccent
+                                    : AppColors.lightPrimary,
                               ),
                             ),
                             const SizedBox(width: 8),
                             Flexible(
                               child: Text(
                                 isDesktop
-                                    ? loc.translate('welcome.heroEyebrowDesktop')
-                                    : loc.translate('welcome.heroEyebrowMobile'),
+                                    ? loc
+                                        .translate('welcome.heroEyebrowDesktop')
+                                    : loc
+                                        .translate('welcome.heroEyebrowMobile'),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w700,
-                                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                  color: isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary,
                                   letterSpacing: 0.8,
                                 ),
                               ),
@@ -137,10 +152,12 @@ class WelcomeHeroSection extends ConsumerWidget {
                         child: Text(
                           loc.translate('welcome.heroNarrative'),
                           textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: isDesktop ? 15.0 : 13.5,
                             height: 1.6,
-                            color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
                           ),
                         ),
                       ),
@@ -157,10 +174,16 @@ class WelcomeHeroSection extends ConsumerWidget {
                           ElevatedButton(
                             onPressed: onGetStarted,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                              foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
-                              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 15),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              backgroundColor: isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary,
+                              foregroundColor: isDark
+                                  ? AppColors.darkErrorText
+                                  : AppColors.lightTextPrimary,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 28, vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                               elevation: 0,
                             ),
                             child: Row(
@@ -168,32 +191,44 @@ class WelcomeHeroSection extends ConsumerWidget {
                               children: [
                                 Text(
                                   loc.translate('welcome.getStarted'),
-                                  style: GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w700),
+                                  style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w700),
                                 ),
                                 const SizedBox(width: 8),
-                                const Icon(Icons.arrow_forward_rounded, size: 16),
+                                const Icon(Icons.arrow_forward_rounded,
+                                    size: 16),
                               ],
                             ),
                           ),
                           TextButton(
                             onPressed: onSignIn,
                             style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                              foregroundColor: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 12),
+                              foregroundColor: isDark
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
                             ),
                             child: RichText(
                               text: TextSpan(
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.plusJakartaSans(
                                   fontSize: 13.5,
-                                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.lightTextSecondary,
                                 ),
                                 children: [
-                                  TextSpan(text: loc.translate('welcome.alreadyHaveAccount')),
+                                  TextSpan(
+                                      text: loc.translate(
+                                          'welcome.alreadyHaveAccount')),
                                   TextSpan(
                                     text: loc.translate('welcome.signInAction'),
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
-                                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                      color: isDark
+                                          ? AppColors.darkAccent
+                                          : AppColors.lightPrimary,
                                       decoration: TextDecoration.underline,
                                     ),
                                   ),
@@ -218,7 +253,10 @@ class WelcomeHeroSection extends ConsumerWidget {
                           return Opacity(
                             opacity: sideWordsAnim.value.clamp(0.0, 1.0),
                             child: Transform.translate(
-                              offset: Offset(-sideWordInward + (1.0 - sideWordsAnim.value) * -20.0, 0),
+                              offset: Offset(
+                                  -sideWordInward +
+                                      (1.0 - sideWordsAnim.value) * -20.0,
+                                  0),
                               child: child,
                             ),
                           );
@@ -245,7 +283,10 @@ class WelcomeHeroSection extends ConsumerWidget {
                           return Opacity(
                             opacity: sideWordsAnim.value.clamp(0.0, 1.0),
                             child: Transform.translate(
-                              offset: Offset(sideWordInward + (1.0 - sideWordsAnim.value) * 20.0, 0),
+                              offset: Offset(
+                                  sideWordInward +
+                                      (1.0 - sideWordsAnim.value) * 20.0,
+                                  0),
                               child: child,
                             ),
                           );
@@ -279,18 +320,21 @@ class WelcomeHeroSection extends ConsumerWidget {
   ) {
     final fontSize = isDesktop ? 68.0 : (isTablet ? 46.0 : 30.0);
 
-    final backOffsetY = (isDesktop ? 18.0 : (isTablet ? 12.0 : 9.0)) + shiftBack;
+    final backOffsetY =
+        (isDesktop ? 18.0 : (isTablet ? 12.0 : 9.0)) + shiftBack;
     final secOffsetY = (isDesktop ? 12.0 : (isTablet ? 8.0 : 6.0)) + shiftMid;
-    final thirdOffsetY = (isDesktop ? 6.0 : (isTablet ? 4.0 : 3.0)) + shiftThird;
+    final thirdOffsetY =
+        (isDesktop ? 6.0 : (isTablet ? 4.0 : 3.0)) + shiftThird;
 
-    final baseStyle = GoogleFonts.inter(
+    final baseStyle = GoogleFonts.plusJakartaSans(
       fontSize: fontSize,
       fontWeight: FontWeight.w900,
       height: 1.05,
       letterSpacing: -1.5,
     );
 
-    Widget buildHeadlineLine(String lineText, Animation<double> anim, {String? prefix, String? accentWord, String? suffix}) {
+    Widget buildHeadlineLine(String lineText, Animation<double> anim,
+        {String? prefix, String? accentWord, String? suffix}) {
       return ClipRect(
         child: AnimatedBuilder(
           animation: anim,
@@ -314,7 +358,9 @@ class WelcomeHeroSection extends ConsumerWidget {
                   lineText,
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(
-                    color: (isDark ? AppColors.darkSurface : AppColors.lightBorder).withValues(alpha: 0.5),
+                    color:
+                        (isDark ? AppColors.darkSurface : AppColors.lightBorder)
+                            .withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -326,7 +372,10 @@ class WelcomeHeroSection extends ConsumerWidget {
                   lineText,
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(
-                    color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.4),
+                    color: (isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.4),
                   ),
                 ),
               ),
@@ -338,7 +387,9 @@ class WelcomeHeroSection extends ConsumerWidget {
                   lineText,
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(
-                    color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+                    color:
+                        (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+                            .withValues(alpha: 0.3),
                   ),
                 ),
               ),
@@ -349,14 +400,18 @@ class WelcomeHeroSection extends ConsumerWidget {
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     style: baseStyle.copyWith(
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                     ),
                     children: [
                       if (prefix != null) TextSpan(text: prefix),
                       TextSpan(
                         text: accentWord,
                         style: TextStyle(
-                          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                          color: isDark
+                              ? AppColors.darkAccent
+                              : AppColors.lightPrimary,
                         ),
                       ),
                       if (suffix != null) TextSpan(text: suffix),
@@ -368,7 +423,9 @@ class WelcomeHeroSection extends ConsumerWidget {
                   lineText,
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                   ),
                 ),
             ],
@@ -381,14 +438,16 @@ class WelcomeHeroSection extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        buildHeadlineLine(loc.translate('welcome.headlineLine1'), headlineLine1),
+        buildHeadlineLine(
+            loc.translate('welcome.headlineLine1'), headlineLine1),
         buildHeadlineLine(
           loc.translate('welcome.headlineLine2Full'),
           headlineLine2,
           prefix: loc.translate('welcome.headlineLine2Prefix'),
           accentWord: loc.translate('welcome.headlineLine2Accent'),
         ),
-        buildHeadlineLine(loc.translate('welcome.headlineLine3'), headlineLine3),
+        buildHeadlineLine(
+            loc.translate('welcome.headlineLine3'), headlineLine3),
       ],
     );
   }
@@ -405,7 +464,7 @@ class WelcomeHeroSection extends ConsumerWidget {
           padding: EdgeInsets.symmetric(vertical: isDesktop ? 12.0 : 7.0),
           child: Text(
             word,
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: isDesktop ? 26.0 : (isTablet ? 18.0 : 12.0),
               fontWeight: FontWeight.w900,
               letterSpacing: isDesktop ? 5.5 : 3.5,

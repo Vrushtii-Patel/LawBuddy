@@ -43,10 +43,12 @@ class TopNavBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final user = authState.user;
-    final String userName = (user?.fullName != null && user!.fullName.trim().isNotEmpty)
-        ? user.fullName.trim()
-        : 'User';
-    final String initial = userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
+    final String userName =
+        (user?.fullName != null && user!.fullName.trim().isNotEmpty)
+            ? user.fullName.trim()
+            : 'User';
+    final String initial =
+        userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -67,7 +69,9 @@ class TopNavBar extends ConsumerWidget {
               IconButton(
                 icon: Icon(
                   Icons.menu_rounded,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
                 onPressed: () => scaffoldKey.currentState?.openDrawer(),
                 tooltip: 'Menu',
@@ -75,10 +79,12 @@ class TopNavBar extends ConsumerWidget {
               const SizedBox(width: 6),
               Text(
                 'LawBuddy',
-                style: GoogleFonts.inter(
-                  fontSize: 16.5,
-                  fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w700,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                   letterSpacing: -0.3,
                 ),
               ),
@@ -86,23 +92,27 @@ class TopNavBar extends ConsumerWidget {
           ),
           InkWell(
             onTap: () => showProfileDialog(context, ref),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: AppRadii.rounded20,
             child: Container(
               padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                  width: 1.5,
+                  width: 1.0,
                 ),
               ),
               child: CircleAvatar(
                 radius: 14,
-                backgroundColor: (isDark ? AppColors.darkAccent : AppColors.lightPrimary).withValues(alpha: 0.15),
+                backgroundColor:
+                    (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                        .withValues(alpha: 0.15),
                 child: Text(
                   initial,
-                  style: TextStyle(
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  style: GoogleFonts.plusJakartaSans(
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                     fontWeight: FontWeight.w700,
                     fontSize: 11,
                   ),
@@ -139,7 +149,7 @@ class HeaderGreeting extends ConsumerWidget {
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: AppRadii.rounded20,
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           width: 1,
@@ -170,23 +180,32 @@ class HeaderGreeting extends ConsumerWidget {
                   children: [
                     // Eyebrow Tag
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3.5),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.2 : 0.08),
-                        borderRadius: BorderRadius.circular(20),
+                        color: (isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
+                            .withValues(alpha: isDark ? 0.2 : 0.08),
+                        borderRadius: AppRadii.rounded20,
                         border: Border.all(
-                          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: isDark ? 0.35 : 0.2),
+                          color: (isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary)
+                              .withValues(alpha: isDark ? 0.35 : 0.2),
                         ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                            width: 5.5,
-                            height: 5.5,
+                            width: 6,
+                            height: 6,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                              color: isDark
+                                  ? AppColors.darkAccent
+                                  : AppColors.lightPrimary,
                             ),
                           ),
                           const SizedBox(width: 6),
@@ -195,11 +214,13 @@ class HeaderGreeting extends ConsumerWidget {
                               loc.translate('home.heroTag'),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.inter(
-                                fontSize: 9.5,
+                              style: GoogleFonts.plusJakartaSans(
+                                fontSize: 10,
                                 fontWeight: FontWeight.w700,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
-                                letterSpacing: 0.8,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightPrimary,
+                                letterSpacing: 0.6,
                               ),
                             ),
                           ),
@@ -210,29 +231,34 @@ class HeaderGreeting extends ConsumerWidget {
 
                     // Greeting Headline
                     Text(
-                      loc.translate('home.greeting', {'greeting': _getGreeting(ref), 'name': userName}),
-                      style: GoogleFonts.inter(
-                        fontSize: isDesktop ? 24 : 19,
-                        fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                      loc.translate('home.greeting',
+                          {'greeting': _getGreeting(ref), 'name': userName}),
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: isDesktop ? 24 : 20,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                         letterSpacing: -0.4,
+                        height: 1.25,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
 
                     // Workspace Subtitle
                     Text(
                       loc.translate('home.heroSub'),
-                      style: GoogleFonts.inter(
-                        fontSize: isDesktop ? 13 : 12,
-                        height: 1.4,
-                        color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: isDesktop ? 13.5 : 12.5,
+                        height: 1.45,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
                 ),
               ),
-
               if (showIllustration) ...[
                 const SizedBox(width: 24),
                 SizedBox(
@@ -240,8 +266,11 @@ class HeaderGreeting extends ConsumerWidget {
                   height: 80,
                   child: CustomPaint(
                     painter: LegalPropertyIllustrationPainter(
-                      accentBlue: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                      accentGold: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      accentBlue: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary,
+                      accentGold:
+                          isDark ? AppColors.darkAccent : AppColors.lightAccent,
                       isDark: isDark,
                     ),
                   ),

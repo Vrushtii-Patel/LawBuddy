@@ -64,10 +64,12 @@ class WelcomeCtaBanner extends ConsumerWidget {
                           children: [
                             Text(
                               title,
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 28,
                                 fontWeight: FontWeight.w800,
-                                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                                color: isDark
+                                    ? AppColors.darkTextPrimary
+                                    : AppColors.lightTextPrimary,
                                 height: 1.2,
                                 letterSpacing: -0.5,
                               ),
@@ -75,10 +77,12 @@ class WelcomeCtaBanner extends ConsumerWidget {
                             const SizedBox(height: 10),
                             Text(
                               subtitle,
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 14.5,
                                 height: 1.45,
-                                color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                                color: isDark
+                                    ? AppColors.darkTextSecondary
+                                    : AppColors.lightTextSecondary,
                               ),
                             ),
                           ],
@@ -91,31 +95,45 @@ class WelcomeCtaBanner extends ConsumerWidget {
                             onPressed: onExploreFeatures,
                             style: OutlinedButton.styleFrom(
                               side: BorderSide(
-                                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                                color: isDark
+                                    ? AppColors.darkBorder
+                                    : AppColors.lightBorder,
                                 width: 1.2,
                               ),
-                              foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              foregroundColor: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Text(
                               exploreText,
-                              style: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w600),
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 14.5, fontWeight: FontWeight.w600),
                             ),
                           ),
                           const SizedBox(width: 12),
                           ElevatedButton(
                             onPressed: onAnalyzeDoc,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightTextPrimary,
-                              foregroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              backgroundColor: isDark
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightTextPrimary,
+                              foregroundColor: isDark
+                                  ? AppColors.darkSurface
+                                  : AppColors.lightSurface,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                               elevation: 0,
                             ),
                             child: Text(
                               analyzeText,
-                              style: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w700),
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 14.5, fontWeight: FontWeight.w700),
                             ),
                           ),
                         ],
@@ -127,10 +145,12 @@ class WelcomeCtaBanner extends ConsumerWidget {
                     children: [
                       Text(
                         title,
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
-                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                           height: 1.2,
                           letterSpacing: -0.4,
                         ),
@@ -138,25 +158,33 @@ class WelcomeCtaBanner extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Text(
                         subtitle,
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.plusJakartaSans(
                           fontSize: 13.5,
                           height: 1.45,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
                         ),
                       ),
                       const SizedBox(height: 22),
                       ElevatedButton(
                         onPressed: onAnalyzeDoc,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightTextPrimary,
-                          foregroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                          backgroundColor: isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightTextPrimary,
+                          foregroundColor: isDark
+                              ? AppColors.darkSurface
+                              : AppColors.lightSurface,
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
                           elevation: 0,
                         ),
                         child: Text(
                           analyzeText,
-                          style: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w700),
+                          style: GoogleFonts.plusJakartaSans(
+                              fontSize: 14.5, fontWeight: FontWeight.w700),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -164,16 +192,22 @@ class WelcomeCtaBanner extends ConsumerWidget {
                         onPressed: onExploreFeatures,
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorder,
                             width: 1.2,
                           ),
-                          foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                          foregroundColor: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                           padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
                         ),
                         child: Text(
                           exploreText,
-                          style: GoogleFonts.inter(fontSize: 14.5, fontWeight: FontWeight.w600),
+                          style: GoogleFonts.plusJakartaSans(
+                              fontSize: 14.5, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ],

@@ -16,10 +16,13 @@ class PrivacyPolicyScreen extends ConsumerWidget {
     final currentLanguage = ref.watch(localeProvider);
     final isHindi = currentLanguage == AppLanguage.hindi;
 
-    final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final bgColor =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
     final cardColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
-    final primaryTextColor = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final secondaryTextColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final primaryTextColor =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final secondaryTextColor =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
     final accentColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
 
@@ -47,7 +50,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
             const SizedBox(width: 8),
             Text(
               'LawBuddy',
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
                 color: primaryTextColor,
@@ -74,15 +77,17 @@ class PrivacyPolicyScreen extends ConsumerWidget {
               children: [
                 // Header Badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: accentColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: accentColor.withValues(alpha: 0.3)),
+                    border:
+                        Border.all(color: accentColor.withValues(alpha: 0.3)),
                   ),
                   child: Text(
                     isHindi ? 'कानूनी दस्तावेज' : 'LEGAL & PRIVACY',
-                    style: GoogleFonts.inter(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.8,
@@ -95,7 +100,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                 // Main Title
                 Text(
                   isHindi ? 'गोपनीयता नीति' : 'Privacy Policy',
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: isDesktop ? 34 : 26,
                     fontWeight: FontWeight.w800,
                     color: primaryTextColor,
@@ -106,8 +111,10 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 // Last Updated
                 Text(
-                  isHindi ? 'अंतिम अद्यतन: 15 सितंबर 2026' : 'Last Updated: 15 September 2026',
-                  style: GoogleFonts.inter(
+                  isHindi
+                      ? 'अंतिम अद्यतन: 15 सितंबर 2026'
+                      : 'Last Updated: 15 September 2026',
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: accentColor,
@@ -126,15 +133,18 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.privacy_tip_outlined, color: accentColor, size: 22),
+                      Icon(Icons.privacy_tip_outlined,
+                          color: accentColor, size: 22),
                       const SizedBox(width: 14),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              isHindi ? 'आपकी गोपनीयता और डेटा पारदर्शिता' : 'Privacy & Data Handling Overview',
-                              style: GoogleFonts.inter(
+                              isHindi
+                                  ? 'आपकी गोपनीयता और डेटा पारदर्शिता'
+                                  : 'Privacy & Data Handling Overview',
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color: primaryTextColor,
@@ -145,7 +155,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                               isHindi
                                   ? 'LawBuddy आपके संपत्ति दस्तावेजों और व्यक्तिगत डेटा के प्रसंस्करण के बारे में पारदर्शी रहने के लिए प्रतिबद्ध है। यह नीति बताती है कि डेटा कैसे एकत्र, संग्रहीत और संसाधित किया जाता है।'
                                   : 'LawBuddy is committed to transparency regarding how your property documents and account data are processed, stored, and analyzed by our AI and OCR technology.',
-                              style: GoogleFonts.inter(
+                              style: GoogleFonts.plusJakartaSans(
                                 fontSize: 12.5,
                                 height: 1.5,
                                 color: secondaryTextColor,
@@ -173,7 +183,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '2',
-                  title: isHindi ? 'हम कौन सी जानकारी एकत्र करते हैं (Information We Collect)' : 'Information We Collect',
+                  title: isHindi
+                      ? 'हम कौन सी जानकारी एकत्र करते हैं (Information We Collect)'
+                      : 'Information We Collect',
                   content: isHindi
                       ? 'वर्तमान एप्लिकेशन कार्यान्वयन के आधार पर, हम निम्नलिखित जानकारी एकत्र और संग्रहीत करते हैं:\n\n'
                           '• खाता जानकारी (Account Information): आपका पूरा नाम, ईमेल पता, पासवर्ड हैश (bcrypt के माध्यम से एन्क्रिप्टेड), वैकल्पिक फ़ोन नंबर, प्रोफ़ाइल अवतार संदर्भ, और खाता टाइमस्टैम्प (निर्माण, अंतिम लॉगिन)।\n'
@@ -200,7 +212,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '3',
-                  title: isHindi ? 'हम आपकी जानकारी का उपयोग कैसे करते हैं (How We Use Your Information)' : 'How We Use Your Information',
+                  title: isHindi
+                      ? 'हम आपकी जानकारी का उपयोग कैसे करते हैं (How We Use Your Information)'
+                      : 'How We Use Your Information',
                   content: isHindi
                       ? 'हम LawBuddy प्लेटफ़ॉर्म सुविधाओं को प्रदान करने और संचालित करने के लिए एकत्र की गई जानकारी का उपयोग करते हैं:\n\n'
                           '• JSON Web Tokens (JWT) का उपयोग करके आपके उपयोगकर्ता खाता सत्र को प्रमाणित करने के लिए।\n'
@@ -223,7 +237,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '4',
-                  title: isHindi ? 'कानूनी दस्तावेज और व्यक्तिगत डेटा (Legal Documents and Personal Data)' : 'Legal Documents and Personal Data',
+                  title: isHindi
+                      ? 'कानूनी दस्तावेज और व्यक्तिगत डेटा (Legal Documents and Personal Data)'
+                      : 'Legal Documents and Personal Data',
                   content: isHindi
                       ? 'अपलोड किए गए संपत्ति और कानूनी दस्तावेज़ों में अक्सर व्यक्तिगत जानकारी होती है, जिसमें शामिल हैं लेकिन इन्हीं तक सीमित नहीं हैं:\n\n'
                           '• खरीदारों, विक्रेताओं, मकान मालिकों, किरायेदारों, गवाहों या प्रतिनिधियों के नाम\n'
@@ -248,7 +264,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '5',
-                  title: isHindi ? 'एआई-संचालित प्रसंस्करण (AI-Powered Processing)' : 'AI-Powered Processing & Gemini Disclosure',
+                  title: isHindi
+                      ? 'एआई-संचालित प्रसंस्करण (AI-Powered Processing)'
+                      : 'AI-Powered Processing & Gemini Disclosure',
                   content: isHindi
                       ? 'स्वचालित अनुबंध समीक्षा और संवादात्मक कानूनी मार्गदर्शन प्रदान करने के लिए, LawBuddy जनरेटिव AI सेवाओं (Google Gemini API) का उपयोग करता है:\n\n'
                           '• प्रसंस्करण के लिए ट्रांसमिशन (Transmission for Processing): जब आप AI-संचालित दस्तावेज़ विश्लेषण का अनुरोध करते हैं या Legal AI सहायक में प्रश्न पूछते हैं, तो सामग्री को संसाधित करने और जोखिम मूल्यांकन, वैधानिक उद्धरण और प्रासंगिक प्रतिक्रियाएं उत्पन्न करने के लिए प्रासंगिक निकाला गया पाठ, खंडित खंड या दस्तावेज़ चित्र Google के Gemini API को प्रेषित किए जाते हैं।\n'
@@ -267,7 +285,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '6',
-                  title: isHindi ? 'दस्तावेज़ भंडारण और सुरक्षा (Document Storage and Security)' : 'Document Storage and Security',
+                  title: isHindi
+                      ? 'दस्तावेज़ भंडारण और सुरक्षा (Document Storage and Security)'
+                      : 'Document Storage and Security',
                   content: isHindi
                       ? 'हम आपकी जानकारी की सुरक्षा के लिए उचित तकनीकी और संगठनात्मक उपाय लागू करते हैं:\n\n'
                           '• प्रमाणीकरण और पासवर्ड (Authentication & Passwords): उपयोगकर्ता पासवर्ड भंडारण से पहले bcrypt हैशिंग का उपयोग करके एन्क्रिप्ट किए जाते हैं। उपयोगकर्ता सत्रों को JSON Web Tokens (JWT) का उपयोग करके सत्यापित किया जाता है।\n'
@@ -286,7 +306,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '7',
-                  title: isHindi ? 'तृतीय-पक्ष सेवाएं (Third-Party Services)' : 'Third-Party Services & OCR Processing',
+                  title: isHindi
+                      ? 'तृतीय-पक्ष सेवाएं (Third-Party Services)'
+                      : 'Third-Party Services & OCR Processing',
                   content: isHindi
                       ? 'LawBuddy अपनी सुविधाएं प्रदान करने के लिए विशिष्ट तृतीय-पक्ष प्रौद्योगिकियों को एकीकृत करता है:\n\n'
                           '• Google ML Kit (On-Device OCR): समर्थित मोबाइल उपकरणों (Android/iOS) पर, विश्लेषण से पहले कच्चा पाठ निकालने के लिए Google ML Kit का उपयोग करके भौतिक दस्तावेज़ों के कैमरा कैप्चर को डिवाइस पर स्थानीय रूप से संसाधित किया जाता है।\n'
@@ -305,7 +327,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '8',
-                  title: isHindi ? 'डेटा प्रतिधारण और हटाना (Data Retention & Deletion)' : 'Data Retention & Deletion',
+                  title: isHindi
+                      ? 'डेटा प्रतिधारण और हटाना (Data Retention & Deletion)'
+                      : 'Data Retention & Deletion',
                   content: isHindi
                       ? 'हम आपकी खाता जानकारी, सहेजे गए दस्तावेज़ रिकॉर्ड, चैट बातचीत और चेकलिस्ट को तब तक बनाए रखते हैं जब तक आपका खाता डेटाबेस में मौजूद है।\n\n'
                           '• दस्तावेज़ हटाना (Document Deletion): आप ऐप में Recent Documents अनुभाग से सीधे अलग-अलग दस्तावेज़ रिकॉर्ड हटा सकते हैं, जो डेटाबेस से दस्तावेज़ रिकॉर्ड को हटा देता है।\n'
@@ -322,7 +346,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '9',
-                  title: isHindi ? 'आपके गोपनीयता अधिकार (Your Privacy Rights)' : 'Your Privacy Rights',
+                  title: isHindi
+                      ? 'आपके गोपनीयता अधिकार (Your Privacy Rights)'
+                      : 'Your Privacy Rights',
                   content: isHindi
                       ? 'Digital Personal Data Protection Act, 2023 सहित लागू भारतीय डेटा सुरक्षा सिद्धांतों के अनुसार:\n\n'
                           '• आप सीधे एप्लिकेशन के भीतर अपने सहेजे गए दस्तावेज़ों, विश्लेषण निष्कर्षों और चेकलिस्ट की समीक्षा कर सकते हैं।\n'
@@ -341,7 +367,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '10',
-                  title: isHindi ? 'डिवाइस संग्रहण और प्राथमिकताएं (Device Storage & Preferences)' : 'Device Storage, Preferences & Cookies',
+                  title: isHindi
+                      ? 'डिवाइस संग्रहण और प्राथमिकताएं (Device Storage & Preferences)'
+                      : 'Device Storage, Preferences & Cookies',
                   content: isHindi
                       ? 'LawBuddy आवश्यक संचालन सुनिश्चित करने के लिए आपके डिवाइस पर स्थानीय भंडारण तंत्र (SharedPreferences के माध्यम से, जो Flutter Web पर ब्राउज़र स्टोरेज में सुरक्षित रूप से मैप होता है) का उपयोग करता है:\n\n'
                           '• कड़ाई से आवश्यक सत्र डेटा (Strictly Necessary Session Data): आपके साइन-इन सत्र को बनाए रखने और दस्तावेज़ विश्लेषण अनुरोधों को अधिकृत करने के लिए प्रमाणीकरण जानकारी स्थानीय रूप से संग्रहीत की जाती है। यह डेटा खाता सुरक्षा के लिए आवश्यक है।\n'
@@ -373,8 +401,10 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          isHindi ? 'अपनी स्थानीय संग्रहण और कुकी प्राथमिकताएं प्रबंधित करें' : 'Manage your local storage and cookie preferences',
-                          style: GoogleFonts.inter(
+                          isHindi
+                              ? 'अपनी स्थानीय संग्रहण और कुकी प्राथमिकताएं प्रबंधित करें'
+                              : 'Manage your local storage and cookie preferences',
+                          style: GoogleFonts.plusJakartaSans(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w600,
                             color: primaryTextColor,
@@ -387,12 +417,17 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: primaryTextColor,
                           side: BorderSide(color: borderColor),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
                         child: Text(
-                          isHindi ? 'प्राथमिकताएं प्रबंधित करें' : 'Manage Preferences',
-                          style: GoogleFonts.inter(fontSize: 11.5, fontWeight: FontWeight.w700),
+                          isHindi
+                              ? 'प्राथमिकताएं प्रबंधित करें'
+                              : 'Manage Preferences',
+                          style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11.5, fontWeight: FontWeight.w700),
                         ),
                       ),
                     ],
@@ -401,7 +436,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '11',
-                  title: isHindi ? "बच्चों की गोपनीयता (Children's Privacy)" : "Children's Privacy",
+                  title: isHindi
+                      ? "बच्चों की गोपनीयता (Children's Privacy)"
+                      : "Children's Privacy",
                   content: isHindi
                       ? 'LawBuddy वयस्क व्यक्तियों, संपत्ति खरीदारों, किरायेदारों और रियल एस्टेट समझौतों का प्रबंधन करने वाले संपत्ति मालिकों के लिए डिज़ाइन किया गया है। हम जानबूझकर 18 वर्ष से कम आयु के व्यक्तियों से व्यक्तिगत डेटा एकत्र नहीं करते हैं।'
                       : 'LawBuddy is designed for adult individuals, property buyers, tenants, and property owners managing real estate agreements. We do not intentionally or knowingly collect personal data from individuals under 18 years of age.',
@@ -412,7 +449,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '12',
-                  title: isHindi ? 'कानूनी अस्वीकरण (Legal Disclaimer)' : 'Legal Disclaimer & Non-Advocate Notice',
+                  title: isHindi
+                      ? 'कानूनी अस्वीकरण (Legal Disclaimer)'
+                      : 'Legal Disclaimer & Non-Advocate Notice',
                   content: isHindi
                       ? 'महत्वपूर्ण सूचना: LawBuddy केवल प्रारंभिक जागरूकता और सूचनात्मक उद्देश्यों के लिए स्वचालित दस्तावेज़ विश्लेषण और कानूनी जानकारी प्रदान करता है। LawBuddy कोई कानूनी फर्म (law firm) नहीं है और औपचारिक कानूनी सलाह, कानूनी प्रतिनिधित्व या अधिवक्ता-ग्राहक विशेषाधिकार प्राप्त परामर्श (advocate-client privileged counsel) प्रदान नहीं करता है।\n\n'
                           'संपत्ति कानून, नगरपालिका नियम और स्टाम्प शुल्क दरें भारतीय राज्यों में भिन्न होती हैं और समय के साथ बदल सकती हैं। औपचारिक संपत्ति हस्तांतरण (property conveyance), शीर्षक खोज (title searches), मुकदमेबाजी, पंजीकरण या उच्च-मूल्य वाले अनुबंधों के निष्पादन के लिए, उपयोगकर्ताओं को एक लाइसेंस प्राप्त अधिवक्ता या योग्य कानूनी पेशेवर से परामर्श करना चाहिए।'
@@ -425,7 +464,9 @@ class PrivacyPolicyScreen extends ConsumerWidget {
 
                 _buildPolicySection(
                   number: '13',
-                  title: isHindi ? 'गोपनीयता नीति में परिवर्तन (Changes to This Privacy Policy)' : 'Changes to This Privacy Policy',
+                  title: isHindi
+                      ? 'गोपनीयता नीति में परिवर्तन (Changes to This Privacy Policy)'
+                      : 'Changes to This Privacy Policy',
                   content: isHindi
                       ? 'हम अपने कार्यान्वयन, प्रौद्योगिकी स्टैक या वैधानिक आवश्यकताओं में परिवर्तनों को दर्शाने के लिए समय-समय पर इस गोपनीयता नीति को अपडेट कर सकते हैं। जब अपडेट होते हैं, तो इस नीति के शीर्ष पर "अंतिम अद्यतन" (Last Updated) तिथि को संशोधित किया जाएगा।'
                       : 'We may update this Privacy Policy from time to time to reflect changes in our implementation, technology stack, or statutory requirements. When updates occur, the "Last Updated" date at the top of this policy will be revised.',
@@ -462,13 +503,16 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                     icon: const Icon(Icons.arrow_back_rounded, size: 16),
                     label: Text(
                       isHindi ? 'वापस जाएं' : 'Back to LawBuddy',
-                      style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                      style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w600),
                     ),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: primaryTextColor,
                       side: BorderSide(color: borderColor),
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                   ),
                 ),
@@ -507,7 +551,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
                 alignment: Alignment.center,
                 child: Text(
                   number,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
                     color: accentColor,
@@ -518,7 +562,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                     color: primaryColor,
@@ -532,7 +576,7 @@ class PrivacyPolicyScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(left: 40),
             child: Text(
               content,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 13.5,
                 height: 1.55,
                 color: secondaryColor,

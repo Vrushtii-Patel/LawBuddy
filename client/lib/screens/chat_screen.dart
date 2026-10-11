@@ -23,7 +23,8 @@ class ChatScreen extends ConsumerStatefulWidget {
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStateMixin {
+class _ChatScreenState extends ConsumerState<ChatScreen>
+    with TickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -42,7 +43,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
   void initState() {
     super.initState();
     _loadSessions();
-    if (widget.initialPrompt != null && widget.initialPrompt!.trim().isNotEmpty) {
+    if (widget.initialPrompt != null &&
+        widget.initialPrompt!.trim().isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _sendMessage(textOverride: widget.initialPrompt);
       });
@@ -101,7 +103,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
       debugPrint('Error loading chat session details: $e');
       if (mounted) {
         final loc = ref.read(localeProvider.notifier);
-        AppToast.showError(context, loc.translate('chat.loadSessionDetailsError'));
+        AppToast.showError(
+            context, loc.translate('chat.loadSessionDetailsError'));
       }
     }
   }
@@ -113,28 +116,37 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
       builder: (ctx) {
         final isDark = Theme.of(ctx).brightness == Brightness.dark;
         return AlertDialog(
-          backgroundColor: isDark ? AppColors.darkElevatedSurface : AppColors.lightElevatedSurface,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          backgroundColor: isDark
+              ? AppColors.darkElevatedSurface
+              : AppColors.lightElevatedSurface,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Row(
             children: [
-              Icon(Icons.delete_outline_rounded, color: isDark ? AppColors.darkError : AppColors.lightError, size: 22),
+              Icon(Icons.delete_outline_rounded,
+                  color: isDark ? AppColors.darkError : AppColors.lightError,
+                  size: 22),
               const SizedBox(width: 8),
               Text(
                 loc.translate('chat.deleteTitle'),
-                style: GoogleFonts.inter(
+                style: GoogleFonts.plusJakartaSans(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
                 ),
               ),
             ],
           ),
           content: Text(
             loc.translate('chat.deleteContent'),
-            style: GoogleFonts.inter(
+            style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               height: 1.4,
-              color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
             ),
           ),
           actions: [
@@ -142,19 +154,25 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
               onPressed: () => Navigator.of(ctx).pop(false),
               child: Text(
                 loc.translate('common.cancel'),
-                style: GoogleFonts.inter(
-                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                style: GoogleFonts.plusJakartaSans(
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
                 ),
               ),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkError : AppColors.lightError,
+                backgroundColor:
+                    isDark ? AppColors.darkError : AppColors.lightError,
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
               ),
               onPressed: () => Navigator.of(ctx).pop(true),
-              child: Text(loc.translate('chat.deleteAction'), style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
+              child: Text(loc.translate('chat.deleteAction'),
+                  style:
+                      GoogleFonts.plusJakartaSans(fontWeight: FontWeight.bold)),
             ),
           ],
         );
@@ -171,7 +189,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
           _clearChat();
         }
       });
-      AppToast.showSuccess(context, loc.translate('chat.deletedToast'), duration: const Duration(seconds: 2));
+      AppToast.showSuccess(context, loc.translate('chat.deletedToast'),
+          duration: const Duration(seconds: 2));
     }
   }
 
@@ -200,7 +219,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
     }
 
     final now = DateTime.now();
-    final timeStr = "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
+    final timeStr =
+        "${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}";
 
     setState(() {
       _messages.add({
@@ -224,9 +244,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
           .toList();
 
       final res = await ApiService.chat(history, sessionId: _currentSessionId);
-      
+
       final replyTime = DateTime.now();
-      final replyTimeStr = "${replyTime.hour.toString().padLeft(2, '0')}:${replyTime.minute.toString().padLeft(2, '0')}";
+      final replyTimeStr =
+          "${replyTime.hour.toString().padLeft(2, '0')}:${replyTime.minute.toString().padLeft(2, '0')}";
 
       if (mounted) {
         final loc = ref.read(localeProvider.notifier);
@@ -251,7 +272,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
       if (mounted) {
         final loc = ref.read(localeProvider.notifier);
         final errTime = DateTime.now();
-        final errTimeStr = "${errTime.hour.toString().padLeft(2, '0')}:${errTime.minute.toString().padLeft(2, '0')}";
+        final errTimeStr =
+            "${errTime.hour.toString().padLeft(2, '0')}:${errTime.minute.toString().padLeft(2, '0')}";
         setState(() {
           _isTyping = false;
           _messages.add({
@@ -292,7 +314,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
+      backgroundColor:
+          isDark ? AppColors.darkBackground : AppColors.lightBackground,
       endDrawer: ChatHistoryDrawer(
         isDark: isDark,
         loc: loc,
@@ -331,7 +354,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
                                   loc: loc,
                                   isMobile: isMobile,
                                   isDesktop: isDesktop,
-                                  onPromptSelected: (p) => _sendMessage(textOverride: p),
+                                  onPromptSelected: (p) =>
+                                      _sendMessage(textOverride: p),
                                 )
                               : ListView.builder(
                                   controller: _scrollController,
@@ -344,9 +368,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
                                   itemBuilder: (context, index) {
                                     final msg = _messages[index];
                                     return AnimatedMessageBubble(
-                                      key: ValueKey('${msg['role']}_${msg['time']}_$index'),
+                                      key: ValueKey(
+                                          '${msg['role']}_${msg['time']}_$index'),
                                       message: msg,
-                                      onSuggestionTap: (s) => _sendMessage(textOverride: s),
+                                      onSuggestionTap: (s) =>
+                                          _sendMessage(textOverride: s),
                                       onScrollRequest: _scrollToBottom,
                                     );
                                   },
@@ -354,7 +380,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
                         ),
                         if (_isTyping)
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: isMobile ? 16 : 32),
                             child: const TypingIndicator(),
                           ),
                         ChatInput(
@@ -411,14 +438,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
                 children: [
                   Icon(
                     Icons.arrow_back_rounded,
-                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
                     size: 18,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     loc.translate('common.back'),
-                    style: GoogleFonts.inter(
-                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    style: GoogleFonts.plusJakartaSans(
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                     ),
@@ -432,12 +463,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
           if (isDesktopOrTablet)
             Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
+                  color:
+                      (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                          .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color:
+                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
                   ),
                 ),
                 child: Row(
@@ -448,16 +483,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with TickerProviderStat
                       height: 6,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightAccent,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       loc.translate('chat.topBarBadge'),
-                      style: GoogleFonts.inter(
+                      style: GoogleFonts.plusJakartaSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
-                        color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightAccent,
                         letterSpacing: 0.9,
                       ),
                     ),
