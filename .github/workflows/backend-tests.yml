@@ -17,10 +17,21 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    # Tests use a disposable secret; never inject production credentials into CI.
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    # Tests use a disposable database and secret; never inject production credentials into CI.
     env:
       NODE_ENV: test
       JWT_SECRET: ci-only-test-secret-not-for-production-123456789
+      MONGODB_URI: mongodb://127.0.0.1:27017/lawbuddy_test
     defaults:
       run:
         working-directory: server
