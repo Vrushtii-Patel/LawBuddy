@@ -7,7 +7,8 @@ const DocumentComparison = require('../models/DocumentComparison');
 const Checklist = require('../models/Checklist');
 const crossReferenceService = require('./crossReferenceService');
 
-const UPLOADS_DIR = path.join(__dirname, '../../uploads/scan_files');
+const DEFAULT_UPLOADS_DIR = path.join(__dirname, '../../uploads/scan_files');
+const UPLOADS_DIR = path.resolve(process.env.SCAN_FILES_DIR || DEFAULT_UPLOADS_DIR);
 
 /**
  * Permanently deletes a single document and cleans up all associated resources:
