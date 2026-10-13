@@ -8,7 +8,8 @@ const llmService = require('./llmService');
 const crossReferenceService = require('./crossReferenceService');
 const { MODEL_NAME, PROMPT_VERSION, ANALYSIS_VERSION } = require('../config/modelConfig');
 
-const UPLOADS_DIR = path.join(__dirname, '../../uploads/scan_files');
+const DEFAULT_UPLOADS_DIR = path.join(__dirname, '../../uploads/scan_files');
+const UPLOADS_DIR = path.resolve(process.env.SCAN_FILES_DIR || DEFAULT_UPLOADS_DIR);
 
 // In-memory set of currently processing "userId:fileHash" keys to prevent redundant concurrent pipeline executions
 const activeProcessingKeys = new Set();
@@ -20,8 +21,10 @@ function ensureUploadsDirectory() {
 }
 
 /**
- * Saves file buffer to disk under uploads/scan_files/${fileHash}.dat
- * Returns the relative storage path.
+ * Saves a file under the configured upload directory.
+ * With SCAN_FILES_DIR configured, persist the absolute path so jobs can resume
+ * from a mounted durable directory such as Render's /var/data/scan_files.
+ * Without it, preserve the legacy relative path format for local development.
  */
 function saveFileToStorage(buffer, fileHash) {
     ensureUploadsDirectory();
@@ -30,19 +33,23 @@ function saveFileToStorage(buffer, fileHash) {
     if (!fs.existsSync(absolutePath)) {
         fs.writeFileSync(absolutePath, buffer);
     }
-    return relativePath;
+    return process.env.SCAN_FILES_DIR ? absolutePath : relativePath;
 }
 
 /**
- * Reads file buffer from storage path.
+ * Reads a file using its stored path. The configured directory is also checked
+ * by basename to support legacy relative paths when SCAN_FILES_DIR is enabled.
  */
 function readFileFromStorage(storagePath) {
     if (!storagePath) return null;
-    const absolutePath = path.isAbsolute(storagePath)
+    const primaryPath = path.isAbsolute(storagePath)
         ? storagePath
-        : path.join(__dirname, '../../', storagePath);
-    if (fs.existsSync(absolutePath)) {
-        return fs.readFileSync(absolutePath);
+        : path.resolve(__dirname, '../../', storagePath);
+    const candidates = [primaryPath, path.join(UPLOADS_DIR, path.basename(storagePath))];
+    for (const candidate of new Set(candidates)) {
+        if (fs.existsSync(candidate)) {
+            return fs.readFileSync(candidate);
+        }
     }
     return null;
 }
@@ -281,6 +288,13 @@ async function executeJobPipeline(jobId) {
         // =====================================================================
         // STAGE 2: OCR & TEXT EXTRACTION
         // =====================================================================
+        const sourceFileBuffer = readFileFromStorage(job.storagePath);
+        const existingText = (job.extractedText || '').trim();
+        if (job.storagePath && !sourceFileBuffer &&
+            (!existingText || existingText === 'Property Agreement')) {
+            throw new Error('Uploaded source file is missing from storage. Please upload the document again.');
+        }
+
         if (!job.completedSteps.includes('TEXT_EXTRACTION') || !job.extractedText || job.extractedText.length === 0) {
             console.log(`[ScanJob ${job.jobId}] Executing STAGE 2: Text Extraction & OCR...`);
             job.status = 'OCR_PROCESSING';
@@ -291,7 +305,7 @@ async function executeJobPipeline(jobId) {
             let canonicalClauses = [];
             const isPdf = (job.mimeType || '').toLowerCase().includes('pdf');
             const isImage = (job.mimeType || '').toLowerCase().startsWith('image/');
-            const fileBuffer = readFileFromStorage(job.storagePath);
+            const fileBuffer = sourceFileBuffer;
 
             if (fileBuffer && isPdf) {
                 let pdfText = '';
@@ -376,8 +390,7 @@ async function executeJobPipeline(jobId) {
                 extractedText = job.extractedText;
                 canonicalClauses = llmService.extractCanonicalClausesFromText(extractedText);
             } else {
-                extractedText = 'Property Agreement';
-                canonicalClauses = llmService.extractCanonicalClausesFromText(extractedText);
+                throw new Error('Source document data is missing for this scan job. Please upload the document again.');
             }
 
             if (!canonicalClauses || canonicalClauses.length === 0) {
