@@ -52,7 +52,7 @@ jobs:
       # Only on the isolated audit branch, test safe updates within existing semver ranges.
       - name: Update vulnerable packages within existing ranges
         if: github.ref == 'refs/heads/deployment/audit-production-db-startup'
-        run: npm update nodemailer proxy-addr qs
+        run: npm install nodemailer@^10.0.6 && npm update proxy-addr qs
       - name: Report dependency vulnerabilities without changing the lockfile
         run: |
           npm audit --json > /tmp/npm-audit.json || true
@@ -99,6 +99,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add server/package-lock.json
+          git add package-lock.json
           git commit -m "Fix audited backend dependency vulnerabilities"
           git push origin HEAD:deployment/audit-production-db-startup
