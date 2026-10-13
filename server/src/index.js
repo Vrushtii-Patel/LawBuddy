@@ -56,30 +56,36 @@ app.use('/api', comparisonRoutes);
 app.use('/api', shareRoutes);
 
 async function startServer() {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
+  const isProduction = process.env.NODE_ENV === 'production';
+  const configuredUri = process.env.MONGODB_URI;
+  const uri = configuredUri || 'mongodb://127.0.0.1:27017/lawbuddy';
 
-  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/lawbuddy';
+  if (isProduction && !configuredUri) {
+    throw new Error('MONGODB_URI must be configured in production.');
+  }
+
   try {
-    await mongoose.connect(uri, { family: 4, serverSelectionTimeoutMS: 2500 });
-    console.log('Connected to MongoDB at', uri);
+    await mongoose.connect(uri, { family: 4, serverSelectionTimeoutMS: 10000 });
+    console.log('Connected to MongoDB.');
   } catch (err) {
+    if (isProduction) {
+      throw new Error('Could not connect to the configured production MongoDB database.');
+    }
+
     console.warn('Local MongoDB connection failed. Starting in-memory MongoDB for development...');
     try {
       const { MongoMemoryServer } = require('mongodb-memory-server');
       const mongod = await MongoMemoryServer.create();
-      const memUri = mongod.getUri();
-      await mongoose.connect(memUri);
-      console.log('Connected to In-Memory MongoDB at', memUri);
+      await mongoose.connect(mongod.getUri());
+      console.log('Connected to in-memory MongoDB for development.');
     } catch (memErr) {
-      console.error('Failed to start in-memory MongoDB:', memErr.message);
+      throw new Error(`Could not connect to local MongoDB or start the development in-memory database: ${memErr.message}`);
     }
   }
 
   const documentCleanupService = require('./services/documentCleanupService');
 
-  // Ensure clean collection indexes & background recovery
+  // Ensure clean collection indexes & background recovery.
   try {
     const Checklist = require('./models/Checklist');
     await Checklist.syncIndexes();
@@ -94,7 +100,7 @@ async function startServer() {
     console.warn('Document syncIndexes note:', docIdxErr.message);
   }
 
-  // Startup Auto-Purge of expired binned documents & checklists (> 30 days)
+  // Startup auto-purge of expired binned documents and checklists (> 30 days).
   Promise.all([
     documentCleanupService.purgeExpiredBinnedDocuments(),
     documentCleanupService.purgeExpiredBinnedChecklists()
@@ -106,7 +112,7 @@ async function startServer() {
     console.warn('Startup bin auto-purge warning:', purgeErr.message);
   });
 
-  // Hourly background timer for opportunistic auto-purge (unreferenced so server can cleanly terminate)
+  // Hourly background timer for opportunistic auto-purge.
   const autoPurgeInterval = setInterval(() => {
     Promise.all([
       documentCleanupService.purgeExpiredBinnedDocuments(),
@@ -118,8 +124,7 @@ async function startServer() {
   }, 60 * 60 * 1000);
   if (autoPurgeInterval.unref) autoPurgeInterval.unref();
 
-  // Sweep abandoned/failed jobs BEFORE startup recovery, so long-dead jobs are
-  // deleted instead of being resumed.
+  // Sweep abandoned/failed jobs before attempting recovery.
   try {
     const swept = await documentCleanupService.sweepAbandonedJobs();
     if (swept.scanJobs || swept.orphanedCompletedJobs || swept.comparisons || swept.files) {
@@ -135,6 +140,14 @@ async function startServer() {
   comparisonService.recoverUnfinishedComparisons().catch(compErr => {
     console.warn('Startup comparison recovery warning:', compErr.message);
   });
+
+  // Only accept traffic once the database connection is established.
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 }
 
-startServer();
+startServer().catch(err => {
+  console.error('Fatal startup error:', err.message);
+  process.exit(1);
+});
