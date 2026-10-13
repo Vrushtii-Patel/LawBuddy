@@ -45,7 +45,7 @@ const scanJobSchema = new mongoose.Schema({
     fileName: { type: String, default: '' },
     sourceType: { type: String, default: 'PDF Document' }, // 'PDF Document', 'Photo Scan', 'Text Description', 'Scanned Image'
     mimeType: { type: String, default: 'application/pdf' },
-    storagePath: { type: String, default: null }, // Relative path on disk (e.g. uploads/scan_files/hash.dat)
+    storagePath: { type: String, default: null }, // Absolute path when SCAN_FILES_DIR is set; legacy relative paths remain supported
     fileSize: { type: Number, default: 0 },
 
     // Explicit Pipeline Status & Step Tracking
