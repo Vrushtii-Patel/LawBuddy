@@ -88,19 +88,19 @@ async function startServer() {
 
   const documentCleanupService = require('./services/documentCleanupService');
 
-  // Ensure clean collection indexes & background recovery.
+  // Ensure schema indexes exist without dropping indexes managed outside Mongoose.
   try {
     const Checklist = require('./models/Checklist');
-    await Checklist.syncIndexes();
+    await Checklist.createIndexes();
   } catch (idxErr) {
-    console.warn('Checklist syncIndexes note:', idxErr.message);
+    console.warn('Checklist createIndexes note:', idxErr.message);
   }
 
   try {
     const Document = require('./models/Document');
-    await Document.syncIndexes();
+    await Document.createIndexes();
   } catch (docIdxErr) {
-    console.warn('Document syncIndexes note:', docIdxErr.message);
+    console.warn('Document createIndexes note:', docIdxErr.message);
   }
 
   // Startup auto-purge of expired binned documents and checklists (> 30 days).
