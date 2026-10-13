@@ -20,8 +20,10 @@ const { validatePassword } = require('../src/utils/passwordValidator');
 
 // Intercept emails sent during tests to verify counts & arguments
 let sentEmails = [];
+let failEmailDelivery = false;
 const originalSendOTP = emailService.sendOTP;
 emailService.sendOTP = async (email, otp) => {
+  if (failEmailDelivery) return { success: false, error: 'simulated provider failure' };
   sentEmails.push({ email, otp, timestamp: Date.now() });
   return { success: true, messageId: `mock-${Date.now()}` };
 };
@@ -436,7 +438,29 @@ async function runTests() {
       body: { email: 'carol_legacy@example.com', password: 'CarolPassword123' }
     });
     assert.strictEqual(carolLoginRes.status, 200, 'Legacy user successfully logged in after setting password');
+
     console.log('✓ Legacy user can successfully reset password and log in.');
+
+    // Email delivery failure must not leave a valid password-reset OTP in storage.
+    failEmailDelivery = true;
+    const failedForgot = await makeRequest(server, {
+      method: 'POST',
+      path: '/api/auth/forgot-password',
+      body: { email: verifyUserEmail }
+    });
+    failEmailDelivery = false;
+    assert.strictEqual(failedForgot.status, 200);
+    assert.strictEqual(
+      failedForgot.body.message,
+      'If an account exists with this email, a password reset code has been sent.'
+    );
+    assert.strictEqual(
+      await Otp.findOne({ email: verifyUserEmail, purpose: 'reset' }),
+      null,
+      'Failed email delivery must invalidate the reset OTP'
+    );
+    console.log('✓ Failed forgot-password email keeps generic response and invalidates its OTP.');
+
 
     // -----------------------------------------------------------------------
     // SECTION 6: JWT BACKWARD COMPATIBILITY & LOGOUT
@@ -598,7 +622,33 @@ async function runTests() {
     });
     assert.strictEqual(resendUnknownReset.status, 200);
     assert.strictEqual(sentEmails.length, 0, 'No email sent for unknown reset resend');
+
     console.log('✓ Resend-otp returns generic 200 and only delivers emails to eligible accounts.');
+
+    // Failed resend delivery must invalidate only the newly created OTP record.
+    await Otp.updateOne(
+      { email: resendSignupEmail, purpose: 'signup' },
+      { createdAt: new Date(Date.now() - 35 * 1000) }
+    );
+    failEmailDelivery = true;
+    const failedResend = await makeRequest(server, {
+      method: 'POST',
+      path: '/api/auth/resend-otp',
+      body: { email: resendSignupEmail, purpose: 'signup' }
+    });
+    failEmailDelivery = false;
+    assert.strictEqual(failedResend.status, 200);
+    assert.strictEqual(
+      failedResend.body.message,
+      'If eligible, a new verification code has been sent to your email.'
+    );
+    assert.strictEqual(
+      await Otp.findOne({ email: resendSignupEmail, purpose: 'signup' }),
+      null,
+      'Failed resend delivery must invalidate the newly created signup OTP'
+    );
+    console.log('✓ Failed resend email keeps generic response and invalidates its OTP.');
+
 
     // -----------------------------------------------------------------------
     // SECTION 9: MISSING INPUT & ERROR RESILIENCE TESTS
