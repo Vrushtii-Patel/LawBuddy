@@ -50,8 +50,14 @@ jobs:
         run: |
           node --check src/index.js
           node --check src/routes/authRoutes.js
+          node --check src/services/scanJobService.js
+          node --check src/services/documentCleanupService.js
+          node --check src/models/ScanJob.js
           node --check tests/test_production_startup.js
+          node --check tests/test_scan_file_storage.js
       - name: Verify production startup fails closed
         run: node tests/test_production_startup.js
+      - name: Verify durable scan file storage and recovery safety
+        run: node tests/test_scan_file_storage.js
       - name: Run backend regression suite
         run: npm test
