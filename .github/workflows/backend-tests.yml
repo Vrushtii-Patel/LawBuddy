@@ -46,5 +46,12 @@ jobs:
           cache-dependency-path: server/package-lock.json
       - name: Install locked dependencies
         run: npm ci
+      - name: Check changed startup and OTP files
+        run: |
+          node --check src/index.js
+          node --check src/routes/authRoutes.js
+          node --check tests/test_production_startup.js
+      - name: Verify production startup fails closed
+        run: node tests/test_production_startup.js
       - name: Run backend regression suite
         run: npm test
