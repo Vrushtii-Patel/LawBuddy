@@ -46,6 +46,28 @@ jobs:
           cache-dependency-path: server/package-lock.json
       - name: Install locked dependencies
         run: npm ci
+      - name: Report dependency vulnerabilities without changing the lockfile
+        run: |
+          npm audit --json > /tmp/npm-audit.json || true
+          node - <<'NODE'
+          const report = require('/tmp/npm-audit.json');
+          console.log('Dependency audit summary:', JSON.stringify(report.metadata?.vulnerabilities || {}, null, 2));
+          for (const [name, item] of Object.entries(report.vulnerabilities || {})) {
+            console.log(JSON.stringify({
+              name,
+              severity: item.severity,
+              isDirect: item.isDirect,
+              range: item.range,
+              fixAvailable: item.fixAvailable,
+              via: item.via.map(v => typeof v === 'string' ? v : {
+                name: v.name,
+                title: v.title,
+                url: v.url,
+                range: v.range
+              })
+            }));
+          }
+          NODE
       - name: Check changed startup and OTP files
         run: |
           node --check src/index.js
