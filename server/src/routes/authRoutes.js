@@ -26,6 +26,29 @@ function generateOtp() {
   return crypto.randomInt(100000, 1000000).toString();
 }
 
+// Deliver an OTP without leaving a usable code behind when delivery fails.
+// Delete only this request's record so concurrent requests cannot erase a newer OTP.
+async function deliverOtpOrInvalidate(email, otp, otpRecord, purpose) {
+  try {
+    const result = await emailService.sendOTP(email, otp);
+    if (result && result.success) return;
+
+    try {
+      await Otp.deleteOne({ _id: otpRecord._id });
+    } catch (_) {
+      // Keep the public response generic even if cleanup itself fails.
+    }
+    console.warn(`OTP delivery failed for purpose: ${purpose}`);
+  } catch (_) {
+    try {
+      await Otp.deleteOne({ _id: otpRecord._id });
+    } catch (_) {
+      // Keep the public response generic even if cleanup itself fails.
+    }
+    console.warn(`OTP delivery failed for purpose: ${purpose}`);
+  }
+}
+
 function formatUserResponse(user) {
   const obj = user.toObject ? user.toObject() : { ...user };
   return {
@@ -293,7 +316,7 @@ router.post('/forgot-password', otpRequestIpLimiter, otpRequestEmailLimiter, asy
       });
       await newOtp.save();
 
-      await emailService.sendOTP(cleanEmail, otp);
+      await deliverOtpOrInvalidate(cleanEmail, otp, newOtp, 'reset');
     }
 
     res.status(200).json({
@@ -421,7 +444,7 @@ router.post('/resend-otp', otpRequestIpLimiter, otpRequestEmailLimiter, async (r
       });
       await newOtp.save();
 
-      await emailService.sendOTP(cleanEmail, otp);
+      await deliverOtpOrInvalidate(cleanEmail, otp, newOtp, purpose);
     }
 
     res.status(200).json({
