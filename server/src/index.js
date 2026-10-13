@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 // CORS: restrict to known origins when ALLOWED_ORIGINS is set (comma-separated,
 // e.g. "https://yourapp.com,https://admin.yourapp.com"). Native mobile clients
 // don't send an Origin header, so this only affects browser/web-build requests.
-// Falls back to allowing all origins if unset, so local dev keeps working.
+// Falls back to allowing all origins only outside production, so local dev keeps working.
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
   .map(o => o.trim())
@@ -62,6 +62,9 @@ async function startServer() {
 
   if (isProduction && !configuredUri) {
     throw new Error('MONGODB_URI must be configured in production.');
+  }
+  if (isProduction && allowedOrigins.length === 0) {
+    throw new Error('ALLOWED_ORIGINS must be configured in production.');
   }
 
   try {
