@@ -6,13 +6,14 @@ const serverRoot = path.resolve(__dirname, '..');
 const entryPoint = path.join(serverRoot, 'src', 'index.js');
 const testSecret = 'production-startup-test-secret-123456789';
 
-function runProductionStartup(mongodbUri) {
+function runProductionStartup(mongodbUri, allowedOrigins = 'https://lawbuddy.example') {
   const env = {
     ...process.env,
     NODE_ENV: 'production',
     JWT_SECRET: testSecret,
     PORT: '0',
-    MONGODB_URI: mongodbUri
+    MONGODB_URI: mongodbUri,
+    ALLOWED_ORIGINS: allowedOrigins
   };
 
   return spawnSync(process.execPath, [entryPoint], {
@@ -46,3 +47,10 @@ assert.doesNotMatch(outputOf(invalidUri), /Server running on port/);
 
 console.log('✓ Production startup fails closed when MONGODB_URI is missing.');
 console.log('✓ Production startup fails closed on database connection errors without memory fallback.');
+
+const missingOrigins = runProductionStartup('not-a-valid-mongodb-uri', '');
+assert.strictEqual(missingOrigins.error, undefined, 'Startup process should not time out');
+assert.strictEqual(missingOrigins.status, 1, 'Missing production ALLOWED_ORIGINS must exit non-zero');
+assert.match(outputOf(missingOrigins), /ALLOWED_ORIGINS must be configured in production/);
+assert.doesNotMatch(outputOf(missingOrigins), /Server running on port/);
+console.log('✓ Production startup fails closed when ALLOWED_ORIGINS is missing.');
