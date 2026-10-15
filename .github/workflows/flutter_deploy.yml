@@ -76,6 +76,7 @@ jobs:
         run: flutter test
 
       - name: Validate production API URL
+        if: github.event_name != 'pull_request'
         env:
           API_URL: ${{ secrets.API_URL }}
         run: |
@@ -90,8 +91,9 @@ jobs:
 
       - name: Build Web App
         working-directory: ./client
+        # Pull requests build with a non-routable placeholder; production builds require the secret above.
         env:
-          API_URL: ${{ secrets.API_URL }}
+          API_URL: ${{ secrets.API_URL || 'https://api.example.invalid/api' }}
         run: flutter build web --release --dart-define="API_URL=${API_URL}" --base-href="/LawBuddy/"
 
       - name: Deploy to GitHub Pages
