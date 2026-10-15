@@ -26,6 +26,7 @@ import 'package:legal_scanner/widgets/cookie_consent_banner.dart';
 import 'package:legal_scanner/widgets/form_consent_widget.dart';
 import 'package:legal_scanner/theme/app_theme.dart';
 import 'package:legal_scanner/screens/chat/chat_input_bar.dart';
+import 'package:legal_scanner/screens/document_comparison_screen.dart';
 
 
 void main() {
@@ -1054,5 +1055,68 @@ void main() {
     final lightSubmitBtn = tester.widget<ElevatedButton>(find.widgetWithText(ElevatedButton, 'Log In'));
     expect(lightSubmitBtn.style?.backgroundColor?.resolve({}), equals(AppColors.lightPrimary));
     expect(lightSubmitBtn.style?.foregroundColor?.resolve({}), equals(AppColors.warmLinen));
+  });
+
+  testWidgets('DocumentComparisonScreen renders header, introduction, version cards, and swap indicator on desktop', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1100, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    final mockDocs = [
+      {
+        '_id': 'doc_a',
+        'title': 'Original Deed Draft.pdf',
+        'fileName': 'Original Deed Draft.pdf',
+        'riskLevel': 'CAUTION',
+        'docSize': '1.8 MB',
+      },
+      {
+        '_id': 'doc_b',
+        'title': 'Revised Deed Counteroffer.pdf',
+        'fileName': 'Revised Deed Counteroffer.pdf',
+        'riskLevel': 'COMPLIANT',
+        'docSize': '1.9 MB',
+      },
+    ];
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: DocumentComparisonScreen(initialDocs: mockDocs),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Compare Agreements'), findsOneWidget);
+    expect(find.text('Contract Differential Analysis'), findsOneWidget);
+    expect(find.text('VERSION A'), findsOneWidget);
+    expect(find.text('VERSION B'), findsOneWidget);
+    expect(find.text('Original Agreement'), findsWidgets);
+    expect(find.text('Revised Agreement'), findsWidgets);
+    expect(find.text('Before negotiation'), findsOneWidget);
+    expect(find.text('After negotiation'), findsOneWidget);
+    expect(find.byIcon(Icons.swap_horiz_rounded), findsOneWidget);
+    expect(find.text('Run Differential Analysis'), findsOneWidget);
+  });
+
+  testWidgets('DocumentComparisonScreen empty state displays compact guidance and scan button', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(800, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: DocumentComparisonScreen(initialDocs: []),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('No scanned agreements yet'), findsNWidgets(2));
+    expect(find.text('Scan an agreement to use it for comparison.'), findsNWidgets(2));
+    expect(find.text('Scan Agreement'), findsNWidgets(2));
   });
 }
