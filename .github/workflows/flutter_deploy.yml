@@ -6,6 +6,9 @@ on:
       - main
       - master
       - Jiya
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -48,7 +51,6 @@ jobs:
     needs: [backend-ci]
     runs-on: ubuntu-latest
 
-    # Permissions required to publish build artifacts to GitHub Pages
     permissions:
       contents: write
 
@@ -73,12 +75,29 @@ jobs:
         working-directory: ./client
         run: flutter test
 
+      - name: Validate production API URL
+        if: github.event_name != 'pull_request'
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: |
+          if [ -z "$API_URL" ]; then
+            echo "::error::Configure the API_URL repository secret to your deployed HTTPS backend URL ending in /api."
+            exit 1
+          fi
+          case "$API_URL" in
+            https://*/api) ;;
+            *) echo "::error::API_URL must use HTTPS and end with /api (example: https://your-backend.onrender.com/api)."; exit 1 ;;
+          esac
+
       - name: Build Web App
         working-directory: ./client
-        # API_URL is supplied via repository secrets; base-href configured for GitHub Pages repository root
-        run: flutter build web --release --dart-define=API_URL=${{ secrets.API_URL }} --base-href="/Final-year-project/"
+        # Pull requests build with a non-routable placeholder; production builds require the secret above.
+        env:
+          API_URL: ${{ secrets.API_URL || 'https://api.example.invalid/api' }}
+        run: flutter build web --release --dart-define="API_URL=${API_URL}" --base-href="/LawBuddy/"
 
       - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/Jiya'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
