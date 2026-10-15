@@ -697,15 +697,15 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: (isDark
-                                ? AppColors.darkAccent
-                                : AppColors.lightAccent)
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
                             .withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(Icons.auto_awesome,
                           color: isDark
-                              ? AppColors.darkAccent
-                              : AppColors.lightAccent,
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
                           size: 22),
                     ),
                     const SizedBox(width: 12),
@@ -911,13 +911,17 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                   : const Icon(Icons.share_outlined, size: 16),
                               label: Text(tr('analysis.shareRiskSummary')),
                               style: OutlinedButton.styleFrom(
+                                backgroundColor: isDark
+                                    ? AppColors.darkSurfaceElevated
+                                    : AppColors.lightSurfaceElevated,
                                 foregroundColor: isDark
                                     ? AppColors.darkTextPrimary
                                     : AppColors.lightTextPrimary,
                                 side: BorderSide(
                                     color: isDark
                                         ? AppColors.darkBorder
-                                        : AppColors.lightBorder),
+                                        : AppColors.lightBorderMedium,
+                                    width: 1.2),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 14, vertical: 10),
                                 shape: RoundedRectangleBorder(
@@ -935,8 +939,9 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                     ? AppColors.darkPrimary
                                     : AppColors.lightPrimary,
                                 foregroundColor: isDark
-                                    ? AppColors.darkErrorText
-                                    : AppColors.lightTextPrimary,
+                                    ? AppColors.softGraphite
+                                    : AppColors.warmLinen,
+                                elevation: 0,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 14, vertical: 10),
                                 shape: RoundedRectangleBorder(
@@ -1016,8 +1021,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 color: (isDark
-                                        ? AppColors.darkAccent
-                                        : AppColors.lightAccent)
+                                        ? AppColors.darkPrimary
+                                        : AppColors.lightPrimary)
                                     .withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -1029,8 +1034,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                         ? Icons.notes_rounded
                                         : Icons.picture_as_pdf_rounded),
                                 color: isDark
-                                    ? AppColors.darkAccent
-                                    : AppColors.lightAccent,
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary,
                                 size: 22,
                               ),
                             ),
@@ -1063,8 +1068,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                           horizontal: 8, vertical: 2),
                                       decoration: BoxDecoration(
                                         color: (isDark
-                                                ? AppColors.darkAccent
-                                                : AppColors.lightAccent)
+                                                ? AppColors.darkPrimary
+                                                : AppColors.lightPrimary)
                                             .withValues(alpha: 0.12),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -1074,8 +1079,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
                                           color: isDark
-                                              ? AppColors.darkAccent
-                                              : AppColors.lightAccent,
+                                              ? AppColors.darkPrimary
+                                              : AppColors.lightPrimary,
                                         ),
                                       ),
                                     ),
@@ -1673,8 +1678,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             color: (isDark
-                                    ? AppColors.darkAccent
-                                    : AppColors.lightAccent)
+                                    ? AppColors.darkPrimary
+                                    : AppColors.lightPrimary)
                                 .withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -1685,8 +1690,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                     ? Icons.description_rounded
                                     : Icons.picture_as_pdf_rounded),
                             color: isDark
-                                ? AppColors.darkAccent
-                                : AppColors.lightAccent,
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary,
                             size: 22,
                           ),
                         ),
@@ -1716,8 +1721,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                         horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: (isDark
-                                              ? AppColors.darkAccent
-                                              : AppColors.lightAccent)
+                                              ? AppColors.darkPrimary
+                                              : AppColors.lightPrimary)
                                           .withValues(alpha: 0.12),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
@@ -1727,8 +1732,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                         color: isDark
-                                            ? AppColors.darkAccent
-                                            : AppColors.lightAccent,
+                                            ? AppColors.darkPrimary
+                                            : AppColors.lightPrimary,
                                       ),
                                     ),
                                   ),

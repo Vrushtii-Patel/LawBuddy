@@ -270,7 +270,7 @@ class HeaderGreeting extends ConsumerWidget {
                           ? AppColors.darkPrimary
                           : AppColors.lightPrimary,
                       accentGold:
-                          isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                          isDark ? AppColors.darkGold : AppColors.lightGold,
                       isDark: isDark,
                     ),
                   ),

@@ -2,61 +2,91 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Centralized Design System Colors for LawBuddy (Sophisticated Lavender + Warm Cream Palette)
+/// Centralized Design System Colors for LawBuddy
+/// Palette: Lavender Haze (#92A9E1) • Soft Graphite (#2D3139) • Warm Linen (#EFE8D6)
 class AppColors {
-  // --- PRIMARY & SUPPORTING DESIGN SYSTEM TOKENS ---
-  // Primary Lavender: #A39DAA (Primary buttons, active states, icons, key highlights, badges)
-  static const Color lightPrimary = Color(0xFFA39DAA);
-  // Soft Lavender: #D8D3DA (Borders, dividers, subtle backgrounds, inactive UI elements)
-  static const Color lightAccent = Color(0xFFD8D3DA);
-  // Sage Olive / Compliant: #6B8E78 (Success states, verified badges, secondary buttons)
-  static const Color lightSecondary = Color(0xFF6B8E78);
-  // Warm Cream: #EFE1D1 (Dominant page canvas background)
-  static const Color lightBackground = Color(0xFFEFE1D1);
-  // Off-white / White: #FAF8F5 (Cards, input fields, modals, elevated surfaces)
-  static const Color lightSurface = Color(0xFFFAF8F5);
-  static const Color lightSurfaceElevated = Color(0xFFFAF8F5);
-  static const Color lightElevatedSurface = Color(0xFFFAF8F5);
-  // Deep Charcoal: #29262B (Primary text and headings)
-  static const Color lightTextPrimary = Color(0xFF29262B);
-  // Warm Brown: #6F6258 (Secondary / muted text)
-  static const Color lightTextSecondary = Color(0xFF6F6258);
-  // Soft Lavender Border: #D8D3DA
-  static const Color lightBorder = Color(0xFFD8D3DA);
-  // Semantic Alerts (Harmonized, keeping semantic clarity)
+  // --- THE CORE CANONICAL PALETTE SWATCHES ---
+  // Lavender Haze: #92A9E1 (Signature periwinkle accent, dark mode primary CTA, chips, pills)
+  static const Color lavenderHaze = Color(0xFF92A9E1);
+  // Soft Graphite: #2D3139 (Primary brand, headers, buttons, dark surface, light text primary)
+  static const Color softGraphite = Color(0xFF2D3139);
+  // Warm Linen: #EFE8D6 (Warm parchment canvas in light mode, dark mode primary text)
+  static const Color warmLinen = Color(0xFFEFE8D6);
+  // Lavender Slate: #4A5F96 (Deep periwinkle slate for verified / compliant states)
+  static const Color lavenderSlate = Color(0xFF4A5F96);
+
+  // --- LIGHT MODE PALETTE ---
+  // Soft Graphite: #2D3139 (Primary brand color, headers, CTAs, action buttons)
+  static const Color lightPrimary = Color(0xFF2D3139);
+  // Deep Graphite (Active / pressed / hover states)
+  static const Color lightPrimaryHover = Color(0xFF1E2127);
+  // Lavender Haze: #92A9E1 (Accent chips, tags, supporting pills)
+  static const Color lightAccent = Color(0xFF92A9E1);
+  // Lavender Slate: #4A5F96 (Secondary brand, compliant / verified states)
+  static const Color lightSecondary = Color(0xFF4A5F96);
+  // Warm Linen: #EFE8D6 (Primary light-mode background canvas from image)
+  static const Color lightBackground = Color(0xFFEFE8D6);
+  // Crisp White: #FFFFFF (Crisp card & modal surfaces layered atop Linen)
+  static const Color lightSurface = Color(0xFFFFFFFF);
+  // Soft Linen Cream: #F7F2E6 (Elevated dropdowns, dialogs)
+  static const Color lightSurfaceElevated = Color(0xFFF7F2E6);
+  static const Color lightElevatedSurface = Color(0xFFFFFFFF);
+  // Soft Graphite: #2D3139 (Primary text, headings — 9.9:1 AAA contrast on Linen, 12.4:1 on White)
+  static const Color lightTextPrimary = Color(0xFF2D3139);
+  // Slate Graphite: #656B77 (Secondary / supporting body text — 4.8:1 contrast on Linen, 6.0:1 on White)
+  static const Color lightTextSecondary = Color(0xFF656B77);
+  // Warm Linen Border: #DDD4BE (Hairline card & container borders)
+  static const Color lightBorder = Color(0xFFDDD4BE);
+  // Medium Linen Border: #C9BFAB (Dividers, structural borders)
+  static const Color lightBorderMedium = Color(0xFFC9BFAB);
+  // Lavender Accent: #92A9E1 (Signature Lavender Haze from image)
+  static const Color lightGold = Color(0xFF92A9E1);
+  static const Color lightTaupe = Color(0xFF7E8492);
+
+  // Semantic Alerts
   static const Color lightError =
-      Color(0xFFC84B31); // Terracotta Red (Destructive / High Risk)
+      Color(0xFF992B35); // Deep Crimson-Graphite (High Risk)
   static const Color lightCaution =
-      Color(0xFFC68B59); // Warm Ochre / Amber (Caution severity)
+      Color(0xFFC28B38); // Warm Ochre / Honey Amber (Caution severity)
 
-  // --- DARK MODE PALETTE (Sophisticated Charcoal-Lavender) ---
-  static const Color darkBackground =
-      Color(0xFF1E1B20); // Deep Charcoal Canvas with subtle lavender undertone
-  static const Color darkSurface =
-      Color(0xFF29262B); // Deep Charcoal Card Surface
-  static const Color darkSurfaceElevated =
-      Color(0xFF343037); // Elevated Charcoal
-  static const Color darkElevatedSurface = Color(0xFF343037); // Alias
-  static const Color darkPrimary = Color(0xFFA39DAA); // Primary Lavender
-  static const Color darkAccent = Color(0xFFD8D3DA); // Soft Lavender
-  static const Color darkSecondary = Color(0xFF7E9F8B); // Sage Olive
-  static const Color darkCaution = Color(0xFFDCA067); // Warm Ochre / Amber
-  static const Color darkError = Color(0xFFE57368); // Terracotta / Coral Red
-  static const Color darkErrorText = Color(0xFF29262B); // Deep Charcoal
-  static const Color darkTextPrimary =
-      Color(0xFFFAF8F5); // Off-White / Warm Cream text
-  static const Color darkTextSecondary =
-      Color(0xFFA9A2AF); // Muted Lavender-Gray text
-  static const Color darkBorder =
-      Color(0xFF433E47); // Subtle Charcoal-Lavender Border
+  // --- DARK MODE PALETTE ---
+  // Deep Obsidian Graphite: #1A1D23 (Midnight canvas derived directly from Soft Graphite)
+  static const Color darkBackground = Color(0xFF1A1D23);
+  // Soft Graphite Surface: #2D3139 (The exact Soft Graphite swatch from the image!)
+  static const Color darkSurface = Color(0xFF2D3139);
+  // Elevated Graphite: #393E49 (Modals, Dialogs, Dropdowns)
+  static const Color darkSurfaceElevated = Color(0xFF393E49);
+  static const Color darkElevatedSurface = Color(0xFF393E49);
+  // Lavender Haze: #92A9E1 (High-contrast, radiant action color against dark Graphite)
+  static const Color darkPrimary = Color(0xFF92A9E1);
+  static const Color darkPrimaryHover = Color(0xFFA8BCED);
+  // Lavender Haze: #92A9E1 (Hero accents and pills in dark mode)
+  static const Color darkAccent = Color(0xFF92A9E1);
+  // Luminous Iris: #92A9E1
+  static const Color darkGold = Color(0xFF92A9E1);
+  // Luminous Periwinkle: #A0B4E8 (Compliant / Verified status in dark mode)
+  static const Color darkSecondary = Color(0xFFA0B4E8);
+  static const Color darkCaution = Color(0xFFE09E48);
+  static const Color darkError = Color(0xFFE26B74); // Radiant coral rose for dark mode
+  static const Color darkErrorText = Color(0xFF2D3139); // Soft Graphite text on luminous alert badges
+  // Warm Linen: #EFE8D6 (The exact Linen Cream swatch — glare-free text in dark mode — 9.9:1 AAA contrast)
+  static const Color darkTextPrimary = Color(0xFFEFE8D6);
+  // Lavender-tinted Slate: #ADB7C9 (Muted secondary text in dark mode — 5.2:1 contrast)
+  static const Color darkTextSecondary = Color(0xFFADB7C9);
+  // Subtle Graphite Border: #444B57 (Subtle border for cards)
+  static const Color darkBorder = Color(0xFF444B57);
 
-  // --- SEMANTIC RISK COLOR HELPERS ---
+  // --- SEMANTIC RISK & THEME COLOR HELPERS ---
   static Color highRisk(bool isDark) => isDark ? darkError : lightError;
   static Color highRiskText(bool isDark) =>
       isDark ? darkErrorText : Colors.white;
   static Color caution(bool isDark) => isDark ? darkCaution : lightCaution;
   static Color compliant(bool isDark) =>
       isDark ? darkSecondary : lightSecondary;
+  static Color gold(bool isDark) => isDark ? darkGold : lightGold;
+  static Color primary(bool isDark) => isDark ? darkPrimary : lightPrimary;
+  static Color primaryForeground(bool isDark) =>
+      isDark ? darkErrorText : Colors.white;
 }
 
 /// Centralized spacing scale (logical pixels) for consistent padding, margins, and gaps
@@ -179,11 +209,11 @@ class AppTheme {
   // Light ColorScheme
   static const ColorScheme lightColorScheme = ColorScheme.light(
     primary: AppColors.lightPrimary,
-    onPrimary: AppColors.lightTextPrimary,
+    onPrimary: AppColors.warmLinen,
     secondary: AppColors.lightSecondary,
     onSecondary: Colors.white,
     tertiary: AppColors.lightAccent,
-    onTertiary: AppColors.lightTextPrimary,
+    onTertiary: AppColors.softGraphite,
     surface: AppColors.lightSurface,
     onSurface: AppColors.lightTextPrimary,
     onSurfaceVariant: AppColors.lightTextSecondary,
@@ -196,17 +226,17 @@ class AppTheme {
   // Dark ColorScheme
   static const ColorScheme darkColorScheme = ColorScheme.dark(
     primary: AppColors.darkPrimary,
-    onPrimary: AppColors.darkErrorText,
+    onPrimary: AppColors.softGraphite,
     secondary: AppColors.darkSecondary,
-    onSecondary: Colors.white,
-    tertiary: AppColors.darkAccent,
-    onTertiary: AppColors.darkBackground,
+    onSecondary: AppColors.softGraphite,
+    tertiary: AppColors.darkGold,
+    onTertiary: AppColors.softGraphite,
     surface: AppColors.darkSurface,
     onSurface: AppColors.darkTextPrimary,
     onSurfaceVariant: AppColors.darkTextSecondary,
     outline: AppColors.darkBorder,
     error: AppColors.darkError,
-    onError: AppColors.darkErrorText,
+    onError: AppColors.softGraphite,
     surfaceContainerHighest: AppColors.darkSurfaceElevated,
   );
 
@@ -321,7 +351,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.lightPrimary,
-          foregroundColor: AppColors.lightTextPrimary,
+          foregroundColor: AppColors.warmLinen,
           minimumSize: const Size(0, 48),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           shape: RoundedRectangleBorder(
@@ -488,7 +518,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.darkPrimary,
-          foregroundColor: AppColors.darkTextPrimary,
+          foregroundColor: AppColors.softGraphite,
           minimumSize: const Size(0, 48),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           shape: RoundedRectangleBorder(

@@ -5,6 +5,7 @@ import 'package:legal_scanner/screens/home_screen.dart';
 import 'package:legal_scanner/screens/chat_screen.dart';
 import 'package:legal_scanner/screens/analysis_screen.dart';
 import 'package:legal_scanner/screens/welcome_screen.dart';
+import 'package:legal_scanner/screens/how_it_works_screen.dart';
 import 'package:legal_scanner/screens/welcome/welcome_widgets.dart';
 
 import 'package:legal_scanner/screens/recent_documents_screen.dart';
@@ -24,6 +25,8 @@ import 'package:legal_scanner/screens/scan_screen.dart';
 import 'package:legal_scanner/widgets/cookie_consent_banner.dart';
 import 'package:legal_scanner/widgets/form_consent_widget.dart';
 import 'package:legal_scanner/theme/app_theme.dart';
+import 'package:legal_scanner/screens/chat/chat_input_bar.dart';
+
 
 void main() {
   testWidgets('RecentDocumentsScreen renders with summary stats, search, and documents', (WidgetTester tester) async {
@@ -904,6 +907,152 @@ void main() {
     expect(find.text('Take a Photo'), findsWidgets);
     expect(find.text('Upload PDF'), findsWidgets);
   });
+
+  testWidgets('HowItWorksScreen renders hero, workflow, feature cards, and deep dives on Desktop', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: HowItWorksScreen(),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(find.byType(HowItWorksScreen), findsOneWidget);
+    expect(find.text('How LawBuddy Works'), findsWidgets);
+    expect(find.text('How Document Analysis Works'), findsOneWidget);
+    expect(find.text('Explore LawBuddy Tools'), findsOneWidget);
+    expect(find.text('Frequently Asked Questions'), findsOneWidget);
+  });
+
+  testWidgets('HowItWorksScreen renders on Mobile without overflow', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: HowItWorksScreen(),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    expect(find.byType(HowItWorksScreen), findsOneWidget);
+    expect(find.text('How LawBuddy Works'), findsWidgets);
+  });
+
+  testWidgets('Navigating to How It Works from WelcomeScreen works', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1200, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: WelcomeScreen(),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 700));
+
+    // Tap on How It Works in header nav
+    final howItWorksFinder = find.widgetWithText(TextButton, 'How It Works');
+    expect(howItWorksFinder, findsWidgets);
+    await tester.tap(howItWorksFinder.first);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(HowItWorksScreen), findsOneWidget);
+  });
+
+  testWidgets('ChatInput send button has high-contrast arrow icon in light and dark mode', (WidgetTester tester) async {
+    // Light mode
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          themeMode: ThemeMode.light,
+          home: Scaffold(
+            body: ChatInput(
+              controller: TextEditingController(),
+              focusNode: FocusNode(),
+              isLoading: false,
+              onSend: () {},
+              isMobile: false,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final lightIcon = tester.widget<Icon>(find.byIcon(Icons.arrow_upward_rounded));
+    expect(lightIcon.color, equals(AppColors.warmLinen));
+
+    // Dark mode
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.darkTheme,
+          themeMode: ThemeMode.dark,
+          home: Scaffold(
+            body: ChatInput(
+              controller: TextEditingController(),
+              focusNode: FocusNode(),
+              isLoading: false,
+              onSend: () {},
+              isMobile: false,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final darkIcon = tester.widget<Icon>(find.byIcon(Icons.arrow_upward_rounded));
+    expect(darkIcon.color, equals(AppColors.softGraphite));
+  });
+
+  testWidgets('LoginScreen submit button has high-contrast text in light and dark mode', (WidgetTester tester) async {
+    // Dark mode
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.darkTheme,
+          themeMode: ThemeMode.dark,
+          home: const LoginScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final darkSubmitBtn = tester.widget<ElevatedButton>(find.widgetWithText(ElevatedButton, 'Log In'));
+    expect(darkSubmitBtn.style?.backgroundColor?.resolve({}), equals(AppColors.darkPrimary));
+    expect(darkSubmitBtn.style?.foregroundColor?.resolve({}), equals(AppColors.softGraphite));
+
+    // Light mode
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          themeMode: ThemeMode.light,
+          home: const LoginScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final lightSubmitBtn = tester.widget<ElevatedButton>(find.widgetWithText(ElevatedButton, 'Log In'));
+    expect(lightSubmitBtn.style?.backgroundColor?.resolve({}), equals(AppColors.lightPrimary));
+    expect(lightSubmitBtn.style?.foregroundColor?.resolve({}), equals(AppColors.warmLinen));
+  });
 }
-
-

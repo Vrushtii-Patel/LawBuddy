@@ -185,9 +185,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
         isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final Color secondaryText =
         isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final Color primaryColor = AppColors.lightPrimary;
+    final Color primaryColor =
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
     final Color accentColor =
-        isDark ? AppColors.darkAccent : AppColors.lightAccent;
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
     final Color elevatedSurface =
         isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
 
@@ -964,8 +965,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                     backgroundColor: primaryColor.withValues(
                         alpha: _isHoveredButton ? 0.92 : 1.0),
                     foregroundColor: isDark
-                        ? AppColors.darkErrorText
-                        : AppColors.lightTextPrimary,
+                        ? AppColors.softGraphite
+                        : AppColors.warmLinen,
                     minimumSize: const Size(double.infinity, 48),
                     disabledBackgroundColor: elevatedSurface,
                     disabledForegroundColor:
@@ -983,8 +984,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
                               isDark
-                                  ? AppColors.darkErrorText
-                                  : AppColors.lightTextPrimary,
+                                  ? AppColors.softGraphite
+                                  : AppColors.warmLinen,
                             ),
                           ),
                         )

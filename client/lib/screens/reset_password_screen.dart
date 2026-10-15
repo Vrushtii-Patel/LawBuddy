@@ -221,7 +221,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
         isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final Color secondaryText =
         isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final Color primaryColor = AppColors.lightPrimary;
+    final Color primaryColor =
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
     final Color elevatedSurface =
         isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
 
@@ -311,6 +312,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                                           elevatedSurface: elevatedSurface,
                                           defaultPinTheme: defaultPinTheme,
                                           focusedPinTheme: focusedPinTheme,
+                                          isDark: isDark,
                                           isLoading: isLoading,
                                           tr: tr,
                                         )
@@ -347,6 +349,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
     required Color primaryColor,
     required Color cardBorder,
     required Color elevatedSurface,
+    required bool isDark,
     required PinTheme defaultPinTheme,
     required PinTheme focusedPinTheme,
     required bool isLoading,
@@ -366,10 +369,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
               color: primaryColor,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.mark_email_read_rounded,
               size: 24,
-              color: Colors.white,
+              color: isDark ? AppColors.softGraphite : AppColors.warmLinen,
             ),
           ),
         ),
@@ -469,7 +472,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
           onPressed: _isCodeValid ? _goToPasswordStep : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: primaryColor,
-            foregroundColor: Colors.white,
+            foregroundColor:
+                isDark ? AppColors.softGraphite : AppColors.warmLinen,
             minimumSize: const Size(double.infinity, 48),
             disabledBackgroundColor: elevatedSurface,
             disabledForegroundColor: secondaryText.withValues(alpha: 0.5),
@@ -535,10 +539,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
               color: primaryColor,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.lock_reset_rounded,
               size: 24,
-              color: Colors.white,
+              color: isDark ? AppColors.softGraphite : AppColors.warmLinen,
             ),
           ),
         ),
@@ -823,7 +827,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
               backgroundColor:
                   primaryColor.withValues(alpha: _isHoveredButton ? 0.92 : 1.0),
               foregroundColor:
-                  isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                  isDark ? AppColors.softGraphite : AppColors.warmLinen,
               minimumSize: const Size(double.infinity, 48),
               disabledBackgroundColor: elevatedSurface,
               disabledForegroundColor: secondaryText.withValues(alpha: 0.5),
@@ -840,8 +844,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen>
                       strokeWidth: 2,
                       valueColor: AlwaysStoppedAnimation<Color>(
                         isDark
-                            ? AppColors.darkErrorText
-                            : AppColors.lightTextPrimary,
+                            ? AppColors.softGraphite
+                            : AppColors.warmLinen,
                       ),
                     ),
                   )

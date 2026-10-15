@@ -344,10 +344,12 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.lightPrimary,
+                    backgroundColor:
+                        isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                     foregroundColor: isDark
-                        ? AppColors.darkErrorText
-                        : AppColors.lightTextPrimary,
+                        ? AppColors.softGraphite
+                        : AppColors.warmLinen,
+                    elevation: 0,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -500,10 +502,12 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.lightPrimary,
+                backgroundColor:
+                    isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                 foregroundColor: isDark
-                    ? AppColors.darkErrorText
-                    : AppColors.lightTextPrimary,
+                    ? AppColors.softGraphite
+                    : AppColors.warmLinen,
+                elevation: 0,
               ),
               onPressed: () async {
                 final newTitle = controller.text.trim();
@@ -1312,7 +1316,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
           Icon(
             icon,
             size: 12,
-            color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+            color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
           ),
           const SizedBox(width: 5),
           Text(
@@ -1445,9 +1449,8 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddItemDialog,
-        backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        foregroundColor:
-            isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+        backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+        foregroundColor: Colors.white,
         tooltip: tr('checklists.addNewTask'),
         elevation: 2,
         child: const Icon(Icons.add_rounded, size: 24),

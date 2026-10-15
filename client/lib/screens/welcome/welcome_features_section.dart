@@ -147,7 +147,7 @@ class WelcomeFeaturesSection extends ConsumerWidget {
     ref.watch(localeProvider);
     final loc = ref.read(localeProvider.notifier);
     final pColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
-    final aColor = isDark ? AppColors.darkAccent : AppColors.lightAccent;
+    final sColor = isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
 
     final features = [
       FeatureCard(
@@ -159,7 +159,7 @@ class WelcomeFeaturesSection extends ConsumerWidget {
       ),
       FeatureCard(
         icon: Icons.shield_outlined,
-        accentColor: aColor,
+        accentColor: sColor,
         tag: loc.translate('welcome.feature2Tag'),
         title: loc.translate('welcome.feature2Title'),
         description: loc.translate('welcome.feature2Desc'),
@@ -173,7 +173,7 @@ class WelcomeFeaturesSection extends ConsumerWidget {
       ),
       FeatureCard(
         icon: Icons.calculate_outlined,
-        accentColor: aColor,
+        accentColor: pColor,
         tag: loc.translate('welcome.feature4Tag'),
         title: loc.translate('welcome.feature4Title'),
         description: loc.translate('welcome.feature4Desc'),
@@ -187,7 +187,7 @@ class WelcomeFeaturesSection extends ConsumerWidget {
       ),
       FeatureCard(
         icon: Icons.checklist_rounded,
-        accentColor: aColor,
+        accentColor: pColor,
         tag: loc.translate('welcome.feature6Tag'),
         title: loc.translate('welcome.feature6Title'),
         description: loc.translate('welcome.feature6Desc'),

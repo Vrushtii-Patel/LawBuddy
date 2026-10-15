@@ -541,8 +541,9 @@ Future<void> handleReraDetails(
                 backgroundColor:
                     isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                 foregroundColor: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.lightTextPrimary,
+                    ? AppColors.softGraphite
+                    : AppColors.warmLinen,
+                elevation: 0,
               ),
               child: Text(loc.translate('common.understood')),
             ),

@@ -246,7 +246,7 @@ class _SharedSummaryScreenState extends ConsumerState<SharedSummaryScreen> {
                 label: Text(tr('common.backToHome')),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                  foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+                  foregroundColor: isDark ? AppColors.softGraphite : AppColors.warmLinen,
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 ),
@@ -533,7 +533,7 @@ class _SharedSummaryScreenState extends ConsumerState<SharedSummaryScreen> {
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: isSelected
-                    ? (isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary)
+                    ? (isDark ? AppColors.softGraphite : AppColors.warmLinen)
                     : (isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary),
               ),
               backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
@@ -895,7 +895,7 @@ class _SharedSummaryScreenState extends ConsumerState<SharedSummaryScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-              foregroundColor: isDark ? AppColors.darkErrorText : AppColors.lightTextPrimary,
+              foregroundColor: isDark ? AppColors.softGraphite : AppColors.warmLinen,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),

@@ -6,3 +6,4 @@ export 'welcome_features_section.dart';
 export 'welcome_how_it_works.dart';
 export 'welcome_risk_showcase.dart';
 export 'welcome_cta_banner.dart';
+export 'welcome_download_section.dart';

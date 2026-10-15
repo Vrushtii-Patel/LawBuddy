@@ -221,8 +221,8 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
               style: FilledButton.styleFrom(
                 backgroundColor: primaryBtnColor,
                 foregroundColor: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.lightTextPrimary,
+                    ? AppColors.softGraphite
+                    : AppColors.warmLinen,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 minimumSize: const Size(0, 36),
@@ -334,8 +334,8 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                 style: FilledButton.styleFrom(
                   backgroundColor: primaryBtnColor,
                   foregroundColor: isDark
-                      ? AppColors.darkTextPrimary
-                      : AppColors.lightTextPrimary,
+                      ? AppColors.softGraphite
+                      : AppColors.warmLinen,
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   minimumSize: const Size(0, 40),
                   shape: RoundedRectangleBorder(

@@ -292,8 +292,8 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                                       horizontal: 7, vertical: 2),
                                   decoration: BoxDecoration(
                                     color: (isDark
-                                            ? AppColors.darkAccent
-                                            : AppColors.lightAccent)
+                                            ? AppColors.darkPrimary
+                                            : AppColors.lightPrimary)
                                         .withValues(alpha: 0.12),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
@@ -308,8 +308,8 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                                           valueColor:
                                               AlwaysStoppedAnimation<Color>(
                                                   isDark
-                                                      ? AppColors.darkAccent
-                                                      : AppColors.lightAccent),
+                                                      ? AppColors.darkPrimary
+                                                      : AppColors.lightPrimary),
                                         ),
                                       ),
                                       const SizedBox(width: 5),
@@ -317,8 +317,8 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                                         'ANALYZING',
                                         style: GoogleFonts.plusJakartaSans(
                                           color: isDark
-                                              ? AppColors.darkAccent
-                                              : AppColors.lightAccent,
+                                              ? AppColors.darkPrimary
+                                              : AppColors.lightPrimary,
                                           fontSize: 9,
                                           fontWeight: FontWeight.w700,
                                           letterSpacing: 0.4,

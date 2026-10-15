@@ -344,8 +344,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                 style: TextStyle(
                                   color: _canResend
                                       ? (isDark
-                                          ? AppColors.darkAccent
-                                          : AppColors.lightAccent)
+                                          ? AppColors.darkPrimary
+                                          : AppColors.lightPrimary)
                                       : colorScheme.onSurfaceVariant
                                           .withValues(alpha: 0.5),
                                   fontWeight: FontWeight.w700,

@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
+import 'how_it_works_screen.dart';
 import 'welcome/welcome_widgets.dart';
 
 class WelcomeScreen extends ConsumerStatefulWidget {
@@ -16,6 +18,7 @@ class WelcomeScreen extends ConsumerStatefulWidget {
 class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _featuresKey = GlobalKey();
+  final GlobalKey _downloadKey = GlobalKey();
   final GlobalKey _howItWorksKey = GlobalKey();
   final GlobalKey _riskSystemKey = GlobalKey();
 
@@ -97,6 +100,19 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProvid
     );
   }
 
+  void _navigateToHowItWorks() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        settings: const RouteSettings(name: '/how-it-works'),
+        pageBuilder: (context, animation, secondaryAnimation) => const HowItWorksScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
@@ -126,13 +142,14 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProvid
                   isDesktop: isDesktop,
                   onLogoTap: () {
                     _scrollController.animateTo(
-                      0,
+                       0,
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeOut,
                     );
                   },
                   onFeaturesTap: () => _scrollToSection(_featuresKey),
-                  onHowItWorksTap: () => _scrollToSection(_howItWorksKey),
+                  onDownloadTap: () => _scrollToSection(_downloadKey),
+                  onHowItWorksTap: _navigateToHowItWorks,
                   onRiskSystemTap: () => _scrollToSection(_riskSystemKey),
                   onLoginTap: _navigateToLogin,
                 ),
@@ -172,6 +189,17 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProvid
                           isDesktop: isDesktop,
                           isTablet: isTablet,
                         ),
+
+                        // Mobile APK Download Section (Website only)
+                        if (kIsWeb) ...[
+                          const SizedBox(height: 80),
+                          WelcomeDownloadSection(
+                            key: _downloadKey,
+                            isDark: isDark,
+                            isDesktop: isDesktop,
+                            isTablet: isTablet,
+                          ),
+                        ],
 
                         const SizedBox(height: 80),
 

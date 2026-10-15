@@ -282,7 +282,7 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
                 if (confidence.isNotEmpty && confidence != 'EXACT' && confidence != 'NONE')
                   _buildTag('Match: $confidence', Colors.blueGrey),
                 if (migration.isNotEmpty && migration != 'UNCHANGED_RISK')
-                  _buildTag(migration.replaceAll('_', ' '), Colors.orangeAccent),
+                  _buildTag(migration.replaceAll('_', ' '), isDark ? AppColors.darkCaution : AppColors.lightCaution),
               ],
             ),
             const SizedBox(height: 8),
@@ -318,9 +318,9 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
                     margin: const EdgeInsets.only(bottom: 6),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.amberAccent.withValues(alpha: 0.08),
+                      color: (isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.amberAccent.withValues(alpha: 0.25)),
+                      border: Border.all(color: (isDark ? AppColors.darkCaution : AppColors.lightCaution).withValues(alpha: 0.25)),
                     ),
                     child: Text(
                       '• [${d['category']}]: ${d['changeDescription']}',

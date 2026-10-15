@@ -79,21 +79,21 @@ class PdfExportService {
     final PdfFont bodyFont = PdfStandardFont(PdfFontFamily.helvetica, 9.5);
     final PdfFont italicFont = PdfStandardFont(PdfFontFamily.helvetica, 9, style: PdfFontStyle.italic);
 
-    // Top Brand Bar
+    // Top Brand Bar (Soft Graphite: 45, 49, 57, Warm Linen: 239, 232, 214, Lavender Haze: 146, 169, 225)
     page.graphics.drawRectangle(
-      brush: PdfSolidBrush(PdfColor(15, 23, 42)), // Slate 900
+      brush: PdfSolidBrush(PdfColor(45, 49, 57)), // Soft Graphite #2D3139
       bounds: Rect.fromLTWH(0, currentY, pageSize.width, 42),
     );
     page.graphics.drawString(
       'LEGALTECH REAL ESTATE AI ASSISTANT',
       PdfStandardFont(PdfFontFamily.helvetica, 11, style: PdfFontStyle.bold),
-      brush: PdfSolidBrush(PdfColor(255, 255, 255)),
+      brush: PdfSolidBrush(PdfColor(239, 232, 214)), // Warm Linen #EFE8D6
       bounds: Rect.fromLTWH(12, currentY + 14, pageSize.width - 24, 20),
     );
     page.graphics.drawString(
       'CONFIDENTIAL REPORT',
       PdfStandardFont(PdfFontFamily.helvetica, 9, style: PdfFontStyle.bold),
-      brush: PdfSolidBrush(PdfColor(148, 163, 184)),
+      brush: PdfSolidBrush(PdfColor(146, 169, 225)), // Lavender Haze #92A9E1
       bounds: Rect.fromLTWH(pageSize.width - 160, currentY + 16, 150, 20),
       format: PdfStringFormat(alignment: PdfTextAlignment.right),
     );
@@ -178,8 +178,8 @@ class PdfExportService {
     final PdfGridRow headerRow = grid.headers.add(1)[0];
     headerRow.cells[0].value = 'Detailed Clause Analysis & RERA Risk Rationale';
     headerRow.cells[0].style = PdfGridCellStyle(
-      backgroundBrush: PdfSolidBrush(PdfColor(15, 23, 42)),
-      textBrush: PdfSolidBrush(PdfColor(255, 255, 255)),
+      backgroundBrush: PdfSolidBrush(PdfColor(45, 49, 57)), // Soft Graphite #2D3139
+      textBrush: PdfSolidBrush(PdfColor(239, 232, 214)), // Warm Linen #EFE8D6
       font: PdfStandardFont(PdfFontFamily.helvetica, 11, style: PdfFontStyle.bold),
       cellPadding: PdfPaddings(left: 10, top: 8, right: 10, bottom: 8),
     );

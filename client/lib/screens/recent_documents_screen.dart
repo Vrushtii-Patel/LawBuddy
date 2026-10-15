@@ -333,12 +333,12 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
+                      color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
                       Icons.edit_rounded,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                       size: 20,
                     ),
                   ),
@@ -873,7 +873,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
           style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.2),
         ),
         backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        foregroundColor: isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
+        foregroundColor: isDark ? AppColors.softGraphite : AppColors.warmLinen,
         elevation: 2,
         hoverElevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -1016,16 +1016,16 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.15),
+                    color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+                      color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Center(
                     child: Icon(
                       Icons.folder_special_rounded,
-                      color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                       size: 22,
                     ),
                   ),
@@ -1052,10 +1052,10 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                             decoration: BoxDecoration(
-                              color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+                              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
                               borderRadius: BorderRadius.circular(6),
                               border: Border.all(
-                                color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.3),
+                                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(
@@ -1064,7 +1064,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                                 fontSize: 9,
                                 fontWeight: FontWeight.w800,
                                 letterSpacing: 0.6,
-                                color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                               ),
                             ),
                           ),
@@ -1430,16 +1430,16 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.12),
+              color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.12),
               shape: BoxShape.circle,
               border: Border.all(
-                color: (isDark ? AppColors.darkAccent : AppColors.lightAccent).withValues(alpha: 0.25),
+                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary).withValues(alpha: 0.25),
               ),
             ),
             child: Icon(
               icon,
               size: 36,
-              color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
             ),
           ),
           const SizedBox(height: 18),

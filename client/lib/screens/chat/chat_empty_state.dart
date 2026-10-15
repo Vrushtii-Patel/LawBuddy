@@ -104,13 +104,16 @@ class ChatEmptyState extends StatelessWidget {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+                  color: (isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary)
                       .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color:
-                        (isDark ? AppColors.darkAccent : AppColors.lightAccent)
-                            .withValues(alpha: 0.3),
+                    color: (isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.3),
                     width: 1.0,
                   ),
                 ),
@@ -118,8 +121,9 @@ class ChatEmptyState extends StatelessWidget {
                   child: Icon(
                     Icons.balance_rounded,
                     size: 30,
-                    color:
-                        isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                    color: isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary,
                   ),
                 ),
               ),
@@ -131,13 +135,16 @@ class ChatEmptyState extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                 decoration: BoxDecoration(
-                  color: (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+                  color: (isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary)
                       .withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color:
-                        (isDark ? AppColors.darkAccent : AppColors.lightAccent)
-                            .withValues(alpha: 0.25),
+                    color: (isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.25),
                   ),
                 ),
                 child: Row(
@@ -149,8 +156,8 @@ class ChatEmptyState extends StatelessWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isDark
-                            ? AppColors.darkAccent
-                            : AppColors.lightAccent,
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
                     ),
                     const SizedBox(width: 7),

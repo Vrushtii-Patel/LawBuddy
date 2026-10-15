@@ -1307,7 +1307,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               label: Text(loc.translate('adminAnalytics.returnToWorkspace')),
               style: ElevatedButton.styleFrom(
                 backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                foregroundColor: isDark ? AppColors.darkErrorText : Colors.white,
+                foregroundColor: isDark ? AppColors.softGraphite : AppColors.warmLinen,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
@@ -1355,7 +1355,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
               label: Text(loc.translate('adminAnalytics.retryConnection')),
               style: ElevatedButton.styleFrom(
                 backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                foregroundColor: isDark ? AppColors.darkErrorText : Colors.white,
+                foregroundColor: isDark ? AppColors.softGraphite : AppColors.warmLinen,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),

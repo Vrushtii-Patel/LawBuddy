@@ -115,7 +115,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
         isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final Color secondaryText =
         isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final Color primaryColor = AppColors.lightPrimary;
+    final Color primaryColor =
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
     final Color elevatedSurface =
         isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
 
@@ -359,8 +360,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                                                       ? 0.92
                                                       : 1.0),
                                           foregroundColor: isDark
-                                              ? AppColors.darkErrorText
-                                              : AppColors.lightTextPrimary,
+                                              ? AppColors.softGraphite
+                                              : AppColors.warmLinen,
                                           minimumSize:
                                               const Size(double.infinity, 48),
                                           shape: RoundedRectangleBorder(
@@ -381,9 +382,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen>
                                                           Color>(
                                                     isDark
                                                         ? AppColors
-                                                            .darkErrorText
-                                                        : AppColors
-                                                            .lightTextPrimary,
+                                                            .softGraphite
+                                                        : AppColors.warmLinen,
                                                   ),
                                                 ),
                                               )

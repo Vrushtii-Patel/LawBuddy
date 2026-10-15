@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -90,13 +91,17 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark,
                   style: OutlinedButton.styleFrom(
                     textStyle: GoogleFonts.plusJakartaSans(
                         fontSize: 12, fontWeight: FontWeight.w600),
+                    backgroundColor: isDark
+                        ? AppColors.darkSurfaceElevated
+                        : AppColors.lightSurfaceElevated,
                     foregroundColor: isDark
                         ? AppColors.darkTextPrimary
                         : AppColors.lightTextPrimary,
                     side: BorderSide(
                         color: isDark
                             ? AppColors.darkBorder
-                            : AppColors.lightBorder),
+                            : AppColors.lightBorderMedium,
+                        width: 1.1),
                   ),
                 ),
                 OutlinedButton.icon(
@@ -112,13 +117,17 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark,
                   style: OutlinedButton.styleFrom(
                     textStyle: GoogleFonts.plusJakartaSans(
                         fontSize: 12, fontWeight: FontWeight.w600),
+                    backgroundColor: isDark
+                        ? AppColors.darkSurfaceElevated
+                        : AppColors.lightSurfaceElevated,
                     foregroundColor: isDark
                         ? AppColors.darkTextPrimary
                         : AppColors.lightTextPrimary,
                     side: BorderSide(
                         color: isDark
                             ? AppColors.darkBorder
-                            : AppColors.lightBorder),
+                            : AppColors.lightBorderMedium,
+                        width: 1.1),
                   ),
                 ),
                 OutlinedButton.icon(
@@ -131,13 +140,17 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark,
                   style: OutlinedButton.styleFrom(
                     textStyle: GoogleFonts.plusJakartaSans(
                         fontSize: 12, fontWeight: FontWeight.w600),
+                    backgroundColor: isDark
+                        ? AppColors.darkSurfaceElevated
+                        : AppColors.lightSurfaceElevated,
                     foregroundColor: isDark
                         ? AppColors.darkTextPrimary
                         : AppColors.lightTextPrimary,
                     side: BorderSide(
                         color: isDark
                             ? AppColors.darkBorder
-                            : AppColors.lightBorder),
+                            : AppColors.lightBorderMedium,
+                        width: 1.1),
                   ),
                 ),
               ],
@@ -146,18 +159,19 @@ void showLegalDisclaimerDialog(BuildContext context, bool isDark,
         ),
       ),
       actions: [
-        FilledButton(
+        ElevatedButton(
           onPressed: () => Navigator.of(ctx).pop(),
-          style: FilledButton.styleFrom(
+          style: ElevatedButton.styleFrom(
             backgroundColor:
                 isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
             foregroundColor:
-                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                isDark ? AppColors.softGraphite : AppColors.warmLinen,
+            elevation: 0,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           child: Text(tr('common.understood'),
-              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600)),
+              style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w700)),
         ),
       ],
     ),
@@ -169,6 +183,7 @@ class WelcomeHeader extends ConsumerWidget {
   final bool isDesktop;
   final VoidCallback onLogoTap;
   final VoidCallback onFeaturesTap;
+  final VoidCallback? onDownloadTap;
   final VoidCallback onHowItWorksTap;
   final VoidCallback onRiskSystemTap;
   final VoidCallback onLoginTap;
@@ -179,6 +194,7 @@ class WelcomeHeader extends ConsumerWidget {
     required this.isDesktop,
     required this.onLogoTap,
     required this.onFeaturesTap,
+    this.onDownloadTap,
     required this.onHowItWorksTap,
     required this.onRiskSystemTap,
     required this.onLoginTap,
@@ -212,7 +228,7 @@ class WelcomeHeader extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Brand Logo + Title
-              Expanded(
+              Flexible(
                 child: InkWell(
                   onTap: onLogoTap,
                   borderRadius: BorderRadius.circular(10),
@@ -235,7 +251,7 @@ class WelcomeHeader extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Expanded(
+                      Flexible(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
@@ -259,8 +275,8 @@ class WelcomeHeader extends ConsumerWidget {
                               height: 1.5,
                               decoration: BoxDecoration(
                                 color: (isDark
-                                        ? AppColors.darkAccent
-                                        : AppColors.lightAccent)
+                                        ? AppColors.darkPrimary
+                                        : AppColors.lightPrimary)
                                     .withValues(alpha: 0.65),
                                 borderRadius: BorderRadius.circular(1),
                               ),
@@ -287,42 +303,47 @@ class WelcomeHeader extends ConsumerWidget {
                 ),
               ),
 
-              const SizedBox(width: 8),
-
               // Desktop Navigation Links
               if (isDesktop)
-                Flexible(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildNavButton(loc.translate('welcome.navFeatures'),
-                            onFeaturesTap, isDark),
-                        _buildNavButton(loc.translate('welcome.navHowItWorks'),
-                            onHowItWorksTap, isDark),
-                        _buildNavButton(loc.translate('welcome.navRiskSystem'),
-                            onRiskSystemTap, isDark),
-                        _buildNavButton(loc.translate('welcome.privacyPolicy'),
-                            () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => const PrivacyPolicyScreen()),
-                          );
-                        }, isDark),
-                        _buildNavButton(loc.translate('welcome.termsOfUse'),
-                            () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (_) => const TermsOfUseScreen()),
-                          );
-                        }, isDark),
-                        _buildNavButton(
-                            loc.translate('welcome.navDisclaimer'),
-                            () =>
-                                showLegalDisclaimerDialog(context, isDark, ref),
-                            isDark),
-                      ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildNavButton(loc.translate('welcome.navFeatures'),
+                                onFeaturesTap, isDark),
+                            if (kIsWeb && onDownloadTap != null)
+                              _buildNavButton('Download', onDownloadTap!, isDark),
+                            _buildNavButton(loc.translate('welcome.navHowItWorks'),
+                                onHowItWorksTap, isDark),
+                            _buildNavButton(loc.translate('welcome.navRiskSystem'),
+                                onRiskSystemTap, isDark),
+                            _buildNavButton(loc.translate('welcome.privacyPolicy'),
+                                () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (_) => const PrivacyPolicyScreen()),
+                              );
+                            }, isDark),
+                            _buildNavButton(loc.translate('welcome.termsOfUse'),
+                                () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (_) => const TermsOfUseScreen()),
+                              );
+                            }, isDark),
+                            _buildNavButton(
+                                loc.translate('welcome.navDisclaimer'),
+                                () =>
+                                    showLegalDisclaimerDialog(context, isDark, ref),
+                                isDark),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -337,16 +358,20 @@ class WelcomeHeader extends ConsumerWidget {
                       minimumSize: const Size(0, 36),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 8),
-                      side: BorderSide(
-                        color: isDark
-                            ? AppColors.darkBorder
-                            : AppColors.lightBorder,
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                      backgroundColor: isDark
+                          ? AppColors.darkSurfaceElevated
+                          : AppColors.lightSurfaceElevated,
                       foregroundColor: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
+                      side: BorderSide(
+                        color: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorderMedium,
+                        width: 1.2,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                     child: Text(
                       loc.translate('welcome.signIn'),
@@ -379,6 +404,9 @@ class WelcomeHeader extends ConsumerWidget {
                           case 'features':
                             onFeaturesTap();
                             break;
+                          case 'download':
+                            onDownloadTap?.call();
+                            break;
                           case 'howItWorks':
                             onHowItWorksTap();
                             break;
@@ -409,6 +437,10 @@ class WelcomeHeader extends ConsumerWidget {
                         PopupMenuItem(
                             value: 'features',
                             child: Text(loc.translate('welcome.navFeatures'))),
+                        if (kIsWeb && onDownloadTap != null)
+                          const PopupMenuItem(
+                              value: 'download',
+                              child: Text('Download App')),
                         PopupMenuItem(
                             value: 'howItWorks',
                             child:

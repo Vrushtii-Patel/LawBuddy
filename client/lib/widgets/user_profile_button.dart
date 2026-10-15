@@ -780,7 +780,7 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               backgroundColor: colorScheme.error,
-              foregroundColor: Colors.white,
+              foregroundColor: colorScheme.onError,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
             onPressed: () {

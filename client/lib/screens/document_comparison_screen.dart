@@ -457,7 +457,8 @@ class _DocumentComparisonScreenState extends ConsumerState<DocumentComparisonScr
                   label: Text(loc.translate('docComparison.scanNewAgreement')),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                    foregroundColor: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                    foregroundColor: isDark ? AppColors.softGraphite : AppColors.warmLinen,
+                    elevation: 0,
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     textStyle: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
                   ),

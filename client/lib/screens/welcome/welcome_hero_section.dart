@@ -178,8 +178,8 @@ class WelcomeHeroSection extends ConsumerWidget {
                                   ? AppColors.darkPrimary
                                   : AppColors.lightPrimary,
                               foregroundColor: isDark
-                                  ? AppColors.darkErrorText
-                                  : AppColors.lightTextPrimary,
+                                  ? AppColors.softGraphite
+                                  : AppColors.warmLinen,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 28, vertical: 15),
                               shape: RoundedRectangleBorder(
@@ -388,7 +388,7 @@ class WelcomeHeroSection extends ConsumerWidget {
                   textAlign: TextAlign.center,
                   style: baseStyle.copyWith(
                     color:
-                        (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+                        (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
                             .withValues(alpha: 0.3),
                   ),
                 ),

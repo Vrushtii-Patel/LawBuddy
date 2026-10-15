@@ -73,8 +73,8 @@ class HomeChecklistCard extends ConsumerWidget {
                       padding: const EdgeInsets.all(7),
                       decoration: BoxDecoration(
                         color: (isDark
-                                ? AppColors.darkAccent
-                                : AppColors.lightAccent)
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
                             .withValues(alpha: 0.18),
                         borderRadius: AppRadii.rounded8,
                       ),

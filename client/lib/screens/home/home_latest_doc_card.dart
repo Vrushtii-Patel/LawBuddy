@@ -229,8 +229,9 @@ class HomeLatestDocCard extends ConsumerWidget {
                             ? AppColors.darkPrimary
                             : AppColors.lightPrimary,
                         foregroundColor: isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.lightTextPrimary,
+                            ? AppColors.softGraphite
+                            : AppColors.warmLinen,
+                        elevation: 0,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 10),
                         shape: RoundedRectangleBorder(
@@ -366,8 +367,9 @@ class HomeLatestDocCard extends ConsumerWidget {
                           ? AppColors.darkPrimary
                           : AppColors.lightPrimary,
                       foregroundColor: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
+                          ? AppColors.softGraphite
+                          : AppColors.warmLinen,
+                      elevation: 0,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 12),
                       shape: RoundedRectangleBorder(

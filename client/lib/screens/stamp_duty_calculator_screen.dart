@@ -1277,14 +1277,17 @@ class _StampDutyCalculatorScreenState
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: isWarning
-            ? (isDark ? const Color(0xFF332005) : const Color(0xFFFFF8E1))
+            ? (isDark
+                ? AppColors.darkCaution.withValues(alpha: 0.12)
+                : AppColors.lightCaution.withValues(alpha: 0.08))
             : (isDark
                 ? AppColors.darkSurfaceElevated
                 : AppColors.lightSurfaceElevated),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isWarning
-              ? const Color(0xFFFF9800).withValues(alpha: isDark ? 0.6 : 0.4)
+              ? (isDark ? AppColors.darkCaution : AppColors.lightCaution)
+                  .withValues(alpha: isDark ? 0.45 : 0.35)
               : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
           width: 1,
         ),
@@ -1298,8 +1301,8 @@ class _StampDutyCalculatorScreenState
                 : Icons.verified_user_outlined,
             size: 18,
             color: isWarning
-                ? const Color(0xFFFF9800)
-                : (isDark ? AppColors.darkAccent : AppColors.lightPrimary),
+                ? (isDark ? AppColors.darkCaution : AppColors.lightCaution)
+                : (isDark ? AppColors.darkSecondary : AppColors.lightSecondary),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -1316,8 +1319,8 @@ class _StampDutyCalculatorScreenState
                         fontWeight: FontWeight.w700,
                         color: isWarning
                             ? (isDark
-                                ? const Color(0xFFFFB74D)
-                                : const Color(0xFFE65100))
+                                ? AppColors.darkCaution
+                                : AppColors.lightCaution)
                             : (isDark
                                 ? AppColors.darkTextPrimary
                                 : AppColors.lightTextPrimary),
@@ -1329,7 +1332,10 @@ class _StampDutyCalculatorScreenState
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFF9800).withValues(alpha: 0.2),
+                          color: (isDark
+                                  ? AppColors.darkCaution
+                                  : AppColors.lightCaution)
+                              .withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -1338,8 +1344,8 @@ class _StampDutyCalculatorScreenState
                             fontSize: 9,
                             fontWeight: FontWeight.w800,
                             color: isDark
-                                ? const Color(0xFFFFB74D)
-                                : const Color(0xFFE65100),
+                                ? AppColors.darkCaution
+                                : AppColors.lightCaution,
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -1356,13 +1362,9 @@ class _StampDutyCalculatorScreenState
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 11,
                     height: 1.35,
-                    color: isWarning
-                        ? (isDark
-                            ? const Color(0xFFFFCC80)
-                            : const Color(0xFFBF360C))
-                        : (isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary),
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
                   ),
                 ),
               ],

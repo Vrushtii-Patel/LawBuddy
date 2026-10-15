@@ -94,17 +94,21 @@ class WelcomeCtaBanner extends ConsumerWidget {
                           OutlinedButton(
                             onPressed: onExploreFeatures,
                             style: OutlinedButton.styleFrom(
-                              side: BorderSide(
-                                color: isDark
-                                    ? AppColors.darkBorder
-                                    : AppColors.lightBorder,
-                                width: 1.2,
-                              ),
+                              backgroundColor: isDark
+                                  ? AppColors.darkSurfaceElevated
+                                  : AppColors.lightSurfaceElevated,
                               foregroundColor: isDark
                                   ? AppColors.darkTextPrimary
                                   : AppColors.lightTextPrimary,
+                              side: BorderSide(
+                                color: isDark
+                                    ? AppColors.darkBorder
+                                    : AppColors.lightBorderMedium,
+                                width: 1.2,
+                              ),
+                              minimumSize: const Size(0, 48),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 16),
+                                  horizontal: 20, vertical: 14),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
                             ),
@@ -120,12 +124,13 @@ class WelcomeCtaBanner extends ConsumerWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: isDark
                                   ? AppColors.darkPrimary
-                                  : AppColors.lightTextPrimary,
+                                  : AppColors.lightPrimary,
                               foregroundColor: isDark
-                                  ? AppColors.darkSurface
-                                  : AppColors.lightSurface,
+                                  ? AppColors.softGraphite
+                                  : AppColors.warmLinen,
+                              minimumSize: const Size(0, 48),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 16),
+                                  horizontal: 24, vertical: 14),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
                               elevation: 0,
@@ -172,10 +177,11 @@ class WelcomeCtaBanner extends ConsumerWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: isDark
                               ? AppColors.darkPrimary
-                              : AppColors.lightTextPrimary,
+                              : AppColors.lightPrimary,
                           foregroundColor: isDark
-                              ? AppColors.darkSurface
-                              : AppColors.lightSurface,
+                              ? AppColors.softGraphite
+                              : AppColors.warmLinen,
+                          minimumSize: const Size(0, 48),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),
@@ -191,15 +197,19 @@ class WelcomeCtaBanner extends ConsumerWidget {
                       OutlinedButton(
                         onPressed: onExploreFeatures,
                         style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: isDark
-                                ? AppColors.darkBorder
-                                : AppColors.lightBorder,
-                            width: 1.2,
-                          ),
+                          backgroundColor: isDark
+                              ? AppColors.darkSurfaceElevated
+                              : AppColors.lightSurfaceElevated,
                           foregroundColor: isDark
                               ? AppColors.darkTextPrimary
                               : AppColors.lightTextPrimary,
+                          side: BorderSide(
+                            color: isDark
+                                ? AppColors.darkBorder
+                                : AppColors.lightBorderMedium,
+                            width: 1.2,
+                          ),
+                          minimumSize: const Size(0, 48),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12)),

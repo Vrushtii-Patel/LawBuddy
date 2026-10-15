@@ -88,24 +88,16 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 3.5),
                         decoration: BoxDecoration(
-                          color: (isDark
-                                  ? AppColors.darkAccent
-                                  : AppColors.lightAccent)
-                              .withValues(alpha: 0.1),
+                          color: itemAccent.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                            color: (isDark
-                                    ? AppColors.darkAccent
-                                    : AppColors.lightAccent)
-                                .withValues(alpha: 0.25),
+                            color: itemAccent.withValues(alpha: 0.25),
                           ),
                         ),
                         child: Text(
                           widget.category,
                           style: GoogleFonts.plusJakartaSans(
-                            color: isDark
-                                ? AppColors.darkAccent
-                                : AppColors.lightAccent,
+                            color: itemAccent,
                             fontSize: 9.5,
                             fontWeight: FontWeight.w800,
                             letterSpacing: 0.6,

@@ -83,7 +83,7 @@ class HomeMetricsRow extends ConsumerWidget {
                 'total': totalTasks.toString(),
               })
             : loc.translate('home.checklistZeroTasks'),
-        accentColor: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+        accentColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
       ),
       WorkspaceMetricData(
         icon: Icons.assignment_outlined,

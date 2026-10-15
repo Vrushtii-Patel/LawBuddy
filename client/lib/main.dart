@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/home_screen.dart';
 import 'screens/welcome_screen.dart';
+import 'screens/how_it_works_screen.dart';
 import 'screens/analysis_screen.dart';
 import 'screens/shared_summary_screen.dart';
 import 'providers/auth_provider.dart';
@@ -76,6 +77,16 @@ class LawBuddyApp extends ConsumerWidget {
     }
 
     final screenParam = Uri.base.queryParameters['screen']?.toLowerCase();
+    final fragment = Uri.base.hasFragment ? Uri.base.fragment.toLowerCase() : '';
+    final path = Uri.base.path.toLowerCase();
+    final isHowItWorksUrl = screenParam == 'how-it-works' ||
+        screenParam == 'howitworks' ||
+        path.endsWith('/how-it-works') ||
+        path.endsWith('/howitworks') ||
+        fragment == '/how-it-works' ||
+        fragment.startsWith('/how-it-works') ||
+        fragment == 'how-it-works';
+
     Widget homeWidget;
 
     if (shareParam != null && shareParam.trim().isNotEmpty) {
@@ -105,6 +116,8 @@ class LawBuddyApp extends ConsumerWidget {
           },
         ],
       );
+    } else if (isHowItWorksUrl) {
+      homeWidget = const HowItWorksScreen();
     } else if (screenParam == 'welcome') {
       homeWidget = const WelcomeScreen();
     } else {
@@ -119,6 +132,20 @@ class LawBuddyApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       home: homeWidget,
+      routes: {
+        '/how-it-works': (context) => const HowItWorksScreen(),
+        '/welcome': (context) => const WelcomeScreen(),
+      },
+      onGenerateRoute: (settings) {
+        final name = (settings.name ?? '').toLowerCase();
+        if (name == '/how-it-works' || name == 'how-it-works' || name == '/howitworks') {
+          return MaterialPageRoute(
+            builder: (_) => const HowItWorksScreen(),
+            settings: settings,
+          );
+        }
+        return null;
+      },
       builder: (context, child) {
         if (child == null) return const SizedBox.shrink();
         return Scaffold(

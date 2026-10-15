@@ -37,8 +37,8 @@ class _StepCardState extends State<StepCard> {
         curve: Curves.easeOutCubic,
         transform: Matrix4.translationValues(0, _isHovered ? -5 : 0, 0),
         width: double.infinity,
-        constraints: const BoxConstraints(minHeight: 165),
-        padding: const EdgeInsets.all(18),
+        constraints: const BoxConstraints(minHeight: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(16),
@@ -60,6 +60,7 @@ class _StepCardState extends State<StepCard> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
@@ -78,26 +79,29 @@ class _StepCardState extends State<StepCard> {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Text(
               widget.title,
               style: GoogleFonts.plusJakartaSans(
-                fontSize: 16,
+                fontSize: 15.5,
                 fontWeight: FontWeight.w700,
                 color: isDark
                     ? AppColors.darkTextPrimary
                     : AppColors.lightTextPrimary,
               ),
             ),
-            const SizedBox(height: 6),
-            Text(
-              widget.description,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 13,
-                height: 1.45,
-                color: isDark
-                    ? AppColors.darkTextSecondary
-                    : AppColors.lightTextSecondary,
+            const SizedBox(height: 5),
+            Flexible(
+              fit: FlexFit.loose,
+              child: Text(
+                widget.description,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12.5,
+                  height: 1.4,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
+                ),
               ),
             ),
           ],
@@ -162,37 +166,39 @@ class WelcomeHowItWorksSection extends ConsumerWidget {
               ),
               const SizedBox(height: 36),
               isDesktop
-                  ? Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                            child: StepCard(
-                                number: '01',
-                                title: step1Title,
-                                description: step1Desc,
-                                isDark: isDark)),
-                        _buildStepArrow(isDark),
-                        Expanded(
-                            child: StepCard(
-                                number: '02',
-                                title: step2Title,
-                                description: step2Desc,
-                                isDark: isDark)),
-                        _buildStepArrow(isDark),
-                        Expanded(
-                            child: StepCard(
-                                number: '03',
-                                title: step3Title,
-                                description: step3Desc,
-                                isDark: isDark)),
-                        _buildStepArrow(isDark),
-                        Expanded(
-                            child: StepCard(
-                                number: '04',
-                                title: step4Title,
-                                description: step4Desc,
-                                isDark: isDark)),
-                      ],
+                  ? IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                              child: StepCard(
+                                  number: '01',
+                                  title: step1Title,
+                                  description: step1Desc,
+                                  isDark: isDark)),
+                          _buildStepArrow(isDark),
+                          Expanded(
+                              child: StepCard(
+                                  number: '02',
+                                  title: step2Title,
+                                  description: step2Desc,
+                                  isDark: isDark)),
+                          _buildStepArrow(isDark),
+                          Expanded(
+                              child: StepCard(
+                                  number: '03',
+                                  title: step3Title,
+                                  description: step3Desc,
+                                  isDark: isDark)),
+                          _buildStepArrow(isDark),
+                          Expanded(
+                              child: StepCard(
+                                  number: '04',
+                                  title: step4Title,
+                                  description: step4Desc,
+                                  isDark: isDark)),
+                        ],
+                      ),
                     )
                   : Column(
                       children: [
@@ -229,12 +235,14 @@ class WelcomeHowItWorksSection extends ConsumerWidget {
   }
 
   Widget _buildStepArrow(bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 56),
-      child: Icon(
-        Icons.chevron_right_rounded,
-        size: 22,
-        color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        child: Icon(
+          Icons.chevron_right_rounded,
+          size: 22,
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+        ),
       ),
     );
   }

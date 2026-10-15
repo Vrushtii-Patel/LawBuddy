@@ -148,16 +148,16 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             color: isDark
-                                ? AppColors.darkBackground
-                                : AppColors.lightTextPrimary,
+                                ? AppColors.softGraphite
+                                : AppColors.warmLinen,
                           ),
                         ),
                       )
                     : Icon(
                         Icons.arrow_upward_rounded,
                         color: isDark
-                            ? AppColors.darkBackground
-                            : AppColors.lightTextPrimary,
+                            ? AppColors.softGraphite
+                            : AppColors.warmLinen,
                         size: 22,
                       ),
               ),

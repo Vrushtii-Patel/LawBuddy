@@ -619,15 +619,23 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                  color: (isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary)
+                      .withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: const Color(0xFFF59E0B).withValues(alpha: 0.3),
+                    color: (isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.3),
                   ),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.folder_shared_rounded,
-                  color: Color(0xFFF59E0B),
+                  color: isDark
+                      ? AppColors.darkPrimary
+                      : AppColors.lightPrimary,
                   size: 20,
                 ),
               ),
@@ -680,15 +688,15 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: (isDark
-                                  ? AppColors.darkAccent
-                                  : AppColors.lightAccent)
+                                  ? AppColors.darkPrimary
+                                  : AppColors.lightPrimary)
                               .withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
                           Icons.checklist_rounded,
                           color: isDark
-                              ? AppColors.darkAccent
+                              ? AppColors.darkPrimary
                               : AppColors.lightPrimary,
                           size: 18,
                         ),
@@ -830,21 +838,22 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: (isDark
-                              ? AppColors.darkAccent
-                              : AppColors.lightAccent)
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary)
                           .withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: (isDark
-                                ? AppColors.darkAccent
-                                : AppColors.lightAccent)
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
                             .withValues(alpha: 0.3),
                       ),
                     ),
                     child: Icon(
                       Icons.auto_awesome_rounded,
-                      color:
-                          isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                      color: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary,
                       size: 20,
                     ),
                   ),
@@ -1327,8 +1336,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: (isDark
-                                ? AppColors.darkAccent
-                                : AppColors.lightAccent)
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
                             .withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -1339,8 +1348,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.8,
                           color: isDark
-                              ? AppColors.darkAccent
-                              : AppColors.lightAccent,
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary,
                         ),
                       ),
                     ),
@@ -1620,11 +1629,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        color: (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+        color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
             .withValues(alpha: 0.12),
         shape: BoxShape.circle,
         border: Border.all(
-          color: (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+          color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
               .withValues(alpha: 0.3),
         ),
       ),

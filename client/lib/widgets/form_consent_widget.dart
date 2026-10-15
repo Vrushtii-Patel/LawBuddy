@@ -51,7 +51,8 @@ class FormConsentCheckbox extends StatelessWidget {
         isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final secondaryText =
         isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final primaryColor = AppColors.lightPrimary;
+    final primaryColor =
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
     final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
     final cardBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
@@ -75,7 +76,7 @@ class FormConsentCheckbox extends StatelessWidget {
                     onChanged: onChanged,
                     activeColor: primaryColor,
                     checkColor:
-                        isDark ? AppColors.darkBackground : Colors.white,
+                        isDark ? AppColors.softGraphite : AppColors.warmLinen,
                     side: BorderSide(
                       color: hasError ? errorColor : cardBorder,
                       width: 1.5,
