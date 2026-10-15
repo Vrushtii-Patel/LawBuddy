@@ -73,10 +73,25 @@ jobs:
         working-directory: ./client
         run: flutter test
 
+      - name: Validate production API URL
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: |
+          if [ -z "$API_URL" ]; then
+            echo "::error::Configure the API_URL repository secret to your deployed HTTPS backend URL ending in /api."
+            exit 1
+          fi
+          case "$API_URL" in
+            https://*/api) ;;
+            *) echo "::error::API_URL must use HTTPS and end with /api (example: https://your-backend.onrender.com/api)."; exit 1 ;;
+          esac
+
       - name: Build Web App
         working-directory: ./client
-        # API_URL is supplied via repository secrets; base-href configured for GitHub Pages repository root
-        run: flutter build web --release --dart-define=API_URL=${{ secrets.API_URL }} --base-href="/Final-year-project/"
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        # GitHub repository Pages path; API_URL must be the deployed backend API root.
+        run: flutter build web --release --dart-define="API_URL=${API_URL}" --base-href="/LawBuddy/"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
