@@ -6,6 +6,9 @@ on:
       - main
       - master
       - Jiya
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -48,7 +51,6 @@ jobs:
     needs: [backend-ci]
     runs-on: ubuntu-latest
 
-    # Permissions required to publish build artifacts to GitHub Pages
     permissions:
       contents: write
 
@@ -90,10 +92,10 @@ jobs:
         working-directory: ./client
         env:
           API_URL: ${{ secrets.API_URL }}
-        # GitHub repository Pages path; API_URL must be the deployed backend API root.
         run: flutter build web --release --dart-define="API_URL=${API_URL}" --base-href="/LawBuddy/"
 
       - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/Jiya'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
