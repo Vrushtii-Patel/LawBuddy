@@ -57,6 +57,23 @@ function readFileFromStorage(storagePath) {
 /**
  * Determines if an error is transient (eligible for automatic retry).
  */
+/** Minimum number of characters that counts as "readable text" from a scanned file. */
+const MIN_READABLE_TEXT_CHARS = 20;
+
+/**
+ * Wraps a failure while reading a file into a clear error with a stable code.
+ * AI-analysis errors already have a clear meaning, so they are passed through unchanged.
+ */
+function wrapExtractionError(err, code, prefix) {
+    if (err && err.name === 'AiAnalysisError') return err;
+    const wrapped = new Error(`${prefix}: ${err && err.message ? err.message : String(err)}`);
+    wrapped.code = code;
+    wrapped.cause = err;
+    const status = err && (err.status || err.statusCode);
+    if (status) wrapped.status = status;
+    return wrapped;
+}
+
 function isTransientError(error) {
     if (!error) return false;
     const msg = (error.message || '').toLowerCase();
@@ -330,7 +347,7 @@ async function executeJobPipeline(jobId) {
                             sourceType: job.sourceType,
                             userId: job.userId
                         });
-                        
+
                         if (scannedResult && scannedResult.analysis && scannedResult.analysis.length > 0) {
                             job.extractedText = scannedResult.extractedText;
                             job.canonicalClauses = scannedResult.canonicalClauses;
@@ -348,13 +365,14 @@ async function executeJobPipeline(jobId) {
                             console.log(`[ScanJob ${job.jobId}] Scanned PDF pipeline completed holistically in Stage 2.`);
                             return job;
                         }
-                        
+
                         extractedText = scannedResult ? scannedResult.extractedText : '';
                         canonicalClauses = scannedResult ? scannedResult.canonicalClauses : [];
                     } catch (scannedErr) {
-                        console.warn(`[ScanJob ${job.jobId}] Scanned PDF vision fallback failed (${scannedErr.message}), using buffer text fallback.`);
-                        extractedText = llmService.normalizeDocumentText(fileBuffer.toString('utf8'));
-                        canonicalClauses = llmService.extractCanonicalClausesFromText(extractedText);
+                        // Never fall back to reading the PDF's raw bytes as text: that produces
+                        // garbage which the AI would then "analyze" into a fake report.
+                        console.warn(`[ScanJob ${job.jobId}] Scanned PDF vision extraction failed: ${scannedErr.message}`);
+                        throw wrapExtractionError(scannedErr, 'PDF_READ_FAILED', 'Could not read this scanned PDF');
                     }
                 }
             } else if (fileBuffer && isImage) {
@@ -365,7 +383,7 @@ async function executeJobPipeline(jobId) {
                     sourceType: 'Photo Scan',
                     userId: job.userId
                 });
-                
+
                 if (imgResult && imgResult.analysis && imgResult.analysis.length > 0) {
                     job.extractedText = imgResult.extractedText;
                     job.canonicalClauses = imgResult.canonicalClauses;
@@ -383,7 +401,7 @@ async function executeJobPipeline(jobId) {
                     console.log(`[ScanJob ${job.jobId}] Image scan pipeline completed holistically in Stage 2.`);
                     return job;
                 }
-                
+
                 extractedText = imgResult ? imgResult.extractedText : '';
                 canonicalClauses = imgResult ? imgResult.canonicalClauses : [];
             } else if (job.extractedText && job.extractedText.length > 0) {
@@ -391,6 +409,12 @@ async function executeJobPipeline(jobId) {
                 canonicalClauses = llmService.extractCanonicalClausesFromText(extractedText);
             } else {
                 throw new Error('Source document data is missing for this scan job. Please upload the document again.');
+            }
+
+            if (fileBuffer && (isPdf || isImage) && (extractedText || '').trim().length < MIN_READABLE_TEXT_CHARS) {
+                const noText = new Error('No readable text was found in this document. Please upload a clearer PDF or photo.');
+                noText.code = 'NO_READABLE_TEXT';
+                throw noText;
             }
 
             if (!canonicalClauses || canonicalClauses.length === 0) {
