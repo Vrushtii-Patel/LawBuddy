@@ -638,25 +638,6 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     }
   }
 
-  void _loadSampleAgreement() {
-    _textController.text = '''BUILDER-BUYER AGREEMENT CLAUSES (EXCERPT)
-
-1. HANDOVER TIMELINE & DELAY PENALTY:
-The Developer agrees to offer possession of the Apartment within 36 months from the date of sanction of building plans. If the Developer fails to deliver possession within the stipulated time, the Developer shall pay compensation to the Allottee calculated at ₹5 per sq. ft. of super built-up area per month for the period of delay.
-
-2. ALLOTTEE DEFAULT & CANCELLATION:
-If the Allottee fails to pay any installment on the due date, interest at the rate of 18% per annum compounded monthly shall be payable by the Allottee on the delayed amount. If default persists beyond 30 days, the Developer reserves the right to cancel the allotment and forfeit 20% of the total consideration.
-
-3. ESCROW ACCOUNT & PAYMENT MILESTONES:
-All amounts paid by the Allottee shall be deposited into the general operating account of the Developer. The Developer reserves the right to alter construction milestones and demand progress payments accordingly.
-
-4. SUPER AREA VS CARPET AREA VARIATION:
-The final sale consideration is subject to variation based on architectural revisions. Any increase in the super built-up area up to 10% shall be billed additionally to the Allottee at prevailing market rates.
-
-5. INDEMNITY & STATUTORY CLEARANCES:
-The Developer represents that necessary zoning approvals are under application with local municipal bodies and environmental clearance will be obtained prior to occupancy certificate issuance.''';
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -1262,99 +1243,57 @@ The Developer represents that necessary zoning approvals are under application w
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row: Title & Action Helpers
+          // Header Row: Title
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: (isDark
-                                ? AppColors.darkAccent
-                                : AppColors.lightAccent)
-                            .withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: (isDark
-                                  ? AppColors.darkAccent
-                                  : AppColors.lightAccent)
-                              .withValues(alpha: 0.25),
-                        ),
-                      ),
-                      child: Icon(
-                        Icons.edit_note_rounded,
-                        size: 20,
-                        color: isDark
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: (isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightAccent)
+                      .withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: (isDark
                             ? AppColors.darkAccent
-                            : AppColors.lightAccent,
+                            : AppColors.lightAccent)
+                        .withValues(alpha: 0.25),
+                  ),
+                ),
+                child: Icon(
+                  Icons.edit_note_rounded,
+                  size: 20,
+                  color: isDark
+                      ? AppColors.darkAccent
+                      : AppColors.lightAccent,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      loc.translate('scan.documentContent'),
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            loc.translate('scan.documentContent'),
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: isDark
-                                  ? AppColors.darkTextPrimary
-                                  : AppColors.lightTextPrimary,
-                            ),
-                          ),
-                          Text(
-                            loc.translate('scan.pastePrompt'),
-                            style: GoogleFonts.plusJakartaSans(
-                              fontSize: 12,
-                              color: isDark
-                                  ? AppColors.darkTextSecondary
-                                  : AppColors.lightTextSecondary,
-                            ),
-                          ),
-                        ],
+                    Text(
+                      loc.translate('scan.pastePrompt'),
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
                       ),
                     ),
                   ],
-                ),
-              ),
-
-              // Sample Agreement Quick-Load Helper
-              TextButton.icon(
-                onPressed: _loadSampleAgreement,
-                icon: Icon(
-                  Icons.auto_awesome_rounded,
-                  size: 14,
-                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                ),
-                label: Text(
-                  'Load Sample Agreement',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w700,
-                    color:
-                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                  ),
-                ),
-                style: TextButton.styleFrom(
-                  backgroundColor:
-                      (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                          .withValues(alpha: 0.1),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(
-                      color: isDark
-                          ? AppColors.darkAccent
-                          : AppColors.lightPrimary,
-                    ),
-                  ),
                 ),
               ),
             ],

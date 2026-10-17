@@ -36,7 +36,6 @@ class _PromptCardState extends ConsumerState<PromptCard> {
   @override
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
-    final loc = ref.read(localeProvider.notifier);
     final itemAccent = widget.accentColor;
     final isDark = widget.isDark;
 
@@ -59,106 +58,66 @@ class _PromptCardState extends ConsumerState<PromptCard> {
               width: 1.0,
             ),
           ),
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Top Row: Icon Container + Badge
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color:
-                              itemAccent.withValues(alpha: isDark ? 0.15 : 0.1),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: itemAccent.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Icon(widget.icon, color: itemAccent, size: 20),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3.5),
-                        decoration: BoxDecoration(
-                          color: itemAccent.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: itemAccent.withValues(alpha: 0.25),
-                          ),
-                        ),
-                        child: Text(
-                          widget.category,
-                          style: GoogleFonts.plusJakartaSans(
-                            color: itemAccent,
-                            fontSize: 9.5,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 0.6,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Title
-                  Text(
-                    widget.title,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
-                      letterSpacing: -0.3,
+                  Container(
+                    padding: const EdgeInsets.all(7),
+                    decoration: BoxDecoration(
+                      color: itemAccent.withValues(alpha: isDark ? 0.15 : 0.1),
+                      borderRadius: BorderRadius.circular(8),
                     ),
+                    child: Icon(widget.icon, color: itemAccent, size: 16),
                   ),
-                  const SizedBox(height: 6),
-
-                  // Description
-                  Text(
-                    widget.description,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12,
-                      height: 1.4,
-                      color: isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary,
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
+                    decoration: BoxDecoration(
+                      color: itemAccent.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      widget.category,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: itemAccent,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 18),
-
-              // Bottom Action Row
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    loc.translate('chat.askLegalAi'),
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w700,
-                      color: isDark
-                          ? AppColors.darkAccent
-                          : AppColors.lightPrimary,
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    color:
-                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                    size: 14,
-                  ),
-                ],
+              const SizedBox(height: 10),
+              Text(
+                widget.title,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w700,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                  letterSpacing: -0.2,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                widget.description,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11.5,
+                  height: 1.35,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
@@ -172,12 +131,14 @@ class HoverableChip extends StatefulWidget {
   final String label;
   final bool isDark;
   final VoidCallback onTap;
+  final bool fullWidth;
 
   const HoverableChip({
     super.key,
     required this.label,
     required this.isDark,
     required this.onTap,
+    this.fullWidth = false,
   });
 
   @override
@@ -199,14 +160,15 @@ class _HoverableChipState extends State<HoverableChip> {
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+          width: widget.fullWidth ? double.infinity : null,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
             color: _isHovered
                 ? (isDark
                     ? AppColors.darkElevatedSurface
                     : AppColors.lightElevatedSurface)
                 : (isDark ? AppColors.darkSurface : AppColors.lightSurface),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: _isHovered
                   ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
@@ -215,23 +177,37 @@ class _HoverableChipState extends State<HoverableChip> {
             ),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize:
+                widget.fullWidth ? MainAxisSize.max : MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
-                Icons.gavel_rounded,
-                size: 12,
+                Icons.help_outline_rounded,
+                size: 14,
                 color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
               ),
-              const SizedBox(width: 6),
-              Text(
-                widget.label,
-                style: GoogleFonts.plusJakartaSans(
-                  color: isDark
-                      ? AppColors.darkTextPrimary
-                      : AppColors.lightTextPrimary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  widget.label,
+                  softWrap: true,
+                  style: GoogleFonts.plusJakartaSans(
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w600,
+                    height: 1.35,
+                  ),
                 ),
+              ),
+              const SizedBox(width: 8),
+              Icon(
+                Icons.arrow_forward_rounded,
+                size: 13,
+                color: isDark
+                    ? AppColors.darkTextSecondary.withValues(alpha: 0.5)
+                    : AppColors.lightTextSecondary.withValues(alpha: 0.5),
               ),
             ],
           ),

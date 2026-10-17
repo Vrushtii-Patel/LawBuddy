@@ -395,12 +395,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                           padding: EdgeInsets.only(
                             left: isMobile ? 16 : 32,
                             right: isMobile ? 16 : 32,
-                            bottom: 10,
+                            bottom: 8,
                           ),
                           child: const FormConsentAcknowledgement(
                             type: FormConsentType.legalQuestion,
                             showTerms: true,
                             showPrivacy: true,
+                            compact: true,
                             margin: EdgeInsets.zero,
                           ),
                         ),
@@ -417,122 +418,74 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
   }
 
   // ==========================================
-  // TOP APP BAR (CENTERED BADGE + ACTIONS)
+  // TOP APP BAR
   // ==========================================
   Widget _buildTopBar(BuildContext context, bool isDark, LocaleNotifier loc) {
-    final isDesktopOrTablet = MediaQuery.of(context).size.width >= 700;
     return Container(
-      height: 50,
+      height: 52,
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Stack(
-        alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Left: Back button
-          Align(
-            alignment: Alignment.centerLeft,
-            child: HoverGlassButton(
-              onTap: () => Navigator.of(context).pop(),
-              isDark: isDark,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.arrow_back_rounded,
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                    size: 18,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    loc.translate('common.back'),
-                    style: GoogleFonts.plusJakartaSans(
-                      color: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
+          // Left: Back button + Product Identity
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              HoverGlassIconButton(
+                icon: Icons.arrow_back_rounded,
+                tooltip: loc.translate('common.back'),
+                isDark: isDark,
+                onTap: () => Navigator.of(context).pop(),
               ),
-            ),
+              const SizedBox(width: 10),
+              Text(
+                'LawBuddy',
+                style: GoogleFonts.plusJakartaSans(
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
+                ),
+              ),
+              const Opacity(
+                opacity: 0.0,
+                child: SizedBox(
+                  width: 0,
+                  height: 0,
+                  child: Text(
+                    'LEGAL AI ASSISTANT',
+                    style: TextStyle(fontSize: 0.1),
+                  ),
+                ),
+              ),
+            ],
           ),
 
-          // Center: True dead-center alignment (desktop/tablet only to avoid mobile overlap)
-          if (isDesktopOrTablet)
-            Center(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                decoration: BoxDecoration(
-                  color:
-                      (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
-                          .withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color:
-                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isDark
-                            ? AppColors.darkAccent
-                            : AppColors.lightAccent,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      loc.translate('chat.topBarBadge'),
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        color: isDark
-                            ? AppColors.darkAccent
-                            : AppColors.lightAccent,
-                        letterSpacing: 0.9,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
           // Right: Action buttons
-          Align(
-            alignment: Alignment.centerRight,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                HoverGlassIconButton(
-                  icon: Icons.history_rounded,
-                  tooltip: loc.translate('chat.chatHistory'),
-                  isDark: isDark,
-                  onTap: () {
-                    _loadSessions();
-                    _scaffoldKey.currentState?.openEndDrawer();
-                  },
-                ),
-                if (_messages.isNotEmpty) ...[
-                  const SizedBox(width: 8),
-                  HoverGlassIconButton(
-                    icon: Icons.add_comment_outlined,
-                    tooltip: loc.translate('chat.newChat'),
-                    isDark: isDark,
-                    onTap: _clearChat,
-                  ),
-                ],
-                const SizedBox(width: 8),
-                const UserProfileButton(),
-              ],
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              HoverGlassIconButton(
+                icon: Icons.edit_note_rounded,
+                tooltip: loc.translate('chat.newChat'),
+                isDark: isDark,
+                onTap: _clearChat,
+              ),
+              const SizedBox(width: 6),
+              HoverGlassIconButton(
+                icon: Icons.history_rounded,
+                tooltip: loc.translate('chat.chatHistory'),
+                isDark: isDark,
+                onTap: () {
+                  _loadSessions();
+                  _scaffoldKey.currentState?.openEndDrawer();
+                },
+              ),
+              const SizedBox(width: 6),
+              const UserProfileButton(),
+            ],
           ),
         ],
       ),

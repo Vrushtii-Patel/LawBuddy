@@ -20,32 +20,6 @@ class ChatEmptyState extends StatelessWidget {
     required this.onPromptSelected,
   });
 
-  Widget _buildLegalTag(IconData icon, String text, Color color, bool isDark) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: isDark ? 0.12 : 0.08),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.30)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 12, color: color),
-          const SizedBox(width: 5),
-          Text(
-            text,
-            style: GoogleFonts.plusJakartaSans(
-              color: color,
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final promptCards = [
@@ -89,57 +63,33 @@ class ChatEmptyState extends StatelessWidget {
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding:
-          EdgeInsets.symmetric(horizontal: isMobile ? 16 : 32, vertical: 20),
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 16 : 28,
+        vertical: isMobile ? 24 : 36,
+      ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 880),
+          constraints: const BoxConstraints(maxWidth: 760),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(height: 8),
-
-              // Emblem Badge
+              // Clean Centered Emblem
               Container(
-                width: 64,
-                height: 64,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: (isDark
-                          ? AppColors.darkPrimary
-                          : AppColors.lightPrimary)
-                      .withValues(alpha: 0.12),
+                  gradient: LinearGradient(
+                    colors: [
+                      (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                          .withValues(alpha: 0.2),
+                      (isDark ? AppColors.darkAccent : AppColors.lightAccent)
+                          .withValues(alpha: 0.1),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: (isDark
-                            ? AppColors.darkPrimary
-                            : AppColors.lightPrimary)
-                        .withValues(alpha: 0.3),
-                    width: 1.0,
-                  ),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.balance_rounded,
-                    size: 30,
-                    color: isDark
-                        ? AppColors.darkPrimary
-                        : AppColors.lightPrimary,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 18),
-
-              // Eyebrow Tag
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                decoration: BoxDecoration(
-                  color: (isDark
-                          ? AppColors.darkPrimary
-                          : AppColors.lightPrimary)
-                      .withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: (isDark
                             ? AppColors.darkPrimary
@@ -147,37 +97,18 @@ class ChatEmptyState extends StatelessWidget {
                         .withValues(alpha: 0.25),
                   ),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isDark
-                            ? AppColors.darkPrimary
-                            : AppColors.lightPrimary,
-                      ),
-                    ),
-                    const SizedBox(width: 7),
-                    Text(
-                      'AI CONTRACT SCRUTINY • RERA RIGHTS • INSTANT CONSULTATION',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: isDark
-                            ? AppColors.darkTextSecondary
-                            : AppColors.lightTextSecondary,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                  ],
+                child: Center(
+                  child: Icon(
+                    Icons.balance_rounded,
+                    size: 24,
+                    color:
+                        isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                  ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 18),
 
-              // Main Headline
+              // Title
               Text(
                 loc.translate('chat.heroHeadline'),
                 textAlign: TextAlign.center,
@@ -185,16 +116,16 @@ class ChatEmptyState extends StatelessWidget {
                   color: isDark
                       ? AppColors.darkTextPrimary
                       : AppColors.lightTextPrimary,
-                  fontSize: isMobile ? 22 : 28,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.5,
+                  fontSize: isMobile ? 22 : 26,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.4,
                 ),
               ),
               const SizedBox(height: 8),
 
               // Subtitle
               ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 620),
+                constraints: const BoxConstraints(maxWidth: 520),
                 child: Text(
                   loc.translate('chat.heroSubtitle'),
                   textAlign: TextAlign.center,
@@ -202,52 +133,21 @@ class ChatEmptyState extends StatelessWidget {
                     color: isDark
                         ? AppColors.darkTextSecondary
                         : AppColors.lightTextSecondary,
-                    fontSize: 14,
+                    fontSize: 13.5,
                     height: 1.45,
                   ),
                 ),
               ),
+              const SizedBox(height: 30),
 
-              const SizedBox(height: 16),
-
-              // Legal Badges Row
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                alignment: WrapAlignment.center,
-                children: [
-                  _buildLegalTag(
-                      Icons.shield_outlined,
-                      loc.translate('chat.tagRera'),
-                      isDark
-                          ? AppColors.darkSecondary
-                          : AppColors.lightSecondary,
-                      isDark),
-                  _buildLegalTag(
-                      Icons.description_outlined,
-                      loc.translate('chat.tagTenancy'),
-                      isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                      isDark),
-                  _buildLegalTag(
-                      Icons.balance_rounded,
-                      loc.translate('chat.tagTransfer'),
-                      isDark
-                          ? AppColors.darkSecondary
-                          : AppColors.lightSecondary,
-                      isDark),
-                ],
-              ),
-
-              const SizedBox(height: 28),
-
-              // 2x2 Interactive Prompt Cards Grid
+              // 4 Clean Starter Prompt Cards in Responsive Grid
               if (isMobile)
                 Column(
                   children: promptCards.asMap().entries.map((entry) {
                     final index = entry.key;
                     final p = entry.value;
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 14),
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: PromptCard(
                         index: index,
                         category: p['category'] as String,
@@ -280,7 +180,7 @@ class ChatEmptyState extends StatelessWidget {
                             isDark: isDark,
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: PromptCard(
                             index: 1,
@@ -296,7 +196,7 @@ class ChatEmptyState extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -313,7 +213,7 @@ class ChatEmptyState extends StatelessWidget {
                             isDark: isDark,
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: PromptCard(
                             index: 3,
@@ -331,70 +231,6 @@ class ChatEmptyState extends StatelessWidget {
                     ),
                   ],
                 ),
-
-              const SizedBox(height: 24),
-
-              // Quick Topic Chips
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                alignment: WrapAlignment.center,
-                children: [
-                  loc.translate('chat.chip1'),
-                  loc.translate('chat.chip2'),
-                  loc.translate('chat.chip3'),
-                  loc.translate('chat.chip4'),
-                ]
-                    .map((s) => HoverableChip(
-                          label: s,
-                          isDark: isDark,
-                          onTap: () => onPromptSelected(
-                              'Explain: $s under Indian property law'),
-                        ))
-                    .toList(),
-              ),
-
-              const SizedBox(height: 24),
-
-              // Legal Disclaimer Capsule
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color:
-                      isDark ? AppColors.darkSurface : AppColors.lightSurface,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color:
-                        isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.lock_outline_rounded,
-                      size: 13,
-                      color: isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary,
-                    ),
-                    const SizedBox(width: 6),
-                    Flexible(
-                      child: Text(
-                        loc.translate('chat.disclaimer'),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.plusJakartaSans(
-                          color: isDark
-                              ? AppColors.darkTextSecondary
-                              : AppColors.lightTextSecondary,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),

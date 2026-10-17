@@ -197,30 +197,30 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (isUser)
+                  if (!isUser && !isError)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.only(bottom: 8),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: const Icon(Icons.person_rounded,
-                                    size: 13, color: Colors.white),
+                              Icon(
+                                Icons.auto_awesome,
+                                size: 14,
+                                color: isDark
+                                    ? AppColors.darkAccent
+                                    : AppColors.lightPrimary,
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                'You',
+                                'LawBuddy',
                                 style: GoogleFonts.plusJakartaSans(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
+                                  color: isDark
+                                      ? AppColors.darkTextPrimary
+                                      : AppColors.lightTextPrimary,
+                                  fontSize: 12.5,
+                                  fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ],
@@ -234,204 +234,20 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                                     : Icons.copy_rounded,
                                 key: ValueKey<bool>(_copied),
                                 size: 14,
-                                color: _copied ? Colors.white : Colors.white70,
+                                color: _copied
+                                    ? (isDark
+                                        ? AppColors.darkSecondary
+                                        : AppColors.lightSecondary)
+                                    : (isDark
+                                        ? AppColors.darkTextSecondary
+                                        : AppColors.lightTextSecondary),
                               ),
                             ),
-                            tooltip: 'Copy message',
+                            tooltip: 'Copy response',
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
-                            onPressed: () => _copyToClipboard(
-                                context, widget.message['text'] ?? ''),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (!isUser && !isError)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: (isDark
-                                          ? AppColors.darkAccent
-                                          : AppColors.lightPrimary)
-                                      .withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Icon(
-                                  _isRevealing
-                                      ? Icons.auto_awesome
-                                      : Icons.gavel_rounded,
-                                  size: 14,
-                                  color: isDark
-                                      ? AppColors.darkAccent
-                                      : AppColors.lightPrimary,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Legal AI Advisor',
-                                style: GoogleFonts.plusJakartaSans(
-                                  color: isDark
-                                      ? AppColors.darkAccent
-                                      : AppColors.lightPrimary,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.2,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              if (_isRevealing)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 7, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: (isDark
-                                            ? AppColors.darkPrimary
-                                            : AppColors.lightPrimary)
-                                        .withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                        width: 8,
-                                        height: 8,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 1.5,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  isDark
-                                                      ? AppColors.darkPrimary
-                                                      : AppColors.lightPrimary),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(
-                                        'ANALYZING',
-                                        style: GoogleFonts.plusJakartaSans(
-                                          color: isDark
-                                              ? AppColors.darkPrimary
-                                              : AppColors.lightPrimary,
-                                          fontSize: 9,
-                                          fontWeight: FontWeight.w700,
-                                          letterSpacing: 0.4,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              else
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: (isDark
-                                            ? AppColors.darkSecondary
-                                            : AppColors.lightSecondary)
-                                        .withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    'PROPERTY LAW',
-                                    style: GoogleFonts.plusJakartaSans(
-                                      color: isDark
-                                          ? AppColors.darkSecondary
-                                          : AppColors.lightSecondary,
-                                      fontSize: 9,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 0.3,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (_isRevealing)
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 6.0),
-                                  child: Tooltip(
-                                    message: 'Reveal entire answer immediately',
-                                    child: InkWell(
-                                      onTap: _finishTyping,
-                                      borderRadius: BorderRadius.circular(6),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8, vertical: 3),
-                                        decoration: BoxDecoration(
-                                          color: (isDark
-                                                  ? AppColors.darkAccent
-                                                  : AppColors.lightPrimary)
-                                              .withValues(alpha: 0.1),
-                                          borderRadius:
-                                              BorderRadius.circular(6),
-                                          border: Border.all(
-                                            color: (isDark
-                                                    ? AppColors.darkAccent
-                                                    : AppColors.lightPrimary)
-                                                .withValues(alpha: 0.3),
-                                            width: 0.8,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(Icons.fast_forward_rounded,
-                                                size: 12,
-                                                color: isDark
-                                                    ? AppColors.darkAccent
-                                                    : AppColors.lightPrimary),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              'Show full answer',
-                                              style:
-                                                  GoogleFonts.plusJakartaSans(
-                                                color: isDark
-                                                    ? AppColors.darkAccent
-                                                    : AppColors.lightPrimary,
-                                                fontSize: 10.5,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              IconButton(
-                                icon: AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 200),
-                                  child: Icon(
-                                    _copied
-                                        ? Icons.check_rounded
-                                        : Icons.copy_rounded,
-                                    key: ValueKey<bool>(_copied),
-                                    size: 15,
-                                    color: _copied
-                                        ? (isDark
-                                            ? AppColors.darkSecondary
-                                            : AppColors.lightSecondary)
-                                        : (isDark
-                                            ? AppColors.darkTextSecondary
-                                            : AppColors.lightTextSecondary),
-                                  ),
-                                ),
-                                tooltip: 'Copy response',
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: () =>
-                                    _copyToClipboard(context, _fullText),
-                              ),
-                            ],
+                            onPressed: () =>
+                                _copyToClipboard(context, _fullText),
                           ),
                         ],
                       ),
@@ -629,16 +445,35 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                 (widget.message['suggestions'] as List).isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 10.0, bottom: 8.0),
-                child: Wrap(
-                  spacing: 8.0,
-                  runSpacing: 8.0,
-                  children: (widget.message['suggestions'] as List)
-                      .map((s) => HoverableChip(
-                            label: s.toString(),
-                            isDark: isDark,
-                            onTap: () => widget.onSuggestionTap(s.toString()),
-                          ))
-                      .toList(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4.0, bottom: 6.0),
+                      child: Text(
+                        'Suggested follow-ups',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ),
+                    ...(widget.message['suggestions'] as List)
+                        .map((s) => Padding(
+                              padding: const EdgeInsets.only(bottom: 6.0),
+                              child: HoverableChip(
+                                label: s.toString(),
+                                isDark: isDark,
+                                fullWidth: true,
+                                onTap: () =>
+                                    widget.onSuggestionTap(s.toString()),
+                              ),
+                            )),
+                  ],
                 ),
               ),
           ],

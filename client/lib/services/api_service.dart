@@ -12,6 +12,8 @@ class ApiService {
   /// Centralized request timeout for all standard HTTP calls.
   static const Duration defaultTimeout = Duration(seconds: 30);
 
+  static String androidHost = 'localhost:3000';
+
   static String get baseUrl {
     const String envApiUrl = String.fromEnvironment('API_URL');
     if (envApiUrl.isNotEmpty) {
@@ -22,7 +24,7 @@ class ApiService {
       return 'http://localhost:3000/api';
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:3000/api';
+      return 'http://$androidHost/api';
     }
     return 'http://localhost:3000/api';
   }

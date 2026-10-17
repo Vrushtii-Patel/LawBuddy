@@ -171,6 +171,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
   final bool showTerms;
   final bool showPrivacy;
   final EdgeInsetsGeometry? margin;
+  final bool compact;
 
   const FormConsentAcknowledgement({
     super.key,
@@ -179,6 +180,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
     this.showTerms = true,
     this.showPrivacy = true,
     this.margin,
+    this.compact = false,
   });
 
   void _openTerms(BuildContext context) {
@@ -219,6 +221,54 @@ class FormConsentAcknowledgement extends StatelessWidget {
       case FormConsentType.custom:
         mainText = customText ?? '';
         break;
+    }
+
+    if (compact) {
+      return Padding(
+        padding: margin ?? const EdgeInsets.symmetric(vertical: 4),
+        child: Text.rich(
+          TextSpan(
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 10.5,
+              height: 1.35,
+              color: secondaryText.withValues(alpha: 0.8),
+            ),
+            children: [
+              TextSpan(text: '$mainText '),
+              if (showPrivacy) ...[
+                TextSpan(
+                  text: 'Privacy Policy',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w600,
+                    color: primaryText,
+                    decoration: TextDecoration.underline,
+                    decorationColor: primaryText.withValues(alpha: 0.4),
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => _openPrivacy(context),
+                ),
+              ],
+              if (showTerms && showPrivacy) const TextSpan(text: ' • '),
+              if (showTerms) ...[
+                TextSpan(
+                  text: 'Terms of Use',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w600,
+                    color: primaryText,
+                    decoration: TextDecoration.underline,
+                    decorationColor: primaryText.withValues(alpha: 0.4),
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => _openTerms(context),
+                ),
+              ],
+            ],
+          ),
+          textAlign: TextAlign.center,
+        ),
+      );
     }
 
     return Container(

@@ -758,6 +758,8 @@ ${JSON.stringify(payload, null, 2)}
 
     const maxRetries = 2;
     let lastParsedClauses = null;
+    let lastError = null;
+    let lastValidationError = null;
 
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
         try {
@@ -779,16 +781,85 @@ ${JSON.stringify(payload, null, 2)}
                 if (validation.valid) {
                     return validation.analyzedClauses;
                 } else {
+                    lastValidationError = validation.error;
                     console.warn(`Stage B validation failed on attempt ${attempt + 1}: ${validation.error}. Retrying with same canonical clauses...`);
                 }
+            } else {
+                lastValidationError = 'AI returned no usable clause list.';
             }
         } catch (err) {
+            lastError = err;
             console.warn(`Stage B analysis error on attempt ${attempt + 1}:`, err.message);
         }
     }
 
-    console.warn('Reconciling canonical clauses with last available AI output for 100% integrity guarantee...');
-    return reconcileCanonicalClauses(canonicalClauses, lastParsedClauses || []);
+    // Never invent a "safe" verdict. If any clause has no real AI verdict, the whole
+    // analysis fails so the caller can retry or show an error instead of a false result.
+    const unanalyzedIds = getUnanalyzedClauseIds(canonicalClauses, lastParsedClauses);
+    if (unanalyzedIds.length > 0) {
+        if (lastError && !lastParsedClauses) {
+            throw new AiAnalysisError(`AI legal analysis unavailable: ${lastError.message}`, {
+                code: 'AI_ANALYSIS_UNAVAILABLE',
+                cause: lastError,
+                status: lastError.status || lastError.statusCode || null
+            });
+        }
+        const detail = lastValidationError || (lastError && lastError.message) || 'unknown reason';
+        throw new AiAnalysisError(
+            `AI legal analysis incomplete: no verdict for ${unanalyzedIds.length} of ${canonicalClauses.length} clauses (${detail})`,
+            { code: 'AI_ANALYSIS_INCOMPLETE', cause: lastError, status: lastError && (lastError.status || lastError.statusCode) || null }
+        );
+    }
+
+    // Every clause has a real AI verdict; strict validation failed only on a technicality
+    // (for example an extra or duplicate id). Keep the AI's own verdicts.
+    console.warn('AI output covers every clause but failed strict validation; reconciling with the AI verdicts.');
+    return reconcileCanonicalClauses(canonicalClauses, lastParsedClauses);
+}
+
+/**
+ * Raised when the AI could not produce a real analysis for every clause.
+ * Callers must treat this as a FAILED analysis, never as "no issues found".
+ * code: AI_ANALYSIS_UNAVAILABLE (AI could not be reached / errored) or
+ *       AI_ANALYSIS_INCOMPLETE  (AI answered, but not for every clause).
+ */
+class AiAnalysisError extends Error {
+    constructor(message, { code = 'AI_ANALYSIS_UNAVAILABLE', cause = null, status = null } = {}) {
+        super(message);
+        this.name = 'AiAnalysisError';
+        this.code = code;
+        if (cause) this.cause = cause;
+        if (status) this.status = status;
+    }
+}
+
+/**
+ * Maps the AI's riskLevel text to HIGH_RISK / CAUTION / COMPLIANT.
+ * Returns null when the value is missing or not recognised, so an unknown
+ * value can never silently turn into a "safe" COMPLIANT verdict.
+ */
+function normalizeRiskLevel(raw) {
+    const value = String(raw || '').toUpperCase().trim();
+    if (!value) return null;
+    if (value.includes('HIGH') || value.includes('RED')) return 'HIGH_RISK';
+    if (value.includes('CAUTION') || value.includes('MEDIUM') || value.includes('YELLOW')) return 'CAUTION';
+    if (value.includes('COMPLIANT') || value.includes('GREEN') || value === 'LOW' || value === 'LOW_RISK') return 'COMPLIANT';
+    return null;
+}
+
+/**
+ * IDs of canonical clauses that have no usable AI verdict in rawAiClauses.
+ */
+function getUnanalyzedClauseIds(canonicalClauses, rawAiClauses) {
+    const analyzed = new Set();
+    if (Array.isArray(rawAiClauses)) {
+        for (const item of rawAiClauses) {
+            if (item && item.clauseId && normalizeRiskLevel(item.riskLevel)) {
+                analyzed.add(item.clauseId);
+            }
+        }
+    }
+    return canonicalClauses.filter(c => !analyzed.has(c.clauseId)).map(c => c.clauseId);
 }
 
 /**
@@ -812,13 +883,9 @@ function validateClauseIntegrity(canonicalClauses, rawAiClauses) {
         }
         seenIds.add(item.clauseId);
 
-        let riskLevel = String(item.riskLevel || '').toUpperCase().trim();
-        if (riskLevel.includes('HIGH') || riskLevel.includes('RED')) {
-            riskLevel = 'HIGH_RISK';
-        } else if (riskLevel.includes('CAUTION') || riskLevel.includes('MEDIUM') || riskLevel.includes('YELLOW')) {
-            riskLevel = 'CAUTION';
-        } else {
-            riskLevel = 'COMPLIANT';
+        const riskLevel = normalizeRiskLevel(item.riskLevel);
+        if (!riskLevel) {
+            return { valid: false, error: `Missing or unrecognised riskLevel for ${item.clauseId}: ${JSON.stringify(item.riskLevel)}` };
         }
 
         const category = riskLevel === 'HIGH_RISK' ? 'Red' : (riskLevel === 'CAUTION' ? 'Yellow' : 'Green');
@@ -860,14 +927,9 @@ function reconcileCanonicalClauses(canonicalClauses, rawAiClauses) {
 
     return canonicalClauses.map(c => {
         const ai = aiMap.get(c.clauseId) || {};
-        let riskLevel = String(ai.riskLevel || '').toUpperCase().trim();
-        if (riskLevel.includes('HIGH') || riskLevel.includes('RED')) {
-            riskLevel = 'HIGH_RISK';
-        } else if (riskLevel.includes('CAUTION') || riskLevel.includes('MEDIUM') || riskLevel.includes('YELLOW')) {
-            riskLevel = 'CAUTION';
-        } else {
-            riskLevel = 'COMPLIANT';
-        }
+        // Defensive: callers only reconcile when every clause has a verdict. If one is
+        // still missing, flag it for review instead of calling it compliant.
+        const riskLevel = normalizeRiskLevel(ai.riskLevel) || 'CAUTION';
         const category = riskLevel === 'HIGH_RISK' ? 'Red' : (riskLevel === 'CAUTION' ? 'Yellow' : 'Green');
 
         return {
@@ -876,7 +938,7 @@ function reconcileCanonicalClauses(canonicalClauses, rawAiClauses) {
             text: c.text,
             category,
             riskLevel,
-            reason: ai.reason || 'Legal analysis audited under Indian Property and Contract Laws.',
+            reason: ai.reason || 'No AI analysis was available for this clause. Please review it manually.',
             reraReferences: Array.isArray(ai.reraReferences) ? ai.reraReferences : (ai.reraReferences ? [String(ai.reraReferences)] : []),
             buyerImpact: ai.buyerImpact || '',
             recommendation: ai.recommendation || '',
@@ -1197,6 +1259,7 @@ exports.extractJpegImagesFromPdfBuffer = extractJpegImagesFromPdfBuffer;
 exports.normalizeDocumentText = normalizeDocumentText;
 exports.extractCanonicalClausesFromText = extractCanonicalClausesFromText;
 exports.analyzeCanonicalClauses = analyzeCanonicalClauses;
+exports.AiAnalysisError = AiAnalysisError;
 exports.PROMPT_VERSION = PROMPT_VERSION;
 exports.ANALYSIS_VERSION = ANALYSIS_VERSION;
 exports.MODEL_NAME = MODEL_NAME;
@@ -1504,5 +1567,3 @@ exports.MODEL_NAME = MODEL_NAME;
 exports.MODEL_VERSION = MODEL_VERSION;
 exports.PROMPT_VERSION = PROMPT_VERSION;
 exports.ANALYSIS_VERSION = ANALYSIS_VERSION;
-
-
