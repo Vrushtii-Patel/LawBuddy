@@ -734,13 +734,16 @@ Your task is Stage B: Audit and classify the exact provided list of canonical co
 6. STRICT SCHEMA & INTEGRITY:
    - Retain exact canonical clauseId as provided in the input (do not assume a fixed count or fixed IDs like CLAUSE-001 through CLAUSE-010 — use whatever clauseIds are actually given to you).
    - Never add, delete, split, or merge clauses.
+   - legalFinding is a short plain summary of the legal issue. statutoryCitations lists ONLY the statutes and sections you actually relied on in your reason (use [] when none apply). Never invent a section number.
    - Return valid JSON matching schema:
 {
   "clauses": [
     {
       "clauseId": "CLAUSE-001",
       "riskLevel": "HIGH_RISK | CAUTION | COMPLIANT",
-      "findingCategory": "Confirmed statutory violation | Potential legal concern | Contractual risk | Documentation/title concern | No material issue identified",
+      "findingCategory": "Confirmed statutory violation | Potential legal concern | Contractual risk | Documentation/title concern | Applicability uncertain | No material issue identified",
+      "legalFinding": "One or two plain sentences naming the legal issue and why it matters (empty string if there is no issue)",
+      "statutoryCitations": ["Indian Contract Act, 1872 - Section 74"],
       "reason": "Structured 5-step analysis: [Finding Category] - FACT FROM DOCUMENT: ... - LEGAL PRINCIPLE: ... - APPLICATION: ... - LIMITATION/UNCERTAINTY: ... - RECOMMENDATION: ...",
       "reraReferences": [],
       "buyerImpact": "Concrete practical consequence for the buyer",
@@ -863,6 +866,75 @@ function getUnanalyzedClauseIds(canonicalClauses, rawAiClauses) {
 }
 
 /**
+ * The only finding categories the database accepts (see ScanJob / Document models).
+ */
+const FINDING_CATEGORIES = [
+    'Confirmed statutory violation',
+    'Potential legal concern',
+    'Contractual risk',
+    'Documentation/title concern',
+    'Applicability uncertain',
+    'No material issue identified'
+];
+
+/**
+ * Turns whatever the AI wrote for findingCategory into one of FINDING_CATEGORIES.
+ * Tolerates different capitalisation, brackets and extra text. When the value is
+ * missing/unknown, or contradicts the risk level (for example HIGH_RISK together with
+ * "No material issue identified"), a category matching the risk level is used instead.
+ */
+function normalizeFindingCategory(raw, riskLevel) {
+    const squash = (v) => String(v || '')
+        .toLowerCase()
+        .replace(/[\[\]"']/g, '')
+        .replace(/\s*\/\s*/g, '/')
+        .replace(/\s+/g, ' ')
+        .trim();
+    const fallbackForRisk = riskLevel === 'HIGH_RISK'
+        ? 'Potential legal concern'
+        : (riskLevel === 'CAUTION' ? 'Contractual risk' : 'No material issue identified');
+
+    const value = squash(raw);
+    if (!value) return fallbackForRisk;
+
+    let matches = FINDING_CATEGORIES.filter(c => squash(c) === value);
+    if (matches.length === 0) {
+        matches = FINDING_CATEGORIES.filter(c => value.includes(squash(c)));
+    }
+    if (matches.length === 0) return fallbackForRisk;
+
+    let chosen = matches[0];
+    if (matches.length > 1 && riskLevel === 'COMPLIANT' && matches.includes('No material issue identified')) {
+        chosen = 'No material issue identified';
+    }
+    if (chosen === 'No material issue identified' && riskLevel !== 'COMPLIANT') {
+        return fallbackForRisk;
+    }
+    return chosen;
+}
+
+/** Short plain-text legal finding; capped to the length the database allows. */
+function cleanLegalFinding(raw) {
+    return typeof raw === 'string' ? raw.trim().slice(0, 4000) : '';
+}
+
+/** List of cited statutes/sections: strings only, trimmed, de-duplicated, max 20. */
+function cleanStatutoryCitations(raw) {
+    const list = Array.isArray(raw) ? raw : (typeof raw === 'string' && raw.trim() ? [raw] : []);
+    const seen = new Set();
+    const out = [];
+    for (const entry of list) {
+        if (typeof entry !== 'string') continue;
+        const text = entry.trim().slice(0, 300);
+        if (!text || seen.has(text.toLowerCase())) continue;
+        seen.add(text.toLowerCase());
+        out.push(text);
+        if (out.length >= 20) break;
+    }
+    return out;
+}
+
+/**
  * Validates that Stage B returned exactly the canonical clause IDs.
  */
 function validateClauseIntegrity(canonicalClauses, rawAiClauses) {
@@ -897,7 +969,10 @@ function validateClauseIntegrity(canonicalClauses, rawAiClauses) {
             text: canonical.text,
             category,
             riskLevel,
+            findingCategory: normalizeFindingCategory(item.findingCategory, riskLevel),
             reason: item.reason || 'Audited under Indian Property Laws and statutory guidelines.',
+            legalFinding: cleanLegalFinding(item.legalFinding),
+            statutoryCitations: cleanStatutoryCitations(item.statutoryCitations),
             reraReferences: Array.isArray(item.reraReferences) ? item.reraReferences : (item.reraReferences ? [String(item.reraReferences)] : []),
             buyerImpact: item.buyerImpact || '',
             recommendation: item.recommendation || '',
@@ -938,7 +1013,10 @@ function reconcileCanonicalClauses(canonicalClauses, rawAiClauses) {
             text: c.text,
             category,
             riskLevel,
+            findingCategory: normalizeFindingCategory(ai.findingCategory, riskLevel),
             reason: ai.reason || 'No AI analysis was available for this clause. Please review it manually.',
+            legalFinding: cleanLegalFinding(ai.legalFinding),
+            statutoryCitations: cleanStatutoryCitations(ai.statutoryCitations),
             reraReferences: Array.isArray(ai.reraReferences) ? ai.reraReferences : (ai.reraReferences ? [String(ai.reraReferences)] : []),
             buyerImpact: ai.buyerImpact || '',
             recommendation: ai.recommendation || '',
@@ -1260,6 +1338,7 @@ exports.normalizeDocumentText = normalizeDocumentText;
 exports.extractCanonicalClausesFromText = extractCanonicalClausesFromText;
 exports.analyzeCanonicalClauses = analyzeCanonicalClauses;
 exports.AiAnalysisError = AiAnalysisError;
+exports.FINDING_CATEGORIES = FINDING_CATEGORIES;
 exports.PROMPT_VERSION = PROMPT_VERSION;
 exports.ANALYSIS_VERSION = ANALYSIS_VERSION;
 exports.MODEL_NAME = MODEL_NAME;

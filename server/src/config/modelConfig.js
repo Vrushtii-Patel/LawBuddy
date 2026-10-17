@@ -18,7 +18,7 @@
 // Generation pipeline
 const MODEL_NAME = "gemini-3.5-flash-lite";
 const MODEL_VERSION = "latest";
-const PROMPT_VERSION = "v1.1.0";
+const PROMPT_VERSION = "v1.2.0";
 const ANALYSIS_VERSION = "v1.1.0";
 const TEMPERATURE = 0.0;
 
