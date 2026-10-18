@@ -255,6 +255,45 @@ async function createScanJob({
 }
 
 /**
+ * Adds a finished document's risky clauses to the user's due-diligence checklists.
+ * A checklist problem must never turn a completed analysis into a failed one.
+ * `document` needs { _id, title, analysis }; a saved Document works.
+ */
+async function syncChecklistsForDocument(job, document) {
+    if (!document || !document._id) {
+        console.warn(`[ScanJob ${job.jobId}] Checklist sync skipped: no saved document to link.`);
+        return;
+    }
+    try {
+        await crossReferenceService.syncDocumentIssuesWithChecklists(job.userId, document);
+        console.log(`[ScanJob ${job.jobId}] Cross-referencing checklist sync completed for user ${job.userId}`);
+    } catch (syncErr) {
+        console.warn(`[ScanJob ${job.jobId}] Warning: Checklist sync error:`, syncErr.message);
+    }
+}
+
+/**
+ * Same as above for scanned PDFs and photos, which are saved by the AI pipeline itself.
+ * Loads the saved Document; if it cannot be re-read, the analysed result is used instead.
+ */
+async function syncChecklistsForScannedResult(job, result) {
+    if (!result || !result.documentId) {
+        console.warn(`[ScanJob ${job.jobId}] Checklist sync skipped: scan result has no document id.`);
+        return;
+    }
+    let document = null;
+    try {
+        document = await Document.findById(result.documentId);
+    } catch (loadErr) {
+        console.warn(`[ScanJob ${job.jobId}] Could not reload saved document for checklist sync:`, loadErr.message);
+    }
+    if (!document) {
+        document = { _id: result.documentId, title: job.title, analysis: result.analysis };
+    }
+    await syncChecklistsForDocument(job, document);
+}
+
+/**
  * Core Stage-by-Stage Resumable Pipeline Execution
  */
 async function executeJobPipeline(jobId) {
@@ -363,6 +402,7 @@ async function executeJobPipeline(jobId) {
                             job.completedAt = new Date();
                             await job.save();
                             console.log(`[ScanJob ${job.jobId}] Scanned PDF pipeline completed holistically in Stage 2.`);
+                            await syncChecklistsForScannedResult(job, scannedResult);
                             return job;
                         }
 
@@ -399,6 +439,7 @@ async function executeJobPipeline(jobId) {
                     job.completedAt = new Date();
                     await job.save();
                     console.log(`[ScanJob ${job.jobId}] Image scan pipeline completed holistically in Stage 2.`);
+                    await syncChecklistsForScannedResult(job, imgResult);
                     return job;
                 }
 
@@ -569,12 +610,7 @@ async function executeJobPipeline(jobId) {
             await job.save();
 
             // Synchronize detected document issues with user's due diligence checklists
-            try {
-                await crossReferenceService.syncDocumentIssuesWithChecklists(job.userId, savedDoc);
-                console.log(`[ScanJob ${job.jobId}] Cross-referencing checklist sync completed for user ${job.userId}`);
-            } catch (syncErr) {
-                console.warn(`[ScanJob ${job.jobId}] Warning: Checklist sync error:`, syncErr.message);
-            }
+            await syncChecklistsForDocument(job, savedDoc);
 
             console.log(`[ScanJob ${job.jobId}] STAGE 4 COMPLETE: Linked to Document ${savedDoc._id}. Status: COMPLETED.`);
         } else {
