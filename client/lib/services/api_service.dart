@@ -12,7 +12,15 @@ class ApiService {
   /// Centralized request timeout for all standard HTTP calls.
   static const Duration defaultTimeout = Duration(seconds: 30);
 
-  static String androidHost = 'localhost:3000';
+  /// Server address used by Android builds when API_URL is not set.
+  /// 10.0.2.2 is how the Android emulator reaches the computer running the server.
+  /// Override it when building, for example:
+  ///   real phone on your Wi-Fi:  flutter run --dart-define=ANDROID_HOST=192.168.1.5:3000
+  ///   real phone with adb reverse: flutter run --dart-define=ANDROID_HOST=localhost:3000
+  static String androidHost = const String.fromEnvironment(
+    'ANDROID_HOST',
+    defaultValue: '10.0.2.2:3000',
+  );
 
   static String get baseUrl {
     const String envApiUrl = String.fromEnvironment('API_URL');
@@ -1118,4 +1126,4 @@ class ApiTimeoutException extends ApiException {
 
   @override
   String toString() => message;
-}
+}

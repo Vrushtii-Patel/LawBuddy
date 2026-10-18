@@ -57,7 +57,18 @@ function run() {
         'Info.plist must not disable App Transport Security (NSAllowsArbitraryLoads = true)');
     console.log('✓ iOS keeps App Transport Security enabled');
 
-    console.log('\nALL RELEASE CONFIG CHECKS PASSED (4/4)');
+    // Item 6: the Android default must reach the computer running the server from an emulator.
+    const api = read('lib/services/api_service.dart');
+    const hostMatch = /static\s+String\s+androidHost\s*=\s*const\s+String\.fromEnvironment\(\s*'ANDROID_HOST'\s*,\s*defaultValue:\s*'([^']+)'\s*,?\s*\)/.exec(api);
+    assert.ok(hostMatch,
+        "api_service.dart must define androidHost = const String.fromEnvironment('ANDROID_HOST', defaultValue: ...) so it can be overridden at build time");
+    assert.strictEqual(hostMatch[1], '10.0.2.2:3000',
+        `Android default host must be 10.0.2.2:3000 (the emulator's address for your computer), found "${hostMatch[1]}"`);
+    assert.ok(/defaultTargetPlatform\s*==\s*TargetPlatform\.android\)\s*\{\s*return\s+'http:\/\/\$androidHost\/api';/.test(api),
+        'Android builds without API_URL must use androidHost');
+    console.log('✓ Android default API host is 10.0.2.2:3000 and can be overridden with --dart-define=ANDROID_HOST');
+
+    console.log('\nALL RELEASE CONFIG CHECKS PASSED (5/5)');
 }
 
 try {
