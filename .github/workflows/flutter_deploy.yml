@@ -76,7 +76,7 @@ jobs:
       - name: Build Web App
         working-directory: ./client
         # API_URL is supplied via repository secrets; base-href configured for GitHub Pages repository root
-        run: flutter build web --release --dart-define=API_URL=${{ secrets.API_URL }} --base-href="/Final-year-project/"
+        run: flutter build web --release --dart-define=API_URL=${{ secrets.API_URL }} --base-href="/LawBuddy/"
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
