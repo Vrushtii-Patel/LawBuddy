@@ -20,6 +20,34 @@ function applicationTag(xml) {
     return match ? match[1] : null;
 }
 
+
+/** Returns the keys that appear more than once inside the same <dict> of a plist. */
+function duplicatePlistKeys(plist) {
+    const duplicates = [];
+    const stack = [];
+    const tokens = /<(\/?)(dict|array)>|<key>([^<]*)<\/key>/g;
+    let m;
+    while ((m = tokens.exec(plist)) !== null) {
+        if (m[2]) {
+            if (m[1]) stack.pop();
+            else stack.push({ isDict: m[2] === 'dict', keys: new Set() });
+        } else if (m[3] !== undefined) {
+            const top = stack[stack.length - 1];
+            if (top && top.isDict) {
+                if (top.keys.has(m[3])) duplicates.push(m[3]);
+                top.keys.add(m[3]);
+            }
+        }
+    }
+    return duplicates;
+}
+
+/** Value of a top-level plist string key, or null. */
+function plistString(plist, key) {
+    const m = new RegExp('<key>' + key + '</key>\\s*<string>([^<]*)</string>').exec(plist);
+    return m ? m[1].trim() : null;
+}
+
 function run() {
     console.log('--- Release configuration guard ---');
 
@@ -57,6 +85,20 @@ function run() {
         'Info.plist must not disable App Transport Security (NSAllowsArbitraryLoads = true)');
     console.log('✓ iOS keeps App Transport Security enabled');
 
+    // Item 7: iOS needs a reason for every protected resource the app uses.
+    const pubspec = read('pubspec.yaml');
+    if (/^\s*image_picker\s*:/m.test(pubspec)) {
+        for (const key of ['NSCameraUsageDescription', 'NSPhotoLibraryUsageDescription']) {
+            const text = plistString(plist, key);
+            assert.ok(text && text.length >= 20,
+                `Info.plist must contain ${key} with a sentence explaining why (the app uses image_picker; without it iOS closes the app when the camera or photos are opened)`);
+        }
+        console.log('✓ iOS Info.plist explains camera and photo library access');
+    }
+    const dupes = duplicatePlistKeys(plist);
+    assert.deepStrictEqual(dupes, [], `Info.plist has duplicate keys (iOS keeps only one, unpredictably): ${dupes.join(', ')}`);
+    console.log('✓ iOS Info.plist has no duplicate keys');
+
     // Item 6: the Android default must reach the computer running the server from an emulator.
     const api = read('lib/services/api_service.dart');
     const hostMatch = /static\s+String\s+androidHost\s*=\s*const\s+String\.fromEnvironment\(\s*'ANDROID_HOST'\s*,\s*defaultValue:\s*'([^']+)'\s*,?\s*\)/.exec(api);
@@ -68,7 +110,7 @@ function run() {
         'Android builds without API_URL must use androidHost');
     console.log('✓ Android default API host is 10.0.2.2:3000 and can be overridden with --dart-define=ANDROID_HOST');
 
-    console.log('\nALL RELEASE CONFIG CHECKS PASSED (5/5)');
+    console.log('\nALL RELEASE CONFIG CHECKS PASSED (7/7)');
 }
 
 try {
