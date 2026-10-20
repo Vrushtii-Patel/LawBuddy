@@ -73,6 +73,15 @@ jobs:
         working-directory: ./client
         run: flutter test
 
+      - name: Require API_URL secret
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: |
+          if [ -z "$API_URL" ]; then
+            echo "::error::The API_URL repository secret is empty or missing. Refusing to build a release that would point at localhost."
+            exit 1
+          fi
+
       - name: Build Web App
         working-directory: ./client
         # API_URL is supplied via repository secrets; base-href configured for GitHub Pages repository root
