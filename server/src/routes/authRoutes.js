@@ -489,16 +489,11 @@ router.get('/me', requireAuth, async (req, res) => {
 // =========================================================================
 // 9) POST /api/auth/logout
 // =========================================================================
-router.post('/logout', requireAuth, async (req, res) => {
-  try {
-    if (req.user && req.user.userId) {
-      await User.updateOne({ userId: req.user.userId }, { $inc: { tokenVersion: 1 } });
-    }
-    res.status(200).json({ message: 'Logged out successfully' });
-  } catch (err) {
-    console.error('Logout error:', err);
-    res.status(500).json({ error: 'Internal server error during logout' });
-  }
+// Logout ends only this device's session: the app discards its own token.
+// tokenVersion is deliberately NOT bumped here, because that would invalidate
+// the user's tokens on every other device. It is bumped on password reset only.
+router.post('/logout', requireAuth, (req, res) => {
+  res.status(200).json({ message: 'Logged out successfully' });
 });
 
 // =========================================================================

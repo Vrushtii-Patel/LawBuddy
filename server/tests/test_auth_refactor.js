@@ -483,24 +483,20 @@ async function runTests() {
     assert.strictEqual(legacyJwtRes.status, 200, 'Legacy JWT with no tokenVersion claim is accepted at tokenVersion 0');
     console.log('✓ Legacy JWT without tokenVersion claim works seamlessly for users at version 0.');
 
-    // 6.2 Logout increments tokenVersion and invalidates the session
+    // 6.2 Logout returns 200 without bumping tokenVersion (client discards its token; other devices preserved)
     const currentCarolToken = carolLoginRes.body.token;
     await User.updateOne({ email: 'carol_legacy@example.com' }, { tokenVersion: 1 }); // restore version 1 matching carolLoginRes token
     
+    const userBeforeLogout = await User.findOne({ email: 'carol_legacy@example.com' });
     const logoutRes = await makeRequest(server, {
       method: 'POST',
       path: '/api/auth/logout',
       headers: { Authorization: `Bearer ${currentCarolToken}` }
     });
     assert.strictEqual(logoutRes.status, 200);
-
-    const afterLogoutMe = await makeRequest(server, {
-      method: 'GET',
-      path: '/api/auth/me',
-      headers: { Authorization: `Bearer ${currentCarolToken}` }
-    });
-    assert.strictEqual(afterLogoutMe.status, 401, 'Token revoked after logout');
-    console.log('✓ Logout endpoint increments tokenVersion and revokes active token.');
+    const userAfterLogout = await User.findOne({ email: 'carol_legacy@example.com' });
+    assert.strictEqual(userAfterLogout.tokenVersion, userBeforeLogout.tokenVersion, 'tokenVersion should not be bumped on logout');
+    console.log('✓ Logout endpoint returns 200 and preserves tokenVersion for multi-device support.');
 
     // -----------------------------------------------------------------------
     // SECTION 7: PROFILE UPDATE & DEPRECATED ROUTES
