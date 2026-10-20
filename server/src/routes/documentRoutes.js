@@ -328,7 +328,7 @@ router.patch('/documents/:id/restore', requireAuth, async (req, res) => {
         // Re-sync checklist issues if document has completed analysis
         if (updatedDoc && updatedDoc.analysisStatus === 'completed' && updatedDoc.analysis && updatedDoc.analysis.length > 0) {
             try {
-                await crossReferenceService.syncDocumentWithChecklists(userId, updatedDoc);
+                await crossReferenceService.syncDocumentIssuesWithChecklists(userId, updatedDoc);
             } catch (syncErr) {
                 console.warn(`[RestoreDocument] Warning: Checklist sync error:`, syncErr.message);
             }
