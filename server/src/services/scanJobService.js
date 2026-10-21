@@ -641,6 +641,14 @@ async function executeJobPipeline(jobId) {
 }
 
 /**
+ * Checks if a scan job is actively processing in-memory.
+ */
+function isJobProcessing(userId, fileHash) {
+    if (!userId || !fileHash) return false;
+    return activeProcessingKeys.has(`${userId}:${fileHash}`);
+}
+
+/**
  * Resumes a failed or unfinished scan job from its last incomplete stage.
  */
 async function retryJob(jobId, isManual = true) {
@@ -653,13 +661,34 @@ async function retryJob(jobId, isManual = true) {
         return job;
     }
 
-    if (isManual) {
-        job.manualRetriesCount = (job.manualRetriesCount || 0) + 1;
+    if (job.status !== 'FAILED') {
+        const isRunning = job.status === 'RETRYING' ||
+            ['QUEUED', 'UPLOADING', 'OCR_PROCESSING', 'TEXT_EXTRACTED', 'AI_ANALYSIS', 'REPORT_GENERATION'].includes(job.status) ||
+            activeProcessingKeys.has(`${job.userId}:${job.fileHash}`);
+        if (isRunning) {
+            return job;
+        }
+        throw new Error(`Only failed scan jobs can be retried (current status: ${job.status}).`);
     }
-    job.lastRetryAt = new Date();
-    job.status = 'RETRYING';
-    job.currentStep = 'Resuming scan...';
-    await job.save();
+
+    // Atomically claim the retry to guard against race conditions
+    const claimedJob = await ScanJob.findOneAndUpdate(
+        { jobId, status: 'FAILED' },
+        {
+            $inc: { manualRetriesCount: isManual ? 1 : 0 },
+            $set: {
+                status: 'RETRYING',
+                currentStep: 'Resuming scan...',
+                lastRetryAt: new Date()
+            }
+        },
+        { returnDocument: 'after' }
+    );
+
+    if (!claimedJob) {
+        // Lost race to another concurrent retry; return current job state
+        return ScanJob.findOne({ jobId });
+    }
 
     return executeJobPipeline(jobId);
 }
@@ -720,5 +749,6 @@ module.exports = {
     recoverUnfinishedScanJobs,
     saveFileToStorage,
     readFileFromStorage,
-    isDocumentCacheValid
+    isDocumentCacheValid,
+    isJobProcessing
 };

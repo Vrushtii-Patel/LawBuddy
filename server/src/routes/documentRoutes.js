@@ -169,24 +169,67 @@ router.post('/scans/:jobId/retry', requireAuth, async (req, res) => {
             });
         }
 
-        job.manualRetriesCount = (job.manualRetriesCount || 0) + 1;
-        job.lastRetryAt = new Date();
-        job.status = 'RETRYING';
-        job.currentStep = 'Resuming scan...';
-        await job.save();
+        if (job.status !== 'FAILED') {
+            const isRunning = job.status === 'RETRYING' ||
+                ['QUEUED', 'UPLOADING', 'OCR_PROCESSING', 'TEXT_EXTRACTED', 'AI_ANALYSIS', 'REPORT_GENERATION'].includes(job.status) ||
+                scanJobService.isJobProcessing(job.userId, job.fileHash);
+
+            if (isRunning) {
+                return res.json({
+                    message: 'Scan job is already running',
+                    jobId: job.jobId,
+                    status: job.status,
+                    currentStep: job.currentStep,
+                    completedSteps: job.completedSteps,
+                    documentId: job.documentId,
+                    errorInfo: job.errorInfo
+                });
+            }
+
+            return res.status(400).json({ error: 'Only failed scan jobs can be retried' });
+        }
+
+        // Atomically claim the retry transition from FAILED -> RETRYING.
+        // If a double-click sends two simultaneous requests, exactly one will claim the record.
+        const claimedJob = await ScanJob.findOneAndUpdate(
+            { jobId: req.params.jobId, userId, status: 'FAILED' },
+            {
+                $inc: { manualRetriesCount: 1 },
+                $set: {
+                    status: 'RETRYING',
+                    currentStep: 'Resuming scan...',
+                    lastRetryAt: new Date()
+                }
+            },
+            { returnDocument: 'after' }
+        );
+
+        if (!claimedJob) {
+            // Lost race to concurrent request (e.g. rapid double-click)
+            const currentJob = await ScanJob.findOne({ jobId: req.params.jobId, userId });
+            return res.json({
+                message: 'Scan job is already running',
+                jobId: currentJob.jobId,
+                status: currentJob.status,
+                currentStep: currentJob.currentStep,
+                completedSteps: currentJob.completedSteps,
+                documentId: currentJob.documentId,
+                errorInfo: currentJob.errorInfo
+            });
+        }
 
         // Launch pipeline in background so HTTP response returns immediately and client polling can track progress
-        scanJobService.executeJobPipeline(job.jobId).catch(err => {
-            console.warn(`[Background Retry Job ${job.jobId}] Pipeline error:`, err.message);
+        scanJobService.executeJobPipeline(claimedJob.jobId).catch(err => {
+            console.warn(`[Background Retry Job ${claimedJob.jobId}] Pipeline error:`, err.message);
         });
 
         res.json({
-            jobId: job.jobId,
-            status: job.status,
-            currentStep: job.currentStep,
-            completedSteps: job.completedSteps,
-            documentId: job.documentId,
-            errorInfo: job.errorInfo
+            jobId: claimedJob.jobId,
+            status: claimedJob.status,
+            currentStep: claimedJob.currentStep,
+            completedSteps: claimedJob.completedSteps,
+            documentId: claimedJob.documentId,
+            errorInfo: claimedJob.errorInfo
         });
     } catch (error) {
         console.error('Error retrying scan job:', error);

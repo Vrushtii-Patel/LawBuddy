@@ -110,20 +110,63 @@ router.post('/comparisons/:comparisonId/retry', requireAuth, async (req, res) =>
             return res.status(404).json({ error: 'Comparison record not found or unauthorized' });
         }
 
-        comp.manualRetriesCount = (comp.manualRetriesCount || 0) + 1;
-        comp.lastRetryAt = new Date();
-        comp.status = 'RETRYING';
-        comp.currentStep = 'Resuming comparison...';
-        await comp.save();
+        if (comp.status === 'COMPLETED') {
+            return res.status(200).json({
+                message: 'Comparison is already completed',
+                comparisonId: comp.comparisonId,
+                status: 'COMPLETED'
+            });
+        }
 
-        comparisonService.executeComparisonPipeline(comp.comparisonId).catch(err => {
-            console.warn(`[Background Retry Comparison ${comp.comparisonId}] Error:`, err.message);
+        if (comp.status !== 'FAILED') {
+            const isRunning = comp.status === 'RETRYING' ||
+                ['QUEUED', 'RESOLVING_DOCUMENTS', 'MATCHING_CLAUSES', 'DIFFING_CHANGES', 'AI_ANALYSIS', 'REPORT_GENERATION'].includes(comp.status);
+            if (isRunning) {
+                return res.status(200).json({
+                    message: 'Comparison is already running',
+                    comparisonId: comp.comparisonId,
+                    status: comp.status,
+                    currentStep: comp.currentStep
+                });
+            }
+            return res.status(400).json({ error: 'Only failed comparisons can be retried' });
+        }
+
+        // Atomically claim the retry transition from FAILED -> RETRYING to guard against double-clicks
+        const claimedComp = await DocumentComparison.findOneAndUpdate(
+            { comparisonId: req.params.comparisonId, userId, status: 'FAILED' },
+            {
+                $inc: { manualRetriesCount: 1 },
+                $set: {
+                    status: 'RETRYING',
+                    currentStep: 'Resuming comparison...',
+                    lastRetryAt: new Date()
+                }
+            },
+            { returnDocument: 'after' }
+        );
+
+        if (!claimedComp) {
+            const currentComp = await DocumentComparison.findOne({
+                comparisonId: req.params.comparisonId,
+                userId
+            });
+            return res.status(200).json({
+                message: 'Comparison is already running',
+                comparisonId: currentComp.comparisonId,
+                status: currentComp.status,
+                currentStep: currentComp.currentStep
+            });
+        }
+
+        comparisonService.executeComparisonPipeline(claimedComp.comparisonId).catch(err => {
+            console.warn(`[Background Retry Comparison ${claimedComp.comparisonId}] Error:`, err.message);
         });
 
         res.status(200).json({
-            comparisonId: comp.comparisonId,
-            status: comp.status,
-            currentStep: comp.currentStep
+            comparisonId: claimedComp.comparisonId,
+            status: claimedComp.status,
+            currentStep: claimedComp.currentStep
         });
     } catch (error) {
         console.error('Error retrying comparison:', error);
