@@ -13,6 +13,7 @@ const {
     TEMPERATURE,
     EMBEDDING_MODEL_NAME,
 } = require('../config/modelConfig');
+const { sanitizeChatHistory, ChatHistoryError } = require('../utils/chatHistorySanitizer');
 
 function safeParseJson(text, defaultFallback = {}) {
     if (!text || typeof text !== 'string') return defaultFallback;
@@ -1427,12 +1428,13 @@ exports.explainSnippet = async (context, snippet) => {
 
 exports.chat = async (historyArray) => {
     try {
-        const latestMessage = historyArray[historyArray.length - 1].text;
+        const sanitizedHistory = sanitizeChatHistory(historyArray);
+        const latestMessage = sanitizedHistory[sanitizedHistory.length - 1].text;
 
         const normQuery = normalizeQuery(latestMessage);
         // Only single-turn questions are cacheable: replies to follow-ups depend on
         // conversation history, which is not part of the cache key.
-        const isCacheable = historyArray.length === 1 && normQuery.length > 0;
+        const isCacheable = sanitizedHistory.length === 1 && normQuery.length > 0;
         // The raw-text lookup is kept only so entries written before this change still hit.
         const cachedResponse = isCacheable
             ? await ChatCache.findOne({ query: { $in: [normQuery, latestMessage] } })
@@ -1550,7 +1552,7 @@ User Query:
 ${latestMessage}
 `;
 
-        const fallbackHistory = [...historyArray];
+        const fallbackHistory = [...sanitizedHistory];
         fallbackHistory[fallbackHistory.length - 1] = {
             role: 'user',
             text: prompt
@@ -1564,7 +1566,7 @@ ${latestMessage}
                     systemInstruction: systemInstruction
                 });
 
-                const formattedHistory = historyArray.slice(0, -1).map(msg => ({
+                const formattedHistory = sanitizedHistory.slice(0, -1).map(msg => ({
                     role: msg.role === 'user' ? 'user' : 'model',
                     parts: [{ text: msg.text }]
                 }));
@@ -1618,7 +1620,7 @@ ${latestMessage}
         return finalResponse;
     } catch (e) {
         console.error("AI API error in chat:", e.message);
-        if (e instanceof AiAnalysisError) {
+        if (e instanceof ChatHistoryError || e instanceof AiAnalysisError) {
             throw e;
         }
         const status = (typeof getErrorStatus === 'function' ? getErrorStatus(e) : e.status) ||
@@ -1708,6 +1710,8 @@ exports.safeParseJson = safeParseJson;
 exports.withRetry = withRetry;
 exports.getErrorStatus = getErrorStatus;
 exports.shouldFailOver = shouldFailOver;
+exports.sanitizeChatHistory = sanitizeChatHistory;
+exports.ChatHistoryError = ChatHistoryError;
 exports.GEMINI_CANDIDATE_MODELS = GEMINI_CANDIDATE_MODELS;
 exports.MODEL_NAME = MODEL_NAME;
 exports.MODEL_VERSION = MODEL_VERSION;

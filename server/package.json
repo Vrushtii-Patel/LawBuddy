@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "node tests/test_stamp_duty.js && node tests/test_ai_failure_handling.js && node tests/test_finding_fields.js && node tests/test_scan_unreadable_pdf.js && node tests/test_scan_checklist_sync.js && node tests/test_release_config.js && node tests/test_version_aware_caching.js && node tests/test_cross_reference.js && node tests/test_document_bin.js && node tests/test_checklist_bin.js && node tests/test_job_sweep.js && node tests/test_backend_regression.js && node tests/test_auth_refactor.js && node tests/test_news_caching.js && node tests/test_email_service_security.js && node tests/test_gemini_retry.js && node tests/test_document_routes_helpers.js && node tests/test_retry_status_guard.js && node tests/test_chat_ai_failure.js",
+    "test": "node tests/test_stamp_duty.js && node tests/test_ai_failure_handling.js && node tests/test_finding_fields.js && node tests/test_scan_unreadable_pdf.js && node tests/test_scan_checklist_sync.js && node tests/test_release_config.js && node tests/test_version_aware_caching.js && node tests/test_cross_reference.js && node tests/test_document_bin.js && node tests/test_checklist_bin.js && node tests/test_job_sweep.js && node tests/test_backend_regression.js && node tests/test_auth_refactor.js && node tests/test_news_caching.js && node tests/test_email_service_security.js && node tests/test_gemini_retry.js && node tests/test_document_routes_helpers.js && node tests/test_retry_status_guard.js && node tests/test_chat_ai_failure.js && node tests/test_chat_history_sanitizer.js",
     "test:regression": "npm test",
     "test:unit": "npm test",
     "test:verify": "node tests/test_stamp_duty_verification.js",
@@ -25,7 +25,8 @@
     "test:release-config": "node tests/test_release_config.js",
     "test:helpers": "node tests/test_document_routes_helpers.js",
     "test:retry-guard": "node tests/test_retry_status_guard.js",
-    "test:chat": "node tests/test_chat_ai_failure.js"
+    "test:chat": "node tests/test_chat_ai_failure.js",
+    "test:chat-history": "node tests/test_chat_history_sanitizer.js"
   },
   "keywords": [],
   "author": "",

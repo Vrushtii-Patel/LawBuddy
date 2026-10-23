@@ -3,6 +3,7 @@ const router = express.Router();
 const llmService = require('../services/llmService');
 const ChatSession = require('../models/ChatSession');
 const { requireAuth } = require('../middleware/authMiddleware');
+const { sanitizeChatHistory, ChatHistoryError } = require('../utils/chatHistorySanitizer');
 
 // 1. Send chat message & persist to a ChatSession for authenticated user
 router.post('/chat', requireAuth, async (req, res) => {
@@ -12,14 +13,21 @@ router.post('/chat', requireAuth, async (req, res) => {
             return res.status(400).json({ error: 'History array is required' });
         }
 
-        const response = await llmService.chat(history);
+        let sanitizedHistory;
+        try {
+            sanitizedHistory = sanitizeChatHistory(history);
+        } catch (validationErr) {
+            return res.status(400).json({ error: validationErr.message });
+        }
+
+        const response = await llmService.chat(sanitizedHistory);
         const userId = req.user.userId;
 
         let activeSessionId = sessionId;
 
         // Auto-persist / update session if requested or if sessionId exists
         try {
-            const latestUserMsg = history[history.length - 1];
+            const latestUserMsg = sanitizedHistory[sanitizedHistory.length - 1];
             const replyMsg = {
                 role: 'ai',
                 text: response.reply,
@@ -72,6 +80,9 @@ router.post('/chat', requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error('Error in chat:', error);
+        if (error instanceof ChatHistoryError || error.status === 400 || error.statusCode === 400) {
+            return res.status(400).json({ error: error.message });
+        }
         const status = error.status || error.statusCode || (
             /rate limit|quota|resource_exhausted|429/i.test(error.message || '') ? 429 : 503
         );
