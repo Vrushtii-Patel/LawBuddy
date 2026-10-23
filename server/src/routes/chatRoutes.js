@@ -72,10 +72,13 @@ router.post('/chat', requireAuth, async (req, res) => {
         });
     } catch (error) {
         console.error('Error in chat:', error);
-        if (error.status === 429) {
+        const status = error.status || error.statusCode || (
+            /rate limit|quota|resource_exhausted|429/i.test(error.message || '') ? 429 : 503
+        );
+        if (status === 429) {
             return res.status(429).json({ error: 'Rate limit reached. Please wait a moment before sending another message.' });
         }
-        res.status(500).json({ error: 'Failed to process chat. Please try again.' });
+        res.status(503).json({ error: 'AI service is temporarily unavailable. Please try again in a moment.' });
     }
 });
 

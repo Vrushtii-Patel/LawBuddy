@@ -866,7 +866,10 @@ class AiAnalysisError extends Error {
         this.name = 'AiAnalysisError';
         this.code = code;
         if (cause) this.cause = cause;
-        if (status) this.status = status;
+        if (status) {
+            this.status = status;
+            this.statusCode = status;
+        }
     }
 }
 
@@ -1584,6 +1587,13 @@ ${latestMessage}
             sources: retrievedSources
         };
 
+        if (!finalResponse.reply || typeof finalResponse.reply !== 'string' || !finalResponse.reply.trim()) {
+            throw new AiAnalysisError('The AI returned an empty response.', {
+                code: 'AI_BAD_RESPONSE',
+                status: 503
+            });
+        }
+
         try {
             if (isCacheable && !ragUnavailable) {
                 // Write under the normalized key so the read side can actually match it.
@@ -1608,11 +1618,16 @@ ${latestMessage}
         return finalResponse;
     } catch (e) {
         console.error("AI API error in chat:", e.message);
-        return {
-            reply: "I am ready to help you with property laws, RERA rules, and contract reviews. Could you please rephrase or ask your question again?\n\n*Disclaimer: LawBuddy provides general legal information based on authoritative Indian sources and is not a substitute for a qualified lawyer.*",
-            suggestions: ["What is RERA?", "Rental agreement checklist", "How to verify a title deed?"],
-            sources: []
-        };
+        if (e instanceof AiAnalysisError) {
+            throw e;
+        }
+        const status = (typeof getErrorStatus === 'function' ? getErrorStatus(e) : e.status) ||
+            (/QuotaFailure|ResourceExhausted|RESOURCE_EXHAUSTED|429/i.test(e.message || '') ? 429 : 503);
+        throw new AiAnalysisError(e.message || 'AI chat service unavailable', {
+            code: status === 429 ? 'AI_RATE_LIMIT' : 'AI_ANALYSIS_UNAVAILABLE',
+            cause: e,
+            status: status
+        });
     }
 };
 
