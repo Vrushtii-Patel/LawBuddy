@@ -8,6 +8,18 @@ const llmService = require('./llmService');
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+/**
+ * A problem with what the caller asked for (missing or unknown document), as
+ * opposed to a server fault. Routes turn it into its own 4xx instead of a 500.
+ */
+class ComparisonInputError extends Error {
+    constructor(message, statusCode = 400) {
+        super(message);
+        this.name = 'ComparisonInputError';
+        this.statusCode = statusCode;
+    }
+}
+
 function computeComparisonHash(userId, fileHashA, fileHashB) {
     return crypto.createHash('sha256').update(`${userId}:${fileHashA}:${fileHashB}`).digest('hex');
 }
@@ -31,7 +43,7 @@ function calculateJaccardSimilarity(str1, str2) {
     const tokens1 = new Set(str1.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(t => t.length > 1 && !STOPWORDS.has(t)));
     const tokens2 = new Set(str2.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(t => t.length > 1 && !STOPWORDS.has(t)));
     if (tokens1.size === 0 || tokens2.size === 0) return 0.0;
-    
+
     let intersection = 0;
     for (const t of tokens1) {
         if (tokens2.has(t)) intersection++;
@@ -94,7 +106,7 @@ function calculateDeterministicRiskMigration({
     const rev = revisedRiskLevel || 'COMPLIANT';
 
     const protectiveKeywords = ['defect', 'possession', 'refund', 'warranty', 'society', 'conveyance', 'title'];
-    const isProtective = protectiveKeywords.some(k => 
+    const isProtective = protectiveKeywords.some(k =>
         (titleA || '').toLowerCase().includes(k) || (textA || '').toLowerCase().includes(k)
     );
 
@@ -306,11 +318,11 @@ function matchClauses(clausesA, clausesB) {
                     textA: a.text || '',
                     sourcePagesA: a.sourcePages || [1],
                     riskLevelA: a.riskLevel || null,
-                    clauseIdB: `${listB[j].clauseId} & ${listB[j+1].clauseId}`,
-                    titleB: `${listB[j].title} / ${listB[j+1].title}`,
+                    clauseIdB: `${listB[j].clauseId} & ${listB[j + 1].clauseId}`,
+                    titleB: `${listB[j].title} / ${listB[j + 1].title}`,
                     textB: combinedB,
-                    sourcePagesB: [...(listB[j].sourcePages || []), ...(listB[j+1].sourcePages || [])],
-                    riskLevelB: listB[j].riskLevel || listB[j+1].riskLevel || null,
+                    sourcePagesB: [...(listB[j].sourcePages || []), ...(listB[j + 1].sourcePages || [])],
+                    riskLevelB: listB[j].riskLevel || listB[j + 1].riskLevel || null,
                     matchConfidence: 'MEDIUM',
                     changeStatus: 'SPLIT',
                     similarityScore: parseFloat(splitSim.toFixed(3)),
@@ -318,7 +330,7 @@ function matchClauses(clausesA, clausesB) {
                         category: 'General Text',
                         changeDescription: 'Clause was split into two separate sub-clauses in Version B',
                         fromText: a.title,
-                        toText: `${listB[j].title} & ${listB[j+1].title}`
+                        toText: `${listB[j].title} & ${listB[j + 1].title}`
                     }]
                 });
                 break;
@@ -475,7 +487,7 @@ function validateCitations(proposedCitations, retrievedSnippets) {
                 const cAct = (cit.actName || '').toLowerCase();
                 const cSec = (cit.sectionOrRule || '').toLowerCase();
                 return (sAct.includes(cAct) || cAct.includes(sAct)) &&
-                       (sSec.includes(cSec) || cSec.includes(sSec));
+                    (sSec.includes(cSec) || cSec.includes(sSec));
             });
         }
 
@@ -555,7 +567,7 @@ async function evaluateDifferentialLegalAnalysis(clausePairs) {
 
             let contextStr = '';
             if (retrievedSnippets.length > 0) {
-                contextStr = retrievedSnippets.map((s, idx) => 
+                contextStr = retrievedSnippets.map((s, idx) =>
                     `[LawSnippet ${idx + 1}] ID: ${s._id}\nAct: ${s.actName}\nSection/Rule: ${s.sectionOrRule}\nTitle: ${s.provisionTitle}\nText: ${s.snippetText}\nURL: ${s.sourceUrl}`
                 ).join('\n\n');
             } else {
@@ -660,8 +672,11 @@ async function startComparison({
 
     // Resolve Doc A
     if (docAId) {
+        if (!mongoose.Types.ObjectId.isValid(docAId)) {
+            throw new ComparisonInputError('Document A has an invalid id.', 400);
+        }
         finalDocA = await Document.findOne({ _id: docAId, userId, isDeleted: { $ne: true } });
-        if (!finalDocA) throw new Error(`Document A (${docAId}) not found or unauthorized.`);
+        if (!finalDocA) throw new ComparisonInputError('Document A was not found.', 404);
     } else if (fileA) {
         const jobA = await scanJobService.createScanJob({
             userId,
@@ -676,8 +691,11 @@ async function startComparison({
 
     // Resolve Doc B
     if (docBId) {
+        if (!mongoose.Types.ObjectId.isValid(docBId)) {
+            throw new ComparisonInputError('Document B has an invalid id.', 400);
+        }
         finalDocB = await Document.findOne({ _id: docBId, userId, isDeleted: { $ne: true } });
-        if (!finalDocB) throw new Error(`Document B (${docBId}) not found or unauthorized.`);
+        if (!finalDocB) throw new ComparisonInputError('Document B was not found.', 404);
     } else if (fileB) {
         const jobB = await scanJobService.createScanJob({
             userId,
@@ -691,7 +709,7 @@ async function startComparison({
     }
 
     if (!finalDocA || !finalDocB) {
-        throw new Error('Both Document A and Document B must be provided and resolved.');
+        throw new ComparisonInputError('Both Document A and Document B must be provided.', 400);
     }
 
     const fileHashA = finalDocA.fileHash || crypto.createHash('sha256').update(finalDocA.extractedNormalizedText || finalDocA.originalText || finalDocA._id.toString()).digest('hex');
@@ -751,13 +769,13 @@ async function executeComparisonPipeline(comparisonId) {
             const clausesA = (docA.canonicalClauses && docA.canonicalClauses.length > 0)
                 ? docA.canonicalClauses
                 : (docA.analysis && docA.analysis.length > 0)
-                    ? docA.analysis.map((a, idx) => ({ clauseId: a.clauseId || `CLAUSE-A-${idx+1}`, title: a.title || `Clause ${idx+1}`, text: a.text, sourcePages: a.sourcePages || [1] }))
+                    ? docA.analysis.map((a, idx) => ({ clauseId: a.clauseId || `CLAUSE-A-${idx + 1}`, title: a.title || `Clause ${idx + 1}`, text: a.text, sourcePages: a.sourcePages || [1] }))
                     : [{ clauseId: 'CLAUSE-A-1', title: docA.title || 'Document A', text: docA.extractedNormalizedText || docA.originalText || '', sourcePages: [1] }];
 
             const clausesB = (docB.canonicalClauses && docB.canonicalClauses.length > 0)
                 ? docB.canonicalClauses
                 : (docB.analysis && docB.analysis.length > 0)
-                    ? docB.analysis.map((b, idx) => ({ clauseId: b.clauseId || `CLAUSE-B-${idx+1}`, title: b.title || `Clause ${idx+1}`, text: b.text, sourcePages: b.sourcePages || [1] }))
+                    ? docB.analysis.map((b, idx) => ({ clauseId: b.clauseId || `CLAUSE-B-${idx + 1}`, title: b.title || `Clause ${idx + 1}`, text: b.text, sourcePages: b.sourcePages || [1] }))
                     : [{ clauseId: 'CLAUSE-B-1', title: docB.title || 'Document B', text: docB.extractedNormalizedText || docB.originalText || '', sourcePages: [1] }];
 
             const matchedPairs = matchClauses(clausesA, clausesB);
@@ -905,6 +923,7 @@ async function recoverUnfinishedComparisons(awaitAll = false) {
 }
 
 module.exports = {
+    ComparisonInputError,
     startComparison,
     executeComparisonPipeline,
     matchClauses,
