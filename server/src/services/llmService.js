@@ -1636,15 +1636,31 @@ exports.generateChecklist = async (prompt) => {
         },
         () => fallbackToOpenRouter(prompt, systemInstruction)
     );
-    const rawText = result.response.text();
-    return safeParseJson(rawText, [
-        { id: "1", title: "Verify Title Deed & Ownership History" },
-        { id: "2", title: "Obtain Encumbrance Certificate (13-30 years)" },
-        { id: "3", title: "Check RERA Registration & Approvals" },
-        { id: "4", title: "Verify Occupancy Certificate (OC) & NOCs" },
-        { id: "5", title: "Execute Registered Sale Agreement" }
-    ]);
+    return parseChecklistItems(result.response.text());
 };
+
+/**
+ * Turns the model's reply into checklist items. Throws if the reply is not a usable
+ * list, so the caller can tell the user it failed instead of saving a generic checklist
+ * that has nothing to do with what they asked for.
+ */
+function parseChecklistItems(rawText) {
+    const parsed = safeParseJson(rawText, null);
+    const list = Array.isArray(parsed) ? parsed : null;
+    const items = (list || [])
+        .filter((item) => item && typeof item.title === 'string' && item.title.trim())
+        .map((item, idx) => ({
+            id: String(item.id || idx + 1),
+            title: item.title.trim()
+        }));
+    if (items.length === 0) {
+        throw new AiAnalysisError('The AI returned a checklist in an unreadable format.', {
+            code: 'AI_BAD_RESPONSE'
+        });
+    }
+    return items;
+}
+exports.parseChecklistItems = parseChecklistItems;
 
 exports.generateEmbedding = async (text) => {
     if (!text || typeof text !== 'string') return new Array(3072).fill(0);

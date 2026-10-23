@@ -30,7 +30,7 @@ router.get('/checklists', requireAuth, async (req, res) => {
         // Auto-clean any stale/orphaned issues for deleted documents
         try {
             await crossReferenceService.cleanOrphanChecklistIssues(userId);
-        } catch (_) {}
+        } catch (_) { }
 
         let checklists = await Checklist.find({ userId, isDeleted: { $ne: true } }).sort({ _id: -1 });
 
@@ -128,9 +128,9 @@ router.get('/checklists/:type', requireAuth, async (req, res) => {
         const userId = req.user.userId;
         const query = getChecklistQuery(type, userId, true);
         const checklist = await Checklist.findOne(query);
-        
+
         if (!checklist) {
-             return res.status(404).json({ error: 'Checklist not found' });
+            return res.status(404).json({ error: 'Checklist not found' });
         }
         res.json(checklist);
     } catch (error) {
@@ -224,7 +224,7 @@ router.delete('/checklists/:type/items/:itemId', requireAuth, async (req, res) =
 
         const initialLength = checklist.items.length;
         checklist.items = checklist.items.filter(
-            i => !( (i.id && i.id.toString() === itemId.toString()) || (i._id && i._id.toString() === itemId.toString()) )
+            i => !((i.id && i.id.toString() === itemId.toString()) || (i._id && i._id.toString() === itemId.toString()))
         );
 
         if (checklist.items.length === initialLength) {
@@ -315,15 +315,11 @@ router.post('/checklists/generate', requireAuth, async (req, res) => {
         try {
             items = await llmService.generateChecklist(prompt);
         } catch (llmErr) {
-            console.error('LLM generation error, using fallback legal rules:', llmErr);
-            items = [
-                { id: "1", title: "Verify Title Deed & 30-Year Chain of Documents" },
-                { id: "2", title: "Obtain Encumbrance Certificate (EC) from Sub-Registrar" },
-                { id: "3", title: "Check RERA Registration & Approved Sanction Plan" },
-                { id: "4", title: "Verify Occupancy Certificate (OC) & Completion Certificate (CC)" },
-                { id: "5", title: "Inspect Society NOC & Share Certificate / Khata Transfer" },
-                { id: "6", title: "Draft & Execute Registered Agreement for Sale / Conveyance Deed" }
-            ];
+            // Do not save a generic checklist under the user's title: tell them it failed.
+            console.error('LLM checklist generation failed:', llmErr);
+            return res.status(503).json({
+                error: 'We could not generate your checklist right now. Please try again in a moment.'
+            });
         }
 
         const cleanItems = (items || []).map((item, idx) => ({
