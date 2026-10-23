@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { withRetry, GEMINI_CANDIDATE_MODELS } = require('../src/services/llmService');
+const { withRetry, shouldFailOver, GEMINI_CANDIDATE_MODELS } = require('../src/services/llmService');
 
 async function runTests() {
   console.log('--- Running withRetry Unit & Integration Tests ---');
@@ -167,7 +167,42 @@ async function runTests() {
     }
   }
 
-  console.log('\nALL withRetry TESTS PASSED SUCCESSFULLY (6/6)!');
+  // =========================================================================
+  // Test 7: Failover is decided by the real status code, not words in the message
+  // =========================================================================
+  {
+    const withStatus = (status, message) => Object.assign(new Error(message), { status });
+
+    assert.strictEqual(shouldFailOver(withStatus(429, 'Too many requests')), true, 'status 429 fails over');
+    assert.strictEqual(shouldFailOver(withStatus(404, 'Not found')), true, 'status 404 fails over');
+    assert.strictEqual(shouldFailOver(new Error('[429 Too Many Requests] slow down')), true, 'bracketed 429 (no status field) fails over');
+    assert.strictEqual(shouldFailOver(new Error('429 quota exceeded')), true, 'leading 429 (no status field) fails over');
+
+    assert.strictEqual(shouldFailOver(withStatus(500, 'Upstream returned 429 bytes of garbage')), false, '500 with "429" in text does not fail over');
+    assert.strictEqual(shouldFailOver(withStatus(503, 'Request id 404-abc timed out')), false, '503 with "404" in text does not fail over');
+    assert.strictEqual(shouldFailOver(new Error('Failed to parse 1429 items')), false, 'number inside another number does not fail over');
+    assert.strictEqual(shouldFailOver(new Error('ECONNRESET while reading 404 rows')), false, 'trailing 404 in unrelated text does not fail over');
+    assert.strictEqual(shouldFailOver(Object.assign(new Error('socket hang up'), { code: 'ECONNRESET' })), false, 'string error code is ignored');
+
+    let attemptsOnFirst = 0;
+    const result = await withRetry(
+      async (model) => {
+        if (model === GEMINI_CANDIDATE_MODELS[0]) {
+          attemptsOnFirst++;
+          throw withStatus(500, 'Internal error mentioning 429 and 404 in text');
+        }
+        return `success from ${model}`;
+      },
+      null,
+      2,
+      0
+    );
+    assert.strictEqual(attemptsOnFirst, 3, 'A 500 is retried on the same model (1 + 2 retries) instead of failing over early');
+    assert.strictEqual(result, `success from ${GEMINI_CANDIDATE_MODELS[1]}`);
+    console.log('✓ Test 7 Passed: failover uses real status codes; stray 429/404 in message text is ignored');
+  }
+
+  console.log('\nALL withRetry TESTS PASSED SUCCESSFULLY (7/7)!');
 }
 
 runTests().catch((err) => {

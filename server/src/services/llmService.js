@@ -208,6 +208,46 @@ const GEMINI_CANDIDATE_MODELS = [
     "gemini-flash-latest"
 ];
 
+/**
+ * Reads the real HTTP status from an error object (SDK errors, fetch wrappers,
+ * or errors that carry the original error as `cause`). Returns null if none.
+ */
+function getErrorStatus(error) {
+    if (!error || typeof error !== 'object') return null;
+    const candidates = [
+        error.status,
+        error.statusCode,
+        error.httpStatus,
+        error.code,
+        error.response && error.response.status,
+        error.cause && (error.cause.status || error.cause.statusCode)
+    ];
+    for (const candidate of candidates) {
+        const n = Number(candidate);
+        if (Number.isInteger(n) && n >= 100 && n <= 599) return n;
+    }
+    return null;
+}
+
+/**
+ * Decides whether to skip the remaining retries on this model and fail over to
+ * the next candidate. Uses the real status code when the error has one. Only
+ * when there is no status does it look at the message, and then only for a
+ * leading or bracketed code ("429 ...", "[404 Not Found]") or known quota text,
+ * so a stray "429" or "404" elsewhere in a message cannot trigger a failover.
+ */
+function shouldFailOver(error) {
+    const message = error && error.message ? error.message : String(error);
+    if (/QuotaFailure|ResourceExhausted|RESOURCE_EXHAUSTED|no longer available/i.test(message)) {
+        return true;
+    }
+    const status = getErrorStatus(error);
+    if (status !== null) {
+        return status === 404 || status === 429;
+    }
+    return /(^|\[)\s*(404|429)\b/.test(message);
+}
+
 async function withRetry(fn, fallbackFn = null, retries = 2, baseDelay = 1000) {
     const maxRetries = typeof retries === 'number' && !isNaN(retries)
         ? Math.max(0, Math.floor(retries))
@@ -229,13 +269,7 @@ async function withRetry(fn, fallbackFn = null, retries = 2, baseDelay = 1000) {
                 console.warn(`Attempt ${attempt + 1}/${maxRetries + 1} with ${modelCandidate} failed:`, errMsg);
 
                 // If 404, 429, or model unavailable: fail over immediately to next candidate model without wasting retries
-                if (
-                    errMsg.includes('QuotaFailure') ||
-                    errMsg.includes('ResourceExhausted') ||
-                    errMsg.includes('429') ||
-                    errMsg.includes('404') ||
-                    errMsg.includes('no longer available')
-                ) {
+                if (shouldFailOver(error)) {
                     console.log(`Rate limit or unavailable model ${modelCandidate}, failing over immediately to next candidate...`);
                     break;
                 }
@@ -1641,6 +1675,8 @@ exports.generateTextWithFallback = async (prompt, customConfig = {}) => {
 
 exports.safeParseJson = safeParseJson;
 exports.withRetry = withRetry;
+exports.getErrorStatus = getErrorStatus;
+exports.shouldFailOver = shouldFailOver;
 exports.GEMINI_CANDIDATE_MODELS = GEMINI_CANDIDATE_MODELS;
 exports.MODEL_NAME = MODEL_NAME;
 exports.MODEL_VERSION = MODEL_VERSION;
