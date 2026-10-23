@@ -175,11 +175,35 @@ async function runTests() {
         console.assert(verifiedEcItem.status === 'VERIFIED', 'status must remain VERIFIED');
         console.log(`  ✓ State preservation successful: Completed task remains VERIFIED.`);
 
+        // Scenario 5: Document Deletion & Zero Active Documents - Auto-generated checklist preservation
+        console.log('\n5. Testing Zero Active Documents & Checklist Data-Loss Prevention...');
+        // Soft-delete all documents for test user
+        await Document.updateMany({ userId: testUserId }, { $set: { isDeleted: true, deletedAt: new Date() } });
+
+        // Trigger cleanup (as called on document deletion)
+        await crossReferenceService.cleanOrphanChecklistIssues(testUserId);
+
+        const preservedChecklist = await Checklist.findOne({ userId: testUserId, isDeleted: { $ne: true } });
+        console.assert(preservedChecklist !== null, 'Checklist MUST NOT be deleted when zero active documents exist');
+        console.assert(preservedChecklist.items.length === dedupeChecklist.items.length, 'All checklist items must remain present');
+
+        const preservedEcItem = preservedChecklist.items.find(i => i.title.toLowerCase().includes('encumbrance'));
+        console.assert(preservedEcItem.isCompleted === true, 'Completed/ticked item MUST remain isCompleted: true');
+        console.assert(preservedEcItem.status === 'VERIFIED', 'Completed item status MUST remain VERIFIED');
+        console.assert((preservedEcItem.linkedIssues || []).length === 0, 'Orphaned linked issues should be pruned');
+
+        const preservedPossessionItem = preservedChecklist.items.find(i => i.title.toLowerCase().includes('possession'));
+        console.assert(preservedPossessionItem.isCompleted === false, 'Pending item must remain pending');
+        console.assert(preservedPossessionItem.status === 'NOT_STARTED', 'Previously flagged item with deleted doc resets to NOT_STARTED');
+        console.log(`  ✓ Zero active documents preservation: Checklist retained with ${preservedChecklist.items.length} items.`);
+        console.log(`  ✓ Completed task: isCompleted=${preservedEcItem.isCompleted}, status=${preservedEcItem.status}`);
+        console.log(`  ✓ Pending task: isCompleted=${preservedPossessionItem.isCompleted}, status=${preservedPossessionItem.status}`);
+
         // Clean up test data
         await Checklist.deleteMany({ userId: testUserId });
         await Document.deleteMany({ userId: testUserId });
 
-        console.log('\n🎉 ALL 10 CROSS-REFERENCING CHECKLIST TESTS PASSED SUCCESSFULLY!\n');
+        console.log('\n🎉 ALL CROSS-REFERENCING CHECKLIST TESTS PASSED SUCCESSFULLY!\n');
     } catch (err) {
         console.error('Test Failed:', err);
     } finally {

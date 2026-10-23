@@ -26,23 +26,7 @@ function getChecklistQuery(idOrType, userId, activeOnly = false) {
 router.get('/checklists', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
-
-        // Auto-clean any stale/orphaned issues for deleted documents
-        try {
-            await crossReferenceService.cleanOrphanChecklistIssues(userId);
-        } catch (_) { }
-
-        let checklists = await Checklist.find({ userId, isDeleted: { $ne: true } }).sort({ _id: -1 });
-
-        // If user has no active checklists, check if they have analyzed documents and auto-sync
-        if (!checklists || checklists.length === 0) {
-            const hasDocs = await Document.exists({ userId, isDeleted: { $ne: true }, analysisStatus: 'completed' });
-            if (hasDocs) {
-                await crossReferenceService.syncAllUserDocuments(userId);
-                checklists = await Checklist.find({ userId, isDeleted: { $ne: true } }).sort({ _id: -1 });
-            }
-        }
-
+        const checklists = await Checklist.find({ userId, isDeleted: { $ne: true } }).sort({ _id: -1 });
         res.json(checklists);
     } catch (error) {
         console.error('Error fetching checklists:', error);
@@ -196,7 +180,8 @@ router.post('/checklists/:type/items', requireAuth, async (req, res) => {
             title: title.trim(),
             isCompleted: false,
             status: 'NOT_STARTED',
-            linkedIssues: []
+            linkedIssues: [],
+            source: 'manual'
         };
 
         checklist.items.push(newItem);
@@ -327,7 +312,8 @@ router.post('/checklists/generate', requireAuth, async (req, res) => {
             title: item.title || 'Legal Due Diligence Task',
             isCompleted: false,
             status: 'NOT_STARTED',
-            linkedIssues: []
+            linkedIssues: [],
+            source: 'manual'
         }));
 
         const newType = 'custom_' + Date.now();

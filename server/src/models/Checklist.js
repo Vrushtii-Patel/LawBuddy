@@ -25,7 +25,12 @@ const checklistItemSchema = new mongoose.Schema({
         enum: ['NOT_STARTED', 'FLAGGED', 'VERIFIED'], 
         default: 'NOT_STARTED' 
     },
-    linkedIssues: [linkedIssueSchema]
+    linkedIssues: [linkedIssueSchema],
+    source: {
+        type: String,
+        enum: ['auto', 'manual'],
+        default: 'manual'
+    }
 }, { _id: true });
 
 const checklistSchema = new mongoose.Schema({

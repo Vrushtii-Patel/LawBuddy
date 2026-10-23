@@ -155,7 +155,8 @@ async function syncDocumentIssuesWithChecklists(userId, document) {
                 title: task.title,
                 isCompleted: false,
                 status: 'NOT_STARTED',
-                linkedIssues: []
+                linkedIssues: [],
+                source: 'manual'
             }))
         });
         await defaultChecklist.save();
@@ -236,7 +237,8 @@ async function syncDocumentIssuesWithChecklists(userId, document) {
                     title: newTitle,
                     isCompleted: false,
                     status: 'FLAGGED',
-                    linkedIssues: [linkedIssuePayload]
+                    linkedIssues: [linkedIssuePayload],
+                    source: 'auto'
                 };
                 checklist.items.push(newItem);
                 isChecklistModified = true;
@@ -268,7 +270,26 @@ async function syncAllUserDocuments(userId) {
 }
 
 /**
- * Cleans up orphaned linked issues and removes auto-generated checklists if all documents are gone.
+ * Safely identifies automatically generated checklist items.
+ * Uses explicit source metadata instead of brittle ID format inferences,
+ * ensuring manual and legacy checklist items are preserved.
+ */
+function isAutomaticItem(item) {
+    if (!item) return false;
+    // Explicit manual flag or manual source always takes precedence
+    if (item.source === 'manual' || item.isManual === true || item.manual === true) {
+        return false;
+    }
+    // Explicit automatic source or authoritative automatic metadata
+    if (item.source === 'auto' || item.auto === true || item.isAuto === true) {
+        return true;
+    }
+    // Legacy items without explicit source are preserved as manual/legacy
+    return false;
+}
+
+/**
+ * Cleans up orphaned linked document issues across checklists while preserving checklists and items.
  */
 async function cleanOrphanChecklistIssues(userId) {
     if (!userId) return;
@@ -278,28 +299,33 @@ async function cleanOrphanChecklistIssues(userId) {
     if (!checklists || checklists.length === 0) return;
 
     if (docs.length === 0) {
-        // If user deleted all their documents, clean up auto-generated diligence checklists
+        // If user has zero active documents, strip linked document issues and prune obsolete auto items while preserving checklists
         for (const checklist of checklists) {
-            const isAutoChecklist = (checklist.type || '').includes('due_diligence') || 
-                                    (checklist.title || '').toLowerCase().startsWith('due diligence');
-            if (isAutoChecklist) {
-                await Checklist.deleteOne({ _id: checklist._id });
-            } else {
-                // If it's a custom-generated checklist, strip any linked document issues
-                let modified = false;
-                for (const item of checklist.items) {
-                    if (item.linkedIssues && item.linkedIssues.length > 0) {
-                        item.linkedIssues = [];
-                        if (!item.isCompleted && item.status === 'FLAGGED') {
-                            item.status = 'NOT_STARTED';
-                        }
-                        modified = true;
+            let modified = false;
+            const updatedItems = [];
+            for (const item of checklist.items) {
+                if (item.linkedIssues && item.linkedIssues.length > 0) {
+                    item.linkedIssues = [];
+                    if (!item.isCompleted && item.status === 'FLAGGED') {
+                        item.status = 'NOT_STARTED';
                     }
+                    modified = true;
                 }
-                if (modified) {
-                    checklist.updatedAt = new Date();
-                    await checklist.save();
+
+                // Check if this was an auto-generated item for an issue that no longer exists
+                const isDefaultTask = DEFAULT_DILIGENCE_TASKS.some(t => t.title === item.title) && !isAutomaticItem(item);
+                const isAuto = isAutomaticItem(item);
+                if (!isDefaultTask && isAuto && !item.isCompleted && (item.linkedIssues || []).length === 0) {
+                    modified = true;
+                    continue; // exclude orphan auto-added item
                 }
+
+                updatedItems.push(item);
+            }
+            if (modified) {
+                checklist.items = updatedItems;
+                checklist.updatedAt = new Date();
+                await checklist.save();
             }
         }
         return;
@@ -323,12 +349,12 @@ async function cleanOrphanChecklistIssues(userId) {
                 isModified = true;
             }
 
-            // Check if this was a dynamically generated item for an issue that no longer exists
-            const isDefaultTask = DEFAULT_DILIGENCE_TASKS.some(t => t.title === item.title);
-            const isNumericId = /^[0-9]+$/.test(item.id);
-            if (!isDefaultTask && !isNumericId && !item.isCompleted && (item.linkedIssues || []).length === 0) {
+            // Check if this was an auto-generated item for an issue that no longer exists
+            const isDefaultTask = DEFAULT_DILIGENCE_TASKS.some(t => t.title === item.title) && !isAutomaticItem(item);
+            const isAuto = isAutomaticItem(item);
+            if (!isDefaultTask && isAuto && !item.isCompleted && (item.linkedIssues || []).length === 0) {
                 isModified = true;
-                continue; // exclude orphan dynamically added item
+                continue; // exclude orphan auto-added item
             }
 
             updatedItems.push(item);
@@ -357,5 +383,6 @@ module.exports = {
     syncDocumentIssuesWithChecklists,
     syncAllUserDocuments,
     cleanOrphanChecklistIssues,
-    removeDocumentIssuesFromChecklists
+    removeDocumentIssuesFromChecklists,
+    isAutomaticItem
 };

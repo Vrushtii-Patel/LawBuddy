@@ -1260,12 +1260,16 @@ analysisStatus: ${cachedDoc.analysisStatus}
         riskLevel = 'Medium Risk';
     }
 
+    // Check if an existing document (active or binned) exists to preserve its custom title and fileName
+    const existingDoc = await Document.findOne({ userId, fileHash });
+
     // Derive document title
-    let title = customTitle;
+    let title = (existingDoc && existingDoc.title) ? existingDoc.title : customTitle;
     if (!title || !title.trim()) {
         const firstLine = extractedText.trim().split('\n')[0].replace(/[#*_-]/g, '').trim();
         title = firstLine.length > 50 ? firstLine.substring(0, 47) + '...' : (firstLine || 'Property Legal Agreement');
     }
+    const fileName = (existingDoc && existingDoc.fileName) ? existingDoc.fileName : title;
 
     const rawBytes = fileBuffer ? fileBuffer.length : Buffer.byteLength(extractedText, 'utf8');
     const docSize = rawBytes >= 1048576
@@ -1282,6 +1286,8 @@ analysisStatus: ${cachedDoc.analysisStatus}
     }
 
     // Step 6: Atomic Upsert to MongoDB with Concurrency Protection
+    // Note: isDeleted and deletedAt are strictly set on insert only, ensuring existing binned documents
+    // are never silently restored during re-upload or LLM re-analysis.
     const docData = {
         userId,
         fileHash,
@@ -1290,7 +1296,7 @@ analysisStatus: ${cachedDoc.analysisStatus}
         sourceType: sourceType || (isPdf ? 'PDF Document' : (isImage ? 'Photo Scan' : 'Text Description')),
         mimeType: mimeType || 'application/pdf',
         fileData: dbFileData,
-        fileName: title,
+        fileName,
         riskLevel,
         docSize,
         totalPages,
@@ -1310,8 +1316,6 @@ analysisStatus: ${cachedDoc.analysisStatus}
         analysisVersion: ANALYSIS_VERSION,
         temperature: TEMPERATURE,
         analysisStatus: 'completed',
-        isDeleted: false,
-        deletedAt: null,
         updatedAt: new Date()
     };
 
@@ -1319,7 +1323,14 @@ analysisStatus: ${cachedDoc.analysisStatus}
     try {
         savedDoc = await Document.findOneAndUpdate(
             { userId, fileHash },
-            { $set: docData, $setOnInsert: { createdAt: new Date() } },
+            {
+                $set: docData,
+                $setOnInsert: {
+                    createdAt: new Date(),
+                    isDeleted: false,
+                    deletedAt: null
+                }
+            },
             { upsert: true, returnDocument: 'after' }
         );
     } catch (saveErr) {
@@ -1327,7 +1338,14 @@ analysisStatus: ${cachedDoc.analysisStatus}
         docData.fileData = null;
         savedDoc = await Document.findOneAndUpdate(
             { userId, fileHash },
-            { $set: docData, $setOnInsert: { createdAt: new Date() } },
+            {
+                $set: docData,
+                $setOnInsert: {
+                    createdAt: new Date(),
+                    isDeleted: false,
+                    deletedAt: null
+                }
+            },
             { upsert: true, returnDocument: 'after' }
         );
     }

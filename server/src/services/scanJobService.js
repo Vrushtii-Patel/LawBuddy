@@ -183,8 +183,8 @@ async function createScanJob({
             jobId,
             userId,
             fileHash,
-            title: title || existingDoc.title,
-            fileName: title || existingDoc.fileName || '',
+            title: existingDoc.title || title,
+            fileName: existingDoc.fileName || existingDoc.title || title || '',
             sourceType: sourceType || existingDoc.sourceType,
             mimeType: mimeType || existingDoc.mimeType,
             storagePath,
@@ -229,13 +229,18 @@ async function createScanJob({
         return inFlightJob;
     }
 
+    // Preserve existing title and fileName if document already exists (active or binned)
+    const existingAnyDoc = await Document.findOne({ userId, fileHash });
+    const resolvedTitle = (existingAnyDoc && existingAnyDoc.title) ? existingAnyDoc.title : (title || 'Property Legal Agreement');
+    const resolvedFileName = (existingAnyDoc && existingAnyDoc.fileName) ? existingAnyDoc.fileName : (existingAnyDoc && existingAnyDoc.title ? existingAnyDoc.title : (title || ''));
+
     // Initialize new pending job with explicit version metadata
     const newJob = new ScanJob({
         jobId,
         userId,
         fileHash,
-        title: title || 'Property Legal Agreement',
-        fileName: title || '',
+        title: resolvedTitle,
+        fileName: resolvedFileName,
         sourceType,
         mimeType,
         storagePath,
@@ -264,6 +269,10 @@ async function syncChecklistsForDocument(job, document) {
         console.warn(`[ScanJob ${job.jobId}] Checklist sync skipped: no saved document to link.`);
         return;
     }
+    if (document.isDeleted === true) {
+        console.log(`[ScanJob ${job.jobId}] Checklist sync skipped: document ${document._id} is in Recycle Bin.`);
+        return;
+    }
     try {
         await crossReferenceService.syncDocumentIssuesWithChecklists(job.userId, document);
         console.log(`[ScanJob ${job.jobId}] Cross-referencing checklist sync completed for user ${job.userId}`);
@@ -286,6 +295,10 @@ async function syncChecklistsForScannedResult(job, result) {
         document = await Document.findById(result.documentId);
     } catch (loadErr) {
         console.warn(`[ScanJob ${job.jobId}] Could not reload saved document for checklist sync:`, loadErr.message);
+    }
+    if (document && document.isDeleted === true) {
+        console.log(`[ScanJob ${job.jobId}] Checklist sync skipped: document ${document._id} is in Recycle Bin.`);
+        return;
     }
     if (!document) {
         document = { _id: result.documentId, title: job.title, analysis: result.analysis };
@@ -319,6 +332,7 @@ async function executeJobPipeline(jobId) {
         const recentDoc = await Document.findOne({
             userId: job.userId,
             fileHash: job.fileHash,
+            isDeleted: { $ne: true },
             analysisStatus: 'completed',
             promptVersion: llmService.PROMPT_VERSION,
             modelName: llmService.MODEL_NAME
@@ -550,6 +564,13 @@ async function executeJobPipeline(jobId) {
                 title = firstLine.length > 50 ? firstLine.substring(0, 47) + '...' : (firstLine || 'Property Legal Agreement');
             }
 
+            // Check if matching document already exists to preserve custom title and fileName
+            const existingDoc = await Document.findOne({ userId: job.userId, fileHash: job.fileHash });
+            if (existingDoc && existingDoc.title) {
+                title = existingDoc.title;
+            }
+            const fileName = (existingDoc && existingDoc.fileName) ? existingDoc.fileName : title;
+
             const rawBytes = job.fileSize || Buffer.byteLength(job.extractedText || '', 'utf8');
             const docSize = rawBytes >= 1048576
                 ? `${(rawBytes / 1048576).toFixed(1)} MB`
@@ -563,7 +584,7 @@ async function executeJobPipeline(jobId) {
                 sourceType: job.sourceType,
                 mimeType: job.mimeType,
                 fileData: null, // Preserved lightweight in Document schema
-                fileName: title,
+                fileName,
                 riskLevel,
                 docSize,
                 totalPages: 1,
@@ -583,15 +604,22 @@ async function executeJobPipeline(jobId) {
                 analysisVersion: llmService.ANALYSIS_VERSION,
                 temperature: llmService.TEMPERATURE,
                 analysisStatus: 'completed',
-                isDeleted: false,
-                deletedAt: null,
                 updatedAt: new Date()
             };
 
             // Atomic Idempotent Upsert (overwrites stale analysis with current version findings)
+            // isDeleted and deletedAt are strictly set on insert only, ensuring existing binned documents
+            // are never silently restored during re-upload, scanning, or retries.
             const savedDoc = await Document.findOneAndUpdate(
                 { userId: job.userId, fileHash: job.fileHash },
-                { $set: docData, $setOnInsert: { createdAt: new Date() } },
+                {
+                    $set: docData,
+                    $setOnInsert: {
+                        createdAt: new Date(),
+                        isDeleted: false,
+                        deletedAt: null
+                    }
+                },
                 { upsert: true, returnDocument: 'after' }
             );
 
@@ -610,7 +638,11 @@ async function executeJobPipeline(jobId) {
             await job.save();
 
             // Synchronize detected document issues with user's due diligence checklists
-            await syncChecklistsForDocument(job, savedDoc);
+            if (!savedDoc.isDeleted) {
+                await syncChecklistsForDocument(job, savedDoc);
+            } else {
+                console.log(`[ScanJob ${job.jobId}] Skipping checklist sync: document ${savedDoc._id} is in Recycle Bin.`);
+            }
 
             console.log(`[ScanJob ${job.jobId}] STAGE 4 COMPLETE: Linked to Document ${savedDoc._id}. Status: COMPLETED.`);
         } else {
