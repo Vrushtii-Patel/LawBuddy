@@ -50,9 +50,14 @@ router.post('/comparisons/start', requireAuth, async (req, res) => {
 router.get('/comparisons/active', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
+        // Running comparisons are always "active". A FAILED one is offered once and
+        // drops out of this list as soon as the user dismisses it.
         const activeComp = await DocumentComparison.findOne({
             userId,
-            status: { $in: ['QUEUED', 'RESOLVING_DOCUMENTS', 'MATCHING_CLAUSES', 'DIFFING_CHANGES', 'AI_ANALYSIS', 'REPORT_GENERATION', 'RETRYING', 'FAILED'] }
+            $or: [
+                { status: { $in: ['QUEUED', 'RESOLVING_DOCUMENTS', 'MATCHING_CLAUSES', 'DIFFING_CHANGES', 'AI_ANALYSIS', 'REPORT_GENERATION', 'RETRYING'] } },
+                { status: 'FAILED', dismissedAt: null }
+            ]
         }).sort({ updatedAt: -1 });
 
         if (!activeComp) {
@@ -78,6 +83,27 @@ router.get('/comparisons/active', requireAuth, async (req, res) => {
 });
 
 // GET /api/comparisons/:comparisonId - Get comparison status / report
+router.post('/comparisons/:comparisonId/dismiss', requireAuth, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const comp = await DocumentComparison.findOne({ comparisonId: req.params.comparisonId, userId });
+        if (!comp) {
+            return res.status(404).json({ error: 'Comparison record not found or unauthorized' });
+        }
+        if (comp.status !== 'FAILED') {
+            return res.status(400).json({ error: 'Only failed comparisons can be dismissed' });
+        }
+        await DocumentComparison.updateOne(
+            { comparisonId: req.params.comparisonId, userId, status: 'FAILED' },
+            { $set: { dismissedAt: new Date() } }
+        );
+        res.status(200).json({ dismissed: true, comparisonId: comp.comparisonId });
+    } catch (error) {
+        console.error('Error dismissing comparison:', error);
+        res.status(500).json({ error: 'Failed to dismiss comparison.' });
+    }
+});
+
 router.get('/comparisons/:comparisonId', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
@@ -140,7 +166,8 @@ router.post('/comparisons/:comparisonId/retry', requireAuth, async (req, res) =>
                 $set: {
                     status: 'RETRYING',
                     currentStep: 'Resuming comparison...',
-                    lastRetryAt: new Date()
+                    lastRetryAt: new Date(),
+                    dismissedAt: null
                 }
             },
             { returnDocument: 'after' }

@@ -14,8 +14,8 @@ const analysisItemSchema = new mongoose.Schema({
     text: { type: String, required: true },
     category: { type: String, enum: ['Red', 'Yellow', 'Green'], default: 'Green' },
     riskLevel: { type: String, enum: ['HIGH_RISK', 'CAUTION', 'COMPLIANT'], default: 'COMPLIANT' },
-    findingCategory: { 
-        type: String, 
+    findingCategory: {
+        type: String,
         enum: [
             'Confirmed statutory violation',
             'Potential legal concern',
@@ -66,9 +66,9 @@ const scanJobSchema = new mongoose.Schema({
         index: true
     },
     currentStep: { type: String, default: 'Scan queued' },
-    completedSteps: [{ 
-        type: String, 
-        enum: ['UPLOAD', 'TEXT_EXTRACTION', 'AI_ANALYSIS', 'REPORT'] 
+    completedSteps: [{
+        type: String,
+        enum: ['UPLOAD', 'TEXT_EXTRACTION', 'AI_ANALYSIS', 'REPORT']
     }],
 
     // Intermediate Persisted Outputs
@@ -97,6 +97,8 @@ const scanJobSchema = new mongoose.Schema({
     maxAutoRetries: { type: Number, default: 3 },
     manualRetriesCount: { type: Number, default: 0 },
     lastRetryAt: { type: Date, default: null },
+    // Set when the user dismisses a FAILED job so it is not offered again as "active".
+    dismissedAt: { type: Date, default: null },
 
     createdAt: { type: Date, default: Date.now, index: true },
     updatedAt: { type: Date, default: Date.now, index: true },
@@ -104,7 +106,7 @@ const scanJobSchema = new mongoose.Schema({
 }, { versionKey: false });
 
 // Auto-update updatedAt on save
-scanJobSchema.pre('save', function() {
+scanJobSchema.pre('save', function () {
     this.updatedAt = new Date();
 });
 

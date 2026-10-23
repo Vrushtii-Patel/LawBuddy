@@ -86,9 +86,14 @@ router.post('/scans/start', requireAuth, uploadDocument, async (req, res) => {
 router.get('/scans/active', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
+        // Running jobs are always "active". A FAILED job is offered once (with Retry and
+        // Dismiss) and drops out of this list as soon as the user dismisses it.
         const activeJob = await ScanJob.findOne({
             userId,
-            status: { $in: ['QUEUED', 'UPLOADING', 'OCR_PROCESSING', 'TEXT_EXTRACTED', 'AI_ANALYSIS', 'REPORT_GENERATION', 'RETRYING', 'FAILED'] }
+            $or: [
+                { status: { $in: ['QUEUED', 'UPLOADING', 'OCR_PROCESSING', 'TEXT_EXTRACTED', 'AI_ANALYSIS', 'REPORT_GENERATION', 'RETRYING'] } },
+                { status: 'FAILED', dismissedAt: null }
+            ]
         }).sort({ updatedAt: -1 });
 
         if (!activeJob) {
@@ -111,6 +116,28 @@ router.get('/scans/active', requireAuth, async (req, res) => {
     } catch (error) {
         console.error('Error fetching active scan job:', error);
         res.status(500).json({ error: 'Failed to fetch active scan job.' });
+    }
+});
+
+// POST /api/scans/:jobId/dismiss - Hides a FAILED scan job from the "active" banner
+router.post('/scans/:jobId/dismiss', requireAuth, async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const job = await ScanJob.findOne({ jobId: req.params.jobId, userId });
+        if (!job) {
+            return res.status(404).json({ error: 'Scan job not found' });
+        }
+        if (job.status !== 'FAILED') {
+            return res.status(400).json({ error: 'Only failed scan jobs can be dismissed' });
+        }
+        await ScanJob.updateOne(
+            { jobId: req.params.jobId, userId, status: 'FAILED' },
+            { $set: { dismissedAt: new Date() } }
+        );
+        res.json({ dismissed: true, jobId: job.jobId });
+    } catch (error) {
+        console.error('Error dismissing scan job:', error);
+        res.status(500).json({ error: 'Failed to dismiss scan job.' });
     }
 });
 
@@ -198,7 +225,8 @@ router.post('/scans/:jobId/retry', requireAuth, async (req, res) => {
                 $set: {
                     status: 'RETRYING',
                     currentStep: 'Resuming scan...',
-                    lastRetryAt: new Date()
+                    lastRetryAt: new Date(),
+                    dismissedAt: null
                 }
             },
             { returnDocument: 'after' }

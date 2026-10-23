@@ -481,6 +481,16 @@ class ApiService {
     return res as Map<String, dynamic>;
   }
 
+  /// Tells the server the user dismissed a FAILED scan job, so it is not offered again.
+  /// Best effort: the banner is hidden locally either way.
+  static Future<void> dismissScanJob(String jobId) async {
+    try {
+      await _sendRequest('POST', '/scans/$jobId/dismiss');
+    } catch (e) {
+      debugPrint('Error dismissing scan job: $e');
+    }
+  }
+
   static Future<Map<String, dynamic>> retryScanJob(String jobId) async {
     final res = await _requestJson(
       'POST',
@@ -1082,6 +1092,15 @@ class ApiService {
       defaultErrorMessage: 'Failed to load comparison details',
     );
     return res as Map<String, dynamic>;
+  }
+
+  /// Tells the server the user dismissed a FAILED comparison, so it is not offered again.
+  static Future<void> dismissComparison(String comparisonId) async {
+    try {
+      await _sendRequest('POST', '/comparisons/$comparisonId/dismiss');
+    } catch (e) {
+      debugPrint('Error dismissing comparison: $e');
+    }
   }
 
   static Future<Map<String, dynamic>> retryComparison(String comparisonId) async {

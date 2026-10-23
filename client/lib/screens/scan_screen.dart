@@ -871,6 +871,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             ),
             tooltip: 'Dismiss',
             onPressed: () {
+              // A failed job is dismissed on the server too, so it does not
+              // come back the next time this screen opens.
+              if (isFailed && jobId.toString().isNotEmpty) {
+                ApiService.dismissScanJob(jobId.toString());
+              }
               setState(() {
                 _activeScanJob = null;
               });
