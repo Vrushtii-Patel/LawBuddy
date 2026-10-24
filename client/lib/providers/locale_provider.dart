@@ -102,6 +102,11 @@ final Map<String, Map<String, String>> _translations = {
   'common.cancel': {'en': 'Cancel', 'hi': 'रद्द करें'},
   'common.delete': {'en': 'Delete', 'hi': 'हटाएं'},
   'common.retry': {'en': 'Retry', 'hi': 'पुनः प्रयास करें'},
+  'common.cantConnect': {'en': "Can't connect", 'hi': 'कनेक्ट नहीं हो पा रहा है'},
+  'common.cantConnectDesc': {
+    'en': 'Unable to connect to LawBuddy servers. Please check your internet connection and try again.',
+    'hi': 'LawBuddy सर्वर से कनेक्ट करने में असमर्थ। कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें।'
+  },
   'common.close': {'en': 'Close', 'hi': 'बंद करें'},
   'common.clear': {'en': 'Clear', 'hi': 'साफ़ करें'},
   'common.save': {'en': 'Save', 'hi': 'सहेजें'},

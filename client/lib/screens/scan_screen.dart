@@ -209,6 +209,34 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
             });
           }
         } catch (pollErr) {
+          int? statusCode;
+          if (pollErr is ApiException) {
+            statusCode = pollErr.statusCode;
+          }
+          final is401 = statusCode == 401 ||
+              pollErr.toString().contains('401') ||
+              pollErr.toString().toLowerCase().contains('unauthorized');
+          final is404 = statusCode == 404 ||
+              pollErr.toString().contains('404') ||
+              pollErr.toString().toLowerCase().contains('not found');
+
+          if (is401 || is404) {
+            debugPrint('Stopping scan poll immediately on terminal status (401=$is401, 404=$is404)');
+            if (mounted) {
+              setState(() {
+                _isProcessing = false;
+                if (is404 && _activeScanJob?['jobId'] == jobId) {
+                  _activeScanJob = null;
+                }
+              });
+              final message = is404
+                  ? 'Scan job not found or has expired.'
+                  : 'Session expired. Please log in again.';
+              AppToast.showError(context, message);
+            }
+            return;
+          }
+
           errorStreak++;
           debugPrint('Polling transient error: $pollErr');
         }

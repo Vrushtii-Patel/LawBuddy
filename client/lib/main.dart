@@ -6,6 +6,7 @@ import 'screens/welcome_screen.dart';
 import 'screens/how_it_works_screen.dart';
 import 'screens/analysis_screen.dart';
 import 'screens/shared_summary_screen.dart';
+import 'screens/cant_connect_screen.dart';
 import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
@@ -181,8 +182,9 @@ class AuthGate extends ConsumerWidget {
       case AuthStatus.authenticated:
         return const HomeScreen();
       case AuthStatus.unauthenticated:
-      case AuthStatus.error:
         return const WelcomeScreen();
+      case AuthStatus.error:
+        return const CantConnectScreen();
     }
   }
 }
