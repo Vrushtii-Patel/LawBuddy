@@ -872,12 +872,15 @@ async function executeComparisonPipeline(comparisonId) {
         return comp;
 
     } catch (err) {
-        console.error(`[Comparison ${comp.comparisonId}] Pipeline error:`, err.message);
+        const failedStage = comp.currentStep || 'Processing comparison...';
+        const friendlyMessage = scanJobService.getUserFriendlyErrorMessage(err);
+        console.error(`[Comparison ${comp.comparisonId}] Pipeline error at stage "${failedStage}":`, err.stack || err);
+
         comp.status = 'FAILED';
-        comp.currentStep = `Failed at ${comp.currentStep}: ${err.message}`;
+        comp.currentStep = `Failed at ${failedStage}`;
         comp.errorInfo = {
-            message: err.message,
-            stage: comp.currentStep,
+            message: friendlyMessage,
+            stage: failedStage,
             code: err.code || 'COMPARISON_ERROR',
             isTransient: (err.message || '').includes('429') || (err.message || '').includes('timeout'),
             timestamp: new Date()
