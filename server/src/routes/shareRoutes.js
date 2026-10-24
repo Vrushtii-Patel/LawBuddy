@@ -37,6 +37,30 @@ function normalizeClauseRisk(riskLevel, category) {
     return 'COMPLIANT';
 }
 
+// Helper: Sanitize one analysis item (used for both client-supplied and stored analysis)
+function sanitizeAnalysisItem(item) {
+    const cRisk = normalizeClauseRisk(item.riskLevel, item.category);
+    return {
+        clauseId: cleanString(item.clauseId, 100) || '',
+        title: cleanString(item.title, 300) || '',
+        text: cleanString(item.text, 4000) || '',
+        category: cleanString(item.category, 50) || (cRisk === 'HIGH_RISK' ? 'Red' : cRisk === 'CAUTION' ? 'Yellow' : 'Green'),
+        riskLevel: cRisk,
+        findingCategory: cleanString(item.findingCategory, 200) || 'No material issue identified',
+        reason: cleanString(item.reason, 4000) || '',
+        legalFinding: cleanString(item.legalFinding, 4000) || '',
+        statutoryCitations: cleanStringArray(item.statutoryCitations, 20, 300),
+        reraReferences: cleanStringArray(item.reraReferences, 20, 300),
+        buyerImpact: cleanString(item.buyerImpact, 4000) || '',
+        recommendation: cleanString(item.recommendation, 4000) || '',
+        sourcePages: Array.isArray(item.sourcePages)
+            ? item.sourcePages.filter(p => Number.isInteger(p)).slice(0, 20)
+            : []
+    };
+}
+
+const MAX_SHARED_CLAUSES = 150;
+
 // =========================================================================
 // POST /api/shares - Create a secure, read-only share token for an analysis
 // =========================================================================
@@ -47,10 +71,6 @@ router.post('/shares', optionalAuth, async (req, res) => {
             title,
             riskLevel,
             riskScore,
-            highRiskCount,
-            cautionCount,
-            compliantCount,
-            totalClauseCount,
             analysis
         } = req.body;
 
@@ -58,10 +78,6 @@ router.post('/shares', optionalAuth, async (req, res) => {
         let finalTitle = cleanString(title, 300) || 'Property Legal Risk Summary';
         let finalRiskLevel = normalizeOverallRisk(riskLevel);
         let finalAnalysis = [];
-        let finalHighRisk = Number.isInteger(highRiskCount) && highRiskCount >= 0 ? highRiskCount : 0;
-        let finalCaution = Number.isInteger(cautionCount) && cautionCount >= 0 ? cautionCount : 0;
-        let finalCompliant = Number.isInteger(compliantCount) && compliantCount >= 0 ? compliantCount : 0;
-        let finalTotal = Number.isInteger(totalClauseCount) && totalClauseCount >= 0 ? totalClauseCount : 0;
         let verifiedDocId = null;
 
         // If a documentId is provided, it must belong to the authenticated caller.
@@ -81,12 +97,8 @@ router.post('/shares', optionalAuth, async (req, res) => {
                 if (!title) finalTitle = doc.title || finalTitle;
                 if (!riskLevel) finalRiskLevel = doc.riskLevel || finalRiskLevel;
                 if (doc.analysis && Array.isArray(doc.analysis) && (!analysis || !analysis.length)) {
-                    finalAnalysis = doc.analysis;
+                    finalAnalysis = doc.analysis.slice(0, MAX_SHARED_CLAUSES).map(sanitizeAnalysisItem);
                 }
-                if (doc.highRiskCount !== undefined) finalHighRisk = doc.highRiskCount;
-                if (doc.cautionCount !== undefined) finalCaution = doc.cautionCount;
-                if (doc.compliantCount !== undefined) finalCompliant = doc.compliantCount;
-                if (doc.totalClauseCount !== undefined) finalTotal = doc.totalClauseCount;
             } catch (err) {
                 console.warn('[Share] Document lookup non-fatal error:', err.message);
                 return res.status(500).json({ error: 'Failed to verify document ownership.' });
@@ -95,35 +107,16 @@ router.post('/shares', optionalAuth, async (req, res) => {
 
         // If client provided analysis items directly, sanitize and validate them
         if (Array.isArray(analysis) && analysis.length > 0) {
-            finalAnalysis = analysis.slice(0, 150).map(item => {
-                const cRisk = normalizeClauseRisk(item.riskLevel, item.category);
-                return {
-                    clauseId: cleanString(item.clauseId, 100) || '',
-                    title: cleanString(item.title, 300) || '',
-                    text: cleanString(item.text, 4000) || '',
-                    category: cleanString(item.category, 50) || (cRisk === 'HIGH_RISK' ? 'Red' : cRisk === 'CAUTION' ? 'Yellow' : 'Green'),
-                    riskLevel: cRisk,
-                    findingCategory: cleanString(item.findingCategory, 200) || 'No material issue identified',
-                    reason: cleanString(item.reason, 4000) || '',
-                    legalFinding: cleanString(item.legalFinding, 4000) || '',
-                    statutoryCitations: cleanStringArray(item.statutoryCitations, 20, 300),
-                    reraReferences: cleanStringArray(item.reraReferences, 20, 300),
-                    buyerImpact: cleanString(item.buyerImpact, 4000) || '',
-                    recommendation: cleanString(item.recommendation, 4000) || '',
-                    sourcePages: Array.isArray(item.sourcePages)
-                        ? item.sourcePages.filter(p => Number.isInteger(p)).slice(0, 20)
-                        : []
-                };
-            });
-
-            // Recalculate counts if not set
-            if (finalTotal === 0) {
-                finalHighRisk = finalAnalysis.filter(c => c.riskLevel === 'HIGH_RISK').length;
-                finalCaution = finalAnalysis.filter(c => c.riskLevel === 'CAUTION').length;
-                finalCompliant = finalAnalysis.filter(c => c.riskLevel === 'COMPLIANT').length;
-                finalTotal = finalAnalysis.length;
-            }
+            finalAnalysis = analysis.slice(0, MAX_SHARED_CLAUSES).map(sanitizeAnalysisItem);
         }
+
+        // One source for the counts: the clauses that are actually stored in the share.
+        // Counts taken from the request or from the saved document could disagree with
+        // the clauses shown (for example when the list was capped or came from elsewhere).
+        const finalHighRisk = finalAnalysis.filter(c => c.riskLevel === 'HIGH_RISK').length;
+        const finalCaution = finalAnalysis.filter(c => c.riskLevel === 'CAUTION').length;
+        const finalCompliant = finalAnalysis.filter(c => c.riskLevel === 'COMPLIANT').length;
+        const finalTotal = finalAnalysis.length;
 
         // Generate 32-character cryptographically secure hex token
         const shareToken = crypto.randomBytes(16).toString('hex');
