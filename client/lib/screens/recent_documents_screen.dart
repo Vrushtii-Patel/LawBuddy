@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
@@ -517,7 +519,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
     final title = (doc['title'] ?? 'Scanned Agreement').toString();
     final originalText = (doc['originalText'] ?? '').toString();
     final sourceType = (doc['sourceType'] as String?) ?? 'PDF Document';
-    final fileData = doc['fileData'] as String?;
+    String? fileData = doc['fileData'] as String?;
     final mimeType = doc['mimeType'] as String?;
 
     _showToast(
@@ -548,6 +550,17 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
     );
 
     try {
+      // The document list no longer carries the (large) original file, so fetch it now.
+      if (fileData == null || fileData.isEmpty) {
+        final docId = (doc['_id'] ?? doc['id'])?.toString();
+        if (docId != null && docId.isNotEmpty) {
+          final bytes = await ApiService.fetchDocumentFile(docId);
+          if (bytes != null && bytes.isNotEmpty) {
+            fileData = base64Encode(bytes);
+          }
+        }
+      }
+
       final result = await ApiService.scanDocument(
         originalText,
         title: title,

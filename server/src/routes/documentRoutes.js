@@ -145,14 +145,23 @@ router.post('/scans/:jobId/dismiss', requireAuth, async (req, res) => {
 router.get('/scans/:jobId', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const job = await ScanJob.findOne({ jobId: req.params.jobId, userId });
+        // The app polls this every ~1.5 s, so keep the polling response small: the heavy
+        // result fields (text, analysis, clauses) are only loaded and sent once the job is
+        // COMPLETED, and the original file is never embedded (it is fetched by document id).
+        const job = await ScanJob.findOne({ jobId: req.params.jobId, userId })
+            .select('-extractedText -analysis -canonicalClauses');
         if (!job) {
             return res.status(404).json({ error: 'Scan job not found' });
         }
 
         let document = null;
-        if (job.documentId) {
-            document = await Document.findById(job.documentId);
+        let result = null;
+        if (job.status === 'COMPLETED') {
+            result = await ScanJob.findOne({ jobId: job.jobId, userId })
+                .select('extractedText analysis canonicalClauses');
+            if (job.documentId) {
+                document = await Document.findById(job.documentId).select('-fileData');
+            }
         }
 
         res.json({
@@ -160,9 +169,9 @@ router.get('/scans/:jobId', requireAuth, async (req, res) => {
             status: job.status,
             currentStep: job.currentStep,
             completedSteps: job.completedSteps,
-            extractedText: job.extractedText,
-            analysis: job.analysis,
-            canonicalClauses: job.canonicalClauses,
+            extractedText: result ? result.extractedText : undefined,
+            analysis: result ? result.analysis : undefined,
+            canonicalClauses: result ? result.canonicalClauses : undefined,
             documentId: job.documentId,
             document: document,
             errorInfo: job.errorInfo,
@@ -289,11 +298,18 @@ router.post('/scan-file', (req, res) => {
 // Import cleanup service
 const documentCleanupService = require('../services/documentCleanupService');
 
+// Fields the document list and the Bin never need. `fileData` is the whole original file as
+// base64 (up to 3 MB per document) and `extractedNormalizedText` duplicates the document text.
+// The app fetches the original file on demand from GET /api/documents/:id/file.
+const LIST_EXCLUDED_FIELDS = '-fileData -extractedNormalizedText';
+
 // GET /api/documents (Strictly scoped to authenticated user, excludes soft-deleted docs)
 router.get('/documents', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const docs = await Document.find({ userId, isDeleted: { $ne: true } }).sort({ createdAt: -1 });
+        const docs = await Document.find({ userId, isDeleted: { $ne: true } })
+            .select(LIST_EXCLUDED_FIELDS)
+            .sort({ createdAt: -1 });
         res.json(docs);
     } catch (error) {
         console.error('Error fetching documents:', error);
@@ -316,7 +332,7 @@ router.get('/documents/bin', requireAuth, async (req, res) => {
         const binnedDocs = await Document.find({
             userId,
             isDeleted: true
-        }).sort({ deletedAt: -1 });
+        }).select(LIST_EXCLUDED_FIELDS).sort({ deletedAt: -1 });
 
         res.json(binnedDocs);
     } catch (error) {
