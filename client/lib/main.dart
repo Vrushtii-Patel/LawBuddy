@@ -199,33 +199,41 @@ class _LawBuddyAppState extends ConsumerState<LawBuddyApp> {
       themeMode: themeMode,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: homeWidget,
+      home: CookieConsentWrapper(child: homeWidget),
       routes: {
-        '/how-it-works': (context) => const HowItWorksScreen(),
-        '/welcome': (context) => const WelcomeScreen(),
+        '/how-it-works': (context) => const CookieConsentWrapper(child: HowItWorksScreen()),
+        '/welcome': (context) => const CookieConsentWrapper(child: WelcomeScreen()),
       },
       onGenerateRoute: (settings) {
         final name = (settings.name ?? '').toLowerCase();
         if (name == '/how-it-works' || name == 'how-it-works' || name == '/howitworks') {
           return MaterialPageRoute(
-            builder: (_) => const HowItWorksScreen(),
+            builder: (_) => const CookieConsentWrapper(child: HowItWorksScreen()),
             settings: settings,
           );
         }
         return null;
       },
       builder: (context, child) {
-        if (child == null) return const SizedBox.shrink();
-        return Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            children: [
-              child,
-              const CookieConsentBanner(),
-            ],
-          ),
-        );
+        return child ?? const SizedBox.shrink();
       },
+    );
+  }
+}
+
+/// Wraps top-level routes with the CookieConsentBanner inside the Navigator,
+/// ensuring dialogs, modal barriers, and overlays render above the banner and have full Navigator context.
+class CookieConsentWrapper extends StatelessWidget {
+  final Widget child;
+  const CookieConsentWrapper({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        child,
+        const CookieConsentBanner(),
+      ],
     );
   }
 }
