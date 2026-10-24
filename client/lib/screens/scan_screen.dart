@@ -484,7 +484,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     } catch (e) {
       debugPrint('Error processing photo scan: $e');
       if (!mounted) return;
-      AppToast.showError(context, _t('scan.photoFailed'));
+      final errorMessage = (e is ApiException || e is RateLimitException)
+          ? e.toString().replaceFirst('Exception: ', '')
+          : (e is Exception ? e.toString().replaceFirst('Exception: ', '') : _t('scan.photoFailed'));
+      AppToast.showError(context, errorMessage);
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -659,7 +662,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       setState(() {
         _isProcessing = false;
       });
-      AppToast.showError(context, _t('scan.analysisFailed'));
+      final errorMessage = (e is ApiException || e is RateLimitException)
+          ? e.toString().replaceFirst('Exception: ', '')
+          : (e is Exception ? e.toString().replaceFirst('Exception: ', '') : _t('scan.analysisFailed'));
+      AppToast.showError(context, errorMessage);
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {

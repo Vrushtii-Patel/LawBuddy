@@ -9,6 +9,7 @@ const ScanJob = require('../models/ScanJob');
 const crossReferenceService = require('../services/crossReferenceService');
 const { requireAuth } = require('../middleware/authMiddleware');
 const { uploadDocument } = require('../middleware/uploadMiddleware');
+const { scanStartLimiter, scanRetryLimiter } = require('../middleware/rateLimitMiddleware');
 
 // =========================================================================
 // SCAN HELPER FUNCTIONS (INFERENCE & RESPONSE SHAPING)
@@ -53,7 +54,7 @@ function inferScanJobParams(req, { requireFile = false } = {}) {
 // =========================================================================
 
 // POST /api/scans/start - Initializes a persistent scan job
-router.post('/scans/start', requireAuth, uploadDocument, async (req, res) => {
+router.post('/scans/start', requireAuth, scanStartLimiter, uploadDocument, async (req, res) => {
     try {
         const { error, params } = inferScanJobParams(req);
         if (error) {
@@ -187,7 +188,7 @@ router.get('/scans/:jobId', requireAuth, async (req, res) => {
 });
 
 // POST /api/scans/:jobId/retry - Resumes a failed or incomplete scan job from its last incomplete stage
-router.post('/scans/:jobId/retry', requireAuth, async (req, res) => {
+router.post('/scans/:jobId/retry', requireAuth, scanRetryLimiter, async (req, res) => {
     try {
         const userId = req.user.userId;
         const job = await ScanJob.findOne({ jobId: req.params.jobId, userId });
