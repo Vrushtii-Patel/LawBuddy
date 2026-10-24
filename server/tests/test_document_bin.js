@@ -170,10 +170,132 @@ async function runBinTests() {
         // Clean up remaining test records
         await documentCleanupService.permanentlyDeleteDocument(recentBinnedDoc._id, testUserId);
 
-        console.log('\n🎉 ALL 6 DOCUMENT BIN & AUTO-PURGE TESTS PASSED SUCCESSFULLY!');
+        // Test 7: Preserving file and other user's active ScanJob when User A permanently deletes their binned document
+        const sharedJobFileHash = `shared_job_hash_${Date.now()}`;
+        const sharedJobFilePath = path.join(uploadsDir, `${sharedJobFileHash}.dat`);
+        fs.writeFileSync(sharedJobFilePath, Buffer.from('Shared content between user A and user B'));
+
+        const testUserBId = `test_bin_user_b_${Date.now()}`;
+
+        // User A's document (binned)
+        const docUserA = await Document.create({
+            userId: testUserId,
+            fileHash: sharedJobFileHash,
+            title: 'User A Rental Agreement',
+            originalText: 'Agreement text...',
+            analysisStatus: 'completed',
+            isDeleted: true,
+            deletedAt: new Date()
+        });
+
+        // User A's old completed job
+        const jobUserA = await ScanJob.create({
+            jobId: `job_user_a_${Date.now()}`,
+            userId: testUserId,
+            fileHash: sharedJobFileHash,
+            documentId: docUserA._id,
+            status: 'COMPLETED',
+            title: docUserA.title,
+            storagePath: `uploads/scan_files/${sharedJobFileHash}.dat`
+        });
+
+        // User B's active in-flight ScanJob for the same fileHash
+        const jobUserB = await ScanJob.create({
+            jobId: `job_user_b_${Date.now()}`,
+            userId: testUserBId,
+            fileHash: sharedJobFileHash,
+            status: 'AI_ANALYSIS',
+            currentStep: 'Analyzing clauses...',
+            title: 'User B Rental Agreement Copy',
+            storagePath: `uploads/scan_files/${sharedJobFileHash}.dat`
+        });
+
+        // User A permanently deletes their binned document
+        await documentCleanupService.permanentlyDeleteDocument(docUserA._id, testUserId);
+
+        // Verify:
+        // 1. User A's document is deleted
+        const foundDocA = await Document.findById(docUserA._id);
+        assert.strictEqual(foundDocA, null, 'User A Document must be permanently deleted');
+
+        // 2. User A's completed job is deleted
+        const foundJobA = await ScanJob.findOne({ jobId: jobUserA.jobId });
+        assert.strictEqual(foundJobA, null, 'User A ScanJob must be deleted');
+
+        // 3. User B's active ScanJob is PRESERVED
+        const foundJobB = await ScanJob.findOne({ jobId: jobUserB.jobId });
+        assert.ok(foundJobB, 'User B active ScanJob MUST NOT be deleted');
+        assert.strictEqual(foundJobB.status, 'AI_ANALYSIS');
+
+        // 4. Crucially: The shared physical file on disk MUST NOT be unlinked because User B is using it!
+        assert.strictEqual(
+            fs.existsSync(sharedJobFilePath),
+            true,
+            'Physical file on disk MUST NOT be deleted while another active ScanJob references it'
+        );
+        console.log('✓ Test 7: Permanently deleting User A document preserves shared file on disk for User B active ScanJob.');
+
+        // Test 8: Once User B finishes and no more documents or ScanJobs reference fileHash, disk cleanup removes the file
+        await ScanJob.deleteOne({ _id: jobUserB._id });
+        const unlinked = await documentCleanupService.removeFileIfUnreferenced(sharedJobFileHash);
+        assert.strictEqual(unlinked, true, 'removeFileIfUnreferenced must return true when all refs are gone');
+        assert.strictEqual(
+            fs.existsSync(sharedJobFilePath),
+            false,
+            'Physical file must be unlinked once no Document and no ScanJob references it'
+        );
+        console.log('✓ Test 8: Physical file cleanly unlinked once all remaining ScanJobs and Documents are gone.');
+
+        // Test 9: User A re-scanning the same file while permanently deleting an old binned copy
+        const rescanFileHash = `rescan_hash_${Date.now()}`;
+        const rescanFilePath = path.join(uploadsDir, `${rescanFileHash}.dat`);
+        fs.writeFileSync(rescanFilePath, Buffer.from('Rescan test file content'));
+
+        const oldDocUserA = await Document.create({
+            userId: testUserId,
+            fileHash: rescanFileHash,
+            title: 'Old Binned Version',
+            originalText: 'Old text...',
+            analysisStatus: 'completed',
+            isDeleted: true,
+            deletedAt: new Date()
+        });
+
+        // User A's new in-flight re-scan job
+        const rescanJobUserA = await ScanJob.create({
+            jobId: `job_rescan_${Date.now()}`,
+            userId: testUserId,
+            fileHash: rescanFileHash,
+            status: 'QUEUED',
+            currentStep: 'Queueing analysis...',
+            title: 'New Scanned Copy',
+            storagePath: `uploads/scan_files/${rescanFileHash}.dat`
+        });
+
+        // User A deletes old binned document
+        await documentCleanupService.permanentlyDeleteDocument(oldDocUserA._id, testUserId);
+
+        // Verify: old doc is gone, in-flight job is NOT deleted, file on disk is preserved
+        const checkOldDoc = await Document.findById(oldDocUserA._id);
+        assert.strictEqual(checkOldDoc, null, 'Old binned document must be deleted');
+        const checkRescanJob = await ScanJob.findOne({ jobId: rescanJobUserA.jobId });
+        assert.ok(checkRescanJob, 'Active in-flight re-scan job must NOT be deleted');
+        assert.strictEqual(
+            fs.existsSync(rescanFilePath),
+            true,
+            'Physical file must be preserved for active in-flight re-scan job'
+        );
+
+        // Cleanup test 9
+        await ScanJob.deleteOne({ _id: rescanJobUserA._id });
+        await documentCleanupService.removeFileIfUnreferenced(rescanFileHash);
+        assert.strictEqual(fs.existsSync(rescanFilePath), false, 'Rescan file removed after job cleanup');
+        console.log('✓ Test 9: Active in-flight re-scan job for the same user is preserved along with disk file.');
+
+        console.log('\n🎉 ALL 9 DOCUMENT BIN & AUTO-PURGE TESTS PASSED SUCCESSFULLY!');
     } finally {
-        await Document.deleteMany({ userId: testUserId });
-        await ScanJob.deleteMany({ userId: testUserId });
+        await Document.deleteMany({ userId: { $in: [testUserId, /test_bin_user_b_/] } });
+        await ScanJob.deleteMany({ userId: { $in: [testUserId, /test_bin_user_b_/] } });
         if (mongod) await mongod.stop();
     }
 }
