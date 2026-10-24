@@ -32,7 +32,7 @@ void main() {
               const Icon(Icons.refresh_rounded, color: AppColors.lightPrimary, size: 28),
               const SizedBox(height: 8),
               Text(
-                'Temporarily adjusting layout...',
+                LocaleNotifier.translateCurrent('app.layoutAdjusting'),
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey.shade600,

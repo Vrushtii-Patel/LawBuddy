@@ -35,12 +35,14 @@ class LocaleNotifier extends StateNotifier<AppLanguage> {
           orElse: () => AppLanguage.english,
         );
         state = matched;
+        _currentCode = matched.code;
       }
     }
   }
 
   Future<void> setLanguage(AppLanguage language) async {
     state = language;
+    _currentCode = language.code;
     final prefs = await SharedPreferences.getInstance();
     final functionalAllowed = prefs.getBool('storage_consent_functional');
     if (functionalAllowed == true) {
@@ -49,7 +51,18 @@ class LocaleNotifier extends StateNotifier<AppLanguage> {
   }
 
   String translate(String key, [Map<String, String>? params]) {
-    final langCode = state.code;
+    return _lookup(key, state.code, params);
+  }
+
+  // Language code for code that has no access to Riverpod, such as the global
+  // ErrorWidget.builder in main.dart. Kept in sync whenever the language changes.
+  static String _currentCode = 'en';
+
+  static String translateCurrent(String key, [Map<String, String>? params]) {
+    return _lookup(key, _currentCode, params);
+  }
+
+  static String _lookup(String key, String langCode, [Map<String, String>? params]) {
     String raw = key;
 
     if (_translations.containsKey(key) && _translations[key]!.containsKey(langCode)) {
@@ -315,6 +328,59 @@ final Map<String, Map<String, String>> _translations = {
     'en': 'Temporarily unavailable — retrying automatically...',
     'hi': 'अस्थायी रूप से अनुपलब्ध — स्वचालित रूप से पुनः प्रयास किया जा रहा है...',
   },
+  'scan.stepQueued': {'en': 'Scan queued...', 'hi': 'स्कैन कतार में है...'},
+  'scan.stepUploading': {'en': 'Uploading document...', 'hi': 'दस्तावेज़ अपलोड हो रहा है...'},
+  'scan.stepExtracting': {'en': 'Extracting document...', 'hi': 'दस्तावेज़ से पाठ निकाला जा रहा है...'},
+  'scan.stepTextExtracted': {'en': 'Document text extracted', 'hi': 'दस्तावेज़ का पाठ निकाल लिया गया'},
+  'scan.stepAnalyzing': {'en': 'Analyzing legal clauses...', 'hi': 'कानूनी खंडों का विश्लेषण हो रहा है...'},
+  'scan.stepReport': {'en': 'Generating report...', 'hi': 'रिपोर्ट तैयार की जा रही है...'},
+  'scan.stepCompleted': {'en': 'Analysis completed', 'hi': 'विश्लेषण पूरा हुआ'},
+  'scan.stepPaused': {'en': 'Scan paused', 'hi': 'स्कैन रुका हुआ है'},
+  'scan.stepProcessing': {'en': 'Processing document...', 'hi': 'दस्तावेज़ संसाधित हो रहा है...'},
+  'scan.pausedWithReason': {'en': 'Scan paused: {reason}', 'hi': 'स्कैन रुका: {reason}'},
+  'scan.pleaseRetry': {'en': 'Please retry.', 'hi': 'कृपया पुनः प्रयास करें।'},
+  'scan.resumeFailed': {
+    'en': 'Unable to resume scan. Please try scanning the document again.',
+    'hi': 'स्कैन फिर से शुरू नहीं हो सका। कृपया दस्तावेज़ को दोबारा स्कैन करने का प्रयास करें।',
+  },
+  'scan.savedStillRunning': {
+    'en': 'Your scan is saved and still running. Find it in your documents when it finishes, or resume it here.',
+    'hi': 'आपका स्कैन सहेजा गया है और अभी चल रहा है। पूरा होने पर इसे अपने दस्तावेज़ों में देखें, या यहीं से फिर शुरू करें।',
+  },
+  'scan.photoFailed': {
+    'en': 'Unable to process the photo scan. Please ensure the image is clear and try again.',
+    'hi': 'फोटो स्कैन संसाधित नहीं हो सका। कृपया सुनिश्चित करें कि छवि स्पष्ट है और पुनः प्रयास करें।',
+  },
+  'scan.fileReadFailed': {'en': 'Unable to read the selected file.', 'hi': 'चुनी गई फ़ाइल पढ़ी नहीं जा सकी।'},
+  'scan.analysisFailed': {
+    'en': 'Unable to complete document analysis. Please check your connection and try again.',
+    'hi': 'दस्तावेज़ का विश्लेषण पूरा नहीं हो सका। कृपया अपना कनेक्शन जाँचें और पुनः प्रयास करें।',
+  },
+  'scan.timeoutTitle': {
+    'en': 'Analysis is taking longer than expected',
+    'hi': 'विश्लेषण में अपेक्षा से अधिक समय लग रहा है',
+  },
+  'scan.timeoutBodyConnection': {
+    'en': "We're having trouble reaching the server, so we can't confirm progress right now. Your scan was already submitted and isn't affected.",
+    'hi': 'हमें सर्वर तक पहुँचने में समस्या हो रही है, इसलिए अभी प्रगति की पुष्टि नहीं हो पा रही। आपका स्कैन पहले ही जमा हो चुका है और प्रभावित नहीं हुआ है।',
+  },
+  'scan.timeoutBodyProcessing': {
+    'en': 'Your document is still being processed. You can keep waiting or check back later.',
+    'hi': 'आपका दस्तावेज़ अभी संसाधित हो रहा है। आप प्रतीक्षा जारी रख सकते हैं या बाद में देख सकते हैं।',
+  },
+  'scan.statusLabel': {'en': 'Scan status', 'hi': 'स्कैन की स्थिति'},
+  'scan.badgeConnection': {'en': 'Connection issue', 'hi': 'कनेक्शन समस्या'},
+  'scan.badgeProcessing': {'en': 'Processing', 'hi': 'संसाधित हो रहा है'},
+  'scan.progressSaved': {
+    'en': "Your document and scan progress are saved. You don't need to upload it again.",
+    'hi': 'आपका दस्तावेज़ और स्कैन की प्रगति सहेजी गई है। आपको इसे दोबारा अपलोड करने की आवश्यकता नहीं है।',
+  },
+  'scan.keepWaiting': {'en': 'Keep waiting', 'hi': 'प्रतीक्षा करें'},
+  'scan.checkLater': {'en': 'Check later', 'hi': 'बाद में देखें'},
+  'scan.unfinishedTitle': {'en': 'Unfinished Scan in Progress', 'hi': 'अधूरा स्कैन जारी है'},
+  'scan.resume': {'en': 'Resume', 'hi': 'फिर शुरू करें'},
+  'scan.dismiss': {'en': 'Dismiss', 'hi': 'हटाएं'},
+  'app.layoutAdjusting': {'en': 'Temporarily adjusting layout...', 'hi': 'लेआउट अस्थायी रूप से समायोजित हो रहा है...'},
 
   // Chat Screen
   'chat.title': {'en': 'Legal AI Assistant', 'hi': 'कानूनी एआई सहायक'},

@@ -121,12 +121,12 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       });
       final errorMsg = e is Exception
           ? e.toString().replaceFirst('Exception: ', '')
-          : 'Unable to resume scan. Please try scanning the document again.';
+          : _t('scan.resumeFailed');
       AppToast.showError(
           context,
           errorMsg.isNotEmpty
               ? errorMsg
-              : 'Unable to resume scan. Please try scanning the document again.');
+              : _t('scan.resumeFailed'));
     }
   }
 
@@ -240,7 +240,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       });
       AppToast.showInfo(
         context,
-        'Your scan is saved and still running. Find it in your documents when it finishes, or resume it here.',
+        _t('scan.savedStillRunning'),
       );
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
@@ -287,7 +287,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       });
       AppToast.showError(
         context,
-        'Scan paused: ${job['errorInfo']?['message'] ?? 'Please retry.'}',
+        _t('scan.pausedWithReason', {
+          'reason': (job['errorInfo']?['message'] ?? _t('scan.pleaseRetry')).toString(),
+        }),
         action: TextButton(
           style: TextButton.styleFrom(
             backgroundColor: (Theme.of(context).brightness == Brightness.dark
@@ -304,8 +306,8 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
           onPressed: () => _resumeOrRetryActiveJob(jobId),
-          child: const Text('Retry',
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
+          child: Text(_t('common.retry'),
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12.5)),
         ),
       );
     } else {
@@ -349,28 +351,31 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     }
   }
 
+  String _t(String key, [Map<String, String>? params]) =>
+      ref.read(localeProvider.notifier).translate(key, params);
+
   String _formatStepMessage(String? status, String? currentStep) {
     switch (status) {
       case 'QUEUED':
-        return 'Scan queued...';
+        return _t('scan.stepQueued');
       case 'UPLOADING':
-        return 'Uploading document...';
+        return _t('scan.stepUploading');
       case 'OCR_PROCESSING':
-        return 'Extracting document...';
+        return _t('scan.stepExtracting');
       case 'TEXT_EXTRACTED':
-        return 'Document text extracted';
+        return _t('scan.stepTextExtracted');
       case 'AI_ANALYSIS':
-        return 'Analyzing legal clauses...';
+        return _t('scan.stepAnalyzing');
       case 'REPORT_GENERATION':
-        return 'Generating report...';
+        return _t('scan.stepReport');
       case 'RETRYING':
-        return 'Temporarily unavailable — retrying automatically...';
+        return _t('scan.retryingStatus');
       case 'COMPLETED':
-        return 'Analysis completed';
+        return _t('scan.stepCompleted');
       case 'FAILED':
-        return 'Scan paused';
+        return _t('scan.stepPaused');
       default:
-        return currentStep ?? 'Processing document...';
+        return currentStep ?? _t('scan.stepProcessing');
     }
   }
 
@@ -451,8 +456,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     } catch (e) {
       debugPrint('Error processing photo scan: $e');
       if (!mounted) return;
-      AppToast.showError(context,
-          'Unable to process the photo scan. Please ensure the image is clear and try again.');
+      AppToast.showError(context, _t('scan.photoFailed'));
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -571,7 +575,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
           context,
           e is Exception
               ? e.toString().replaceFirst('Exception: ', '')
-              : 'Unable to read the selected file.');
+              : _t('scan.fileReadFailed'));
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -627,8 +631,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       setState(() {
         _isProcessing = false;
       });
-      AppToast.showError(context,
-          'Unable to complete document analysis. Please check your connection and try again.');
+      AppToast.showError(context, _t('scan.analysisFailed'));
     } finally {
       if (mounted && _currentJob?['status'] != 'COMPLETED') {
         setState(() {
@@ -789,7 +792,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                 Row(
                   children: [
                     Text(
-                      'Unfinished Scan in Progress',
+                      _t('scan.unfinishedTitle'),
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
@@ -853,7 +856,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                     size: 16),
                 const SizedBox(width: 6),
                 Text(
-                  isFailed ? 'Retry' : 'Resume',
+                  isFailed ? _t('common.retry') : _t('scan.resume'),
                   style: GoogleFonts.plusJakartaSans(
                       fontSize: 12, fontWeight: FontWeight.w700),
                 ),
@@ -869,7 +872,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   ? AppColors.darkTextSecondary
                   : AppColors.lightTextSecondary,
             ),
-            tooltip: 'Dismiss',
+            tooltip: _t('scan.dismiss'),
             onPressed: () {
               // A failed job is dismissed on the server too, so it does not
               // come back the next time this screen opens.
@@ -1416,9 +1419,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         isDark ? AppColors.darkElevatedSurface : AppColors.lightSurface;
 
     final body = _pollConnectionIssue
-        ? "We're having trouble reaching the server, so we can't confirm progress right now. Your scan was already submitted and isn't affected."
-        : 'Your document is still being processed. You can keep waiting or check back later.';
-    final badge = _pollConnectionIssue ? 'Connection issue' : 'Processing';
+        ? _t('scan.timeoutBodyConnection')
+        : _t('scan.timeoutBodyProcessing');
+    final badge = _pollConnectionIssue
+        ? _t('scan.badgeConnection')
+        : _t('scan.badgeProcessing');
     final badgeColor = _pollConnectionIssue ? Colors.orange : primary;
 
     return ConstrainedBox(
@@ -1426,7 +1431,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       child: Semantics(
         container: true,
         liveRegion: true,
-        label: 'Analysis is taking longer than expected. $body',
+        label: '${_t('scan.timeoutTitle')}. $body',
         child: Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
@@ -1443,7 +1448,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Analysis is taking longer than expected',
+                      _t('scan.timeoutTitle'),
                       style: GoogleFonts.plusJakartaSans(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
@@ -1469,7 +1474,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                     Row(
                       children: [
                         Expanded(
-                          child: Text('Scan status',
+                          child: Text(_t('scan.statusLabel'),
                               style: GoogleFonts.plusJakartaSans(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
@@ -1492,7 +1497,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      "Your document and scan progress are saved. You don't need to upload it again.",
+                      _t('scan.progressSaved'),
                       style: GoogleFonts.plusJakartaSans(
                           fontSize: 12, height: 1.4, color: textSecondary),
                     ),
@@ -1510,7 +1515,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24)),
                 ),
-                child: Text('Keep waiting',
+                child: Text(_t('scan.keepWaiting'),
                     style: GoogleFonts.plusJakartaSans(
                         fontSize: 14, fontWeight: FontWeight.w700)),
               ),
@@ -1524,7 +1529,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24)),
                 ),
-                child: Text('Check later',
+                child: Text(_t('scan.checkLater'),
                     style: GoogleFonts.plusJakartaSans(
                         fontSize: 14, fontWeight: FontWeight.w600)),
               ),
