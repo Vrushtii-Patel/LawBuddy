@@ -15,6 +15,10 @@ class ApiService {
   /// Extended timeout for large multipart uploads (PDFs, high-resolution scans).
   static const Duration uploadTimeout = Duration(minutes: 3);
 
+  /// Optional HTTP client override for testing or custom client configuration.
+  @visibleForTesting
+  static http.Client? client;
+
   /// Server address used by Android builds when API_URL is not set.
   /// 10.0.2.2 is how the Android emulator reaches the computer running the server.
   /// Override it when building, for example:
@@ -82,25 +86,48 @@ class ApiService {
         ? jsonEncode(body)
         : body;
 
+    final clientToUse = client;
     Future<http.Response> sendFuture;
-    switch (method.toUpperCase()) {
-      case 'GET':
-        sendFuture = http.get(url, headers: effectiveHeaders);
-        break;
-      case 'POST':
-        sendFuture = http.post(url, headers: effectiveHeaders, body: encodedBody);
-        break;
-      case 'PUT':
-        sendFuture = http.put(url, headers: effectiveHeaders, body: encodedBody);
-        break;
-      case 'PATCH':
-        sendFuture = http.patch(url, headers: effectiveHeaders, body: encodedBody);
-        break;
-      case 'DELETE':
-        sendFuture = http.delete(url, headers: effectiveHeaders, body: encodedBody);
-        break;
-      default:
-        throw ArgumentError('Unsupported HTTP method: $method');
+    if (clientToUse != null) {
+      switch (method.toUpperCase()) {
+        case 'GET':
+          sendFuture = clientToUse.get(url, headers: effectiveHeaders);
+          break;
+        case 'POST':
+          sendFuture = clientToUse.post(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'PUT':
+          sendFuture = clientToUse.put(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'PATCH':
+          sendFuture = clientToUse.patch(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'DELETE':
+          sendFuture = clientToUse.delete(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        default:
+          throw ArgumentError('Unsupported HTTP method: $method');
+      }
+    } else {
+      switch (method.toUpperCase()) {
+        case 'GET':
+          sendFuture = http.get(url, headers: effectiveHeaders);
+          break;
+        case 'POST':
+          sendFuture = http.post(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'PUT':
+          sendFuture = http.put(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'PATCH':
+          sendFuture = http.patch(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'DELETE':
+          sendFuture = http.delete(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        default:
+          throw ArgumentError('Unsupported HTTP method: $method');
+      }
     }
 
     final effectiveTimeout = timeout ?? defaultTimeout;
@@ -150,14 +177,14 @@ class ApiService {
     }
 
     final effectiveTimeout = timeout ?? uploadTimeout;
-    final httpClient = client ?? http.Client();
+    final httpClient = client ?? ApiService.client ?? http.Client();
     try {
       final streamedResponse = await httpClient.send(request).timeout(effectiveTimeout);
       return await http.Response.fromStream(streamedResponse).timeout(effectiveTimeout);
     } on TimeoutException {
       throw ApiTimeoutException();
     } finally {
-      if (client == null) {
+      if (client == null && ApiService.client == null) {
         httpClient.close();
       }
     }
