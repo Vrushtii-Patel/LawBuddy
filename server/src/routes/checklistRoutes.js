@@ -36,10 +36,14 @@ router.get('/checklists', requireAuth, async (req, res) => {
 
         // If user has no active checklists, check if they have analyzed documents and auto-sync
         if (!checklists || checklists.length === 0) {
-            const hasDocs = await Document.exists({ userId, isDeleted: { $ne: true }, analysisStatus: 'completed' });
-            if (hasDocs) {
-                await crossReferenceService.syncAllUserDocuments(userId);
-                checklists = await Checklist.find({ userId, isDeleted: { $ne: true } }).sort({ _id: -1 });
+            const defaultType = 'due_diligence_' + userId;
+            const existsInBin = await Checklist.exists({ userId, type: defaultType, isDeleted: true });
+            if (!existsInBin) {
+                const hasDocs = await Document.exists({ userId, isDeleted: { $ne: true }, analysisStatus: 'completed' });
+                if (hasDocs) {
+                    await crossReferenceService.syncAllUserDocuments(userId);
+                    checklists = await Checklist.find({ userId, isDeleted: { $ne: true } }).sort({ _id: -1 });
+                }
             }
         }
 
@@ -80,13 +84,44 @@ router.patch('/checklists/:id/restore', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
         const query = getChecklistQuery(req.params.id, userId);
-        const checklist = await Checklist.findOne(query);
+
+        // Find the soft-deleted checklist in the Recycle Bin
+        let checklist = await Checklist.findOne({ ...query, isDeleted: true });
 
         if (!checklist) {
+            // Check if checklist exists but is already active
+            const existingActive = await Checklist.findOne(query);
+            if (existingActive && !existingActive.isDeleted) {
+                return res.status(400).json({ error: 'Checklist is not in the Recycle Bin' });
+            }
             return res.status(404).json({ error: 'Checklist not found or unauthorized' });
         }
-        if (!checklist.isDeleted) {
-            return res.status(400).json({ error: 'Checklist is not in the Recycle Bin' });
+
+        // Check if an active checklist with the same type already exists for this user (Item 19)
+        const activeCollision = await Checklist.findOne({
+            userId,
+            type: checklist.type,
+            isDeleted: { $ne: true },
+            _id: { $ne: checklist._id }
+        });
+
+        if (activeCollision) {
+            const replace = req.query.replace === 'true' || req.body?.replace === true;
+            if (replace) {
+                // If replace is requested, move conflicting active checklist to bin
+                activeCollision.isDeleted = true;
+                activeCollision.deletedAt = new Date();
+                activeCollision.updatedAt = new Date();
+                await activeCollision.save();
+            } else {
+                return res.status(409).json({
+                    error: `An active checklist of type "${checklist.type}" (${activeCollision.title}) already exists. Please delete or rename the active checklist first, or restore with ?replace=true.`,
+                    code: 'CHECKLIST_TYPE_CONFLICT',
+                    activeChecklistId: activeCollision._id,
+                    activeChecklistTitle: activeCollision.title,
+                    type: checklist.type
+                });
+            }
         }
 
         checklist.isDeleted = false;
@@ -104,6 +139,12 @@ router.patch('/checklists/:id/restore', requireAuth, async (req, res) => {
         res.json({ message: 'Checklist restored successfully', checklist });
     } catch (error) {
         console.error('Error restoring checklist:', error);
+        if (error.code === 11000) {
+            return res.status(409).json({
+                error: 'An active checklist of this type already exists. Please delete or rename the active checklist first, or restore with ?replace=true.',
+                code: 'CHECKLIST_TYPE_CONFLICT'
+            });
+        }
         res.status(500).json({ error: 'Failed to restore checklist. Please try again.' });
     }
 });

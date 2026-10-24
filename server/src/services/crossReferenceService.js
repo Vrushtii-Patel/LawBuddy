@@ -141,25 +141,30 @@ async function syncDocumentIssuesWithChecklists(userId, document) {
         return [];
     }
 
-    // 2. Fetch existing checklists for user
+    // 2. Fetch existing active checklists for user
     let checklists = await Checklist.find({ userId, isDeleted: { $ne: true } });
 
-    // If user has no checklists yet, create the standard Due Diligence Checklist
+    // If user has no active checklists, check whether a default checklist is already in the Recycle Bin
+    // before auto-creating one. Do NOT auto-create while a deleted one of that type exists!
     if (!checklists || checklists.length === 0) {
-        const defaultChecklist = new Checklist({
-            userId,
-            type: 'due_diligence_' + userId,
-            title: `Due Diligence: ${docTitle.substring(0, 35)}`,
-            items: DEFAULT_DILIGENCE_TASKS.map((task, idx) => ({
-                id: (idx + 1).toString(),
-                title: task.title,
-                isCompleted: false,
-                status: 'NOT_STARTED',
-                linkedIssues: []
-            }))
-        });
-        await defaultChecklist.save();
-        checklists = [defaultChecklist];
+        const defaultType = 'due_diligence_' + userId;
+        const existsInBin = await Checklist.exists({ userId, type: defaultType, isDeleted: true });
+        if (!existsInBin) {
+            const defaultChecklist = new Checklist({
+                userId,
+                type: defaultType,
+                title: `Due Diligence: ${docTitle.substring(0, 35)}`,
+                items: DEFAULT_DILIGENCE_TASKS.map((task, idx) => ({
+                    id: (idx + 1).toString(),
+                    title: task.title,
+                    isCompleted: false,
+                    status: 'NOT_STARTED',
+                    linkedIssues: []
+                }))
+            });
+            await defaultChecklist.save();
+            checklists = [defaultChecklist];
+        }
     }
 
     let modifiedChecklists = [];
