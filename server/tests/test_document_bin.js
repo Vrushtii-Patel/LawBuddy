@@ -14,13 +14,19 @@ const testFileHash = `bin_hash_${Date.now()}`;
 async function runBinTests() {
     console.log('=== Starting LawBuddy Document Bin & Soft-Delete Test Suite ===\n');
 
-    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/lawbuddy';
+    let mongod = null;
+    const uri = process.env.MONGODB_URI;
     if (mongoose.connection.readyState !== 1) {
         try {
-            await mongoose.connect(uri, { serverSelectionTimeoutMS: 4000 });
+            if (uri) {
+                await mongoose.connect(uri, { serverSelectionTimeoutMS: 2000 });
+            } else {
+                throw new Error('No MONGODB_URI set');
+            }
         } catch (dbErr) {
-            console.warn('MongoDB not reachable for DB-backed tests, skipping DB assertions:', dbErr.message);
-            return;
+            const { MongoMemoryServer } = require('mongodb-memory-server');
+            mongod = await MongoMemoryServer.create();
+            await mongoose.connect(mongod.getUri());
         }
     }
 
@@ -168,6 +174,7 @@ async function runBinTests() {
     } finally {
         await Document.deleteMany({ userId: testUserId });
         await ScanJob.deleteMany({ userId: testUserId });
+        if (mongod) await mongod.stop();
     }
 }
 

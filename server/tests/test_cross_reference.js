@@ -8,13 +8,20 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') });
 async function runTests() {
     console.log('=== Starting LawBuddy Cross-Referencing Checklist Tests ===\n');
 
-    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/lawbuddy';
+    let mongod = null;
+    const uri = process.env.MONGODB_URI;
     try {
-        await mongoose.connect(uri, { serverSelectionTimeoutMS: 4000 });
-        console.log('Connected to MongoDB');
+        if (uri) {
+            await mongoose.connect(uri, { serverSelectionTimeoutMS: 2000 });
+            console.log('Connected to MongoDB');
+        } else {
+            throw new Error('No MONGODB_URI set');
+        }
     } catch (dbErr) {
-        console.warn('MongoDB not reachable for DB-backed tests, skipping DB assertions:', dbErr.message);
-        return;
+        const { MongoMemoryServer } = require('mongodb-memory-server');
+        mongod = await MongoMemoryServer.create();
+        await mongoose.connect(mongod.getUri());
+        console.log('Connected to in-memory MongoDB');
     }
 
     const testUserId = 'test_user_cross_ref_' + Date.now();
@@ -184,6 +191,7 @@ async function runTests() {
         console.error('Test Failed:', err);
     } finally {
         await mongoose.disconnect();
+        if (mongod) await mongod.stop();
     }
 }
 

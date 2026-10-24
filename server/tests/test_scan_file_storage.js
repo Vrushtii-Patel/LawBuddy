@@ -14,8 +14,7 @@ const ScanJob = require('../src/models/ScanJob');
 
 async function run() {
   const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/lawbuddy_test';
-  let jobId;
-
+  let mongod = null;
   try {
     const payload = Buffer.from('LawBuddy durable storage path test');
     const fileHash = crypto.createHash('sha256').update(payload).digest('hex');
@@ -30,7 +29,21 @@ async function run() {
     assert.deepStrictEqual(scanJobService.readFileFromStorage(legacyPath), payload);
     console.log('✓ Scan uploads and cleanup share SCAN_FILES_DIR; legacy relative paths remain readable.');
 
-    await mongoose.connect(uri, { family: 4, serverSelectionTimeoutMS: 5000 });
+    const uri = process.env.MONGODB_URI;
+    if (uri) {
+      try {
+        await mongoose.connect(uri, { family: 4, serverSelectionTimeoutMS: 2000 });
+      } catch (_) {
+        const { MongoMemoryServer } = require('mongodb-memory-server');
+        mongod = await MongoMemoryServer.create();
+        await mongoose.connect(mongod.getUri());
+      }
+    } else {
+      const { MongoMemoryServer } = require('mongodb-memory-server');
+      mongod = await MongoMemoryServer.create();
+      await mongoose.connect(mongod.getUri());
+    }
+
     jobId = `missing_source_${Date.now()}_${crypto.randomBytes(3).toString('hex')}`;
     const missingJob = new ScanJob({
       jobId,
@@ -54,10 +67,13 @@ async function run() {
     console.log('✓ Missing source files fail safely instead of producing a placeholder legal report.');
   } finally {
     if (jobId && mongoose.connection.readyState === 1) {
-      await ScanJob.deleteOne({ jobId });
+      await ScanJob.deleteOne({ jobId }).catch(() => {});
     }
     if (mongoose.connection.readyState !== 0) {
-      await mongoose.disconnect();
+      await mongoose.disconnect().catch(() => {});
+    }
+    if (mongod) {
+      await mongod.stop().catch(() => {});
     }
     fs.rmSync(tempDir, { recursive: true, force: true });
   }
