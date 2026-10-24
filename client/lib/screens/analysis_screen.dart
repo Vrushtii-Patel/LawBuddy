@@ -229,6 +229,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       }
 
       final token = await ApiService.createShareLink(
+        documentId: widget.documentId,
         title: _getDocumentTitle(),
         riskLevel: _getOverallRiskLevel(),
         analysis: widget.analysis,

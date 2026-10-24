@@ -64,7 +64,15 @@ async function permanentlyDeleteDocument(docId, userId) {
         console.warn(`[PermanentDelete] Warning: Checklist cleanup error:`, syncErr.message);
     }
 
-    // 4. Delete the Document row itself
+    // 4. Clean up any associated public shares
+    try {
+        const SharedAnalysis = require('../models/SharedAnalysis');
+        await SharedAnalysis.deleteMany({ documentId: doc._id });
+    } catch (shareErr) {
+        console.warn(`[PermanentDelete] Warning: Share cleanup error:`, shareErr.message);
+    }
+
+    // 5. Delete the Document row itself
     await Document.findByIdAndDelete(doc._id);
 
     return { id: doc._id, fileHash: doc.fileHash };

@@ -119,11 +119,31 @@ const loginEmailLimiter = rateLimit({
   }
 });
 
+// Rate limiter for creating public share links (20 links per 15 minutes per user/IP)
+const createShareLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    return req.user?.userId ? `user_share_${req.user.userId}` : `ip_share_${ipKeyGenerator(req)}`;
+  },
+  validate: { xForwardedForHeader: false },
+  skip: isTestEnv,
+  message: 'Too many share links created. Please try again later.',
+  handler: (req, res, _next, options) => {
+    res.status(options.statusCode).json({
+      error: options.message
+    });
+  }
+});
+
 module.exports = {
   otpRequestIpLimiter,
   otpRequestEmailLimiter,
   otpVerifyIpLimiter,
   otpVerifyEmailLimiter,
   loginIpLimiter,
-  loginEmailLimiter
+  loginEmailLimiter,
+  createShareLimiter
 };

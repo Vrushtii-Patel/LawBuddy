@@ -490,6 +490,14 @@ router.delete('/documents/:id', requireAuth, async (req, res) => {
             console.warn(`[SoftDeleteDocument] Warning: Checklist cleanup error:`, syncErr.message);
         }
 
+        // Revoke any public shares associated with this document so private text is not accessible
+        try {
+            const SharedAnalysis = require('../models/SharedAnalysis');
+            await SharedAnalysis.deleteMany({ documentId: req.params.id, userId });
+        } catch (shareErr) {
+            console.warn(`[SoftDeleteDocument] Warning: Share cleanup error:`, shareErr.message);
+        }
+
         res.json({
             message: 'Document moved to Recycle Bin',
             id: req.params.id,

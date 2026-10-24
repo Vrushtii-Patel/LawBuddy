@@ -609,6 +609,29 @@ class ApiService {
     }
   }
 
+  static Future<List<dynamic>?> getMyShares() async {
+    try {
+      final response = await _sendRequest('GET', '/shares', requiresAuth: true);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as List<dynamic>;
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error listing shares: $e');
+      return null;
+    }
+  }
+
+  static Future<bool> revokeShare(String shareToken) async {
+    try {
+      final response = await _sendRequest('DELETE', '/shares/$shareToken', requiresAuth: true);
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint('Error revoking share: $e');
+      return false;
+    }
+  }
+
   /// Base URL for share links.
   /// Configurable via `--dart-define=SHARE_BASE_URL=https://your-domain.com/`.
   /// Defaults to browser origin on web, or development/testing repository URL as fallback.

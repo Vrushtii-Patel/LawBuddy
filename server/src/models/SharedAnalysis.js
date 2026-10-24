@@ -34,13 +34,23 @@ const sharedAnalysisSchema = new mongoose.Schema({
     },
     userId: { 
         type: String, 
-        default: null,
+        required: true, 
         index: true 
     },
     documentId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Document',
-        default: null 
+        default: null,
+        index: true 
+    },
+    isRevoked: {
+        type: Boolean,
+        default: false,
+        index: true
+    },
+    revokedAt: {
+        type: Date,
+        default: null
     },
     title: { 
         type: String, 
