@@ -1,0 +1,58 @@
+# Auto-detect text files and normalize line endings to LF
+* text=auto eol=lf
+
+# Explicit text files
+*.dart text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.xml text eol=lf
+*.gradle text eol=lf
+*.kts text eol=lf
+*.properties text eol=lf
+*.sh text eol=lf
+*.env.example text eol=lf
+
+# Windows-specific files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary files - prevents line-ending corruption
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.jar binary
+*.keystore binary
+*.jks binary
+*.zip binary
+*.tar binary
+*.gz binary
+
+# Export-ignore: Exclude development, CI, tests, and unwanted files when building zip archives (git archive)
+.github export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.editorconfig export-ignore
+.DS_Store export-ignore
+client/.dart_tool export-ignore
+client/build export-ignore
+client/test export-ignore
+server/tests export-ignore
+server/scripts export-ignore
+server/.env export-ignore
+server/uploads export-ignore
+server/scan_files export-ignore
