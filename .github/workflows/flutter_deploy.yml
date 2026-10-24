@@ -4,48 +4,21 @@ on:
   push:
     branches:
       - main
-      - master
-      - Jiya
+    paths:
+      - "client/**"
+      - ".github/workflows/flutter_deploy.yml"
+  pull_request:
+    paths:
+      - "client/**"
+      - ".github/workflows/flutter_deploy.yml"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  backend-ci:
-    name: Backend CI (Node.js & Express)
-    runs-on: ubuntu-latest
-
-    services:
-      mongodb:
-        image: mongo:6.0
-        ports:
-          - 27017:27017
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: './server/package-lock.json'
-
-      - name: Install server dependencies
-        working-directory: ./server
-        run: npm ci
-
-      - name: Run backend tests
-        working-directory: ./server
-        env:
-          NODE_ENV: test
-          MONGODB_URI: mongodb://localhost:27017/lawbuddy_test
-          JWT_SECRET: test_jwt_secret_super_secure_key_1234567890
-          ALLOW_DEV_EMAIL_FALLBACK: 'true'
-        run: npm test
-
   flutter-ci-and-deploy:
     name: Flutter Web CI & Deploy
-    needs: [backend-ci]
     runs-on: ubuntu-latest
 
     # Permissions required to publish build artifacts to GitHub Pages
@@ -74,6 +47,7 @@ jobs:
         run: flutter test
 
       - name: Require API_URL secret
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:
           API_URL: ${{ secrets.API_URL }}
         run: |
@@ -83,11 +57,13 @@ jobs:
           fi
 
       - name: Build Web App
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         working-directory: ./client
         # API_URL is supplied via repository secrets; base-href configured for GitHub Pages repository root
         run: flutter build web --release --dart-define=API_URL=${{ secrets.API_URL }} --base-href="/LawBuddy/"
 
       - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
