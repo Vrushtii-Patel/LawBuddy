@@ -764,7 +764,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                           ).then((_) => _fetchDocuments());
                         },
                         child: Text(
-                          'View Bin',
+                          tr('bin.viewBin'),
                           style: TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w600,
@@ -1483,7 +1483,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
             OutlinedButton.icon(
               onPressed: _fetchDocuments,
               icon: const Icon(Icons.refresh_rounded, size: 16),
-              label: const Text('Retry'),
+              label: Text(tr('common.retry')),
               style: OutlinedButton.styleFrom(
                 foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                 side: BorderSide(color: isDark ? AppColors.darkAccent : AppColors.lightPrimary),

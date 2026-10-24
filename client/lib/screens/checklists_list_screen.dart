@@ -290,7 +290,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
               ).then((_) => _loadChecklists());
             },
             child: Text(
-              'View Bin',
+              tr('bin.viewBin'),
               style: TextStyle(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w600,

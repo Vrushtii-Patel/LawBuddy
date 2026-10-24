@@ -1506,7 +1506,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                       color:
                           isDark ? AppColors.darkError : AppColors.lightError),
                   label: Text(
-                    'Clear',
+                    _t('common.clear'),
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,

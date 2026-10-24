@@ -451,7 +451,7 @@ class _AnimatedMessageBubbleState extends ConsumerState<AnimatedMessageBubble> {
                     Padding(
                       padding: const EdgeInsets.only(left: 4.0, bottom: 6.0),
                       child: Text(
-                        'Suggested follow-ups',
+                        LocaleNotifier.translateCurrent('chat.suggestedFollowUps'),
                         style: GoogleFonts.plusJakartaSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,

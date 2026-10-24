@@ -192,7 +192,7 @@ class ChatHistoryDrawer extends StatelessWidget {
                                 TextButton(
                                   onPressed: onRetry,
                                   child: Text(
-                                    'Retry',
+                                    loc.translate('common.retry'),
                                     style: GoogleFonts.plusJakartaSans(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,

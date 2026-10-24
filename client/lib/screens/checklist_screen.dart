@@ -27,6 +27,9 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
   String? _error;
   String _selectedFilter = 'All'; // All, Pending, Flagged, Completed
 
+  String tr(String key, [Map<String, String>? params]) =>
+      ref.read(localeProvider.notifier).translate(key, params);
+
   @override
   void initState() {
     super.initState();
@@ -47,8 +50,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
       debugPrint('Error fetching checklist details: $e');
       if (mounted) {
         setState(() {
-          _error =
-              'Unable to load checklist details. Please check your connection and try again.';
+          _error = tr('checklists.loadFailedGeneral');
           _isLoading = false;
         });
       }
@@ -104,10 +106,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                 size: 18,
               ),
               const SizedBox(width: 10),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Unable to update task. Please try again.',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                  tr('checklists.updateTaskFailed'),
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -221,10 +223,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                   size: 18,
                 ),
                 const SizedBox(width: 10),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Unable to delete task. Please try again.',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                    tr('checklists.deleteTaskFailed'),
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -435,10 +437,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                                       size: 18,
                                     ),
                                     const SizedBox(width: 10),
-                                    const Expanded(
+                                    Expanded(
                                       child: Text(
-                                        'Unable to add task. Please try again.',
-                                        style: TextStyle(
+                                        tr('checklists.addTaskFailed'),
+                                        style: const TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600),
                                       ),
@@ -580,10 +582,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                               size: 18,
                             ),
                             const SizedBox(width: 10),
-                            const Expanded(
+                            Expanded(
                               child: Text(
-                                'Unable to rename checklist. Please try again.',
-                                style: TextStyle(
+                                tr('checklists.renameFailedGeneral'),
+                                style: const TextStyle(
                                     fontSize: 13, fontWeight: FontWeight.w600),
                               ),
                             ),
@@ -755,7 +757,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                 );
               },
               child: Text(
-                'View Bin',
+                tr('bin.viewBin'),
                 style: TextStyle(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w600,
@@ -788,7 +790,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'Unable to delete checklist. Please try again.',
+                    tr('checklists.deleteFailedGeneral'),
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,

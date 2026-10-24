@@ -1148,7 +1148,7 @@ class _DocumentComparisonScreenState
           ),
           const SizedBox(height: 8),
           Text(
-            'No scanned agreements yet',
+            loc.translate('docComparison.noScannedDocs'),
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               fontWeight: FontWeight.w700,
@@ -1160,7 +1160,7 @@ class _DocumentComparisonScreenState
           ),
           const SizedBox(height: 3),
           Text(
-            'Scan an agreement to use it for comparison.',
+            loc.translate('docComparison.scanPrompt'),
             style: GoogleFonts.plusJakartaSans(
               fontSize: 11.5,
               color: isDark
@@ -1181,7 +1181,7 @@ class _DocumentComparisonScreenState
               },
               icon: const Icon(Icons.document_scanner_rounded, size: 14),
               label: Text(
-                'Scan Agreement',
+                loc.translate('docComparison.scanNewAgreement'),
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,

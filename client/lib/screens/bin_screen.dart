@@ -20,6 +20,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
   String? _errorMessage;
   int _selectedTabIndex = 0; // 0: Documents, 1: Checklists
 
+  String tr(String key, [Map<String, String>? params]) =>
+      ref.read(localeProvider.notifier).translate(key, params);
+
   @override
   void initState() {
     super.initState();
@@ -50,8 +53,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage =
-              'Failed to load Recycle Bin. Please check your connection.';
+          _errorMessage = tr('bin.loadError');
         });
       }
     }
@@ -268,7 +270,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Failed to permanently delete document.',
+                  tr('bin.deleteDocError'),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -440,7 +442,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Failed to permanently delete checklist.',
+                  tr('bin.deleteChecklistError'),
                   style: TextStyle(
                     fontSize: 13,
                     color: isDark
@@ -682,7 +684,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               ElevatedButton.icon(
                 onPressed: _fetchBinData,
                 icon: const Icon(Icons.refresh_rounded, size: 18),
-                label: const Text('Retry'),
+                label: Text(tr('common.retry')),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       isDark ? AppColors.darkAccent : AppColors.lightPrimary,
