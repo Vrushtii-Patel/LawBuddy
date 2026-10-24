@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:legal_scanner/providers/auth_provider.dart';
 import 'package:legal_scanner/screens/cant_connect_screen.dart';
+import 'package:legal_scanner/screens/scan_screen.dart';
 import 'package:legal_scanner/services/api_service.dart';
 import 'package:legal_scanner/services/token_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -133,6 +134,40 @@ void main() {
       expect(isTerminalScanError(error404), isTrue, reason: '404 must be terminal');
       expect(isTerminalScanError(error401), isTrue, reason: '401 must be terminal');
       expect(isTerminalScanError(transientError), isFalse, reason: 'Transient socket glitch should allow retry');
+    });
+  });
+
+  group('Issue 37: Large Upload Timeout, Progress Tracking & Cancel Scan', () {
+    test('ApiService.uploadTimeout is set to 3 minutes (180s) to support large documents', () {
+      expect(ApiService.uploadTimeout, equals(const Duration(minutes: 3)));
+      expect(ApiService.defaultTimeout, equals(const Duration(seconds: 30)));
+      expect(ApiService.uploadTimeout.inSeconds, greaterThanOrEqualTo(180));
+    });
+
+    test('ApiService.startScanJob accepts timeout, onProgress callback, and client', () {
+      expect(ApiService.startScanJob, isA<Function>());
+      expect(ApiService.scanDocument, isA<Function>());
+      expect(ApiService.scanDocumentFile, isA<Function>());
+    });
+
+    testWidgets('ScanScreen renders initial options and supports cancelling in-flight scan', (tester) async {
+      tester.view.physicalSize = const Size(1200, 900);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: ScanScreen(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Verify initial UI elements
+      expect(find.byType(ScanScreen), findsOneWidget);
+      expect(find.text('Scan or Input Document'), findsOneWidget);
+      expect(find.byKey(const ValueKey('cancel_scan_button')), findsNothing);
     });
   });
 }

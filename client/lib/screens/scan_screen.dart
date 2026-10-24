@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'package:http/http.dart' as http;
 import '../services/api_service.dart';
 import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
@@ -33,6 +34,37 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
   String _statusMessage = '';
   Map<String, dynamic>? _activeScanJob;
   Map<String, dynamic>? _currentJob;
+
+  // Upload progress & cancellation support (Issue 37)
+  double? _uploadProgress;
+  int _uploadBytesSent = 0;
+  int _uploadBytesTotal = 0;
+  bool _isCancelled = false;
+  http.Client? _uploadClient;
+
+  void _cancelCurrentOperation() {
+    _isCancelled = true;
+    if (_uploadClient != null) {
+      try {
+        _uploadClient?.close();
+      } catch (_) {}
+      _uploadClient = null;
+    }
+    if (_timeoutDecision != null && !_timeoutDecision!.isCompleted) {
+      _timeoutDecision!.complete(false);
+    }
+    if (mounted) {
+      setState(() {
+        _isProcessing = false;
+        _uploadProgress = null;
+        _uploadBytesSent = 0;
+        _uploadBytesTotal = 0;
+        _currentJob = null;
+      });
+      final loc = ref.read(localeProvider.notifier);
+      AppToast.showInfo(context, loc.translate('scan.scanCancelled'));
+    }
+  }
 
   // Polling-timeout prompt state. The single polling loop in
   // _pollJobUntilComplete awaits _timeoutDecision, so "Keep waiting" resumes
@@ -83,6 +115,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
 
   @override
   void dispose() {
+    _isCancelled = true;
+    _uploadClient?.close();
+    _uploadClient = null;
     if (_timeoutDecision != null && !_timeoutDecision!.isCompleted) {
       _timeoutDecision!.complete(false);
     }
@@ -192,14 +227,15 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     int errorStreak = 0;
     bool userChoseCheckLater = false;
 
-    while (mounted && !isTerminal(job)) {
-      while (mounted && !isTerminal(job) && polls < maxPolls) {
+    while (mounted && !isTerminal(job) && !_isCancelled) {
+      while (mounted && !isTerminal(job) && polls < maxPolls && !_isCancelled) {
         polls++;
         await Future.delayed(const Duration(milliseconds: 1500));
-        if (!mounted) return;
+        if (!mounted || _isCancelled) return;
 
         try {
           job = await ApiService.getScanJob(jobId);
+          if (_isCancelled) return;
           errorStreak = 0;
           if (mounted) {
             setState(() {
@@ -242,7 +278,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         }
       }
 
-      if (!mounted || isTerminal(job)) break;
+      if (!mounted || isTerminal(job) || _isCancelled) break;
 
       // Waiting window elapsed but the job is still running. This is NOT a
       // failure: ask the user, and only touch local polling state.
@@ -459,13 +495,32 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       }
 
       // Multimodal AI Vision Fallback (Web, Desktop, or scanned images)
+      _uploadClient = http.Client();
+      _isCancelled = false;
+      _uploadProgress = 0.0;
+      _uploadBytesSent = 0;
+      _uploadBytesTotal = bytes.length;
       final startRes = await ApiService.startScanJob(
         fileBytes: bytes,
         fileName: image.name.isNotEmpty ? image.name : 'photo_scan.jpg',
         mimeType: mimeType,
         title: image.name.isNotEmpty ? image.name : 'Photo Scan Document',
         sourceType: 'Photo Scan',
+        client: _uploadClient,
+        onProgress: (sent, total) {
+          if (!mounted || _isCancelled) return;
+          setState(() {
+            _uploadBytesSent = sent;
+            _uploadBytesTotal = total;
+            _uploadProgress = total > 0 ? (sent / total).clamp(0.0, 1.0) : 0.0;
+            _statusMessage =
+                'Uploading scan (${(sent / (1024 * 1024)).toStringAsFixed(1)} MB / ${(total / (1024 * 1024)).toStringAsFixed(1)} MB)...';
+          });
+        },
       );
+
+      if (_isCancelled) return;
+      _uploadProgress = 1.0;
 
       final String jobId = startRes['jobId'] ?? '';
       if (jobId.isNotEmpty) {
@@ -482,6 +537,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         throw Exception('Failed to initialize scan job.');
       }
     } catch (e) {
+      if (_isCancelled) {
+        debugPrint('Photo scan cancelled by user');
+        return;
+      }
       debugPrint('Error processing photo scan: $e');
       if (!mounted) return;
       final errorMessage = (e is ApiException || e is RateLimitException)
@@ -489,7 +548,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
           : (e is Exception ? e.toString().replaceFirst('Exception: ', '') : _t('scan.photoFailed'));
       AppToast.showError(context, errorMessage);
     } finally {
-      if (mounted && _currentJob?['status'] != 'COMPLETED') {
+      _uploadClient?.close();
+      _uploadClient = null;
+      if (mounted && _currentJob?['status'] != 'COMPLETED' && !_isCancelled) {
         setState(() {
           _isProcessing = false;
         });
@@ -550,13 +611,33 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
           }
 
           // Multimodal fallback for PDF
+          _uploadClient = http.Client();
+          _isCancelled = false;
+          _uploadProgress = 0.0;
+          _uploadBytesSent = 0;
+          _uploadBytesTotal = uint8bytes.length;
           final startRes = await ApiService.startScanJob(
             fileBytes: uint8bytes,
             fileName: fileName,
             mimeType: 'application/pdf',
             title: fileName,
             sourceType: 'PDF Document',
+            client: _uploadClient,
+            onProgress: (sent, total) {
+              if (!mounted || _isCancelled) return;
+              setState(() {
+                _uploadBytesSent = sent;
+                _uploadBytesTotal = total;
+                _uploadProgress =
+                    total > 0 ? (sent / total).clamp(0.0, 1.0) : 0.0;
+                _statusMessage =
+                    'Uploading PDF (${(sent / (1024 * 1024)).toStringAsFixed(1)} MB / ${(total / (1024 * 1024)).toStringAsFixed(1)} MB)...';
+              });
+            },
           );
+
+          if (_isCancelled) return;
+          _uploadProgress = 1.0;
 
           final String jobId = startRes['jobId'] ?? '';
           if (jobId.isNotEmpty) {
@@ -576,13 +657,33 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
           final String mimeType = ext == 'png'
               ? 'image/png'
               : (ext == 'webp' ? 'image/webp' : 'image/jpeg');
+          _uploadClient = http.Client();
+          _isCancelled = false;
+          _uploadProgress = 0.0;
+          _uploadBytesSent = 0;
+          _uploadBytesTotal = uint8bytes.length;
           final startRes = await ApiService.startScanJob(
             fileBytes: uint8bytes,
             fileName: fileName,
             mimeType: mimeType,
             title: fileName,
             sourceType: 'Scanned Image',
+            client: _uploadClient,
+            onProgress: (sent, total) {
+              if (!mounted || _isCancelled) return;
+              setState(() {
+                _uploadBytesSent = sent;
+                _uploadBytesTotal = total;
+                _uploadProgress =
+                    total > 0 ? (sent / total).clamp(0.0, 1.0) : 0.0;
+                _statusMessage =
+                    'Uploading image (${(sent / (1024 * 1024)).toStringAsFixed(1)} MB / ${(total / (1024 * 1024)).toStringAsFixed(1)} MB)...';
+              });
+            },
           );
+
+          if (_isCancelled) return;
+          _uploadProgress = 1.0;
 
           final String jobId = startRes['jobId'] ?? '';
           if (jobId.isNotEmpty) {
@@ -600,6 +701,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         }
       }
     } catch (e) {
+      if (_isCancelled) {
+        debugPrint('Document scan cancelled by user');
+        return;
+      }
       debugPrint('Error reading document file: $e');
       if (!mounted) return;
       AppToast.showError(
@@ -608,7 +713,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
               ? e.toString().replaceFirst('Exception: ', '')
               : _t('scan.fileReadFailed'));
     } finally {
-      if (mounted && _currentJob?['status'] != 'COMPLETED') {
+      _uploadClient?.close();
+      _uploadClient = null;
+      if (mounted && _currentJob?['status'] != 'COMPLETED' && !_isCancelled) {
         setState(() {
           _isProcessing = false;
         });
@@ -632,6 +739,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     });
 
     try {
+      _uploadClient = fileBytes != null ? http.Client() : null;
+      _isCancelled = false;
+      _uploadProgress = fileBytes != null ? 0.0 : null;
+      _uploadBytesSent = 0;
+      _uploadBytesTotal = fileBytes?.length ?? 0;
       final startRes = await ApiService.startScanJob(
         text: text,
         title: title,
@@ -640,7 +752,24 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         fileName: fileName,
         mimeType: mimeType,
         base64Data: base64Data,
+        client: _uploadClient,
+        onProgress: fileBytes != null
+            ? (sent, total) {
+                if (!mounted || _isCancelled) return;
+                setState(() {
+                  _uploadBytesSent = sent;
+                  _uploadBytesTotal = total;
+                  _uploadProgress =
+                      total > 0 ? (sent / total).clamp(0.0, 1.0) : 0.0;
+                  _statusMessage =
+                      'Uploading document (${(sent / (1024 * 1024)).toStringAsFixed(1)} MB / ${(total / (1024 * 1024)).toStringAsFixed(1)} MB)...';
+                });
+              }
+            : null,
       );
+
+      if (_isCancelled) return;
+      if (fileBytes != null) _uploadProgress = 1.0;
 
       final String jobId = startRes['jobId'] ?? '';
       if (jobId.isNotEmpty) {
@@ -657,6 +786,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         throw Exception('Failed to initialize scan job.');
       }
     } catch (e) {
+      if (_isCancelled) {
+        debugPrint('Analysis cancelled by user');
+        return;
+      }
       debugPrint('Error analyzing document text: $e');
       if (!mounted) return;
       setState(() {
@@ -667,7 +800,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
           : (e is Exception ? e.toString().replaceFirst('Exception: ', '') : _t('scan.analysisFailed'));
       AppToast.showError(context, errorMessage);
     } finally {
-      if (mounted && _currentJob?['status'] != 'COMPLETED') {
+      _uploadClient?.close();
+      _uploadClient = null;
+      if (mounted && _currentJob?['status'] != 'COMPLETED' && !_isCancelled) {
         setState(() {
           _isProcessing = false;
         });
@@ -1755,6 +1890,56 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
               ),
             ),
 
+            // Upload Progress Bar with MB counters (Issue 37)
+            if (_uploadProgress != null &&
+                _uploadProgress! < 1.0 &&
+                _uploadBytesTotal > 0) ...[
+              const SizedBox(height: 18),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 380),
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: LinearProgressIndicator(
+                        key: const ValueKey('upload_progress_indicator'),
+                        value: _uploadProgress,
+                        minHeight: 8,
+                        backgroundColor: isDark
+                            ? AppColors.darkBorder
+                            : AppColors.lightBorder,
+                        valueColor: AlwaysStoppedAnimation<Color>(accentColor),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${(_uploadProgress! * 100).toInt()}%',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: accentColor,
+                          ),
+                        ),
+                        Text(
+                          '${(_uploadBytesSent / (1024 * 1024)).toStringAsFixed(1)} MB / ${(_uploadBytesTotal / (1024 * 1024)).toStringAsFixed(1)} MB',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.lightTextSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
             // Timeout prompt after ~3 minutes of polling (scan is NOT failed)
             if (_pollTimedOut) ...[
               const SizedBox(height: 20),
@@ -1796,6 +1981,39 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                 ),
               ),
             ],
+
+            // Cancel Scan / Upload Action Button (Issue 37)
+            const SizedBox(height: 24),
+            OutlinedButton.icon(
+              key: const ValueKey('cancel_scan_button'),
+              onPressed: _cancelCurrentOperation,
+              icon: const Icon(Icons.close_rounded, size: 16),
+              label: Text(
+                _uploadProgress != null && _uploadProgress! < 1.0
+                    ? loc.translate('scan.cancelUpload')
+                    : loc.translate('scan.cancelScan'),
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
+                side: BorderSide(
+                  color: isDark
+                      ? AppColors.darkBorder.withValues(alpha: 0.6)
+                      : AppColors.lightBorder,
+                  width: 1.2,
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
           ],
         ),
       ),
