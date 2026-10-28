@@ -187,8 +187,8 @@ class TermsOfUseScreen extends ConsumerWidget {
                   number: '2',
                   title: isHindi ? 'सेवा का विवरण' : 'Description of Service',
                   content: isHindi
-                      ? 'LawBuddy भारतीय संपत्ति दस्तावेजों (जैसे सेल डीड, लीज एग्रीमेंट, पावर ऑफ अटॉर्नी आदि) के लिए AI-आधारित OCR, विश्लेषण और चेकलिस्ट सहायता प्रदान करता है।'
-                      : 'LawBuddy offers AI-assisted document parsing, optical character recognition (OCR), risk flag identification, due-diligence checklists, and informational assistance for Indian property and real estate documentation.',
+                      ? 'LawBuddy भारतीय संपत्ति दस्तावेजों (जैसे सेल डीड, लीज एग्रीमेंट, पावर ऑफ अटॉर्नी आदि) के लिए AI-आधारित OCR, विश्लेषण और चेकलिस्ट सहायता प्रदान करता है। एआई सुविधाएं तृतीय-पक्ष क्लाउड जनरेटिव एआई सेवाओं (प्राथमिक रूप से Google Gemini API, और सेवा निरंतरता के लिए द्वितीयक फ़ॉलबैक प्रदाता के रूप में OpenRouter) द्वारा संचालित हैं।'
+                      : 'LawBuddy offers AI-assisted document parsing, optical character recognition (OCR), risk flag identification, due-diligence checklists, and informational assistance for Indian property and real estate documentation. AI processing features are powered by third-party generative AI services (primarily Google Gemini API, with OpenRouter as a resilient secondary fallback routing provider for service continuity).',
                   isDark: isDark,
                   cardColor: cardColor,
                   primaryTextColor: primaryTextColor,

@@ -110,6 +110,11 @@ const getGenerativeModel = (modelName = MODEL_NAME, customConfig = {}) => {
     return genAI.getGenerativeModel(modelParams);
 };
 
+/**
+ * Fallback LLM completion via OpenRouter (https://openrouter.ai/)
+ * Disclosed in Privacy Policy Section 5 & 7 and user form consent disclosures.
+ * Triggered as a secondary fallback only when all primary Google Gemini candidate models fail.
+ */
 async function fallbackToOpenRouter(prompt, systemInstruction = null, base64Data = null, mimeType = null) {
     if (!process.env.OPENROUTER_API_KEY) {
         throw new Error('OPENROUTER_API_KEY is not configured.');

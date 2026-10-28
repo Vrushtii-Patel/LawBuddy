@@ -126,7 +126,9 @@ class FormConsentCheckbox extends StatelessWidget {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => _openPrivacy(context),
                           ),
-                          const TextSpan(text: '.'),
+                          const TextSpan(
+                              text:
+                                  ' (including AI processing via Google Gemini and OpenRouter fallback).'),
                         ],
                       ),
                     ),
@@ -212,11 +214,11 @@ class FormConsentAcknowledgement extends StatelessWidget {
     switch (type) {
       case FormConsentType.legalQuestion:
         mainText =
-            'I understand that the information I provide may be processed by LawBuddy to provide the requested legal assistance. Please do not submit information you do not wish to share.';
+            'I understand that the information I provide may be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) to provide the requested legal assistance. Please do not submit information you do not wish to share.';
         break;
       case FormConsentType.documentUpload:
         mainText =
-            'I understand that the document I submit will be processed by LawBuddy for the purpose described above.';
+            'I understand that the document I submit will be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) for legal risk analysis.';
         break;
       case FormConsentType.custom:
         mainText = customText ?? '';
