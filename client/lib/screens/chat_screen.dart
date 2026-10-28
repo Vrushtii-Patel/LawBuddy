@@ -449,17 +449,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                   letterSpacing: -0.2,
                 ),
               ),
-              const Opacity(
-                opacity: 0.0,
-                child: SizedBox(
-                  width: 0,
-                  height: 0,
-                  child: Text(
-                    'LEGAL AI ASSISTANT',
-                    style: TextStyle(fontSize: 0.1),
-                  ),
-                ),
-              ),
             ],
           ),
 

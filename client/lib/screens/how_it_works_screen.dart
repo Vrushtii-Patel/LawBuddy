@@ -75,6 +75,7 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
   @override
   Widget build(BuildContext context) {
     ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 1024;
@@ -92,97 +93,97 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
 
     // Feature 1: Document Scanner & Risk Detection
     final scannerSteps = [
-      const _StepInfo(
+      _StepInfo(
         number: '01',
-        title: 'Upload Agreement',
-        description: 'Upload your property agreement, sale deed, or rental contract as a PDF, photo, or pasted text.',
+        title: loc.translate('howItWorks.stepScanner1Title'),
+        description: loc.translate('howItWorks.stepScanner1Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '02',
-        title: 'AI Contract Scan',
-        description: 'Our AI reads each clause and cross-references statutory RERA rules to detect risks.',
+        title: loc.translate('howItWorks.stepScanner2Title'),
+        description: loc.translate('howItWorks.stepScanner2Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '03',
-        title: 'Plain-English Insights',
-        description: 'See clear color-coded flags (Safe, Caution, High Risk) with simple clause explanations.',
+        title: loc.translate('howItWorks.stepScanner3Title'),
+        description: loc.translate('howItWorks.stepScanner3Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '04',
-        title: 'Legal Audit Report',
-        description: 'Download a structured summary report to negotiate with confidence before signing.',
+        title: loc.translate('howItWorks.stepScanner4Title'),
+        description: loc.translate('howItWorks.stepScanner4Desc'),
       ),
     ];
 
     // Feature 2: Property Due Diligence Checklists
     final checklistSteps = [
-      const _StepInfo(
+      _StepInfo(
         number: '01',
-        title: 'Select Property Type',
-        description: 'Choose a dedicated legal verification checklist for resale flats, builder floors, or land plots.',
+        title: loc.translate('howItWorks.stepChecklist1Title'),
+        description: loc.translate('howItWorks.stepChecklist1Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '02',
-        title: '30-Year EC & Title',
-        description: 'Verify 30-year Encumbrance Certificates to confirm continuous clear ownership and no active bank liens.',
+        title: loc.translate('howItWorks.stepChecklist2Title'),
+        description: loc.translate('howItWorks.stepChecklist2Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '03',
-        title: 'Municipal Approvals',
-        description: 'Track Occupancy Certificates (OC), Commencement (CC), sanctioned layout plans, and builder NOCs.',
+        title: loc.translate('howItWorks.stepChecklist3Title'),
+        description: loc.translate('howItWorks.stepChecklist3Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '04',
-        title: 'Custom AI Checklist',
-        description: 'Generate a customized city-specific verification list tailored to your exact property transaction.',
+        title: loc.translate('howItWorks.stepChecklist4Title'),
+        description: loc.translate('howItWorks.stepChecklist4Desc'),
       ),
     ];
 
     // Feature 3: Stamp Duty & Registration Calculator
     final calculatorSteps = [
-      const _StepInfo(
+      _StepInfo(
         number: '01',
-        title: 'Choose State & City',
-        description: 'Select your state (Maharashtra, Karnataka, Delhi, UP, etc.) and specific urban or rural locality.',
+        title: loc.translate('howItWorks.stepCalc1Title'),
+        description: loc.translate('howItWorks.stepCalc1Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '02',
-        title: 'Enter Property Value',
-        description: 'Input agreed purchase price and local Ready Reckoner (circle rate) to establish the statutory taxable base.',
+        title: loc.translate('howItWorks.stepCalc2Title'),
+        description: loc.translate('howItWorks.stepCalc2Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '03',
-        title: 'Apply Concessions',
-        description: 'Automatically factor in state government concessions for female buyers, first-time owners, and metro cess.',
+        title: loc.translate('howItWorks.stepCalc3Title'),
+        description: loc.translate('howItWorks.stepCalc3Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '04',
-        title: 'Instant Fee Summary',
-        description: 'Receive an itemized breakdown of stamp duty, statutory surcharge, and registration fees payable.',
+        title: loc.translate('howItWorks.stepCalc4Title'),
+        description: loc.translate('howItWorks.stepCalc4Desc'),
       ),
     ];
 
     // Feature 4: Legal AI Assistant & Agreement Comparison
     final legalAiSteps = [
-      const _StepInfo(
+      _StepInfo(
         number: '01',
-        title: 'Ask Legal AI',
-        description: 'Ask real estate questions anytime to clarify complex indemnity clauses, maintenance rules, or RERA rights.',
+        title: loc.translate('howItWorks.stepLegalAi1Title'),
+        description: loc.translate('howItWorks.stepLegalAi1Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '02',
-        title: 'Compare 2 Drafts',
-        description: 'Upload an original contract draft and builder revised version to compare both texts line by line.',
+        title: loc.translate('howItWorks.stepLegalAi2Title'),
+        description: loc.translate('howItWorks.stepLegalAi2Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '03',
-        title: 'Spot Hidden Changes',
-        description: 'Instantly view highlighted deletions, altered liability clauses, and stealthy extra fees between versions.',
+        title: loc.translate('howItWorks.stepLegalAi3Title'),
+        description: loc.translate('howItWorks.stepLegalAi3Desc'),
       ),
-      const _StepInfo(
+      _StepInfo(
         number: '04',
-        title: 'Secure Cloud Archive',
-        description: 'Keep all audited contracts safely stored in your private workspace with a dedicated recycle bin for recovery.',
+        title: loc.translate('howItWorks.stepLegalAi4Title'),
+        description: loc.translate('howItWorks.stepLegalAi4Desc'),
       ),
     ];
 
@@ -252,7 +253,7 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
                             key: _scannerKey,
                             badgeNumber: 'FEATURE 1',
                             eyebrow: 'DOCUMENT SCANNER',
-                            title: 'How Document Analysis Works',
+                            title: loc.translate('howItWorks.analysisTitle'),
                             subtitle: 'Four clear steps to review and verify any real estate contract with complete confidence.',
                             steps: scannerSteps,
                             actionLabel: 'Start Document Scan',
@@ -633,7 +634,7 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
           const SizedBox(height: 14),
 
           Text(
-            'How LawBuddy Works',
+            ref.read(localeProvider.notifier).translate('howItWorks.title'),
             textAlign: TextAlign.center,
             style: GoogleFonts.plusJakartaSans(
               fontSize: isDesktop ? 32 : 24,
@@ -726,7 +727,7 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
             border: Border.all(color: accentColor.withValues(alpha: isDark ? 0.35 : 0.2)),
           ),
           child: Text(
-            'Explore LawBuddy Tools',
+            ref.read(localeProvider.notifier).translate('howItWorks.exploreTools'),
             style: GoogleFonts.plusJakartaSans(
               fontSize: 11,
               fontWeight: FontWeight.w800,
@@ -1017,7 +1018,7 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Frequently Asked Questions',
+            ref.read(localeProvider.notifier).translate('howItWorks.faqTitle'),
             textAlign: TextAlign.center,
             style: GoogleFonts.plusJakartaSans(
               fontSize: isDesktop ? 26 : 21,

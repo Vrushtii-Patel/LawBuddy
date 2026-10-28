@@ -126,6 +126,7 @@ class WelcomeHeroSection extends ConsumerWidget {
 
                       // Giant Dimensional 4-Layered Headline (All 3 lines 100% visible & readable)
                       _buildLayeredHeadline(
+                        context,
                         loc,
                         titleShiftBack,
                         titleShiftMid,
@@ -313,29 +314,34 @@ class WelcomeHeroSection extends ConsumerWidget {
   }
 
   Widget _buildLayeredHeadline(
+    BuildContext context,
     LocaleNotifier loc,
     double shiftBack,
     double shiftMid,
     double shiftThird,
   ) {
-    final fontSize = isDesktop ? 68.0 : (isTablet ? 46.0 : 30.0);
+    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
+    final rawFontSize = isDesktop ? 62.0 : (isTablet ? 42.0 : 28.0);
+    final fontSize = (rawFontSize / (textScale > 1.2 ? textScale * 0.8 : 1.0)).clamp(20.0, 68.0);
 
     final backOffsetY =
-        (isDesktop ? 18.0 : (isTablet ? 12.0 : 9.0)) + shiftBack;
-    final secOffsetY = (isDesktop ? 12.0 : (isTablet ? 8.0 : 6.0)) + shiftMid;
+        (isDesktop ? 10.0 : (isTablet ? 7.0 : 5.0)) + (shiftBack * 0.4);
+    final secOffsetY =
+        (isDesktop ? 7.0 : (isTablet ? 5.0 : 3.5)) + (shiftMid * 0.4);
     final thirdOffsetY =
-        (isDesktop ? 6.0 : (isTablet ? 4.0 : 3.0)) + shiftThird;
+        (isDesktop ? 4.0 : (isTablet ? 3.0 : 2.0)) + (shiftThird * 0.4);
 
     final baseStyle = GoogleFonts.plusJakartaSans(
       fontSize: fontSize,
       fontWeight: FontWeight.w900,
-      height: 1.05,
-      letterSpacing: -1.5,
+      height: 1.15,
+      letterSpacing: -1.0,
     );
 
     Widget buildHeadlineLine(String lineText, Animation<double> anim,
         {String? prefix, String? accentWord, String? suffix}) {
-      return ClipRect(
+      return Padding(
+        padding: EdgeInsets.only(bottom: isDesktop ? 6.0 : 4.0),
         child: AnimatedBuilder(
           animation: anim,
           builder: (context, child) {
@@ -343,92 +349,96 @@ class WelcomeHeroSection extends ConsumerWidget {
             return Opacity(
               opacity: progress,
               child: Transform.translate(
-                offset: Offset(0, (1.0 - progress) * 35.0),
+                offset: Offset(0, (1.0 - progress) * 25.0),
                 child: child,
               ),
             );
           },
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              // Layer 1: Back Deep Slate Tone
-              Transform.translate(
-                offset: Offset(0, backOffsetY),
-                child: Text(
-                  lineText,
-                  textAlign: TextAlign.center,
-                  style: baseStyle.copyWith(
-                    color:
-                        (isDark ? AppColors.darkSurface : AppColors.lightBorder)
-                            .withValues(alpha: 0.5),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: backOffsetY),
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                // Layer 1: Back Deep Slate Tone
+                Transform.translate(
+                  offset: Offset(0, backOffsetY),
+                  child: Text(
+                    lineText,
+                    textAlign: TextAlign.center,
+                    style: baseStyle.copyWith(
+                      color:
+                          (isDark ? AppColors.darkSurface : AppColors.lightBorder)
+                              .withValues(alpha: 0.5),
+                    ),
                   ),
                 ),
-              ),
 
-              // Layer 2: Mid Lavender Shadow
-              Transform.translate(
-                offset: Offset(0, secOffsetY),
-                child: Text(
-                  lineText,
-                  textAlign: TextAlign.center,
-                  style: baseStyle.copyWith(
-                    color: (isDark
-                            ? AppColors.darkPrimary
-                            : AppColors.lightPrimary)
-                        .withValues(alpha: 0.4),
+                // Layer 2: Mid Lavender Shadow
+                Transform.translate(
+                  offset: Offset(0, secOffsetY),
+                  child: Text(
+                    lineText,
+                    textAlign: TextAlign.center,
+                    style: baseStyle.copyWith(
+                      color: (isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary)
+                          .withValues(alpha: 0.4),
+                    ),
                   ),
                 ),
-              ),
 
-              // Layer 3: Third Brand Warm Tone
-              Transform.translate(
-                offset: Offset(0, thirdOffsetY),
-                child: Text(
-                  lineText,
-                  textAlign: TextAlign.center,
-                  style: baseStyle.copyWith(
-                    color:
-                        (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
-                            .withValues(alpha: 0.3),
+                // Layer 3: Third Brand Warm Tone
+                Transform.translate(
+                  offset: Offset(0, thirdOffsetY),
+                  child: Text(
+                    lineText,
+                    textAlign: TextAlign.center,
+                    style: baseStyle.copyWith(
+                      color:
+                          (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
+                              .withValues(alpha: 0.3),
+                    ),
                   ),
                 ),
-              ),
 
-              // Layer 4: Front Crisp Dominant Layer
-              if (accentWord != null)
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
+                // Layer 4: Front Crisp Dominant Layer
+                if (accentWord != null)
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: baseStyle.copyWith(
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                      children: [
+                        if (prefix != null) TextSpan(text: prefix),
+                        TextSpan(
+                          text: accentWord,
+                          style: TextStyle(
+                            color: isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightPrimary,
+                          ),
+                        ),
+                        if (suffix != null) TextSpan(text: suffix),
+                      ],
+                    ),
+                  )
+                else
+                  Text(
+                    lineText,
+                    textAlign: TextAlign.center,
                     style: baseStyle.copyWith(
                       color: isDark
                           ? AppColors.darkTextPrimary
                           : AppColors.lightTextPrimary,
                     ),
-                    children: [
-                      if (prefix != null) TextSpan(text: prefix),
-                      TextSpan(
-                        text: accentWord,
-                        style: TextStyle(
-                          color: isDark
-                              ? AppColors.darkAccent
-                              : AppColors.lightPrimary,
-                        ),
-                      ),
-                      if (suffix != null) TextSpan(text: suffix),
-                    ],
                   ),
-                )
-              else
-                Text(
-                  lineText,
-                  textAlign: TextAlign.center,
-                  style: baseStyle.copyWith(
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       );

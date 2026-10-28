@@ -10,6 +10,7 @@ import 'screens/cant_connect_screen.dart';
 import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
+import 'providers/consent_provider.dart';
 import 'widgets/cookie_consent_banner.dart';
 import 'theme/app_theme.dart';
 
@@ -223,15 +224,23 @@ class _LawBuddyAppState extends ConsumerState<LawBuddyApp> {
 
 /// Wraps top-level routes with the CookieConsentBanner inside the Navigator,
 /// ensuring dialogs, modal barriers, and overlays render above the banner and have full Navigator context.
-class CookieConsentWrapper extends StatelessWidget {
+/// On mobile, provides bottom spacing so bottom navigation, FABs, and action buttons remain reachable.
+class CookieConsentWrapper extends ConsumerWidget {
   final Widget child;
   const CookieConsentWrapper({super.key, required this.child});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final consentState = ref.watch(consentProvider);
+    final isDesktop = MediaQuery.of(context).size.width >= 768;
+    final bottomInset = (!consentState.hasDecided && !isDesktop) ? 140.0 : 0.0;
+
     return Stack(
       children: [
-        child,
+        Padding(
+          padding: EdgeInsets.only(bottom: bottomInset),
+          child: child,
+        ),
         const CookieConsentBanner(),
       ],
     );

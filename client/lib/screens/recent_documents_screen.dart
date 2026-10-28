@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
+import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
 import '../services/pdf_export_service.dart';
 import '../theme/app_theme.dart';
@@ -10,6 +11,7 @@ import 'analysis_screen.dart';
 import 'scan_screen.dart';
 import 'document_comparison_screen.dart';
 import 'bin_screen.dart';
+import 'home/home_sidebar.dart';
 import '../widgets/user_profile_button.dart';
 
 class RecentDocumentsScreen extends ConsumerStatefulWidget {
@@ -297,7 +299,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Failed to download PDF report. Please try again.',
+                  tr('recentDocs.downloadPdfFailed'),
                   style: TextStyle(
                     fontSize: 13,
                     color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
@@ -787,7 +789,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              'Failed to delete document. Please try again.',
+                              tr('recentDocs.deleteDocFailed'),
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
@@ -814,60 +816,65 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
     ref.watch(localeProvider);
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDesktop = MediaQuery.of(context).size.width >= 960;
+    final authState = ref.watch(authProvider);
+    final user = authState.user;
     final displayDocs = _filteredDocs;
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-          ),
-          tooltip: 'Back',
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
-        title: Text(
-          tr('recentDocs.title'),
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.3,
-            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-          ),
-        ),
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.delete_outline_rounded,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+      appBar: isDesktop
+          ? null
+          : AppBar(
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_rounded,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
+                tooltip: 'Back',
+                onPressed: () => Navigator.of(context).maybePop(),
+              ),
+              title: Text(
+                tr('recentDocs.title'),
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.3,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
+              ),
+              backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+              elevation: 0,
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.delete_outline_rounded,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                  tooltip: 'Recycle Bin',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const BinScreen()),
+                    ).then((_) => _fetchDocuments());
+                  },
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.compare_arrows_rounded,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                  tooltip: 'Compare Agreements',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const DocumentComparisonScreen()),
+                    );
+                  },
+                ),
+                const UserProfileButton(),
+                const SizedBox(width: 12),
+              ],
             ),
-            tooltip: 'Recycle Bin',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const BinScreen()),
-              ).then((_) => _fetchDocuments());
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.compare_arrows_rounded,
-              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-            ),
-            tooltip: 'Compare Agreements',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const DocumentComparisonScreen()),
-              );
-            },
-          ),
-          const UserProfileButton(),
-          const SizedBox(width: 12),
-        ],
-      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
@@ -891,15 +898,44 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         hoverElevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      body: RefreshIndicator(
-        onRefresh: _fetchDocuments,
-        color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1060),
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (isDesktop)
+            DesktopSidebar(
+              isDark: isDark,
+              user: user,
+              legalNews: const [],
+              activeItem: 'documents',
+              onDashboardTap: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              onNavigate: (screen) {
+                if (screen is RecentDocumentsScreen) return;
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, animation, __) => screen,
+                    transitionsBuilder: (_, anim, __, child) =>
+                        FadeTransition(opacity: anim, child: child),
+                  ),
+                );
+              },
+            ),
+          Expanded(
+            child: Column(
               children: [
+                if (isDesktop) _buildDesktopTopBar(context, isDark, tr),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: _fetchDocuments,
+              color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1060),
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 96),
+                    children: [
                 // 1. EDITORIAL LEGAL REPOSITORY COMMAND VAULT
                 _buildRepositorySummaryCard(tr, isDark),
                 const SizedBox(height: 18),
@@ -966,6 +1002,83 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
             ),
           ),
         ),
+      ),
+    ),
+  ],
+),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopTopBar(
+      BuildContext context, bool isDark, String Function(String, [Map<String, String>?]) tr) {
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              size: 20,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+            tooltip: 'Back',
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            tr('recentDocs.title'),
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+              letterSpacing: -0.3,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+          ),
+          const Spacer(),
+          IconButton(
+            icon: Icon(
+              Icons.delete_outline_rounded,
+              size: 20,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+            tooltip: 'Recycle Bin',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const BinScreen()),
+              ).then((_) => _fetchDocuments());
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.compare_arrows_rounded,
+              size: 20,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+            tooltip: 'Compare Agreements',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const DocumentComparisonScreen()),
+              );
+            },
+          ),
+          const SizedBox(width: 4),
+          const UserProfileButton(),
+        ],
       ),
     );
   }

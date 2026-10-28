@@ -809,6 +809,8 @@ final Map<String, Map<String, String>> _translations = {
   'analysis.gotIt': {'en': 'Got it', 'hi': 'समझ गया'},
   'analysis.pdfSuccess': {'en': 'Legal Risk Assessment Report exported successfully!', 'hi': 'कानूनी जोखिम मूल्यांकन रिपोर्ट सफलतापूर्वक निर्यात की गई!'},
   'analysis.exportSuccess': {'en': 'Legal Risk Assessment Report exported successfully!', 'hi': 'कानूनी जोखिम मूल्यांकन रिपोर्ट सफलतापूर्वक निर्यात की गई!'},
+  'analysis.pdfPreviewUnavailable': {'en': 'PDF preview is currently unavailable', 'hi': 'पीडीएफ पूर्वावलोकन वर्तमान में अनुपलब्ध है'},
+  'analysis.pdfPreviewFallbackDesc': {'en': 'The agreement clauses have been extracted and fully analyzed below.', 'hi': 'समझौते के क्लॉज को निकाला गया है और नीचे पूरी तरह से विश्लेषण किया गया है।'},
   'analysis.pdfFailed': {'en': 'Failed to export PDF: {error}', 'hi': 'पीडीएफ निर्यात करने में विफल: {error}'},
   'analysis.copySuccess': {'en': 'Contract text copied to clipboard!', 'hi': 'अनुबंध पाठ क्लिपबोर्ड पर कॉपी किया गया!'},
   'analysis.copyText': {'en': 'Copy Text', 'hi': 'पाठ कॉपी करें'},
@@ -1386,6 +1388,14 @@ final Map<String, Map<String, String>> _translations = {
   'docComparison.chooseVersion': {'en': 'Choose document version', 'hi': 'दस्तावेज़ संस्करण चुनें'},
   'docComparison.untitledAgreement': {'en': 'Untitled Agreement', 'hi': 'शीर्षकहीन समझौता'},
   'docComparison.runAnalysis': {'en': 'Run Differential Analysis', 'hi': 'अंतर विश्लेषण चलाएं'},
+  'docComparison.stepOriginal': {'en': 'Original Agreement', 'hi': 'मूल समझौता'},
+  'docComparison.stepRevised': {'en': 'Revised Agreement', 'hi': 'संशोधित समझौता'},
+  'docComparison.stepCompare': {'en': 'Compare Changes', 'hi': 'बदलावों की तुलना करें'},
+  'docComparison.swapTooltip': {'en': 'Swap Original & Revised Agreements', 'hi': 'मूल और संशोधित समझौतों को आपस में बदलें'},
+  'docComparison.onlyOneDocPrompt': {'en': 'You have 1 document saved. Scan a second agreement to compare.', 'hi': 'आपके पास 1 दस्तावेज़ सहेजा गया है। तुलना करने के लिए एक दूसरा समझौता स्कैन करें।'},
+  'docComparison.scanSecondDoc': {'en': 'Scan Second Agreement', 'hi': 'दूसरा समझौता स्कैन करें'},
+  'docComparison.helperSelectSecond': {'en': 'Select a second agreement version to proceed.', 'hi': 'आगे बढ़ने के लिए दूसरा समझौता संस्करण चुनें।'},
+  'docComparison.helperReady': {'en': 'Ready to analyze clause modifications and risk escalations.', 'hi': 'क्लॉज संशोधनों और जोखिम वृद्धि का विश्लेषण करने के लिए तैयार।'},
 
   // ==========================================
   // Chat Citations & Chat Screen Additions
@@ -1476,6 +1486,26 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'हम तृतीय-पक्ष विज्ञापन या ट्रैकिंग पिक्सेल प्रदर्शित नहीं करते हैं।',
   },
   'consent.readFullPrivacyPolicy': {'en': 'Read our full Privacy Policy', 'hi': 'हमारी पूरी गोपनीयता नीति पढ़ें'},
+  'consent.agreePrefix': {'en': 'I agree to the ', 'hi': 'मैं इसके नियमों से सहमत हूँ: '},
+  'consent.termsOfUse': {'en': 'Terms of Use', 'hi': 'उपयोग की शर्तें'},
+  'consent.andAcknowledge': {'en': ' and acknowledge the ', 'hi': ' और स्वीकार करता हूँ '},
+  'consent.privacyPolicy': {'en': 'Privacy Policy', 'hi': 'गोपनीयता नीति'},
+  'consent.aiProcessingNotice': {
+    'en': ' (including AI processing via Google Gemini and OpenRouter fallback).',
+    'hi': ' (Google Gemini और OpenRouter फ़ॉलबैक के माध्यम से AI प्रोसेसिंग सहित)।',
+  },
+  'consent.requiredError': {
+    'en': 'Please agree to the Terms of Use and Privacy Policy.',
+    'hi': 'कृपया उपयोग की शर्तों और गोपनीयता नीति से सहमत हों।',
+  },
+  'consent.legalQuestionAcknowledgement': {
+    'en': 'I understand that the information I provide may be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) to provide the requested legal assistance. Please do not submit information you do not wish to share.',
+    'hi': 'मैं समझता हूँ कि मेरे द्वारा प्रदान की गई जानकारी का उपयोग LawBuddy और इसके AI सेवा प्रदाताओं (Google Gemini और फ़ॉलबैक प्रदाता OpenRouter) द्वारा मांगी गई कानूनी सहायता प्रदान करने के लिए संसाधित किया जा सकता है। कृपया वह जानकारी साझा न करें जिसे आप साझा नहीं करना चाहते।',
+  },
+  'consent.documentUploadAcknowledgement': {
+    'en': 'I understand that the document I submit will be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) for legal risk analysis.',
+    'hi': 'मैं समझता हूँ कि मेरे द्वारा सबमिट किए गए दस्तावेज़ को कानूनी जोखिम विश्लेषण के लिए LawBuddy और इसके AI सेवा प्रदाताओं (Google Gemini और फ़ॉलबैक प्रदाता OpenRouter) द्वारा संसाधित किया जाएगा।',
+  },
 
   // ==========================================
   // Welcome Screen & Features Section
@@ -1611,4 +1641,117 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'जैसे-जैसे उपयोगकर्ता रियल एस्टेट अनुबंध अपलोड और मूल्यांकन करेंगे, सिस्टम मेट्रिक्स यहां वास्तविक समय में दिखाई देंगे।',
   },
   'adminAnalytics.refresh': {'en': 'Refresh', 'hi': 'ताज़ा करें'},
+
+  // How It Works Detailed Steps
+  'howItWorks.title': {'en': 'How LawBuddy Works', 'hi': 'LawBuddy कैसे काम करता है'},
+  'howItWorks.analysisTitle': {'en': 'How Document Analysis Works', 'hi': 'दस्तावेज़ विश्लेषण कैसे काम करता है'},
+  'howItWorks.exploreTools': {'en': 'Explore LawBuddy Tools', 'hi': 'LawBuddy टूल्स का अन्वेषण करें'},
+  'howItWorks.faqTitle': {'en': 'Frequently Asked Questions', 'hi': 'अक्सर पूछे जाने वाले प्रश्न'},
+  'howItWorks.stepScanner1Title': {'en': 'Upload Agreement', 'hi': 'समझौता अपलोड करें'},
+  'howItWorks.stepScanner1Desc': {
+    'en': 'Upload your property agreement, sale deed, or rental contract as a PDF, photo, or pasted text.',
+    'hi': 'अपने संपत्ति समझौते, बिक्री विलेख, या किराए के अनुबंध को पीडीएफ, फोटो, या चिपकाए गए टेक्स्ट के रूप में अपलोड करें।',
+  },
+  'howItWorks.stepScanner2Title': {'en': 'AI Contract Scan', 'hi': 'एआई अनुबंध स्कैन'},
+  'howItWorks.stepScanner2Desc': {
+    'en': 'Our AI reads each clause and cross-references statutory RERA rules to detect risks.',
+    'hi': 'हमारा एआई प्रत्येक खंड को पढ़ता है और जोखिमों का पता लगाने के लिए वैधानिक रेरा नियमों को क्रॉस-रेफरेंस करता है।',
+  },
+  'howItWorks.stepScanner3Title': {'en': 'Plain-English Insights', 'hi': 'सरल भाषा में अंतर्दृष्टि'},
+  'howItWorks.stepScanner3Desc': {
+    'en': 'See clear color-coded flags (Safe, Caution, High Risk) with simple clause explanations.',
+    'hi': 'सरल खंड स्पष्टीकरण के साथ स्पष्ट रंग-कोडित संकेत (सुरक्षित, चेतावनी, उच्च जोखिम) देखें।',
+  },
+  'howItWorks.stepScanner4Title': {'en': 'Legal Audit Report', 'hi': 'कानूनी ऑडिट रिपोर्ट'},
+  'howItWorks.stepScanner4Desc': {
+    'en': 'Download a structured summary report to negotiate with confidence before signing.',
+    'hi': 'हस्ताक्षर करने से पहले विश्वास के साथ बातचीत करने के लिए एक संरचित सारांश रिपोर्ट डाउनलोड करें।',
+  },
+  'howItWorks.stepChecklist1Title': {'en': 'Select Property Type', 'hi': 'संपत्ति का प्रकार चुनें'},
+  'howItWorks.stepChecklist1Desc': {
+    'en': 'Choose a dedicated legal verification checklist for resale flats, builder floors, or land plots.',
+    'hi': 'पुनर्विक्रय फ्लैटों, बिल्डर फ्लोर, या भूखंडों के लिए समर्पित कानूनी सत्यापन चेकलिस्ट चुनें।',
+  },
+  'howItWorks.stepChecklist2Title': {'en': '30-Year EC & Title', 'hi': '30-वर्षीय भार प्रमाणपत्र और शीर्षक'},
+  'howItWorks.stepChecklist2Desc': {
+    'en': 'Verify 30-year Encumbrance Certificates to confirm continuous clear ownership and no active bank liens.',
+    'hi': 'निरंतर स्पष्ट स्वामित्व और कोई सक्रिय बैंक ग्रहणाधिकार न होने की पुष्टि के लिए 30-वर्षीय भार प्रमाणपत्रों का सत्यापन करें।',
+  },
+  'howItWorks.stepChecklist3Title': {'en': 'Municipal Approvals', 'hi': 'नगरपालिका अनुमोदन'},
+  'howItWorks.stepChecklist3Desc': {
+    'en': 'Track Occupancy Certificates (OC), Commencement (CC), sanctioned layout plans, and builder NOCs.',
+    'hi': 'अधिभोग प्रमाणपत्र (OC), प्रारंभ प्रमाणपत्र (CC), स्वीकृत लेआउट योजनाओं और बिल्डर एनओसी को ट्रैक करें।',
+  },
+  'howItWorks.stepChecklist4Title': {'en': 'Custom AI Checklist', 'hi': 'कस्टम एआई चेकलिस्ट'},
+  'howItWorks.stepChecklist4Desc': {
+    'en': 'Generate a customized city-specific verification list tailored to your exact property transaction.',
+    'hi': 'अपने विशिष्ट संपत्ति लेनदेन के अनुसार एक अनुकूलित शहर-विशिष्ट सत्यापन सूची तैयार करें।',
+  },
+  'howItWorks.stepCalc1Title': {'en': 'Choose State & City', 'hi': 'राज्य और शहर चुनें'},
+  'howItWorks.stepCalc1Desc': {
+    'en': 'Select your state (Maharashtra, Karnataka, Delhi, UP, etc.) and specific urban or rural locality.',
+    'hi': 'अपना राज्य (महाराष्ट्र, कर्नाटक, दिल्ली, यूपी आदि) और विशिष्ट शहरी या ग्रामीण इलाका चुनें।',
+  },
+  'howItWorks.stepCalc2Title': {'en': 'Enter Property Value', 'hi': 'संपत्ति का मूल्य दर्ज करें'},
+  'howItWorks.stepCalc2Desc': {
+    'en': 'Input agreed purchase price and local Ready Reckoner (circle rate) to establish the statutory taxable base.',
+    'hi': 'वैधानिक कर योग्य आधार स्थापित करने के लिए सहमत खरीद मूल्य और स्थानीय रेडी रेकनर (सर्किल दर) इनपुट करें।',
+  },
+  'howItWorks.stepCalc3Title': {'en': 'Apply Concessions', 'hi': 'छूट लागू करें'},
+  'howItWorks.stepCalc3Desc': {
+    'en': 'Automatically factor in state government concessions for female buyers, first-time owners, and metro cess.',
+    'hi': 'महिला खरीदारों, पहली बार मालिकों और मेट्रो सेस के लिए राज्य सरकार की रियायतों को स्वचालित रूप से शामिल करें।',
+  },
+  'howItWorks.stepCalc4Title': {'en': 'Instant Fee Summary', 'hi': 'त्वरित शुल्क सारांश'},
+  'howItWorks.stepCalc4Desc': {
+    'en': 'Receive an itemized breakdown of stamp duty, statutory surcharge, and registration fees payable.',
+    'hi': 'देय स्टाम्प शुल्क, वैधानिक अधिभार और पंजीकरण शुल्क का विस्तृत विवरण प्राप्त करें।',
+  },
+  'howItWorks.stepLegalAi1Title': {'en': 'Ask Legal AI', 'hi': 'लीगल एआई से पूछें'},
+  'howItWorks.stepLegalAi1Desc': {
+    'en': 'Ask real estate questions anytime to clarify complex indemnity clauses, maintenance rules, or RERA rights.',
+    'hi': 'जटिल क्षतिपूर्ति खंडों, रखरखाव नियमों, या रेरा अधिकारों को स्पष्ट करने के लिए कभी भी रियल एस्टेट प्रश्न पूछें।',
+  },
+  'howItWorks.stepLegalAi2Title': {'en': 'Compare 2 Drafts', 'hi': '2 ड्राफ्ट की तुलना करें'},
+  'howItWorks.stepLegalAi2Desc': {
+    'en': 'Upload an original contract draft and builder revised version to compare both texts line by line.',
+    'hi': 'दोनों मसौदों की पंक्ति-दर-पंक्ति तुलना करने के लिए मूल अनुबंध और बिल्डर द्वारा संशोधित संस्करण अपलोड करें।',
+  },
+  'howItWorks.stepLegalAi3Title': {'en': 'Spot Hidden Changes', 'hi': 'छिपे हुए बदलाव खोजें'},
+  'howItWorks.stepLegalAi3Desc': {
+    'en': 'Instantly view highlighted deletions, altered liability clauses, and stealthy extra fees between versions.',
+    'hi': 'संस्करणों के बीच हटाए गए अंशों, बदले गए दायित्व खंडों और गुप्त अतिरिक्त शुल्कों को तुरंत हाइलाइट देखें।',
+  },
+  'howItWorks.stepLegalAi4Title': {'en': 'Secure Cloud Archive', 'hi': 'सुरक्षित क्लाउड संग्रह'},
+  'howItWorks.stepLegalAi4Desc': {
+    'en': 'Keep all audited contracts safely stored in your private workspace with a dedicated recycle bin for recovery.',
+    'hi': 'पुनर्प्राप्ति के लिए समर्पित रीसायकल बिन के साथ अपने निजी कार्यक्षेत्र में सभी ऑडिट किए गए अनुबंध सुरक्षित रखें।',
+  },
+
+  // Error toasts and UI labels
+  'recentDocs.downloadPdfFailed': {
+    'en': 'Failed to download PDF report. Please try again.',
+    'hi': 'पीडीएफ रिपोर्ट डाउनलोड करने में विफल। कृपया पुनः प्रयास करें।',
+  },
+  'recentDocs.deleteDocFailed': {
+    'en': 'Failed to delete document. Please try again.',
+    'hi': 'दस्तावेज़ हटाने में विफल। कृपया पुनः प्रयास करें।',
+  },
+  'bin.restoreDocFailed': {
+    'en': 'Failed to restore document. Please try again.',
+    'hi': 'दस्तावेज़ पुनर्स्थापित करने में विफल। कृपया पुनः प्रयास करें।',
+  },
+  'bin.restoreChecklistFailed': {
+    'en': 'Failed to restore checklist. Please try again.',
+    'hi': 'चेकलिस्ट पुनर्स्थापित करने में विफल। कृपया पुनः प्रयास करें।',
+  },
+  'checklists.deleteFailed': {
+    'en': 'Unable to delete checklist. Please try again.',
+    'hi': 'चेकलिस्ट हटाने में असमर्थ। कृपया पुनः प्रयास करें।',
+  },
+  'checklists.generateFailed': {
+    'en': 'Unable to generate checklist. Please try again.',
+    'hi': 'चेकलिस्ट तैयार करने में असमर्थ। कृपया पुनः प्रयास करें।',
+  },
+  'welcome.downloadApp': {'en': 'Download App', 'hi': 'ऐप डाउनलोड करें'},
 };

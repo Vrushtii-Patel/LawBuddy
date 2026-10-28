@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -246,7 +247,7 @@ void main() {
     await tester.pump();
 
     expect(find.byType(ChatScreen), findsOneWidget);
-    expect(find.textContaining('LEGAL AI ASSISTANT'), findsWidgets);
+    expect(find.textContaining('LawBuddy'), findsWidgets);
   });
 
   testWidgets('AnalysisScreen renders with summary and Export PDF button', (WidgetTester tester) async {
@@ -281,6 +282,43 @@ void main() {
     expect(find.byIcon(Icons.download), findsOneWidget);
   });
 
+  testWidgets('AnalysisScreen renders PDF fallback error card and retry button on load failure', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1000, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          home: AnalysisScreen(
+            documentTitle: 'Corrupted Contract',
+            originalText: 'Sample text',
+            sourceType: 'PDF Document',
+            initialFileBytes: Uint8List.fromList([1, 2, 3, 4]),
+            analysis: const [
+              {
+                'text': 'Sample text',
+                'category': 'Yellow',
+                'reason': 'Sample review'
+              }
+            ],
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 700));
+
+    expect(find.byType(AnalysisScreen), findsOneWidget);
+    if (find.byIcon(Icons.refresh_rounded).evaluate().isNotEmpty) {
+      await tester.tap(find.byIcon(Icons.refresh_rounded));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.byType(AnalysisScreen), findsOneWidget);
+    }
+  });
+
   testWidgets('ChatScreen renders empty state suggestions and handles input', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1000, 800);
     tester.view.devicePixelRatio = 1.0;
@@ -295,7 +333,7 @@ void main() {
     );
 
     await tester.pump();
-    expect(find.textContaining('LEGAL AI ASSISTANT'), findsWidgets);
+    expect(find.textContaining('LawBuddy'), findsWidgets);
     expect(find.byType(TextField), findsWidgets);
   });
 

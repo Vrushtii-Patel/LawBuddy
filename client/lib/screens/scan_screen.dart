@@ -12,8 +12,10 @@ import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:http/http.dart' as http;
 import '../services/api_service.dart';
 import '../providers/locale_provider.dart';
+import '../providers/auth_provider.dart';
 import '../theme/app_theme.dart';
 import 'analysis_screen.dart';
+import 'home/home_sidebar.dart';
 import '../widgets/user_profile_button.dart';
 import '../widgets/form_consent_widget.dart';
 import '../widgets/app_toast.dart';
@@ -882,25 +884,54 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 960;
+    final authState = ref.watch(authProvider);
+    final user = authState.user;
 
     return Scaffold(
       backgroundColor:
           isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      body: Container(
-        color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 6),
-              // TOP BAR
-              _buildTopBar(context, isDark, loc),
-              const SizedBox(height: 4),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (isDesktop)
+            DesktopSidebar(
+              isDark: isDark,
+              user: user,
+              legalNews: const [],
+              activeItem: 'scan',
+              onDashboardTap: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              onNavigate: (screen) {
+                if (screen is ScanScreen) return;
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, animation, __) => screen,
+                    transitionsBuilder: (_, anim, __, child) =>
+                        FadeTransition(opacity: anim, child: child),
+                  ),
+                );
+              },
+            ),
+          Expanded(
+            child: Container(
+              color: isDark
+                  ? AppColors.darkBackground
+                  : AppColors.lightBackground,
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 6),
+                    // TOP BAR
+                    _buildTopBar(context, isDark, loc),
+                    const SizedBox(height: 4),
 
-              // BODY CONTENT
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  child: _isProcessing
+                    // BODY CONTENT
+                    Expanded(
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 250),
+                        child: _isProcessing
                       ? _buildProcessingState(isDark, loc)
                       : FadeTransition(
                           opacity: _fadeAnimation ??
@@ -962,8 +993,11 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
           ),
         ),
       ),
-    );
-  }
+    ),
+  ],
+),
+);
+}
 
   // ==========================================
   // RESUMABLE SCAN JOB BANNER
