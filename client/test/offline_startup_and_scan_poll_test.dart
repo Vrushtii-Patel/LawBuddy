@@ -169,5 +169,27 @@ void main() {
       expect(find.text('Scan or Input Document'), findsOneWidget);
       expect(find.byKey(const ValueKey('cancel_scan_button')), findsNothing);
     });
+
+    test('Devanagari text detection correctly validates Hindi/Marathi and rejects Latin OCR noise', () {
+      const devanagariText = 'विक्री करारनामा: सदर दस्तऐवज खरेदीदार आणि विक्रेता यांच्यात झाला आहे.';
+      const latinGarbageText = '| | / \\ \\ - - 1 1 0 0 0 l l l i i i';
+      const validLatinLegal = 'This Agreement for Sale is executed on 15th October 2026 between Vendor and Purchaser.';
+
+      // Devanagari detection regex
+      final devanagariCount = RegExp(r'[\u0900-\u097F]').allMatches(devanagariText).length;
+      expect(devanagariCount >= 8, isTrue);
+
+      // Latin garbage should fail Devanagari check
+      final garbageDevanagariCount = RegExp(r'[\u0900-\u097F]').allMatches(latinGarbageText).length;
+      expect(garbageDevanagariCount >= 8, isFalse);
+
+      // Latin garbage should fail word and length criteria
+      final wordsInGarbage = RegExp(r'[a-zA-Z]{3,}').allMatches(latinGarbageText).length;
+      expect(wordsInGarbage >= 5, isFalse);
+
+      // Valid Latin legal text should satisfy word criteria
+      final wordsInValid = RegExp(r'[a-zA-Z]{3,}').allMatches(validLatinLegal).length;
+      expect(wordsInValid >= 5, isTrue);
+    });
   });
 }

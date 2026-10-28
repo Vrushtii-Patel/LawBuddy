@@ -443,8 +443,83 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     }
   }
 
+  bool _isSubstantiveDevanagariText(String text) {
+    final clean = text.trim();
+    if (clean.length < 20) return false;
+    final devanagariCount =
+        RegExp(r'[\u0900-\u097F]').allMatches(clean).length;
+    return devanagariCount >= 8;
+  }
+
+  bool _isSubstantiveLatinText(String text) {
+    final clean = text.trim();
+    if (clean.length < 30) return false;
+
+    // Check for alphabetic words with 3 or more letters
+    final words = RegExp(r'[a-zA-Z]{3,}')
+        .allMatches(clean)
+        .map((m) => m.group(0)!)
+        .toList();
+    if (words.length < 5) return false;
+
+    // Ensure alphabetic characters make up a reasonable proportion of the text (not mostly symbols/noise)
+    final alphaCount = RegExp(r'[a-zA-Z]').allMatches(clean).length;
+    final totalNonSpace = clean.replaceAll(RegExp(r'\s'), '').length;
+    if (totalNonSpace == 0 || (alphaCount / totalNonSpace) < 0.45) return false;
+
+    return true;
+  }
+
+  /// Extracts text on mobile using ML Kit, testing Devanagari (Hindi/Marathi) and Latin scripts.
+  /// If extracted text is garbage, short, or invalid, returns empty string so the caller
+  /// seamlessly falls back to the multimodal server vision pipeline.
+  Future<String> _extractTextWithMlKit(String imagePath, bool isHindi) async {
+    if (!_isMobile) return '';
+
+    // If the app is in Hindi mode, try Devanagari first; otherwise try Latin first
+    final scripts = isHindi
+        ? [TextRecognitionScript.devanagiri, TextRecognitionScript.latin]
+        : [TextRecognitionScript.latin, TextRecognitionScript.devanagiri];
+
+    for (final script in scripts) {
+      TextRecognizer? recognizer;
+      try {
+        recognizer = TextRecognizer(script: script);
+        final inputImage = InputImage.fromFilePath(imagePath);
+        final RecognizedText recognizedText =
+            await recognizer.processImage(inputImage);
+        final text = recognizedText.text.trim();
+
+        if (script == TextRecognitionScript.devanagiri) {
+          if (_isSubstantiveDevanagariText(text)) {
+            debugPrint(
+                'MLKit Devanagari OCR extracted ${text.length} chars successfully.');
+            return text;
+          }
+        } else {
+          if (_isSubstantiveLatinText(text)) {
+            debugPrint(
+                'MLKit Latin OCR extracted ${text.length} chars successfully.');
+            return text;
+          }
+        }
+      } catch (mlKitErr) {
+        debugPrint(
+            'MLKit ${script.name} OCR error: $mlKitErr. Continuing fallback pipeline.');
+      } finally {
+        recognizer?.close();
+      }
+    }
+
+    debugPrint(
+        'On-device ML Kit OCR did not produce substantive text; routing image straight to multimodal vision pipeline.');
+    return '';
+  }
+
   Future<void> _scanImage(ImageSource source) async {
     final loc = ref.read(localeProvider.notifier);
+    final currentLanguage = ref.read(localeProvider);
+    final isHindi = currentLanguage == AppLanguage.hindi;
     try {
       final XFile? image = await _picker.pickImage(
         source: source,
@@ -460,23 +535,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
         _statusMessage = loc.translate('scan.processingPhoto');
       });
 
-      String extractedText = '';
-
-      if (_isMobile) {
-        final textRecognizer =
-            TextRecognizer(script: TextRecognitionScript.latin);
-        try {
-          final inputImage = InputImage.fromFilePath(image.path);
-          final RecognizedText recognizedText =
-              await textRecognizer.processImage(inputImage);
-          extractedText = recognizedText.text;
-        } catch (mlKitErr) {
-          debugPrint(
-              'MLKit local OCR error, falling back to server vision: $mlKitErr');
-        } finally {
-          textRecognizer.close();
-        }
-      }
+      final String extractedText = _isMobile
+          ? await _extractTextWithMlKit(image.path, isHindi)
+          : '';
 
       final Uint8List bytes = await image.readAsBytes();
       final String mimeType = image.mimeType ??
@@ -484,7 +545,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
               ? 'image/png'
               : 'image/jpeg');
 
-      if (extractedText.trim().length > 10) {
+      if (extractedText.isNotEmpty &&
+          (_isSubstantiveLatinText(extractedText) ||
+              _isSubstantiveDevanagariText(extractedText))) {
         await _analyzeText(extractedText,
             title: image.name.isNotEmpty ? image.name : 'Photo Scan Document',
             sourceType: 'Photo Scan',
