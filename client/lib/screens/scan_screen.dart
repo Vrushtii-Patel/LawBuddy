@@ -144,7 +144,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
     setState(() {
       _isProcessing = true;
       _currentJob = null;
-      _statusMessage = 'Resuming scan...';
+      _statusMessage = _t('scan.resumingScan');
     });
 
     try {

@@ -346,6 +346,7 @@ final Map<String, Map<String, String>> _translations = {
   'scan.stepCompleted': {'en': 'Analysis completed', 'hi': 'विश्लेषण पूरा हुआ'},
   'scan.stepPaused': {'en': 'Scan paused', 'hi': 'स्कैन रुका हुआ है'},
   'scan.stepProcessing': {'en': 'Processing document...', 'hi': 'दस्तावेज़ संसाधित हो रहा है...'},
+  'scan.resumingScan': {'en': 'Resuming scan...', 'hi': 'स्कैन फिर से शुरू किया जा रहा है...'},
   'scan.pausedWithReason': {'en': 'Scan paused: {reason}', 'hi': 'स्कैन रुका: {reason}'},
   'scan.pleaseRetry': {'en': 'Please retry.', 'hi': 'कृपया पुनः प्रयास करें।'},
   'scan.resumeFailed': {
@@ -967,6 +968,8 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'आपका खाता ईमेल ओटीपी से बनाया गया था। जारी रखने के लिए कृपया पासवर्ड सेट करें।',
   },
   'auth.accountExistsToast': {'en': 'An account with this email already exists. Please log in.', 'hi': 'इस ईमेल से खाता पहले से मौजूद है। कृपया लॉग इन करें।'},
+  'auth.verifyEmailPrompt': {'en': 'Please verify your email address to continue.', 'hi': 'जारी रखने के लिए कृपया अपना ईमेल पता सत्यापित करें।'},
+  'auth.invalidEmailOrPassword': {'en': 'Invalid email or password', 'hi': 'अमान्य ईमेल या पासवर्ड'},
   'auth.goToLogin': {'en': 'Go to Login', 'hi': 'लॉग इन पर जाएं'},
   'auth.termsMustBeAccepted': {'en': 'Please accept the Terms of Use and Privacy Policy.', 'hi': 'कृपया उपयोग की शर्तें और गोपनीयता नीति स्वीकार करें।'},
   'auth.dateOfBirth': {'en': 'Date of Birth', 'hi': 'जन्म तिथि'},

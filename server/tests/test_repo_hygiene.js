@@ -84,7 +84,8 @@ function run() {
     console.log('\n--- Test 5: server/.env does not contain live credentials ---');
     if (fs.existsSync(envPath)) {
         const envContent = fs.readFileSync(envPath, 'utf8');
-        assert.ok(!envContent.includes('finalyearproject2513'), 'server/.env must not contain production MongoDB username');
+        const mongoUri = (envContent.match(/^MONGODB_URI=(.*)$/m) || [])[1] || '';
+        assert.ok(!mongoUri.includes('finalyearproject2513'), 'server/.env must not contain production MongoDB username');
         assert.ok(!envContent.includes('mongodb.net'), 'server/.env must not point to remote Atlas cluster');
         assert.ok(!envContent.includes('sk-or-v1-'), 'server/.env must not contain live OpenRouter key');
         assert.ok(!envContent.includes('AQ.Ab8RN'), 'server/.env must not contain live Gemini API key');

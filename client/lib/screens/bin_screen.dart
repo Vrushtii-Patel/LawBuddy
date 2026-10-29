@@ -146,7 +146,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '"$title" ${tr('bin.restoredSuccess').toLowerCase()}',
+                  '$title: ${tr('bin.restoredSuccess')}',
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w600,
@@ -242,7 +242,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '"$title" ${tr('bin.permanentlyDeletedSuccess').toLowerCase()}',
+                  '$title: ${tr('bin.permanentlyDeletedSuccess')}',
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w700,
@@ -335,7 +335,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '"$title" ${tr('bin.checklistRestoredSuccess').toLowerCase()}',
+                  '$title: ${tr('bin.checklistRestoredSuccess')}',
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w700,
@@ -419,7 +419,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  '"$title" ${tr('bin.checklistPermanentlyDeletedSuccess').toLowerCase()}',
+                  '$title: ${tr('bin.checklistPermanentlyDeletedSuccess')}',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,

@@ -17,7 +17,7 @@ async function sendOTP(email, otp) {
   const hasSmtpConfig = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 
   if (!hasSmtpConfig) {
-    const isDevConsoleFallback = !isProduction && process.env.OTP_CONSOLE_FALLBACK === 'true';
+    const isDevConsoleFallback = !isProduction && (process.env.OTP_CONSOLE_FALLBACK === 'true' || process.env.ALLOW_DEV_EMAIL_FALLBACK === 'true');
 
     if (isDevConsoleFallback) {
       console.log('\n========================================');

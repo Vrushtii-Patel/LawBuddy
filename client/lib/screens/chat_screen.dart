@@ -254,7 +254,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
         setState(() {
           _isTyping = false;
           if (res['sessionId'] != null) {
+            final isNewSession = _currentSessionId != res['sessionId'];
             _currentSessionId = res['sessionId'];
+            if (isNewSession) {
+              _loadSessions();
+            }
           }
           _messages.add({
             'role': 'ai',

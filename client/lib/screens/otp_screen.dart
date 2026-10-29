@@ -102,7 +102,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
 
     final success = await ref.read(authProvider.notifier).resendOtp(
           email: widget.email,
-          purpose: 'signup',
+          purpose: widget.type.isNotEmpty ? widget.type : 'signup',
         );
     if (success && mounted) {
       AppToast.showSuccess(context, tr('auth.otpResentSuccess'));
@@ -334,22 +334,31 @@ class _OtpScreenState extends ConsumerState<OtpScreen>
                                   fontSize: 13),
                             ),
                             const SizedBox(width: 4),
-                            GestureDetector(
-                              onTap: _canResend ? _resendOtp : null,
-                              child: Text(
-                                _canResend
-                                    ? tr('auth.resend')
-                                    : tr('auth.waitCooldown',
-                                        {'seconds': '$_resendCooldown'}),
-                                style: TextStyle(
-                                  color: _canResend
-                                      ? (isDark
-                                          ? AppColors.darkPrimary
-                                          : AppColors.lightPrimary)
-                                      : colorScheme.onSurfaceVariant
-                                          .withValues(alpha: 0.5),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 13,
+                            MouseRegion(
+                              cursor: _canResend
+                                  ? SystemMouseCursors.click
+                                  : SystemMouseCursors.basic,
+                              child: GestureDetector(
+                                onTap: _canResend ? _resendOtp : null,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4, vertical: 6),
+                                  child: Text(
+                                    _canResend
+                                        ? tr('auth.resend')
+                                        : tr('auth.waitCooldown',
+                                            {'seconds': '$_resendCooldown'}),
+                                    style: TextStyle(
+                                      color: _canResend
+                                          ? (isDark
+                                              ? AppColors.darkPrimary
+                                              : AppColors.lightPrimary)
+                                          : colorScheme.onSurfaceVariant
+                                              .withValues(alpha: 0.5),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
