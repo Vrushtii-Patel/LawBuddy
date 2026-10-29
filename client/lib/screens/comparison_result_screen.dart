@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
 
@@ -15,12 +16,15 @@ class ComparisonResultScreen extends ConsumerStatefulWidget {
 class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen> {
   String _selectedFilter = 'All'; // All, Modified, Added, Removed, Escalated, Unchanged
 
+  String tr(String key, [Map<String, String>? params]) =>
+      ref.read(localeProvider.notifier).translate(key, params);
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final comp = widget.comparisonData;
-    final titleA = comp['titleA'] ?? 'Version A';
-    final titleB = comp['titleB'] ?? 'Version B';
+    final titleA = comp['titleA'] ?? tr('docComparison.versionA');
+    final titleB = comp['titleB'] ?? tr('docComparison.versionB');
     final List<dynamic> allPairs = (comp['clauseComparisons'] as List<dynamic>?) ?? [];
 
     final filteredPairs = allPairs.where((pair) {
@@ -37,7 +41,7 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
-        title: const Text('Comparison Report', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(tr('docComparison.comparisonReport'), style: const TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
         elevation: 0,
         actions: const [
@@ -91,7 +95,7 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Agreement Version Differential',
+                  tr('docComparison.versionDifferential'),
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -257,18 +261,21 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
       statusColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: migration == 'ESCALATED_RISK' || migration == 'NEW_RISK_ADDED'
-              ? AppColors.highRisk(isDark).withValues(alpha: 0.5)
-              : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
-          width: migration == 'ESCALATED_RISK' || migration == 'NEW_RISK_ADDED' ? 1.5 : 1.0,
+    return Material(
+      color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+      borderRadius: BorderRadius.circular(16),
+      clipBehavior: Clip.antiAlias,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: migration == 'ESCALATED_RISK' || migration == 'NEW_RISK_ADDED'
+                ? AppColors.highRisk(isDark).withValues(alpha: 0.5)
+                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            width: migration == 'ESCALATED_RISK' || migration == 'NEW_RISK_ADDED' ? 1.5 : 1.0,
+          ),
         ),
-      ),
-      child: ExpansionTile(
+        child: ExpansionTile(
         initiallyExpanded: status == 'MODIFIED' || status == 'ADDED' || status == 'REMOVED',
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         title: Column(
@@ -372,7 +379,7 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
                             Icon(Icons.info_outline, size: 16, color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary),
                             const SizedBox(width: 6),
                             Text(
-                              'Buyer Impact',
+                              tr('docComparison.buyerImpact'),
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -426,7 +433,9 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            '${c['actName']} — ${c['sectionOrRule']} (${c['provisionTitle'] ?? ''})',
+                            c is Map
+                                ? '${c['actName'] ?? ''} — ${c['sectionOrRule'] ?? ''} (${c['provisionTitle'] ?? ''})'.trim()
+                                : c.toString(),
                             style: TextStyle(
                               fontSize: 11,
                               color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
@@ -443,8 +452,9 @@ class _ComparisonResultScreenState extends ConsumerState<ComparisonResultScreen>
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTextSnippet(bool isDark, String label, String text, Color accentColor) {
     return Container(

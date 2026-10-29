@@ -131,35 +131,41 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                 : ref
                     .watch(localeProvider.notifier)
                     .translate('a11y.chatSendMessage'),
-            child: GestureDetector(
-              onTap: widget.isLoading ? null : widget.onSend,
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: widget.isLoading
-                    ? Center(
-                        child: SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: isDark
-                                ? AppColors.softGraphite
-                                : AppColors.warmLinen,
+            child: MouseRegion(
+              cursor: widget.isLoading
+                  ? SystemMouseCursors.basic
+                  : SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: widget.isLoading ? null : widget.onSend,
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: widget.isLoading
+                      ? Center(
+                          child: SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: isDark
+                                  ? AppColors.softGraphite
+                                  : AppColors.warmLinen,
+                            ),
                           ),
+                        )
+                      : Icon(
+                          Icons.arrow_upward_rounded,
+                          color: isDark
+                              ? AppColors.softGraphite
+                              : AppColors.warmLinen,
+                          size: 22,
                         ),
-                      )
-                    : Icon(
-                        Icons.arrow_upward_rounded,
-                        color: isDark
-                            ? AppColors.softGraphite
-                            : AppColors.warmLinen,
-                        size: 22,
-                      ),
+                ),
               ),
             ),
           ),

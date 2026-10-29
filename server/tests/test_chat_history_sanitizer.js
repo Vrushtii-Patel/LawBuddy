@@ -272,8 +272,12 @@ async function runTests() {
 
         // =========================================================================
         // SECTION 3: Real Gemini API Test with Consecutive User Turns (Issue 31 requirement)
-        // =========================================================================
-        if (process.env.GEMINI_API_KEY && !process.env.GEMINI_API_KEY.startsWith('dummy')) {
+        const isPlaceholderKey = !process.env.GEMINI_API_KEY ||
+            process.env.GEMINI_API_KEY.startsWith('dummy') ||
+            process.env.GEMINI_API_KEY.startsWith('your_') ||
+            process.env.GEMINI_API_KEY.startsWith('test_') ||
+            process.env.GEMINI_API_KEY.includes('placeholder');
+        if (!isPlaceholderKey) {
             console.log('\n--- Running Real Gemini API Test for Consecutive User Turns ---');
             const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
             const model = genAI.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });

@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/api_service.dart';
 import '../providers/locale_provider.dart';
+import '../providers/auth_provider.dart';
 import '../theme/app_theme.dart';
 import 'checklist_screen.dart';
 import 'bin_screen.dart';
+import 'home/home_sidebar.dart';
 import '../widgets/user_profile_button.dart';
 
 enum _DuplicateChecklistAction {
@@ -290,7 +292,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
               ).then((_) => _loadChecklists());
             },
             child: Text(
-              'View Bin',
+              tr('bin.viewBin'),
               style: TextStyle(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w600,
@@ -321,7 +323,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Unable to delete checklist. Please try again.',
+                  tr('checklists.deleteFailed'),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -1052,7 +1054,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                                     const SizedBox(width: 10),
                                     Expanded(
                                       child: Text(
-                                        'Unable to generate checklist. Please try again.',
+                                        tr('checklists.generateFailed'),
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
@@ -1125,6 +1127,8 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 960;
+    final authState = ref.watch(authProvider);
+    final user = authState.user;
 
     return Scaffold(
       backgroundColor:
@@ -1143,14 +1147,41 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
               fontWeight: FontWeight.w700, letterSpacing: 0.3),
         ),
       ),
-      body: Container(
-        color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 6),
-              // TOP BAR
-              _buildTopBar(context, isDark, tr),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (isDesktop)
+            DesktopSidebar(
+              isDark: isDark,
+              user: user,
+              legalNews: const [],
+              activeItem: 'checklists',
+              onDashboardTap: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              onNavigate: (screen) {
+                if (screen is ChecklistsListScreen) return;
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, animation, __) => screen,
+                    transitionsBuilder: (_, anim, __, child) =>
+                        FadeTransition(opacity: anim, child: child),
+                  ),
+                );
+              },
+            ),
+          Expanded(
+            child: Container(
+              color: isDark
+                  ? AppColors.darkBackground
+                  : AppColors.lightBackground,
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 6),
+                    // TOP BAR
+                    _buildTopBar(context, isDark, tr),
               const SizedBox(height: 4),
 
               // BODY CONTENT
@@ -1180,8 +1211,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
           ),
         ),
       ),
-    );
-  }
+    ),
+  ],
+),
+);
+}
 
   // ==========================================
   // TOP BAR

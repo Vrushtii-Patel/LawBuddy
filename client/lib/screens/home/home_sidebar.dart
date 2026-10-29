@@ -29,6 +29,8 @@ class DesktopSidebar extends ConsumerWidget {
   final dynamic user;
   final List<dynamic> legalNews;
   final void Function(Widget screen) onNavigate;
+  final String activeItem;
+  final VoidCallback? onDashboardTap;
 
   const DesktopSidebar({
     super.key,
@@ -36,6 +38,8 @@ class DesktopSidebar extends ConsumerWidget {
     required this.user,
     required this.legalNews,
     required this.onNavigate,
+    this.activeItem = 'dashboard',
+    this.onDashboardTap,
   });
 
   @override
@@ -60,6 +64,8 @@ class DesktopSidebar extends ConsumerWidget {
           legalNews,
           onNavigate,
           isDrawer: false,
+          activeItem: activeItem,
+          onDashboardTap: onDashboardTap,
         ),
       ),
     );
@@ -74,6 +80,8 @@ class SidebarDrawer extends ConsumerWidget {
   final dynamic user;
   final List<dynamic> legalNews;
   final void Function(Widget screen) onNavigate;
+  final String activeItem;
+  final VoidCallback? onDashboardTap;
 
   const SidebarDrawer({
     super.key,
@@ -81,6 +89,8 @@ class SidebarDrawer extends ConsumerWidget {
     required this.user,
     required this.legalNews,
     required this.onNavigate,
+    this.activeItem = 'dashboard',
+    this.onDashboardTap,
   });
 
   @override
@@ -96,6 +106,8 @@ class SidebarDrawer extends ConsumerWidget {
           legalNews,
           onNavigate,
           isDrawer: true,
+          activeItem: activeItem,
+          onDashboardTap: onDashboardTap,
         ),
       ),
     );
@@ -114,6 +126,8 @@ Widget _buildSidebarContent(
   List<dynamic> legalNews,
   void Function(Widget screen) onNavigate, {
   required bool isDrawer,
+  String activeItem = 'dashboard',
+  VoidCallback? onDashboardTap,
 }) {
   ref.watch(localeProvider);
   final loc = ref.read(localeProvider.notifier);
@@ -196,10 +210,13 @@ Widget _buildSidebarContent(
             SidebarNavItem(
               icon: Icons.dashboard_rounded,
               label: loc.translate('sidebar.dashboard'),
-              isActive: true,
+              isActive: activeItem == 'dashboard',
               isDark: isDark,
               onTap: () {
                 if (isDrawer) Navigator.pop(context);
+                if (onDashboardTap != null) {
+                  onDashboardTap();
+                }
               },
             ),
             const SizedBox(height: 14),
@@ -210,7 +227,7 @@ Widget _buildSidebarContent(
             SidebarNavItem(
               icon: Icons.folder_open_rounded,
               label: loc.translate('sidebar.documents'),
-              isActive: false,
+              isActive: activeItem == 'documents',
               isDark: isDark,
               onTap: () {
                 if (isDrawer) Navigator.pop(context);
@@ -220,7 +237,7 @@ Widget _buildSidebarContent(
             SidebarNavItem(
               icon: Icons.document_scanner_rounded,
               label: loc.translate('sidebar.riskAnalysis'),
-              isActive: false,
+              isActive: activeItem == 'scan' || activeItem == 'riskAnalysis',
               isDark: isDark,
               onTap: () {
                 if (isDrawer) Navigator.pop(context);
@@ -230,7 +247,7 @@ Widget _buildSidebarContent(
             SidebarNavItem(
               icon: Icons.checklist_rounded,
               label: loc.translate('sidebar.checklists'),
-              isActive: false,
+              isActive: activeItem == 'checklists',
               isDark: isDark,
               onTap: () {
                 if (isDrawer) Navigator.pop(context);
@@ -245,7 +262,8 @@ Widget _buildSidebarContent(
             SidebarNavItem(
               icon: Icons.compare_arrows_rounded,
               label: loc.translate('sidebar.documentComparison'),
-              isActive: false,
+              isActive: activeItem == 'comparison' ||
+                  activeItem == 'documentComparison',
               isDark: isDark,
               onTap: () {
                 if (isDrawer) Navigator.pop(context);
@@ -255,7 +273,7 @@ Widget _buildSidebarContent(
             SidebarNavItem(
               icon: Icons.auto_awesome_rounded,
               label: loc.translate('sidebar.legalAi'),
-              isActive: false,
+              isActive: activeItem == 'chat' || activeItem == 'legalAi',
               isDark: isDark,
               onTap: () {
                 if (isDrawer) Navigator.pop(context);
@@ -265,7 +283,7 @@ Widget _buildSidebarContent(
             SidebarNavItem(
               icon: Icons.calculate_rounded,
               label: loc.translate('sidebar.stampDuty'),
-              isActive: false,
+              isActive: activeItem == 'stampDuty',
               isDark: isDark,
               onTap: () {
                 if (isDrawer) Navigator.pop(context);
@@ -296,7 +314,8 @@ Widget _buildSidebarContent(
               SidebarNavItem(
                 icon: Icons.admin_panel_settings_rounded,
                 label: loc.translate('sidebar.adminAnalytics'),
-                isActive: false,
+                isActive:
+                    activeItem == 'admin' || activeItem == 'adminAnalytics',
                 isDark: isDark,
                 onTap: () {
                   if (isDrawer) Navigator.pop(context);
@@ -321,7 +340,7 @@ Widget _buildSidebarContent(
             SidebarNavItem(
               icon: Icons.delete_outline_rounded,
               label: loc.translate('sidebar.bin'),
-              isActive: false,
+              isActive: activeItem == 'bin',
               isDark: isDark,
               onTap: () {
                 if (isDrawer) Navigator.pop(context);

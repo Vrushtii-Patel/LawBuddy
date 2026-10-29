@@ -205,29 +205,66 @@ async function getStampDutyConfigBundle() {
 }
 
 /**
- * Calculates official stamp duty, registration fee, and total payable amount.
- * Evaluates rules engine according to state config and global rules.
- *
- * @param {Object} params
- * @param {string} params.state - Indian state/UT
- * @param {string} [params.propertyType='Residential'] - Type of property
- * @param {number} [params.agreementValue=0] - Declared agreement / consideration value
- * @param {number} [params.circleRate=0] - Government circle rate / ready reckoner value
- * @param {string} [params.gender='Male'] - Buyer gender category
- * @param {string|boolean} [params.firstTimeBuyer='No'] - First-time home buyer status ('Yes'/'No' or bool)
- * @param {Object} [params.customConfig=null] - Optional specific state config override
- * @returns {Object} Full breakdown of rates and amounts
+ * Resolves a state's configuration either from customConfig, MongoDB StampDutyConfig collection,
+ * or built-in DEFAULT_STATE_CONFIGS_MAP. Rejects unknown or misspelled states.
  */
-function calculateStampDuty({
-  state,
+function findDefaultStateConfig(stateName) {
+  if (!stateName || typeof stateName !== 'string') return null;
+  const trimmed = stateName.trim();
+  const lower = trimmed.toLowerCase();
+  for (const [key, config] of Object.entries(DEFAULT_STATE_CONFIGS_MAP)) {
+    if (key.toLowerCase() === lower) {
+      return config;
+    }
+  }
+  return null;
+}
+
+async function resolveStateConfig(stateName, customConfig = null) {
+  if (customConfig) return customConfig;
+  if (!stateName || typeof stateName !== 'string' || !stateName.trim()) {
+    throw new Error('State is required for stamp duty calculation.');
+  }
+
+  const trimmedState = stateName.trim();
+
+  // 1. Try fetching from MongoDB StampDutyConfig collection if connected
+  try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+      const escaped = trimmedState.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const dbDoc = await StampDutyConfig.findOne({
+        state: { $regex: new RegExp(`^${escaped}$`, 'i') }
+      }).lean();
+      if (dbDoc) {
+        return dbDoc;
+      }
+    }
+  } catch (err) {
+    console.warn('Could not query StampDutyConfig from DB, falling back to defaults:', err.message);
+  }
+
+  // 2. Fall back to built-in default state configurations
+  const defaultConfig = findDefaultStateConfig(trimmedState);
+  if (defaultConfig) {
+    return defaultConfig;
+  }
+
+  // 3. Reject unknown / misspelled states with clear error
+  throw new Error(`Unknown state "${stateName}". Please select a valid Indian state or "Other".`);
+}
+
+/**
+ * Core calculation logic applying base rates, slabs, gender overrides, property adjustments,
+ * first-time buyer concessions, and registration fee caps against a resolved stateConfig.
+ */
+function calculateFromConfig(stateConfig, {
   propertyType = 'Residential',
   agreementValue = 0,
   circleRate = 0,
   gender = 'Male',
-  firstTimeBuyer = 'No',
-  customConfig = null
+  firstTimeBuyer = 'No'
 }) {
-  const normState = (state || '').trim();
   const normPropertyType = VALID_PROPERTY_TYPES.includes(propertyType) ? propertyType : 'Residential';
   const normGender = VALID_GENDERS.includes(gender) ? gender : 'Male';
   const isFirstTime = firstTimeBuyer === 'Yes' || firstTimeBuyer === true || firstTimeBuyer === 'true';
@@ -242,10 +279,7 @@ function calculateStampDuty({
     throw new Error('Property value or circle rate must be greater than zero.');
   }
 
-  // 1. Resolve State Configuration
-  const stateConfig = customConfig || DEFAULT_STATE_CONFIGS_MAP[normState] || DEFAULT_STATE_CONFIGS_MAP['Other'];
-
-  // 2. Resolve Base Rate (from Slabs, Gender Overrides, or Default Base Rate)
+  // 1. Resolve Base Rate (from Slabs, Gender Overrides, or Default Base Rate)
   let baseRate = stateConfig.baseRate !== undefined ? Number(stateConfig.baseRate) : 5.0;
 
   if (Array.isArray(stateConfig.slabs) && stateConfig.slabs.length > 0) {
@@ -266,7 +300,7 @@ function calculateStampDuty({
     }
   }
 
-  // 3. Apply Global Property Type Adjustments
+  // 2. Apply Global Property Type Adjustments
   const propAdj = GLOBAL_STAMP_DUTY_RULES.propertyTypeAdjustments[normPropertyType];
   if (propAdj) {
     if (propAdj.type === 'add') {
@@ -276,13 +310,13 @@ function calculateStampDuty({
     }
   }
 
-  // 4. Apply Global First-Time Buyer Concession
+  // 3. Apply Global First-Time Buyer Concession
   const ftRule = GLOBAL_STAMP_DUTY_RULES.firstTimeBuyerConcession;
   if (isFirstTime && baseRate > ftRule.thresholdRate) {
     baseRate = Math.min(ftRule.maxRate, Math.max(ftRule.minRate, baseRate - ftRule.discount));
   }
 
-  // 5. Calculate Registration Rate & Amount
+  // 4. Calculate Registration Rate & Amount
   const regRate = stateConfig.registrationRate !== undefined ? Number(stateConfig.registrationRate) : 1.0;
   let regAmount = applicableMarketValue * (regRate / 100.0);
 
@@ -299,7 +333,7 @@ function calculateStampDuty({
   const totalPayable = Math.round((stampDutyAmount + regAmount) * 100) / 100;
 
   return {
-    state: normState || 'Other',
+    state: stateConfig.state,
     propertyType: normPropertyType,
     agreementValue: propVal,
     circleRate: circleVal,
@@ -316,8 +350,36 @@ function calculateStampDuty({
   };
 }
 
+/**
+ * Calculates official stamp duty, registration fee, and total payable amount.
+ * Asynchronously reads state rate configurations from MongoDB or default configurations.
+ */
+async function calculateStampDuty(params) {
+  const stateConfig = await resolveStateConfig(params?.state, params?.customConfig);
+  return calculateFromConfig(stateConfig, params || {});
+}
+
+/**
+ * Synchronous calculation helper using built-in defaults or customConfig without database lookup.
+ */
+function calculateStampDutySync(params) {
+  let stateConfig = params?.customConfig;
+  if (!stateConfig) {
+    if (!params?.state || typeof params.state !== 'string' || !params.state.trim()) {
+      throw new Error('State is required for stamp duty calculation.');
+    }
+    stateConfig = findDefaultStateConfig(params.state);
+    if (!stateConfig) {
+      throw new Error(`Unknown state "${params.state}". Please select a valid Indian state or "Other".`);
+    }
+  }
+  return calculateFromConfig(stateConfig, params || {});
+}
+
 module.exports = {
   calculateStampDuty,
+  calculateStampDutySync,
+  resolveStateConfig,
   getStampDutyConfigBundle,
   GLOBAL_STAMP_DUTY_RULES,
   DEFAULT_STATE_CONFIGS_MAP,

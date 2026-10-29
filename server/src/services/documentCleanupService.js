@@ -10,12 +10,26 @@ const crossReferenceService = require('./crossReferenceService');
 const DEFAULT_UPLOADS_DIR = path.join(__dirname, '../../uploads/scan_files');
 const UPLOADS_DIR = path.resolve(process.env.SCAN_FILES_DIR || DEFAULT_UPLOADS_DIR);
 
+// Hashes are used to build a path on disk, so only accept plain file-name characters.
+const SAFE_HASH_RE = /^[A-Za-z0-9_-]+$/;
+
+const IN_FLIGHT_JOB_STATUSES = [
+    'QUEUED',
+    'UPLOADING',
+    'OCR_PROCESSING',
+    'TEXT_EXTRACTED',
+    'AI_ANALYSIS',
+    'REPORT_GENERATION',
+    'RETRYING'
+];
+
 /**
  * Permanently deletes a single document and cleans up all associated resources:
- * - Physical file on disk (uploads/scan_files/<hash>.dat) if no other document references this fileHash
- * - Associated ScanJob record(s)
+ * - Associated ScanJob record(s) belonging to this document/user (preserving in-flight scan jobs)
  * - Associated Checklist cross-reference links
+ * - Any associated public shares
  * - The Document record itself
+ * - Physical file on disk (uploads/scan_files/<hash>.dat) ONLY if no other document AND no remaining ScanJob references this fileHash
  */
 async function permanentlyDeleteDocument(docId, userId) {
     const doc = await Document.findOne({ _id: docId, userId });
@@ -26,46 +40,53 @@ async function permanentlyDeleteDocument(docId, userId) {
         throw new Error('Document must be in the bin before it can be permanently deleted');
     }
 
-    // 1. File on disk cleanup with error tolerance
-    if (doc.fileHash) {
-        try {
-            const otherReferences = await Document.countDocuments({
-                _id: { $ne: doc._id },
-                fileHash: doc.fileHash
-            });
+    const fileHash = doc.fileHash;
 
-            if (otherReferences === 0) {
-                const filePath = path.join(UPLOADS_DIR, `${doc.fileHash}.dat`);
-                if (fs.existsSync(filePath)) {
-                    fs.unlinkSync(filePath);
-                }
-            }
-        } catch (fsErr) {
-            console.warn(`[PermanentDelete] Warning: File deletion failed for hash ${doc.fileHash}:`, fsErr.message);
-        }
-    }
-
-    // 2. Delete associated ScanJob records
+    // 1. Delete associated ScanJob records belonging to this document / user
+    // Preserve any active in-flight scan job that might be re-scanning the same file
     try {
         await ScanJob.deleteMany({
             $or: [
                 { documentId: doc._id },
-                { userId: doc.userId, fileHash: doc.fileHash }
+                {
+                    userId: doc.userId,
+                    fileHash: doc.fileHash,
+                    status: { $nin: IN_FLIGHT_JOB_STATUSES }
+                }
             ]
         });
     } catch (jobErr) {
         console.warn(`[PermanentDelete] Warning: ScanJob deletion error:`, jobErr.message);
     }
 
-    // 3. Clean up linked checklist issues
+    // 2. Clean up linked checklist issues
     try {
         await crossReferenceService.removeDocumentIssuesFromChecklists(userId, doc._id);
     } catch (syncErr) {
         console.warn(`[PermanentDelete] Warning: Checklist cleanup error:`, syncErr.message);
     }
 
+    // 3. Clean up any associated public shares
+    try {
+        const SharedAnalysis = require('../models/SharedAnalysis');
+        await SharedAnalysis.deleteMany({ documentId: doc._id });
+    } catch (shareErr) {
+        console.warn(`[PermanentDelete] Warning: Share cleanup error:`, shareErr.message);
+    }
+
     // 4. Delete the Document row itself
     await Document.findByIdAndDelete(doc._id);
+
+    // 5. File on disk cleanup with error tolerance:
+    // Files are content-addressed (SHA-256). Only unlink if no other Document
+    // and no active or remaining ScanJob references this fileHash.
+    if (fileHash) {
+        try {
+            await removeFileIfUnreferenced(fileHash);
+        } catch (fsErr) {
+            console.warn(`[PermanentDelete] Warning: File deletion failed for hash ${fileHash}:`, fsErr.message);
+        }
+    }
 
     return { id: doc._id, fileHash: doc.fileHash };
 }
@@ -168,9 +189,6 @@ const DEFAULT_ABANDONED_JOB_RETENTION_DAYS = (() => {
 })();
 
 const SWEEP_BATCH_LIMIT = 500;
-
-// Hashes are used to build a path on disk, so only accept plain file-name characters.
-const SAFE_HASH_RE = /^[A-Za-z0-9_-]+$/;
 
 /**
  * Deletes uploads/scan_files/<hash>.dat only when nothing references it any more:

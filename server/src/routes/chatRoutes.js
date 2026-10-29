@@ -36,36 +36,53 @@ router.post('/chat', requireAuth, async (req, res) => {
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
 
+            let existingSession = null;
             if (activeSessionId) {
-                const existingSession = await ChatSession.findOne({ _id: activeSessionId, userId });
-                if (existingSession) {
-                    existingSession.messages.push({
-                        role: 'user',
-                        text: latestUserMsg.text,
-                        time: latestUserMsg.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                    });
-                    existingSession.messages.push(replyMsg);
-                    existingSession.updatedAt = new Date();
-                    await existingSession.save();
+                try {
+                    existingSession = await ChatSession.findOne({ _id: activeSessionId, userId });
+                } catch (lookupErr) {
+                    console.warn(`Invalid or unresolvable sessionId ${activeSessionId}:`, lookupErr.message);
+                    existingSession = null;
                 }
+            }
+
+            if (existingSession) {
+                existingSession.messages.push({
+                    role: 'user',
+                    text: latestUserMsg.text,
+                    time: latestUserMsg.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                });
+                existingSession.messages.push(replyMsg);
+                existingSession.updatedAt = new Date();
+                await existingSession.save();
             } else {
-                // Generate a brief descriptive title from the first message
-                let title = latestUserMsg.text.trim();
+                // If sessionId is missing, invalid, or lookup fails (e.g. points to a deleted session),
+                // create a new session so messages are never silently dropped or vanished from history.
+                let title = (sanitizedHistory[0] ? sanitizedHistory[0].text : latestUserMsg.text).trim();
                 if (title.length > 40) {
                     title = title.substring(0, 37) + '...';
                 }
 
+                const initialMessages = [];
+                for (let i = 0; i < sanitizedHistory.length - 1; i++) {
+                    const msg = sanitizedHistory[i];
+                    initialMessages.push({
+                        role: msg.role === 'model' || msg.role === 'ai' ? 'ai' : 'user',
+                        text: msg.text || '',
+                        time: msg.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    });
+                }
+                initialMessages.push({
+                    role: 'user',
+                    text: latestUserMsg.text,
+                    time: latestUserMsg.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                });
+                initialMessages.push(replyMsg);
+
                 const newSession = new ChatSession({
                     userId,
                     title: title || 'Legal Consultation',
-                    messages: [
-                        {
-                            role: 'user',
-                            text: latestUserMsg.text,
-                            time: latestUserMsg.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                        },
-                        replyMsg
-                    ]
+                    messages: initialMessages
                 });
                 const saved = await newSession.save();
                 activeSessionId = saved._id.toString();

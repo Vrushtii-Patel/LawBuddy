@@ -139,7 +139,7 @@ class _SharedSummaryScreenState extends ConsumerState<SharedSummaryScreen> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Read-Only',
+                    tr('analysis.readOnlyBadge'),
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
@@ -261,10 +261,25 @@ class _SharedSummaryScreenState extends ConsumerState<SharedSummaryScreen> {
     final title = (data['title'] ?? 'Property Legal Risk Summary').toString();
     final overallRisk = (data['riskLevel'] ?? 'Low Risk').toString();
     final createdAt = data['createdAt'] as String?;
-    final highCount = data['highRiskCount'] as int? ?? 0;
-    final cautionCount = data['cautionCount'] as int? ?? 0;
-    final compliantCount = data['compliantCount'] as int? ?? 0;
     final rawAnalysis = (data['analysis'] as List<dynamic>?) ?? [];
+    final highCount = data['highRiskCount'] as int? ??
+        rawAnalysis.where((c) {
+          final r = (c['riskLevel'] ?? '').toString().toUpperCase();
+          final cat = (c['category'] ?? '').toString().toUpperCase();
+          return r == 'HIGH_RISK' || cat == 'RED' || cat == 'HIGH';
+        }).length;
+    final cautionCount = data['cautionCount'] as int? ??
+        rawAnalysis.where((c) {
+          final r = (c['riskLevel'] ?? '').toString().toUpperCase();
+          final cat = (c['category'] ?? '').toString().toUpperCase();
+          return r == 'CAUTION' || cat == 'YELLOW' || cat == 'CAUTION' || cat == 'MEDIUM';
+        }).length;
+    final compliantCount = data['compliantCount'] as int? ??
+        rawAnalysis.where((c) {
+          final r = (c['riskLevel'] ?? '').toString().toUpperCase();
+          final cat = (c['category'] ?? '').toString().toUpperCase();
+          return r == 'COMPLIANT' || cat == 'GREEN' || cat == 'COMPLIANT' || cat == 'LOW';
+        }).length;
 
     // Filter clauses
     final filteredClauses = rawAnalysis.where((clause) {
@@ -311,7 +326,7 @@ class _SharedSummaryScreenState extends ConsumerState<SharedSummaryScreen> {
                   ),
                   child: Center(
                     child: Text(
-                      'No clauses found under this filter.',
+                      tr('analysis.noClausesFilter'),
                       style: TextStyle(
                         color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
                         fontSize: 14,
@@ -509,10 +524,10 @@ class _SharedSummaryScreenState extends ConsumerState<SharedSummaryScreen> {
     int totalCount,
   ) {
     final filters = [
-      {'key': 'ALL', 'label': 'All Clauses ($totalCount)'},
-      {'key': 'HIGH_RISK', 'label': 'High Risk ($highCount)'},
-      {'key': 'CAUTION', 'label': 'Caution ($cautionCount)'},
-      {'key': 'COMPLIANT', 'label': 'Compliant ($compliantCount)'},
+      {'key': 'ALL', 'label': '${tr('analysis.allClauses')} ($totalCount)'},
+      {'key': 'HIGH_RISK', 'label': '${tr('analysis.highRisk')} ($highCount)'},
+      {'key': 'CAUTION', 'label': '${tr('analysis.caution')} ($cautionCount)'},
+      {'key': 'COMPLIANT', 'label': '${tr('analysis.compliant')} ($compliantCount)'},
     ];
 
     return SingleChildScrollView(

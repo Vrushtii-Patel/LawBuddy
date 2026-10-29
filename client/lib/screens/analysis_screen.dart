@@ -54,6 +54,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
   late final String _resolvedHeroTag;
   Uint8List? _resolvedFileBytes;
   bool _isLoadingFile = false;
+  bool _pdfLoadFailed = false;
 
   @override
   void initState() {
@@ -73,9 +74,10 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
   }
 
   Future<void> _fetchDocumentFileBytes(String docId) async {
-    if (!mounted) return;
+    if (!mounted || _isLoadingFile) return;
     setState(() {
       _isLoadingFile = true;
+      _pdfLoadFailed = false;
     });
     try {
       final bytes = await ApiService.fetchDocumentFile(docId);
@@ -83,10 +85,12 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
         setState(() {
           _resolvedFileBytes = bytes;
           _isLoadingFile = false;
+          _pdfLoadFailed = false;
         });
       } else if (mounted) {
         setState(() {
           _isLoadingFile = false;
+          _pdfLoadFailed = true;
         });
       }
     } catch (e) {
@@ -94,6 +98,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       if (mounted) {
         setState(() {
           _isLoadingFile = false;
+          _pdfLoadFailed = true;
         });
       }
     }
@@ -229,6 +234,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       }
 
       final token = await ApiService.createShareLink(
+        documentId: widget.documentId,
         title: _getDocumentTitle(),
         riskLevel: _getOverallRiskLevel(),
         analysis: widget.analysis,
@@ -1206,26 +1212,103 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Container(
-                            height: 380,
+                            height: _pdfLoadFailed ? null : 380,
                             width: double.infinity,
                             decoration: BoxDecoration(
+                              color: _pdfLoadFailed
+                                  ? (isDark
+                                      ? AppColors.darkSurfaceElevated
+                                      : AppColors.lightSurfaceElevated)
+                                  : null,
                               border: Border.all(
                                   color: isDark
                                       ? AppColors.darkBorder
                                       : AppColors.lightBorder),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: SfPdfViewer.memory(
-                              _resolvedFileBytes!,
-                              canShowScrollHead: true,
-                              canShowScrollStatus: true,
-                              enableDoubleTapZooming: true,
-                              onDocumentLoadFailed:
-                                  (PdfDocumentLoadFailedDetails details) {
-                                debugPrint(
-                                    'PDF viewer load error: ${details.error}');
-                              },
-                            ),
+                            child: _pdfLoadFailed
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 28),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.picture_as_pdf_outlined,
+                                          size: 36,
+                                          color: isDark
+                                              ? AppColors.darkTextSecondary
+                                              : AppColors.lightTextSecondary,
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          tr('analysis.pdfPreviewUnavailable'),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 14,
+                                            color: isDark
+                                                ? AppColors.darkTextPrimary
+                                                : AppColors.lightTextPrimary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          tr('analysis.pdfPreviewFallbackDesc'),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: isDark
+                                                ? AppColors.darkTextSecondary
+                                                : AppColors.lightTextSecondary,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 14),
+                                        OutlinedButton.icon(
+                                          onPressed: _isLoadingFile
+                                              ? null
+                                              : () {
+                                                  if (widget.documentId !=
+                                                          null &&
+                                                      widget.documentId!
+                                                          .isNotEmpty) {
+                                                    _fetchDocumentFileBytes(
+                                                        widget.documentId!);
+                                                  } else {
+                                                    setState(() =>
+                                                        _pdfLoadFailed = false);
+                                                  }
+                                                },
+                                          icon: const Icon(
+                                              Icons.refresh_rounded,
+                                              size: 15),
+                                          label: Text(tr('common.retry')),
+                                          style: OutlinedButton.styleFrom(
+                                            visualDensity:
+                                                VisualDensity.compact,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : SfPdfViewer.memory(
+                                    _resolvedFileBytes!,
+                                    key: ValueKey(
+                                        'pdf_${_resolvedFileBytes.hashCode}'),
+                                    canShowScrollHead: true,
+                                    canShowScrollStatus: true,
+                                    enableDoubleTapZooming: true,
+                                    onDocumentLoadFailed:
+                                        (PdfDocumentLoadFailedDetails details) {
+                                      debugPrint(
+                                          'PDF viewer load error: ${details.error}');
+                                      if (mounted) {
+                                        setState(() {
+                                          _pdfLoadFailed = true;
+                                        });
+                                      }
+                                    },
+                                  ),
                           ),
                         ),
                         const SizedBox(height: 14),

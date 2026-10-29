@@ -65,22 +65,66 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final token = await TokenStorage.getToken();
 
       if (token != null && token.isNotEmpty) {
-        final data = await ApiService.getProfile(token);
-        final user = UserModel.fromJson(data['user']);
-        state = state.copyWith(
-          status: AuthStatus.authenticated,
-          user: user,
-          clearError: true,
-        );
+        try {
+          final data = await ApiService.getProfile(token);
+          final user = UserModel.fromJson(data['user']);
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('userId', user.userId);
+          state = state.copyWith(
+            status: AuthStatus.authenticated,
+            user: user,
+            clearError: true,
+          );
+        } catch (fetchErr) {
+          final is401 = (fetchErr is ApiException && fetchErr.statusCode == 401) ||
+              fetchErr.toString().contains('401') ||
+              fetchErr.toString().toLowerCase().contains('unauthorized');
+
+          if (is401) {
+            try {
+              await TokenStorage.deleteToken();
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.remove('userId');
+            } catch (_) {}
+            state = state.copyWith(
+              status: AuthStatus.unauthenticated,
+              clearUser: true,
+              clearError: true,
+            );
+          } else {
+            // Offline / connection error: Do NOT log out. The user retains their session.
+            state = state.copyWith(
+              status: AuthStatus.error,
+              errorMessage: "Can't connect",
+              errorCode: 'CONNECTION_ERROR',
+            );
+          }
+        }
       } else {
         state = state.copyWith(status: AuthStatus.unauthenticated, clearUser: true);
       }
     } catch (e) {
-      state = state.copyWith(
-        status: AuthStatus.unauthenticated,
-        clearUser: true,
-        clearError: true,
-      );
+      final is401 = (e is ApiException && e.statusCode == 401) ||
+          e.toString().contains('401') ||
+          e.toString().toLowerCase().contains('unauthorized');
+      if (is401) {
+        try {
+          await TokenStorage.deleteToken();
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.remove('userId');
+        } catch (_) {}
+        state = state.copyWith(
+          status: AuthStatus.unauthenticated,
+          clearUser: true,
+          clearError: true,
+        );
+      } else {
+        state = state.copyWith(
+          status: AuthStatus.error,
+          errorMessage: "Can't connect",
+          errorCode: 'CONNECTION_ERROR',
+        );
+      }
     }
   }
 

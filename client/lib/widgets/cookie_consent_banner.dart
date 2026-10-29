@@ -316,7 +316,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                   foregroundColor: primaryTextColor,
                   side: BorderSide(color: borderColor),
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  minimumSize: const Size(0, 40),
+                  minimumSize: const Size(0, 44),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
@@ -337,7 +337,7 @@ class _CookieConsentBannerState extends ConsumerState<CookieConsentBanner> {
                       ? AppColors.softGraphite
                       : AppColors.warmLinen,
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  minimumSize: const Size(0, 40),
+                  minimumSize: const Size(0, 44),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),

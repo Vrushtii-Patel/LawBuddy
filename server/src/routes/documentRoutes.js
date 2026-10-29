@@ -9,6 +9,7 @@ const ScanJob = require('../models/ScanJob');
 const crossReferenceService = require('../services/crossReferenceService');
 const { requireAuth } = require('../middleware/authMiddleware');
 const { uploadDocument } = require('../middleware/uploadMiddleware');
+const { scanStartLimiter, scanRetryLimiter } = require('../middleware/rateLimitMiddleware');
 
 // =========================================================================
 // SCAN HELPER FUNCTIONS (INFERENCE & RESPONSE SHAPING)
@@ -53,7 +54,7 @@ function inferScanJobParams(req, { requireFile = false } = {}) {
 // =========================================================================
 
 // POST /api/scans/start - Initializes a persistent scan job
-router.post('/scans/start', requireAuth, uploadDocument, async (req, res) => {
+router.post('/scans/start', requireAuth, scanStartLimiter, uploadDocument, async (req, res) => {
     try {
         const { error, params } = inferScanJobParams(req);
         if (error) {
@@ -145,14 +146,23 @@ router.post('/scans/:jobId/dismiss', requireAuth, async (req, res) => {
 router.get('/scans/:jobId', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const job = await ScanJob.findOne({ jobId: req.params.jobId, userId });
+        // The app polls this every ~1.5 s, so keep the polling response small: the heavy
+        // result fields (text, analysis, clauses) are only loaded and sent once the job is
+        // COMPLETED, and the original file is never embedded (it is fetched by document id).
+        const job = await ScanJob.findOne({ jobId: req.params.jobId, userId })
+            .select('-extractedText -analysis -canonicalClauses');
         if (!job) {
             return res.status(404).json({ error: 'Scan job not found' });
         }
 
         let document = null;
-        if (job.documentId) {
-            document = await Document.findById(job.documentId);
+        let result = null;
+        if (job.status === 'COMPLETED') {
+            result = await ScanJob.findOne({ jobId: job.jobId, userId })
+                .select('extractedText analysis canonicalClauses');
+            if (job.documentId) {
+                document = await Document.findById(job.documentId).select('-fileData');
+            }
         }
 
         res.json({
@@ -160,9 +170,9 @@ router.get('/scans/:jobId', requireAuth, async (req, res) => {
             status: job.status,
             currentStep: job.currentStep,
             completedSteps: job.completedSteps,
-            extractedText: job.extractedText,
-            analysis: job.analysis,
-            canonicalClauses: job.canonicalClauses,
+            extractedText: result ? result.extractedText : undefined,
+            analysis: result ? result.analysis : undefined,
+            canonicalClauses: result ? result.canonicalClauses : undefined,
             documentId: job.documentId,
             document: document,
             errorInfo: job.errorInfo,
@@ -178,7 +188,7 @@ router.get('/scans/:jobId', requireAuth, async (req, res) => {
 });
 
 // POST /api/scans/:jobId/retry - Resumes a failed or incomplete scan job from its last incomplete stage
-router.post('/scans/:jobId/retry', requireAuth, async (req, res) => {
+router.post('/scans/:jobId/retry', requireAuth, scanRetryLimiter, async (req, res) => {
     try {
         const userId = req.user.userId;
         const job = await ScanJob.findOne({ jobId: req.params.jobId, userId });
@@ -289,11 +299,18 @@ router.post('/scan-file', (req, res) => {
 // Import cleanup service
 const documentCleanupService = require('../services/documentCleanupService');
 
+// Fields the document list and the Bin never need. `fileData` is the whole original file as
+// base64 (up to 3 MB per document) and `extractedNormalizedText` duplicates the document text.
+// The app fetches the original file on demand from GET /api/documents/:id/file.
+const LIST_EXCLUDED_FIELDS = '-fileData -extractedNormalizedText';
+
 // GET /api/documents (Strictly scoped to authenticated user, excludes soft-deleted docs)
 router.get('/documents', requireAuth, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const docs = await Document.find({ userId, isDeleted: { $ne: true } }).sort({ createdAt: -1 });
+        const docs = await Document.find({ userId, isDeleted: { $ne: true } })
+            .select(LIST_EXCLUDED_FIELDS)
+            .sort({ createdAt: -1 });
         res.json(docs);
     } catch (error) {
         console.error('Error fetching documents:', error);
@@ -316,7 +333,7 @@ router.get('/documents/bin', requireAuth, async (req, res) => {
         const binnedDocs = await Document.find({
             userId,
             isDeleted: true
-        }).sort({ deletedAt: -1 });
+        }).select(LIST_EXCLUDED_FIELDS).sort({ deletedAt: -1 });
 
         res.json(binnedDocs);
     } catch (error) {
@@ -472,6 +489,14 @@ router.delete('/documents/:id', requireAuth, async (req, res) => {
             await crossReferenceService.removeDocumentIssuesFromChecklists(userId, req.params.id);
         } catch (syncErr) {
             console.warn(`[SoftDeleteDocument] Warning: Checklist cleanup error:`, syncErr.message);
+        }
+
+        // Revoke any public shares associated with this document so private text is not accessible
+        try {
+            const SharedAnalysis = require('../models/SharedAnalysis');
+            await SharedAnalysis.deleteMany({ documentId: req.params.id, userId });
+        } catch (shareErr) {
+            console.warn(`[SoftDeleteDocument] Warning: Share cleanup error:`, shareErr.message);
         }
 
         res.json({

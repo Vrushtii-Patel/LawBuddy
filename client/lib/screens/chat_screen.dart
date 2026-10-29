@@ -254,7 +254,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
         setState(() {
           _isTyping = false;
           if (res['sessionId'] != null) {
+            final isNewSession = _currentSessionId != res['sessionId'];
             _currentSessionId = res['sessionId'];
+            if (isNewSession) {
+              _loadSessions();
+            }
           }
           _messages.add({
             'role': 'ai',
@@ -447,17 +451,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                   fontSize: 16.5,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.2,
-                ),
-              ),
-              const Opacity(
-                opacity: 0.0,
-                child: SizedBox(
-                  width: 0,
-                  height: 0,
-                  child: Text(
-                    'LEGAL AI ASSISTANT',
-                    style: TextStyle(fontSize: 0.1),
-                  ),
                 ),
               ),
             ],

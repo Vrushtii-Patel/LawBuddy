@@ -100,7 +100,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           AppToast.showInfo(
               context,
               authState.errorMessage ??
-                  'Please verify your email address to continue.');
+                  ref.read(localeProvider.notifier).translate('auth.verifyEmailPrompt'));
           await ref.read(authProvider.notifier).resendOtp(
                 email: email,
                 purpose: 'signup',
@@ -134,7 +134,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         } else {
           AppToast.showError(
             context,
-            authState.errorMessage ?? 'Invalid email or password',
+            authState.errorMessage ??
+                ref.read(localeProvider.notifier).translate('auth.invalidEmailOrPassword'),
           );
         }
       }

@@ -77,6 +77,8 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
           final isDark = Theme.of(dialogContext).brightness == Brightness.dark;
           final currentLanguage = ref.watch(localeProvider);
           final currentThemeMode = ref.watch(themeProvider);
+          final authState = ref.watch(authProvider);
+          final user = authState.user;
 
           return AlertDialog(
             backgroundColor: colorScheme.surface,
@@ -337,6 +339,31 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                         clipBehavior: Clip.antiAlias,
                         child: Column(
                           children: [
+                            if (authState.status == AuthStatus.authenticated && user != null) ...[
+                              ListTile(
+                                dense: true,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                                leading: Icon(Icons.person_outline_rounded, size: 19, color: colorScheme.primary),
+                                title: Text(
+                                  currentLanguage == AppLanguage.hindi ? 'खाता प्रोफ़ाइल' : 'Account Profile',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  user.fullName.isNotEmpty ? user.fullName : (user.email ?? ''),
+                                  style: TextStyle(fontSize: 11.5, color: colorScheme.onSurfaceVariant),
+                                ),
+                                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
+                                onTap: () {
+                                  Navigator.pop(dialogContext);
+                                  showProfileDialog(context, ref);
+                                },
+                              ),
+                              Divider(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            ],
                             ListTile(
                               dense: true,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
@@ -449,9 +476,37 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                 onPressed: () => Navigator.pop(dialogContext),
                 child: Text(
                   currentLanguage == AppLanguage.hindi ? 'बंद करें' : 'Close',
-                  style: TextStyle(color: colorScheme.primary, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
                 ),
               ),
+              if (authState.status == AuthStatus.authenticated && user != null)
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: colorScheme.error,
+                    foregroundColor: colorScheme.onError,
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(dialogContext);
+                    ref.read(authProvider.notifier).logout();
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) => const WelcomeScreen(),
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                          return FadeTransition(opacity: animation, child: child);
+                        },
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  icon: const Icon(Icons.logout_rounded, size: 16),
+                  label: Text(
+                    currentLanguage == AppLanguage.hindi ? 'साइन आउट' : 'Sign Out',
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ),
             ],
           );
         },

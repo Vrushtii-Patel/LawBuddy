@@ -236,6 +236,49 @@ async function runTests() {
             console.log('✓ Test 4 Passed: Successful chat persists session and returns 200.');
         }
 
+        // -------------------------------------------------------------
+        // Test 5: Deleted / nonexistent sessionId creates new session and returns new sessionId
+        // -------------------------------------------------------------
+        {
+            llmService.chat = async () => {
+                return {
+                    reply: 'This is an answer to a query that had a deleted sessionId.',
+                    suggestions: [],
+                    sources: []
+                };
+            };
+
+            const deletedSessionId = new mongoose.Types.ObjectId().toString();
+
+            const res = await makeRequest(server, {
+                method: 'POST',
+                path: '/api/chat',
+                body: {
+                    sessionId: deletedSessionId,
+                    history: [
+                        { role: 'user', text: 'Original message in now deleted conversation' },
+                        { role: 'ai', text: 'Original reply' },
+                        { role: 'user', text: 'New query after session was deleted' }
+                    ]
+                }
+            });
+
+            assert.strictEqual(res.statusCode, 200);
+            assert.ok(res.body.sessionId, 'Must return a sessionId');
+            assert.notStrictEqual(res.body.sessionId, deletedSessionId, 'Must return a NEW sessionId, not the deleted one');
+
+            const sessionInDb = await ChatSession.findById(res.body.sessionId);
+            assert.ok(sessionInDb, 'New session must be saved to database');
+            assert.strictEqual(sessionInDb.userId, testUserId);
+            // Verify all history turns + latest user message + reply are saved
+            assert.strictEqual(sessionInDb.messages.length, 4, 'Should save all conversation history turns in new session');
+            assert.strictEqual(sessionInDb.messages[0].text, 'Original message in now deleted conversation');
+            assert.strictEqual(sessionInDb.messages[2].text, 'New query after session was deleted');
+            assert.strictEqual(sessionInDb.messages[3].role, 'ai');
+
+            console.log('✓ Test 5 Passed: Deleted sessionId lookup failure creates new session and returns new sessionId.');
+        }
+
         console.log('\n🎉 ALL CHAT AI FAILURE HANDLING TESTS PASSED SUCCESSFULLY!');
     } finally {
         llmService.chat = originalChat;

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/locale_provider.dart';
+import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
+import 'home/home_sidebar.dart';
 
 class BinScreen extends ConsumerStatefulWidget {
   const BinScreen({super.key});
@@ -19,6 +21,9 @@ class _BinScreenState extends ConsumerState<BinScreen> {
   bool _isLoading = true;
   String? _errorMessage;
   int _selectedTabIndex = 0; // 0: Documents, 1: Checklists
+
+  String tr(String key, [Map<String, String>? params]) =>
+      ref.read(localeProvider.notifier).translate(key, params);
 
   @override
   void initState() {
@@ -50,8 +55,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage =
-              'Failed to load Recycle Bin. Please check your connection.';
+          _errorMessage = tr('bin.loadError');
         });
       }
     }
@@ -142,7 +146,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '"$title" ${tr('bin.restoredSuccess').toLowerCase()}',
+                  '$title: ${tr('bin.restoredSuccess')}',
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w600,
@@ -172,7 +176,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Failed to restore document. Please try again.',
+                  tr('bin.restoreDocFailed'),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -238,7 +242,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '"$title" ${tr('bin.permanentlyDeletedSuccess').toLowerCase()}',
+                  '$title: ${tr('bin.permanentlyDeletedSuccess')}',
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w700,
@@ -268,7 +272,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Failed to permanently delete document.',
+                  tr('bin.deleteDocError'),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -331,7 +335,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  '"$title" ${tr('bin.checklistRestoredSuccess').toLowerCase()}',
+                  '$title: ${tr('bin.checklistRestoredSuccess')}',
                   style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w700,
@@ -361,7 +365,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Failed to restore checklist. Please try again.',
+                  tr('bin.restoreChecklistFailed'),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -415,7 +419,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  '"$title" ${tr('bin.checklistPermanentlyDeletedSuccess').toLowerCase()}',
+                  '$title: ${tr('bin.checklistPermanentlyDeletedSuccess')}',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -440,7 +444,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Failed to permanently delete checklist.',
+                  tr('bin.deleteChecklistError'),
                   style: TextStyle(
                     fontSize: 13,
                     color: isDark
@@ -608,43 +612,125 @@ class _BinScreenState extends ConsumerState<BinScreen> {
     final tr = ref.read(localeProvider.notifier).translate;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isDesktop = MediaQuery.of(context).size.width >= 960;
+    final authState = ref.watch(authProvider);
+    final user = authState.user;
 
     return Scaffold(
       backgroundColor:
           isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color:
-                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+      appBar: isDesktop
+          ? null
+          : AppBar(
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_rounded,
+                  color:
+                      isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
+                tooltip: 'Back',
+                onPressed: () => Navigator.of(context).maybePop(),
+              ),
+              title: Text(
+                tr('bin.title'),
+                style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.3,
+                  color:
+                      isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                ),
+              ),
+              backgroundColor:
+                  isDark ? AppColors.darkSurface : AppColors.lightSurface,
+              elevation: 0,
+              actions: const [
+                UserProfileButton(),
+                SizedBox(width: 12),
+              ],
+            ),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (isDesktop)
+            DesktopSidebar(
+              isDark: isDark,
+              user: user,
+              legalNews: const [],
+              activeItem: 'bin',
+              onDashboardTap: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              onNavigate: (screen) {
+                if (screen is BinScreen) return;
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, animation, __) => screen,
+                    transitionsBuilder: (_, anim, __, child) =>
+                        FadeTransition(opacity: anim, child: child),
+                  ),
+                );
+              },
+            ),
+          Expanded(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  if (isDesktop) _buildDesktopTopBar(context, isDark, tr),
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: _fetchBinData,
+                      color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      child: _buildBody(context, isDark, tr, isDesktop),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          tooltip: 'Back',
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
-        title: Text(
-          tr('bin.title'),
-          style: GoogleFonts.plusJakartaSans(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.3,
-            color:
-                isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
-          ),
-        ),
-        backgroundColor:
-            isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        elevation: 0,
-        actions: const [
-          UserProfileButton(),
-          SizedBox(width: 12),
         ],
       ),
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: _fetchBinData,
-          color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-          child: _buildBody(context, isDark, tr, isDesktop),
+    );
+  }
+
+  Widget _buildDesktopTopBar(
+      BuildContext context, bool isDark, String Function(String, [Map<String, String>?]) tr) {
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            width: 1,
+          ),
         ),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              size: 20,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+            tooltip: 'Back',
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            tr('bin.title'),
+            style: GoogleFonts.plusJakartaSans(
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+              letterSpacing: -0.3,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+          ),
+          const Spacer(),
+          const UserProfileButton(),
+          const SizedBox(width: 12),
+        ],
       ),
     );
   }
@@ -682,7 +768,7 @@ class _BinScreenState extends ConsumerState<BinScreen> {
               ElevatedButton.icon(
                 onPressed: _fetchBinData,
                 icon: const Icon(Icons.refresh_rounded, size: 18),
-                label: const Text('Retry'),
+                label: Text(tr('common.retry')),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       isDark ? AppColors.darkAccent : AppColors.lightPrimary,

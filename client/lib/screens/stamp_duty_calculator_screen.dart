@@ -7,7 +7,9 @@ import '../widgets/user_profile_button.dart';
 import '../widgets/app_toast.dart';
 import '../services/api_service.dart';
 import '../providers/locale_provider.dart';
+import '../providers/auth_provider.dart';
 import '../theme/app_theme.dart';
+import 'home/home_sidebar.dart';
 
 class StampDutyCalculatorScreen extends ConsumerStatefulWidget {
   const StampDutyCalculatorScreen({super.key});
@@ -288,6 +290,8 @@ class _StampDutyCalculatorScreenState
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width >= 960;
+    final authState = ref.watch(authProvider);
+    final user = authState.user;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -296,12 +300,37 @@ class _StampDutyCalculatorScreenState
       child: Scaffold(
         backgroundColor:
             isDark ? AppColors.darkBackground : AppColors.lightBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 6),
-              // TOP BAR
-              _buildTopBar(context, isDark, loc),
+        body: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (isDesktop)
+              DesktopSidebar(
+                isDark: isDark,
+                user: user,
+                legalNews: const [],
+                activeItem: 'stampDuty',
+                onDashboardTap: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                },
+                onNavigate: (screen) {
+                  if (screen is StampDutyCalculatorScreen) return;
+                  Navigator.pushReplacement(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (_, animation, __) => screen,
+                      transitionsBuilder: (_, anim, __, child) =>
+                          FadeTransition(opacity: anim, child: child),
+                    ),
+                  );
+                },
+              ),
+            Expanded(
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 6),
+                    // TOP BAR
+                    _buildTopBar(context, isDark, loc),
               const SizedBox(height: 4),
 
               // BODY CONTENT
@@ -381,8 +410,11 @@ class _StampDutyCalculatorScreenState
           ),
         ),
       ),
-    );
-  }
+    ],
+  ),
+),
+);
+}
 
   // ==========================================
   // TOP BAR
@@ -841,14 +873,17 @@ class _StampDutyCalculatorScreenState
                           ? AppColors.darkTextSecondary
                           : AppColors.lightTextSecondary),
                   const SizedBox(width: 10),
-                  Text(
-                    hintText,
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 13,
-                      color: isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary,
-                      fontWeight: FontWeight.w500,
+                  Expanded(
+                    child: Text(
+                      hintText,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 13,
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
@@ -872,14 +907,17 @@ class _StampDutyCalculatorScreenState
                     children: [
                       Icon(icon, size: 18, color: AppColors.lightPrimary),
                       const SizedBox(width: 10),
-                      Text(
-                        display,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 13,
-                          color: isDark
-                              ? AppColors.darkTextPrimary
-                              : AppColors.lightTextPrimary,
-                          fontWeight: FontWeight.w600,
+                      Expanded(
+                        child: Text(
+                          display,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13,
+                            color: isDark
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
@@ -1309,7 +1347,10 @@ class _StampDutyCalculatorScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 6,
+                  runSpacing: 4,
                   children: [
                     Text(
                       loc.translate(
@@ -1326,8 +1367,7 @@ class _StampDutyCalculatorScreenState
                                 : AppColors.lightTextPrimary),
                       ),
                     ),
-                    if (isWarning) ...[
-                      const SizedBox(width: 6),
+                    if (isWarning)
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 2),
@@ -1350,7 +1390,6 @@ class _StampDutyCalculatorScreenState
                           ),
                         ),
                       ),
-                    ],
                   ],
                 ),
                 const SizedBox(height: 2),
@@ -1435,6 +1474,7 @@ class _HoverCalculateButtonState extends State<_HoverCalculateButton> {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.calculate_rounded,
@@ -1442,13 +1482,17 @@ class _HoverCalculateButtonState extends State<_HoverCalculateButton> {
                 color: widget.isDark ? AppColors.darkBackground : Colors.white,
               ),
               const SizedBox(width: 8),
-              Text(
-                widget.label,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color:
-                      widget.isDark ? AppColors.darkBackground : Colors.white,
+              Flexible(
+                child: Text(
+                  widget.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color:
+                        widget.isDark ? AppColors.darkBackground : Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -1507,6 +1551,7 @@ class _HoverResetButtonState extends State<_HoverResetButton> {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.restart_alt_rounded,
@@ -1516,14 +1561,18 @@ class _HoverResetButtonState extends State<_HoverResetButton> {
                     : AppColors.lightTextSecondary,
               ),
               const SizedBox(width: 6),
-              Text(
-                widget.label,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: widget.isDark
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextSecondary,
+              Flexible(
+                child: Text(
+                  widget.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: widget.isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
+                  ),
                 ),
               ),
             ],

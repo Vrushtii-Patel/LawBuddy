@@ -112,11 +112,26 @@ async function runRegressionTests() {
     console.log('  LAWBUDDY BACKEND REGRESSION TEST SUITE (DOCUMENT ROUTES)   ');
     console.log('===============================================================\n');
 
-    const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/lawbuddy';
+    const uri = process.env.MONGODB_URI;
+    let mongod = null;
     try {
         if (mongoose.connection.readyState !== 1) {
-            await mongoose.connect(uri, { family: 4, serverSelectionTimeoutMS: 2500 });
-            console.log('✓ Connected to MongoDB for regression testing.\n');
+            if (uri) {
+                try {
+                    await mongoose.connect(uri, { family: 4, serverSelectionTimeoutMS: 2500 });
+                    console.log('✓ Connected to MongoDB for regression testing.\n');
+                } catch (e) {
+                    const { MongoMemoryServer } = require('mongodb-memory-server');
+                    mongod = await MongoMemoryServer.create();
+                    await mongoose.connect(mongod.getUri());
+                    console.log('✓ Connected to in-memory MongoDB for regression testing.\n');
+                }
+            } else {
+                const { MongoMemoryServer } = require('mongodb-memory-server');
+                mongod = await MongoMemoryServer.create();
+                await mongoose.connect(mongod.getUri());
+                console.log('✓ Connected to in-memory MongoDB for regression testing.\n');
+            }
         }
     } catch (err) {
         console.warn('MongoDB connect notice:', err.message);
@@ -440,6 +455,7 @@ async function runRegressionTests() {
         await User.deleteMany({ userId: testUser });
         await new Promise(res => server.close(res));
         await mongoose.disconnect();
+        if (mongod) await mongod.stop();
     }
 
     console.log('\n===============================================================');

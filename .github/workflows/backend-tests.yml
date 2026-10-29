@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - "deployment/**"
     paths:
       - "server/**"
       - ".github/workflows/backend-tests.yml"
@@ -15,7 +14,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   test:
@@ -49,10 +48,6 @@ jobs:
           cache-dependency-path: server/package-lock.json
       - name: Install locked dependencies
         run: npm ci
-      # Only on the isolated audit branch, test safe updates within existing semver ranges.
-      - name: Update vulnerable packages within existing ranges
-        if: github.ref == 'refs/heads/deployment/audit-production-db-startup'
-        run: npm install nodemailer@^10.0.6 && npm update proxy-addr qs
       - name: Report dependency vulnerabilities without changing the lockfile
         run: |
           npm audit --json > /tmp/npm-audit.json || true
@@ -90,15 +85,3 @@ jobs:
         run: node tests/test_scan_file_storage.js
       - name: Run backend regression suite
         run: npm test
-      - name: Commit verified dependency lockfile updates on audit branch
-        if: github.ref == 'refs/heads/deployment/audit-production-db-startup'
-        run: |
-          if git diff --quiet -- package-lock.json; then
-            echo "No dependency lockfile changes to commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json
-          git commit -m "Fix audited backend dependency vulnerabilities"
-          git push origin HEAD:deployment/audit-production-db-startup

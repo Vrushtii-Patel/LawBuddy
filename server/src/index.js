@@ -15,8 +15,55 @@ const shareRoutes = require('./routes/shareRoutes');
 const scanJobService = require('./services/scanJobService');
 const comparisonService = require('./services/comparisonService');
 
+// =========================================================================
+// PROCESS SAFETY NETS & REJECTION HANDLERS
+// =========================================================================
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[Process] Unhandled Promise Rejection:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('[Process] Uncaught Exception:', err);
+  if (process.env.NODE_ENV === 'production') {
+    process.exit(1);
+  }
+});
+
+let server = null;
+
+function gracefulShutdown(signal) {
+  console.log(`[Process] Received ${signal}. Starting graceful shutdown...`);
+  if (server) {
+    server.close(() => {
+      console.log('[Process] HTTP server closed.');
+      mongoose.connection.close(false).then(() => {
+        console.log('[Process] MongoDB connection closed.');
+        process.exit(0);
+      }).catch(err => {
+        console.error('[Process] Error closing MongoDB connection:', err);
+        process.exit(1);
+      });
+    });
+  } else {
+    process.exit(0);
+  }
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Trust reverse proxy (e.g. Nginx, Cloudflare, Render, AWS ALB, Heroku) so express-rate-limit
+// and req.ip correctly identify client IP addresses rather than the proxy's IP.
+const trustProxyConfig = process.env.TRUST_PROXY;
+if (trustProxyConfig) {
+  const numeric = Number(trustProxyConfig);
+  app.set('trust proxy', isNaN(numeric) ? (trustProxyConfig === 'true' ? true : trustProxyConfig) : numeric);
+} else {
+  app.set('trust proxy', 1);
+}
 
 // CORS: restrict to known origins when ALLOWED_ORIGINS is set (comma-separated,
 // e.g. "https://yourapp.com,https://admin.yourapp.com"). Native mobile clients
@@ -73,6 +120,48 @@ app.get(['/health', '/api/health'], (req, res) => {
     uptime: Math.floor(process.uptime()),
     timestamp: new Date().toISOString()
   });
+});
+
+// Catch-all 404 handler for undefined API routes
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+// Global JSON error handler
+// Ensures that CORS rejections, body-parser syntax errors, and unhandled route errors
+// always return well-formed JSON instead of HTML error pages.
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  // Handle CORS errors (from cors middleware callback)
+  if (err.message === 'Not allowed by CORS') {
+    return res.status(403).json({ error: 'Not allowed by CORS' });
+  }
+
+  // Handle malformed JSON body errors from express.json()
+  if (err instanceof SyntaxError && (err.status === 400 || err.statusCode === 400) && 'body' in err) {
+    return res.status(400).json({ error: 'Malformed JSON payload in request body.' });
+  }
+
+  // Handle payload too large
+  if (err.status === 413 || err.type === 'entity.too.large') {
+    return res.status(413).json({ error: 'Request payload is too large.' });
+  }
+
+  const statusCode = (typeof err.status === 'number' && err.status >= 400 && err.status < 600)
+    ? err.status
+    : (typeof err.statusCode === 'number' && err.statusCode >= 400 && err.statusCode < 600)
+      ? err.statusCode
+      : 500;
+
+  const message = statusCode >= 500 && process.env.NODE_ENV === 'production'
+    ? 'An unexpected server error occurred.'
+    : (err.message || 'An unexpected error occurred.');
+
+  console.error(`[Unhandled Error] ${req.method} ${req.originalUrl || req.url}:`, err);
+  res.status(statusCode).json({ error: message });
 });
 
 async function startServer() {
@@ -165,12 +254,17 @@ async function startServer() {
   });
 
   // Only accept traffic once the database connection is established.
-  app.listen(PORT, () => {
+  server = app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
+  return server;
 }
 
-startServer().catch(err => {
-  console.error('Fatal startup error:', err.message);
-  process.exit(1);
-});
+module.exports = { app, startServer };
+
+if (require.main === module) {
+  startServer().catch(err => {
+    console.error('Fatal startup error:', err.message);
+    process.exit(1);
+  });
+}

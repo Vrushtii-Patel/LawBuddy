@@ -35,12 +35,14 @@ class LocaleNotifier extends StateNotifier<AppLanguage> {
           orElse: () => AppLanguage.english,
         );
         state = matched;
+        _currentCode = matched.code;
       }
     }
   }
 
   Future<void> setLanguage(AppLanguage language) async {
     state = language;
+    _currentCode = language.code;
     final prefs = await SharedPreferences.getInstance();
     final functionalAllowed = prefs.getBool('storage_consent_functional');
     if (functionalAllowed == true) {
@@ -49,7 +51,18 @@ class LocaleNotifier extends StateNotifier<AppLanguage> {
   }
 
   String translate(String key, [Map<String, String>? params]) {
-    final langCode = state.code;
+    return _lookup(key, state.code, params);
+  }
+
+  // Language code for code that has no access to Riverpod, such as the global
+  // ErrorWidget.builder in main.dart. Kept in sync whenever the language changes.
+  static String _currentCode = 'en';
+
+  static String translateCurrent(String key, [Map<String, String>? params]) {
+    return _lookup(key, _currentCode, params);
+  }
+
+  static String _lookup(String key, String langCode, [Map<String, String>? params]) {
     String raw = key;
 
     if (_translations.containsKey(key) && _translations[key]!.containsKey(langCode)) {
@@ -89,6 +102,11 @@ final Map<String, Map<String, String>> _translations = {
   'common.cancel': {'en': 'Cancel', 'hi': 'रद्द करें'},
   'common.delete': {'en': 'Delete', 'hi': 'हटाएं'},
   'common.retry': {'en': 'Retry', 'hi': 'पुनः प्रयास करें'},
+  'common.cantConnect': {'en': "Can't connect", 'hi': 'कनेक्ट नहीं हो पा रहा है'},
+  'common.cantConnectDesc': {
+    'en': 'Unable to connect to LawBuddy servers. Please check your internet connection and try again.',
+    'hi': 'LawBuddy सर्वर से कनेक्ट करने में असमर्थ। कृपया अपना इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें।'
+  },
   'common.close': {'en': 'Close', 'hi': 'बंद करें'},
   'common.clear': {'en': 'Clear', 'hi': 'साफ़ करें'},
   'common.save': {'en': 'Save', 'hi': 'सहेजें'},
@@ -315,6 +333,64 @@ final Map<String, Map<String, String>> _translations = {
     'en': 'Temporarily unavailable — retrying automatically...',
     'hi': 'अस्थायी रूप से अनुपलब्ध — स्वचालित रूप से पुनः प्रयास किया जा रहा है...',
   },
+  'scan.stepQueued': {'en': 'Scan queued...', 'hi': 'स्कैन कतार में है...'},
+  'scan.stepUploading': {'en': 'Uploading document...', 'hi': 'दस्तावेज़ अपलोड हो रहा है...'},
+  'scan.cancelScan': {'en': 'Cancel Scan', 'hi': 'स्कैन रद्द करें'},
+  'scan.cancelUpload': {'en': 'Cancel Upload', 'hi': 'अपलोड रद्द करें'},
+  'scan.scanCancelled': {'en': 'Scan cancelled', 'hi': 'स्कैन रद्द किया गया'},
+  'scan.uploadingProgress': {'en': 'Uploading document...', 'hi': 'दस्तावेज़ अपलोड हो रहा है...'},
+  'scan.stepExtracting': {'en': 'Extracting document...', 'hi': 'दस्तावेज़ से पाठ निकाला जा रहा है...'},
+  'scan.stepTextExtracted': {'en': 'Document text extracted', 'hi': 'दस्तावेज़ का पाठ निकाल लिया गया'},
+  'scan.stepAnalyzing': {'en': 'Analyzing legal clauses...', 'hi': 'कानूनी खंडों का विश्लेषण हो रहा है...'},
+  'scan.stepReport': {'en': 'Generating report...', 'hi': 'रिपोर्ट तैयार की जा रही है...'},
+  'scan.stepCompleted': {'en': 'Analysis completed', 'hi': 'विश्लेषण पूरा हुआ'},
+  'scan.stepPaused': {'en': 'Scan paused', 'hi': 'स्कैन रुका हुआ है'},
+  'scan.stepProcessing': {'en': 'Processing document...', 'hi': 'दस्तावेज़ संसाधित हो रहा है...'},
+  'scan.resumingScan': {'en': 'Resuming scan...', 'hi': 'स्कैन फिर से शुरू किया जा रहा है...'},
+  'scan.pausedWithReason': {'en': 'Scan paused: {reason}', 'hi': 'स्कैन रुका: {reason}'},
+  'scan.pleaseRetry': {'en': 'Please retry.', 'hi': 'कृपया पुनः प्रयास करें।'},
+  'scan.resumeFailed': {
+    'en': 'Unable to resume scan. Please try scanning the document again.',
+    'hi': 'स्कैन फिर से शुरू नहीं हो सका। कृपया दस्तावेज़ को दोबारा स्कैन करने का प्रयास करें।',
+  },
+  'scan.savedStillRunning': {
+    'en': 'Your scan is saved and still running. Find it in your documents when it finishes, or resume it here.',
+    'hi': 'आपका स्कैन सहेजा गया है और अभी चल रहा है। पूरा होने पर इसे अपने दस्तावेज़ों में देखें, या यहीं से फिर शुरू करें।',
+  },
+  'scan.photoFailed': {
+    'en': 'Unable to process the photo scan. Please ensure the image is clear and try again.',
+    'hi': 'फोटो स्कैन संसाधित नहीं हो सका। कृपया सुनिश्चित करें कि छवि स्पष्ट है और पुनः प्रयास करें।',
+  },
+  'scan.fileReadFailed': {'en': 'Unable to read the selected file.', 'hi': 'चुनी गई फ़ाइल पढ़ी नहीं जा सकी।'},
+  'scan.analysisFailed': {
+    'en': 'Unable to complete document analysis. Please check your connection and try again.',
+    'hi': 'दस्तावेज़ का विश्लेषण पूरा नहीं हो सका। कृपया अपना कनेक्शन जाँचें और पुनः प्रयास करें।',
+  },
+  'scan.timeoutTitle': {
+    'en': 'Analysis is taking longer than expected',
+    'hi': 'विश्लेषण में अपेक्षा से अधिक समय लग रहा है',
+  },
+  'scan.timeoutBodyConnection': {
+    'en': "We're having trouble reaching the server, so we can't confirm progress right now. Your scan was already submitted and isn't affected.",
+    'hi': 'हमें सर्वर तक पहुँचने में समस्या हो रही है, इसलिए अभी प्रगति की पुष्टि नहीं हो पा रही। आपका स्कैन पहले ही जमा हो चुका है और प्रभावित नहीं हुआ है।',
+  },
+  'scan.timeoutBodyProcessing': {
+    'en': 'Your document is still being processed. You can keep waiting or check back later.',
+    'hi': 'आपका दस्तावेज़ अभी संसाधित हो रहा है। आप प्रतीक्षा जारी रख सकते हैं या बाद में देख सकते हैं।',
+  },
+  'scan.statusLabel': {'en': 'Scan status', 'hi': 'स्कैन की स्थिति'},
+  'scan.badgeConnection': {'en': 'Connection issue', 'hi': 'कनेक्शन समस्या'},
+  'scan.badgeProcessing': {'en': 'Processing', 'hi': 'संसाधित हो रहा है'},
+  'scan.progressSaved': {
+    'en': "Your document and scan progress are saved. You don't need to upload it again.",
+    'hi': 'आपका दस्तावेज़ और स्कैन की प्रगति सहेजी गई है। आपको इसे दोबारा अपलोड करने की आवश्यकता नहीं है।',
+  },
+  'scan.keepWaiting': {'en': 'Keep waiting', 'hi': 'प्रतीक्षा करें'},
+  'scan.checkLater': {'en': 'Check later', 'hi': 'बाद में देखें'},
+  'scan.unfinishedTitle': {'en': 'Unfinished Scan in Progress', 'hi': 'अधूरा स्कैन जारी है'},
+  'scan.resume': {'en': 'Resume', 'hi': 'फिर शुरू करें'},
+  'scan.dismiss': {'en': 'Dismiss', 'hi': 'हटाएं'},
+  'app.layoutAdjusting': {'en': 'Temporarily adjusting layout...', 'hi': 'लेआउट अस्थायी रूप से समायोजित हो रहा है...'},
 
   // Chat Screen
   'chat.title': {'en': 'Legal AI Assistant', 'hi': 'कानूनी एआई सहायक'},
@@ -409,6 +485,7 @@ final Map<String, Map<String, String>> _translations = {
     'en': 'Reviewing statutory provisions and property jurisprudence',
     'hi': 'वैधानिक प्रावधानों और संपत्ति कानून की समीक्षा की जा रही है',
   },
+  'chat.suggestedFollowUps': {'en': 'Suggested follow-ups', 'hi': 'सुझाए गए अनुवर्ती प्रश्न'},
 
   // Checklists Screen
   'checklists.title': {'en': 'Due Diligence Checklists', 'hi': 'उचित सावधानी चेकलिस्ट'},
@@ -476,6 +553,12 @@ final Map<String, Map<String, String>> _translations = {
   'checklists.deleteChecklist': {'en': 'Move to Recycle Bin', 'hi': 'रीसायकल बिन में ले जाएं'},
   'checklists.deleteConfirm': {'en': 'Are you sure you want to move this checklist to the Recycle Bin?', 'hi': 'क्या आप वाकई इस चेकलिस्ट को रीसायकल बिन में ले जाना चाहते हैं?'},
   'checklists.deletedSuccess': {'en': 'Checklist moved to Recycle Bin', 'hi': 'चेकलिस्ट रीसायकल बिन में ले जाया गया'},
+  'checklists.updateTaskFailed': {'en': 'Unable to update task. Please try again.', 'hi': 'कार्य अपडेट करने में असमर्थ। कृपया पुनः प्रयास करें।'},
+  'checklists.deleteTaskFailed': {'en': 'Unable to delete task. Please try again.', 'hi': 'कार्य हटाने में असमर्थ। कृपया पुनः प्रयास करें।'},
+  'checklists.addTaskFailed': {'en': 'Unable to add task. Please try again.', 'hi': 'कार्य जोड़ने में असमर्थ। कृपया पुनः प्रयास करें।'},
+  'checklists.renameFailedGeneral': {'en': 'Unable to rename checklist. Please try again.', 'hi': 'चेकलिस्ट का नाम बदलने में असमर्थ। कृपया पुनः प्रयास करें।'},
+  'checklists.deleteFailedGeneral': {'en': 'Unable to delete checklist. Please try again.', 'hi': 'चेकलिस्ट हटाने में असमर्थ। कृपया पुनः प्रयास करें।'},
+  'checklists.loadFailedGeneral': {'en': 'Unable to load checklist details. Please check your connection and try again.', 'hi': 'चेकलिस्ट विवरण लोड करने में असमर्थ। कृपया अपना कनेक्शन जांचें और पुनः प्रयास करें।'},
   'checklists.renameChecklist': {'en': 'Rename Checklist', 'hi': 'चेकलिस्ट का नाम बदलें'},
   'checklists.enterNewName': {'en': 'Checklist name', 'hi': 'चेकलिस्ट का नाम'},
   'checklists.renamedSuccess': {'en': 'Checklist renamed successfully', 'hi': 'चेकलिस्ट का नाम सफलतापूर्वक बदल दिया गया'},
@@ -690,6 +773,10 @@ final Map<String, Map<String, String>> _translations = {
   'bin.checklistRestoredSuccess': {'en': 'Checklist restored to library', 'hi': 'चेकलिस्ट लाइब्रेरी में पुनर्स्थापित की गई'},
   'bin.checklistPermanentlyDeletedSuccess': {'en': 'Checklist permanently deleted', 'hi': 'चेकलिस्ट स्थायी रूप से हटा दी गई'},
   'bin.autoPurgeNote': {'en': 'Items in the bin for more than 30 days are automatically deleted permanently.', 'hi': '30 दिनों से अधिक समय से बिन में मौजूद आइटम स्वचालित रूप से स्थायी रूप से हटा दिए जाते हैं।'},
+  'bin.viewBin': {'en': 'View Bin', 'hi': 'बिन देखें'},
+  'bin.loadError': {'en': 'Failed to load Recycle Bin. Please check your connection.', 'hi': 'रीसायकल बिन लोड करने में विफल। कृपया अपना कनेक्शन जांचें।'},
+  'bin.deleteDocError': {'en': 'Failed to permanently delete document.', 'hi': 'दस्तावेज़ स्थायी रूप से हटाने में विफल।'},
+  'bin.deleteChecklistError': {'en': 'Failed to permanently delete checklist.', 'hi': 'चेकलिस्ट स्थायी रूप से हटाने में विफल।'},
   'sidebar.bin': {'en': 'Recycle Bin', 'hi': 'रीसायकल बिन'},
 
   // Analysis Screen
@@ -723,6 +810,8 @@ final Map<String, Map<String, String>> _translations = {
   'analysis.gotIt': {'en': 'Got it', 'hi': 'समझ गया'},
   'analysis.pdfSuccess': {'en': 'Legal Risk Assessment Report exported successfully!', 'hi': 'कानूनी जोखिम मूल्यांकन रिपोर्ट सफलतापूर्वक निर्यात की गई!'},
   'analysis.exportSuccess': {'en': 'Legal Risk Assessment Report exported successfully!', 'hi': 'कानूनी जोखिम मूल्यांकन रिपोर्ट सफलतापूर्वक निर्यात की गई!'},
+  'analysis.pdfPreviewUnavailable': {'en': 'PDF preview is currently unavailable', 'hi': 'पीडीएफ पूर्वावलोकन वर्तमान में अनुपलब्ध है'},
+  'analysis.pdfPreviewFallbackDesc': {'en': 'The agreement clauses have been extracted and fully analyzed below.', 'hi': 'समझौते के क्लॉज को निकाला गया है और नीचे पूरी तरह से विश्लेषण किया गया है।'},
   'analysis.pdfFailed': {'en': 'Failed to export PDF: {error}', 'hi': 'पीडीएफ निर्यात करने में विफल: {error}'},
   'analysis.copySuccess': {'en': 'Contract text copied to clipboard!', 'hi': 'अनुबंध पाठ क्लिपबोर्ड पर कॉपी किया गया!'},
   'analysis.copyText': {'en': 'Copy Text', 'hi': 'पाठ कॉपी करें'},
@@ -879,6 +968,8 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'आपका खाता ईमेल ओटीपी से बनाया गया था। जारी रखने के लिए कृपया पासवर्ड सेट करें।',
   },
   'auth.accountExistsToast': {'en': 'An account with this email already exists. Please log in.', 'hi': 'इस ईमेल से खाता पहले से मौजूद है। कृपया लॉग इन करें।'},
+  'auth.verifyEmailPrompt': {'en': 'Please verify your email address to continue.', 'hi': 'जारी रखने के लिए कृपया अपना ईमेल पता सत्यापित करें।'},
+  'auth.invalidEmailOrPassword': {'en': 'Invalid email or password', 'hi': 'अमान्य ईमेल या पासवर्ड'},
   'auth.goToLogin': {'en': 'Go to Login', 'hi': 'लॉग इन पर जाएं'},
   'auth.termsMustBeAccepted': {'en': 'Please accept the Terms of Use and Privacy Policy.', 'hi': 'कृपया उपयोग की शर्तें और गोपनीयता नीति स्वीकार करें।'},
   'auth.dateOfBirth': {'en': 'Date of Birth', 'hi': 'जन्म तिथि'},
@@ -923,7 +1014,12 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'यह साझाकरण लिंक समाप्त हो सकता है या हटा दिया गया हो सकता है।'
   },
   'analysis.scanYourOwnCta': {'en': 'Scan Your Own Agreement', 'hi': 'अपना अनुबंध स्कैन करें'},
+  'analysis.readOnlyBadge': {'en': 'Read-Only', 'hi': 'केवल पढ़ने योग्य'},
+  'analysis.noClausesFilter': {'en': 'No clauses found under this filter.', 'hi': 'इस फ़िल्टर के तहत कोई खंड नहीं मिला।'},
   'analysis.allClauses': {'en': 'All Clauses', 'hi': 'सभी खंड'},
+  'analysis.highRisk': {'en': 'High Risk', 'hi': 'उच्च जोखिम'},
+  'analysis.caution': {'en': 'Caution', 'hi': 'सावधानी'},
+  'analysis.compliant': {'en': 'Compliant', 'hi': 'अनुपालन'},
   'analysis.statutoryCitations': {'en': 'Statutory Citations', 'hi': 'वैधानिक उद्धरण'},
   'analysis.reraReferences': {'en': 'RERA References', 'hi': 'रेरा संदर्भ'},
   'analysis.buyerImpact': {'en': 'Buyer Impact', 'hi': 'खरीदार पर प्रभाव'},
@@ -1281,13 +1377,28 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'आपके दस्तावेज़ लोड नहीं हो सके। अपना कनेक्शन जांचें और पुनः प्रयास करें।',
   },
   'docComparison.noScannedDocs': {
-    'en': 'No scanned documents found in your workspace.',
-    'hi': 'आपके कार्यस्थान में कोई स्कैन किए गए दस्तावेज़ नहीं मिले।',
+    'en': 'No scanned agreements yet',
+    'hi': 'अभी तक कोई स्कैन किया गया समझौता नहीं है',
   },
-  'docComparison.scanNewAgreement': {'en': 'Scan New Agreement', 'hi': 'नया समझौता स्कैन करें'},
+  'docComparison.scanNewAgreement': {'en': 'Scan Agreement', 'hi': 'समझौता स्कैन करें'},
+  'docComparison.scanPrompt': {'en': 'Scan an agreement to use it for comparison.', 'hi': 'तुलना के लिए उपयोग करने हेतु एक समझौता स्कैन करें।'},
+  'docComparison.comparisonReport': {'en': 'Comparison Report', 'hi': 'तुलना रिपोर्ट'},
+  'docComparison.versionDifferential': {'en': 'Agreement Version Differential', 'hi': 'समझौता संस्करण अंतर'},
+  'docComparison.buyerImpact': {'en': 'Buyer Impact', 'hi': 'खरीदार पर प्रभाव'},
+  'docComparison.versionA': {'en': 'Version A', 'hi': 'संस्करण ए'},
+  'docComparison.versionB': {'en': 'Version B', 'hi': 'संस्करण बी'},
+  'docComparison.noDifferencesFound': {'en': 'No clause differences found for this filter.', 'hi': 'इस फ़िल्टर के लिए कोई खंड अंतर नहीं मिला।'},
   'docComparison.chooseVersion': {'en': 'Choose document version', 'hi': 'दस्तावेज़ संस्करण चुनें'},
   'docComparison.untitledAgreement': {'en': 'Untitled Agreement', 'hi': 'शीर्षकहीन समझौता'},
   'docComparison.runAnalysis': {'en': 'Run Differential Analysis', 'hi': 'अंतर विश्लेषण चलाएं'},
+  'docComparison.stepOriginal': {'en': 'Original Agreement', 'hi': 'मूल समझौता'},
+  'docComparison.stepRevised': {'en': 'Revised Agreement', 'hi': 'संशोधित समझौता'},
+  'docComparison.stepCompare': {'en': 'Compare Changes', 'hi': 'बदलावों की तुलना करें'},
+  'docComparison.swapTooltip': {'en': 'Swap Original & Revised Agreements', 'hi': 'मूल और संशोधित समझौतों को आपस में बदलें'},
+  'docComparison.onlyOneDocPrompt': {'en': 'You have 1 document saved. Scan a second agreement to compare.', 'hi': 'आपके पास 1 दस्तावेज़ सहेजा गया है। तुलना करने के लिए एक दूसरा समझौता स्कैन करें।'},
+  'docComparison.scanSecondDoc': {'en': 'Scan Second Agreement', 'hi': 'दूसरा समझौता स्कैन करें'},
+  'docComparison.helperSelectSecond': {'en': 'Select a second agreement version to proceed.', 'hi': 'आगे बढ़ने के लिए दूसरा समझौता संस्करण चुनें।'},
+  'docComparison.helperReady': {'en': 'Ready to analyze clause modifications and risk escalations.', 'hi': 'क्लॉज संशोधनों और जोखिम वृद्धि का विश्लेषण करने के लिए तैयार।'},
 
   // ==========================================
   // Chat Citations & Chat Screen Additions
@@ -1378,6 +1489,26 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'हम तृतीय-पक्ष विज्ञापन या ट्रैकिंग पिक्सेल प्रदर्शित नहीं करते हैं।',
   },
   'consent.readFullPrivacyPolicy': {'en': 'Read our full Privacy Policy', 'hi': 'हमारी पूरी गोपनीयता नीति पढ़ें'},
+  'consent.agreePrefix': {'en': 'I agree to the ', 'hi': 'मैं इसके नियमों से सहमत हूँ: '},
+  'consent.termsOfUse': {'en': 'Terms of Use', 'hi': 'उपयोग की शर्तें'},
+  'consent.andAcknowledge': {'en': ' and acknowledge the ', 'hi': ' और स्वीकार करता हूँ '},
+  'consent.privacyPolicy': {'en': 'Privacy Policy', 'hi': 'गोपनीयता नीति'},
+  'consent.aiProcessingNotice': {
+    'en': ' (including AI processing via Google Gemini and OpenRouter fallback).',
+    'hi': ' (Google Gemini और OpenRouter फ़ॉलबैक के माध्यम से AI प्रोसेसिंग सहित)।',
+  },
+  'consent.requiredError': {
+    'en': 'Please agree to the Terms of Use and Privacy Policy.',
+    'hi': 'कृपया उपयोग की शर्तों और गोपनीयता नीति से सहमत हों।',
+  },
+  'consent.legalQuestionAcknowledgement': {
+    'en': 'I understand that the information I provide may be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) to provide the requested legal assistance. Please do not submit information you do not wish to share.',
+    'hi': 'मैं समझता हूँ कि मेरे द्वारा प्रदान की गई जानकारी का उपयोग LawBuddy और इसके AI सेवा प्रदाताओं (Google Gemini और फ़ॉलबैक प्रदाता OpenRouter) द्वारा मांगी गई कानूनी सहायता प्रदान करने के लिए संसाधित किया जा सकता है। कृपया वह जानकारी साझा न करें जिसे आप साझा नहीं करना चाहते।',
+  },
+  'consent.documentUploadAcknowledgement': {
+    'en': 'I understand that the document I submit will be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) for legal risk analysis.',
+    'hi': 'मैं समझता हूँ कि मेरे द्वारा सबमिट किए गए दस्तावेज़ को कानूनी जोखिम विश्लेषण के लिए LawBuddy और इसके AI सेवा प्रदाताओं (Google Gemini और फ़ॉलबैक प्रदाता OpenRouter) द्वारा संसाधित किया जाएगा।',
+  },
 
   // ==========================================
   // Welcome Screen & Features Section
@@ -1513,4 +1644,117 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'जैसे-जैसे उपयोगकर्ता रियल एस्टेट अनुबंध अपलोड और मूल्यांकन करेंगे, सिस्टम मेट्रिक्स यहां वास्तविक समय में दिखाई देंगे।',
   },
   'adminAnalytics.refresh': {'en': 'Refresh', 'hi': 'ताज़ा करें'},
+
+  // How It Works Detailed Steps
+  'howItWorks.title': {'en': 'How LawBuddy Works', 'hi': 'LawBuddy कैसे काम करता है'},
+  'howItWorks.analysisTitle': {'en': 'How Document Analysis Works', 'hi': 'दस्तावेज़ विश्लेषण कैसे काम करता है'},
+  'howItWorks.exploreTools': {'en': 'Explore LawBuddy Tools', 'hi': 'LawBuddy टूल्स का अन्वेषण करें'},
+  'howItWorks.faqTitle': {'en': 'Frequently Asked Questions', 'hi': 'अक्सर पूछे जाने वाले प्रश्न'},
+  'howItWorks.stepScanner1Title': {'en': 'Upload Agreement', 'hi': 'समझौता अपलोड करें'},
+  'howItWorks.stepScanner1Desc': {
+    'en': 'Upload your property agreement, sale deed, or rental contract as a PDF, photo, or pasted text.',
+    'hi': 'अपने संपत्ति समझौते, बिक्री विलेख, या किराए के अनुबंध को पीडीएफ, फोटो, या चिपकाए गए टेक्स्ट के रूप में अपलोड करें।',
+  },
+  'howItWorks.stepScanner2Title': {'en': 'AI Contract Scan', 'hi': 'एआई अनुबंध स्कैन'},
+  'howItWorks.stepScanner2Desc': {
+    'en': 'Our AI reads each clause and cross-references statutory RERA rules to detect risks.',
+    'hi': 'हमारा एआई प्रत्येक खंड को पढ़ता है और जोखिमों का पता लगाने के लिए वैधानिक रेरा नियमों को क्रॉस-रेफरेंस करता है।',
+  },
+  'howItWorks.stepScanner3Title': {'en': 'Plain-English Insights', 'hi': 'सरल भाषा में अंतर्दृष्टि'},
+  'howItWorks.stepScanner3Desc': {
+    'en': 'See clear color-coded flags (Safe, Caution, High Risk) with simple clause explanations.',
+    'hi': 'सरल खंड स्पष्टीकरण के साथ स्पष्ट रंग-कोडित संकेत (सुरक्षित, चेतावनी, उच्च जोखिम) देखें।',
+  },
+  'howItWorks.stepScanner4Title': {'en': 'Legal Audit Report', 'hi': 'कानूनी ऑडिट रिपोर्ट'},
+  'howItWorks.stepScanner4Desc': {
+    'en': 'Download a structured summary report to negotiate with confidence before signing.',
+    'hi': 'हस्ताक्षर करने से पहले विश्वास के साथ बातचीत करने के लिए एक संरचित सारांश रिपोर्ट डाउनलोड करें।',
+  },
+  'howItWorks.stepChecklist1Title': {'en': 'Select Property Type', 'hi': 'संपत्ति का प्रकार चुनें'},
+  'howItWorks.stepChecklist1Desc': {
+    'en': 'Choose a dedicated legal verification checklist for resale flats, builder floors, or land plots.',
+    'hi': 'पुनर्विक्रय फ्लैटों, बिल्डर फ्लोर, या भूखंडों के लिए समर्पित कानूनी सत्यापन चेकलिस्ट चुनें।',
+  },
+  'howItWorks.stepChecklist2Title': {'en': '30-Year EC & Title', 'hi': '30-वर्षीय भार प्रमाणपत्र और शीर्षक'},
+  'howItWorks.stepChecklist2Desc': {
+    'en': 'Verify 30-year Encumbrance Certificates to confirm continuous clear ownership and no active bank liens.',
+    'hi': 'निरंतर स्पष्ट स्वामित्व और कोई सक्रिय बैंक ग्रहणाधिकार न होने की पुष्टि के लिए 30-वर्षीय भार प्रमाणपत्रों का सत्यापन करें।',
+  },
+  'howItWorks.stepChecklist3Title': {'en': 'Municipal Approvals', 'hi': 'नगरपालिका अनुमोदन'},
+  'howItWorks.stepChecklist3Desc': {
+    'en': 'Track Occupancy Certificates (OC), Commencement (CC), sanctioned layout plans, and builder NOCs.',
+    'hi': 'अधिभोग प्रमाणपत्र (OC), प्रारंभ प्रमाणपत्र (CC), स्वीकृत लेआउट योजनाओं और बिल्डर एनओसी को ट्रैक करें।',
+  },
+  'howItWorks.stepChecklist4Title': {'en': 'Custom AI Checklist', 'hi': 'कस्टम एआई चेकलिस्ट'},
+  'howItWorks.stepChecklist4Desc': {
+    'en': 'Generate a customized city-specific verification list tailored to your exact property transaction.',
+    'hi': 'अपने विशिष्ट संपत्ति लेनदेन के अनुसार एक अनुकूलित शहर-विशिष्ट सत्यापन सूची तैयार करें।',
+  },
+  'howItWorks.stepCalc1Title': {'en': 'Choose State & City', 'hi': 'राज्य और शहर चुनें'},
+  'howItWorks.stepCalc1Desc': {
+    'en': 'Select your state (Maharashtra, Karnataka, Delhi, UP, etc.) and specific urban or rural locality.',
+    'hi': 'अपना राज्य (महाराष्ट्र, कर्नाटक, दिल्ली, यूपी आदि) और विशिष्ट शहरी या ग्रामीण इलाका चुनें।',
+  },
+  'howItWorks.stepCalc2Title': {'en': 'Enter Property Value', 'hi': 'संपत्ति का मूल्य दर्ज करें'},
+  'howItWorks.stepCalc2Desc': {
+    'en': 'Input agreed purchase price and local Ready Reckoner (circle rate) to establish the statutory taxable base.',
+    'hi': 'वैधानिक कर योग्य आधार स्थापित करने के लिए सहमत खरीद मूल्य और स्थानीय रेडी रेकनर (सर्किल दर) इनपुट करें।',
+  },
+  'howItWorks.stepCalc3Title': {'en': 'Apply Concessions', 'hi': 'छूट लागू करें'},
+  'howItWorks.stepCalc3Desc': {
+    'en': 'Automatically factor in state government concessions for female buyers, first-time owners, and metro cess.',
+    'hi': 'महिला खरीदारों, पहली बार मालिकों और मेट्रो सेस के लिए राज्य सरकार की रियायतों को स्वचालित रूप से शामिल करें।',
+  },
+  'howItWorks.stepCalc4Title': {'en': 'Instant Fee Summary', 'hi': 'त्वरित शुल्क सारांश'},
+  'howItWorks.stepCalc4Desc': {
+    'en': 'Receive an itemized breakdown of stamp duty, statutory surcharge, and registration fees payable.',
+    'hi': 'देय स्टाम्प शुल्क, वैधानिक अधिभार और पंजीकरण शुल्क का विस्तृत विवरण प्राप्त करें।',
+  },
+  'howItWorks.stepLegalAi1Title': {'en': 'Ask Legal AI', 'hi': 'लीगल एआई से पूछें'},
+  'howItWorks.stepLegalAi1Desc': {
+    'en': 'Ask real estate questions anytime to clarify complex indemnity clauses, maintenance rules, or RERA rights.',
+    'hi': 'जटिल क्षतिपूर्ति खंडों, रखरखाव नियमों, या रेरा अधिकारों को स्पष्ट करने के लिए कभी भी रियल एस्टेट प्रश्न पूछें।',
+  },
+  'howItWorks.stepLegalAi2Title': {'en': 'Compare 2 Drafts', 'hi': '2 ड्राफ्ट की तुलना करें'},
+  'howItWorks.stepLegalAi2Desc': {
+    'en': 'Upload an original contract draft and builder revised version to compare both texts line by line.',
+    'hi': 'दोनों मसौदों की पंक्ति-दर-पंक्ति तुलना करने के लिए मूल अनुबंध और बिल्डर द्वारा संशोधित संस्करण अपलोड करें।',
+  },
+  'howItWorks.stepLegalAi3Title': {'en': 'Spot Hidden Changes', 'hi': 'छिपे हुए बदलाव खोजें'},
+  'howItWorks.stepLegalAi3Desc': {
+    'en': 'Instantly view highlighted deletions, altered liability clauses, and stealthy extra fees between versions.',
+    'hi': 'संस्करणों के बीच हटाए गए अंशों, बदले गए दायित्व खंडों और गुप्त अतिरिक्त शुल्कों को तुरंत हाइलाइट देखें।',
+  },
+  'howItWorks.stepLegalAi4Title': {'en': 'Secure Cloud Archive', 'hi': 'सुरक्षित क्लाउड संग्रह'},
+  'howItWorks.stepLegalAi4Desc': {
+    'en': 'Keep all audited contracts safely stored in your private workspace with a dedicated recycle bin for recovery.',
+    'hi': 'पुनर्प्राप्ति के लिए समर्पित रीसायकल बिन के साथ अपने निजी कार्यक्षेत्र में सभी ऑडिट किए गए अनुबंध सुरक्षित रखें।',
+  },
+
+  // Error toasts and UI labels
+  'recentDocs.downloadPdfFailed': {
+    'en': 'Failed to download PDF report. Please try again.',
+    'hi': 'पीडीएफ रिपोर्ट डाउनलोड करने में विफल। कृपया पुनः प्रयास करें।',
+  },
+  'recentDocs.deleteDocFailed': {
+    'en': 'Failed to delete document. Please try again.',
+    'hi': 'दस्तावेज़ हटाने में विफल। कृपया पुनः प्रयास करें।',
+  },
+  'bin.restoreDocFailed': {
+    'en': 'Failed to restore document. Please try again.',
+    'hi': 'दस्तावेज़ पुनर्स्थापित करने में विफल। कृपया पुनः प्रयास करें।',
+  },
+  'bin.restoreChecklistFailed': {
+    'en': 'Failed to restore checklist. Please try again.',
+    'hi': 'चेकलिस्ट पुनर्स्थापित करने में विफल। कृपया पुनः प्रयास करें।',
+  },
+  'checklists.deleteFailed': {
+    'en': 'Unable to delete checklist. Please try again.',
+    'hi': 'चेकलिस्ट हटाने में असमर्थ। कृपया पुनः प्रयास करें।',
+  },
+  'checklists.generateFailed': {
+    'en': 'Unable to generate checklist. Please try again.',
+    'hi': 'चेकलिस्ट तैयार करने में असमर्थ। कृपया पुनः प्रयास करें।',
+  },
+  'welcome.downloadApp': {'en': 'Download App', 'hi': 'ऐप डाउनलोड करें'},
 };

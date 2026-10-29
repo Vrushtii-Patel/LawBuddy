@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/locale_provider.dart';
+import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
 import '../widgets/app_toast.dart';
 import 'comparison_result_screen.dart';
 import 'scan_screen.dart';
+import 'home/home_sidebar.dart';
 
 class DocumentComparisonScreen extends ConsumerStatefulWidget {
   final List<dynamic>? initialDocs;
@@ -57,6 +59,9 @@ class _DocumentComparisonScreenState
   }
 
   Future<void> _loadInitialData() async {
+    if (widget.initialDocs != null) {
+      return;
+    }
     if (_recentDocs.isEmpty) {
       setState(() {
         _isLoadingDocs = true;
@@ -241,48 +246,82 @@ class _DocumentComparisonScreenState
     final loc = ref.read(localeProvider.notifier);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
+    final isDesktop = size.width >= 960;
     final isDesktopOrTablet = size.width >= 820;
     final isCompact = size.width < 500;
+    final authState = ref.watch(authProvider);
+    final user = authState.user;
 
     return Scaffold(
       backgroundColor:
           isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      appBar: AppBar(
-        title: Text(
-          loc.translate('docComparison.appBarTitle'),
-          style: GoogleFonts.plusJakartaSans(
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-            color: isDark
-                ? AppColors.darkTextPrimary
-                : AppColors.lightTextPrimary,
-          ),
-        ),
-        backgroundColor:
-            isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: isDark
-                ? AppColors.darkTextPrimary
-                : AppColors.lightTextPrimary,
-          ),
-          tooltip: 'Back',
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
-        actions: const [
-          UserProfileButton(),
-          SizedBox(width: 8),
-        ],
-      ),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 960),
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
+      appBar: isDesktop
+          ? null
+          : AppBar(
+              title: Text(
+                loc.translate('docComparison.appBarTitle'),
+                style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                ),
+              ),
+              backgroundColor:
+                  isDark ? AppColors.darkSurface : AppColors.lightSurface,
+              elevation: 0,
+              scrolledUnderElevation: 0,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back_rounded,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                ),
+                tooltip: 'Back',
+                onPressed: () => Navigator.of(context).maybePop(),
+              ),
+              actions: const [
+                UserProfileButton(),
+                SizedBox(width: 8),
+              ],
+            ),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (isDesktop)
+            DesktopSidebar(
+              isDark: isDark,
+              user: user,
+              legalNews: const [],
+              activeItem: 'comparison',
+              onDashboardTap: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+              onNavigate: (screen) {
+                if (screen is DocumentComparisonScreen) return;
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, animation, __) => screen,
+                    transitionsBuilder: (_, anim, __, child) =>
+                        FadeTransition(opacity: anim, child: child),
+                  ),
+                );
+              },
+            ),
+          Expanded(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  if (isDesktop) _buildDesktopTopBar(context, isDark, loc),
+                  Expanded(
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 960),
+                        child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(
                 horizontal: isDesktopOrTablet ? 32 : 16,
                 vertical: 20,
               ),
@@ -295,7 +334,7 @@ class _DocumentComparisonScreenState
 
                   // 2. Step Flow Indicator (Original -> Revised -> Compare)
                   if (!isCompact) ...[
-                    _buildStepFlow(isDark),
+                    _buildStepFlow(isDark, loc),
                     const SizedBox(height: 18),
                   ],
 
@@ -421,6 +460,53 @@ class _DocumentComparisonScreenState
           ),
         ),
       ),
+    ],
+  ),
+),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopTopBar(
+      BuildContext context, bool isDark, LocaleNotifier loc) {
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              size: 20,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+            tooltip: 'Back',
+            onPressed: () => Navigator.of(context).maybePop(),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            loc.translate('docComparison.appBarTitle'),
+            style: GoogleFonts.plusJakartaSans(
+              fontWeight: FontWeight.w700,
+              fontSize: 16,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            ),
+          ),
+          const Spacer(),
+          const UserProfileButton(),
+        ],
+      ),
     );
   }
 
@@ -475,7 +561,7 @@ class _DocumentComparisonScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Contract Differential Analysis',
+                  loc.translate('docComparison.heading'),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
@@ -487,7 +573,7 @@ class _DocumentComparisonScreenState
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Compare agreement versions to identify changes, missing protections, and potential risks.',
+                  loc.translate('docComparison.subheading'),
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 13,
                     color: isDark
@@ -507,7 +593,7 @@ class _DocumentComparisonScreenState
   // ==========================================
   // 2. STEP FLOW INDICATOR
   // ==========================================
-  Widget _buildStepFlow(bool isDark) {
+  Widget _buildStepFlow(bool isDark, LocaleNotifier loc) {
     final hasA = _selectedDocAId != null;
     final hasB = _selectedDocBId != null;
     final canCompare = hasA && hasB && _selectedDocAId != _selectedDocBId;
@@ -532,7 +618,7 @@ class _DocumentComparisonScreenState
             children: [
               _buildStepItem(
                 stepNumber: '1',
-                label: 'Original Agreement',
+                label: loc.translate('docComparison.stepOriginal'),
                 isComplete: hasA,
                 isDark: isDark,
               ),
@@ -548,7 +634,7 @@ class _DocumentComparisonScreenState
           ),
           _buildStepItem(
             stepNumber: '2',
-            label: 'Revised Agreement',
+            label: loc.translate('docComparison.stepRevised'),
             isComplete: hasB,
             isDark: isDark,
           ),
@@ -564,7 +650,7 @@ class _DocumentComparisonScreenState
           ),
           _buildStepItem(
             stepNumber: '3',
-            label: 'Compare Changes',
+            label: loc.translate('docComparison.stepCompare'),
             isComplete: canCompare,
             isDark: isDark,
           ),
@@ -1148,7 +1234,7 @@ class _DocumentComparisonScreenState
           ),
           const SizedBox(height: 8),
           Text(
-            'No scanned agreements yet',
+            loc.translate('docComparison.noScannedDocs'),
             style: GoogleFonts.plusJakartaSans(
               fontSize: 13,
               fontWeight: FontWeight.w700,
@@ -1160,7 +1246,7 @@ class _DocumentComparisonScreenState
           ),
           const SizedBox(height: 3),
           Text(
-            'Scan an agreement to use it for comparison.',
+            loc.translate('docComparison.scanPrompt'),
             style: GoogleFonts.plusJakartaSans(
               fontSize: 11.5,
               color: isDark
@@ -1181,7 +1267,7 @@ class _DocumentComparisonScreenState
               },
               icon: const Icon(Icons.document_scanner_rounded, size: 14),
               label: Text(
-                'Scan Agreement',
+                loc.translate('docComparison.scanNewAgreement'),
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -1219,7 +1305,7 @@ class _DocumentComparisonScreenState
       children: [
         if (isHorizontal) const SizedBox(height: 52),
         Tooltip(
-          message: 'Swap Original & Revised Agreements',
+          message: ref.read(localeProvider.notifier).translate('docComparison.swapTooltip'),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
@@ -1286,27 +1372,28 @@ class _DocumentComparisonScreenState
     IconData helperIcon;
     Color helperColor;
 
-    if (!hasA && !hasB) {
-      helperMessage =
-          'Select two agreement drafts above to enable differential analysis.';
+    if (_recentDocs.length == 1) {
+      helperMessage = loc.translate('docComparison.onlyOneDocPrompt');
+      helperIcon = Icons.info_outline_rounded;
+      helperColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
+    } else if (!hasA && !hasB) {
+      helperMessage = loc.translate('docComparison.selectBothPrompt');
       helperIcon = Icons.info_outline_rounded;
       helperColor = isDark
           ? AppColors.darkTextSecondary
           : AppColors.lightTextSecondary;
     } else if (!hasA || !hasB) {
-      helperMessage = 'Select a second agreement version to proceed.';
+      helperMessage = loc.translate('docComparison.helperSelectSecond');
       helperIcon = Icons.arrow_upward_rounded;
       helperColor = isDark
           ? AppColors.darkTextSecondary
           : AppColors.lightTextSecondary;
     } else if (isSame) {
-      helperMessage =
-          'Please select two distinct agreement drafts to compare.';
+      helperMessage = loc.translate('docComparison.selectDistinctPrompt');
       helperIcon = Icons.warning_amber_rounded;
       helperColor = isDark ? AppColors.darkCaution : AppColors.lightCaution;
     } else {
-      helperMessage =
-          'Ready to analyze clause modifications and risk escalations.';
+      helperMessage = loc.translate('docComparison.helperReady');
       helperIcon = Icons.check_circle_outline_rounded;
       helperColor =
           isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
@@ -1333,6 +1420,24 @@ class _DocumentComparisonScreenState
             ),
           ],
         ),
+        if (_recentDocs.length == 1) ...[
+          const SizedBox(height: 10),
+          OutlinedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ScanScreen()),
+              ).then((_) => _loadInitialData());
+            },
+            icon: const Icon(Icons.document_scanner_rounded, size: 16),
+            label: Text(loc.translate('docComparison.scanSecondDoc')),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              side: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+        ],
         const SizedBox(height: 12),
 
         // Primary Button (compact width, centered on desktop)

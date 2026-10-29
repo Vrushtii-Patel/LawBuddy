@@ -95,6 +95,44 @@ function isTransientError(error) {
     );
 }
 
+/**
+ * Maps technical pipeline errors to clean, user-friendly messages for client consumption.
+ * Keeps stack traces, raw error codes, URLs, and internal SDK error objects out of errorInfo.
+ */
+function getUserFriendlyErrorMessage(err) {
+    if (!err) return 'Document analysis could not be completed. Please retry.';
+
+    const rawMessage = (err.message || '').toString();
+    const code = err.code || err.status;
+
+    if (code === 'NO_READABLE_TEXT' || /no readable text/i.test(rawMessage)) {
+        return 'No readable text was found in this document. Please upload a clearer PDF or photo.';
+    }
+    if (code === 'PDF_READ_FAILED' || /could not read this scanned pdf|unreadable pdf/i.test(rawMessage)) {
+        return 'Could not read this document. Please ensure the PDF or image is clear and undamaged.';
+    }
+    if (/uploaded source file is missing from storage|source document data is missing/i.test(rawMessage)) {
+        return 'Uploaded source file is missing from storage. Please upload the document again.';
+    }
+    if (code === 'AI_ANALYSIS_UNAVAILABLE' || err.name === 'AiAnalysisError') {
+        return 'The legal AI service is temporarily unavailable. Please retry in a moment.';
+    }
+    if (code === 429 || /429|rate limit|quota|resource exhausted/i.test(rawMessage)) {
+        return 'The legal AI service is temporarily busy due to high demand. Please wait a moment and retry.';
+    }
+    if (code === 503 || code === 504 || /503|504|unavailable|timeout|timed? out|econnreset/i.test(rawMessage)) {
+        return 'The legal AI service is temporarily unavailable. Please check your connection and retry.';
+    }
+
+    // If the message is a clean, short human-readable sentence without technical traces
+    const isTechnical = /([\[{]|https?:\/\/|node_modules|at\s+\w+|\.js:\d+|MongoError|E11000|GoogleGenerativeAI|status\s+code|\b(TypeError|SyntaxError|ReferenceError)\b)/i.test(rawMessage);
+    if (!isTechnical && rawMessage.length >= 10 && rawMessage.length <= 150) {
+        return rawMessage;
+    }
+
+    return 'Document analysis could not be completed. Please retry.';
+}
+
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
@@ -655,12 +693,15 @@ async function executeJobPipeline(jobId) {
         return job;
 
     } catch (err) {
-        console.error(`[ScanJob ${job.jobId}] Error during stage execution:`, err.message);
+        const failedStage = job.currentStep || 'Processing document...';
+        const friendlyMessage = getUserFriendlyErrorMessage(err);
+        console.error(`[ScanJob ${job.jobId}] Pipeline error at stage "${failedStage}":`, err.stack || err);
+
         job.status = 'FAILED';
-        job.currentStep = `Failed at ${job.currentStep}: ${err.message}`;
+        job.currentStep = `Failed at ${failedStage}`;
         job.errorInfo = {
-            message: err.message,
-            stage: job.currentStep,
+            message: friendlyMessage,
+            stage: failedStage,
             code: err.code || err.status || 'PIPELINE_ERROR',
             isTransient: isTransientError(err),
             timestamp: new Date()
@@ -782,5 +823,6 @@ module.exports = {
     saveFileToStorage,
     readFileFromStorage,
     isDocumentCacheValid,
-    isJobProcessing
+    isJobProcessing,
+    getUserFriendlyErrorMessage
 };

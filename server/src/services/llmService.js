@@ -110,6 +110,11 @@ const getGenerativeModel = (modelName = MODEL_NAME, customConfig = {}) => {
     return genAI.getGenerativeModel(modelParams);
 };
 
+/**
+ * Fallback LLM completion via OpenRouter (https://openrouter.ai/)
+ * Disclosed in Privacy Policy Section 5 & 7 and user form consent disclosures.
+ * Triggered as a secondary fallback only when all primary Google Gemini candidate models fail.
+ */
 async function fallbackToOpenRouter(prompt, systemInstruction = null, base64Data = null, mimeType = null) {
     if (!process.env.OPENROUTER_API_KEY) {
         throw new Error('OPENROUTER_API_KEY is not configured.');
@@ -1241,7 +1246,7 @@ analysisStatus: ${cachedDoc.analysisStatus}
     });
 
     // Step 4: Stage B - Deterministic Legal Risk Analysis
-    const analyzedClauses = await analyzeCanonicalClauses(canonicalClauses);
+    const analyzedClauses = await (exports.analyzeCanonicalClauses || analyzeCanonicalClauses)(canonicalClauses);
 
     // Step 5: Risk Count Calculations directly from the array
     const highRiskCount = analyzedClauses.filter(c => c.riskLevel === 'HIGH_RISK').length;
@@ -1276,12 +1281,32 @@ analysisStatus: ${cachedDoc.analysisStatus}
         ? `${(rawBytes / 1048576).toFixed(1)} MB`
         : `${Math.max(1, Math.round(rawBytes / 1024))} KB`;
 
+    // Maximum size of base64 data to store inline in MongoDB document (3 MB base64 ~ 2.25 MB binary).
+    // Item 24: Stored file copy must NEVER be truncated or sliced, as a sliced base64 string
+    // corrupts the PDF/image structure. Store the entire file or none (set to null).
+    // The complete binary is always preserved in durable disk storage (uploads/scan_files/${fileHash}.dat).
+    const MAX_INLINE_FILE_DATA_SIZE = 3 * 1024 * 1024;
     let dbFileData = cleanBase64;
-    if (dbFileData && dbFileData.length > 3 * 1024 * 1024) {
-        dbFileData = dbFileData.substring(0, 3 * 1024 * 1024);
-        const remainder = dbFileData.length % 4;
-        if (remainder > 0) {
-            dbFileData = dbFileData.substring(0, dbFileData.length - remainder);
+    if (dbFileData && dbFileData.length > MAX_INLINE_FILE_DATA_SIZE) {
+        console.info(`[DocumentStorage] File base64 (${(dbFileData.length / (1024 * 1024)).toFixed(2)} MB) exceeds inline DB limit (3 MB). Storing complete file on disk and setting inline fileData to null to prevent file corruption.`);
+        dbFileData = null;
+    }
+
+    // Ensure full binary exists in disk storage if buffer is available
+    if (fileBuffer && fileHash) {
+        try {
+            const fs = require('fs');
+            const path = require('path');
+            const uploadsDir = process.env.SCAN_FILES_DIR || path.resolve(__dirname, '../../uploads/scan_files');
+            if (!fs.existsSync(uploadsDir)) {
+                fs.mkdirSync(uploadsDir, { recursive: true });
+            }
+            const diskFile = path.join(uploadsDir, `${fileHash}.dat`);
+            if (!fs.existsSync(diskFile)) {
+                fs.writeFileSync(diskFile, fileBuffer);
+            }
+        } catch (storageErr) {
+            console.warn('[DocumentStorage] Warning: Failed to ensure disk storage copy:', storageErr.message);
         }
     }
 

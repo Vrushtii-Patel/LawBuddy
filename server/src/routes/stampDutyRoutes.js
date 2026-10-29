@@ -27,7 +27,7 @@ router.get('/stamp-duty-rules', async (req, res) => {
 });
 
 // POST /api/stamp-duty/calculate - Authoritative calculation without saving
-router.post('/stamp-duty/calculate', (req, res) => {
+router.post('/stamp-duty/calculate', async (req, res) => {
     try {
         const {
             state,
@@ -43,7 +43,7 @@ router.post('/stamp-duty/calculate', (req, res) => {
 
         const effectiveAgreementValue = agreementValue ?? propertyValue ?? applicableMarketValue ?? applicableValue ?? 0;
 
-        const calculation = calculateStampDuty({
+        const calculation = await calculateStampDuty({
             state,
             propertyType,
             agreementValue: effectiveAgreementValue,
@@ -78,7 +78,7 @@ router.post('/stamp-duty', requireAuth, async (req, res) => {
 
         // Authoritative server-side calculation: computes exact rates and amounts,
         // preventing client tampering or math bugs from persisting invalid records.
-        const calculated = calculateStampDuty({
+        const calculated = await calculateStampDuty({
             state,
             propertyType,
             agreementValue: effectiveAgreementValue,
@@ -108,7 +108,12 @@ router.post('/stamp-duty', requireAuth, async (req, res) => {
         res.status(201).json({ message: 'Calculation verified and saved to database', calculation: savedRecord });
     } catch (error) {
         console.error('Error saving stamp duty calculation:', error);
-        if (error.message && error.message.includes('greater than zero')) {
+        if (error.message && (
+            error.message.includes('greater than zero') ||
+            error.message.includes('Unknown state') ||
+            error.message.includes('required') ||
+            error.message.includes('valid state')
+        )) {
             return res.status(400).json({ error: error.message });
         }
         res.status(500).json({ error: 'Failed to save calculation. Please try again.' });

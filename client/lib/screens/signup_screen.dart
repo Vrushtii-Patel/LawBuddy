@@ -836,6 +836,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                           color: isDark
                               ? AppColors.darkError
                               : AppColors.lightError)),
+                  errorStyle: (_hasInteractedWithPassword ||
+                              _passwordController.text.isNotEmpty) &&
+                          _passwordController.text.isNotEmpty
+                      ? const TextStyle(
+                          fontSize: 0, height: 0, color: Colors.transparent)
+                      : null,
                 ),
                 validator: (val) {
                   if (val == null || val.isEmpty) {
@@ -848,13 +854,22 @@ class _SignupScreenState extends ConsumerState<SignupScreen>
                   return null;
                 },
               ),
-              const SizedBox(height: 8),
 
-              // Live Password Checklist
-              PasswordChecklistWidget(
-                validation: _passwordValidation,
-                isVisible: _hasInteractedWithPassword ||
-                    _passwordController.text.isNotEmpty,
+              // Live Password Checklist with smooth non-jumping transition
+              AnimatedSize(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+                alignment: Alignment.topCenter,
+                child: (_hasInteractedWithPassword ||
+                        _passwordController.text.isNotEmpty)
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: PasswordChecklistWidget(
+                          validation: _passwordValidation,
+                          isVisible: true,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
               ),
               const SizedBox(height: 16),
 

@@ -438,9 +438,9 @@ class WelcomeHeader extends ConsumerWidget {
                             value: 'features',
                             child: Text(loc.translate('welcome.navFeatures'))),
                         if (kIsWeb && onDownloadTap != null)
-                          const PopupMenuItem(
+                          PopupMenuItem(
                               value: 'download',
-                              child: Text('Download App')),
+                              child: Text(loc.translate('welcome.downloadApp'))),
                         PopupMenuItem(
                             value: 'howItWorks',
                             child:

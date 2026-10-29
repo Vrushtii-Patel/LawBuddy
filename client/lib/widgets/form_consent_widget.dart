@@ -1,9 +1,21 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import '../screens/terms_of_use_screen.dart';
 import '../screens/privacy_policy_screen.dart';
+
+String _tr(BuildContext context, String key, String fallback) {
+  try {
+    final container = ProviderScope.containerOf(context, listen: false);
+    final val = container.read(localeProvider.notifier).translate(key);
+    return val == key ? fallback : val;
+  } catch (_) {
+    return fallback;
+  }
+}
 
 enum FormConsentType {
   legalQuestion,
@@ -56,6 +68,19 @@ class FormConsentCheckbox extends StatelessWidget {
     final errorColor = isDark ? AppColors.darkError : AppColors.lightError;
     final cardBorder = isDark ? AppColors.darkBorder : AppColors.lightBorder;
 
+    final agreePrefix = _tr(context, 'consent.agreePrefix', 'I agree to the ');
+    final termsOfUse = _tr(context, 'consent.termsOfUse', 'Terms of Use');
+    final andAcknowledge =
+        _tr(context, 'consent.andAcknowledge', ' and acknowledge the ');
+    final privacyPolicy =
+        _tr(context, 'consent.privacyPolicy', 'Privacy Policy');
+    final aiProcessingNotice = _tr(
+        context,
+        'consent.aiProcessingNotice',
+        ' (including AI processing via Google Gemini and OpenRouter fallback).');
+    final defaultError = _tr(context, 'consent.requiredError',
+        'Please agree to the Terms of Use and Privacy Policy.');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -98,9 +123,9 @@ class FormConsentCheckbox extends StatelessWidget {
                           color: hasError ? errorColor : secondaryText,
                         ),
                         children: [
-                          const TextSpan(text: 'I agree to the '),
+                          TextSpan(text: agreePrefix),
                           TextSpan(
-                            text: 'Terms of Use',
+                            text: termsOfUse,
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 12.5,
                               fontWeight: FontWeight.w700,
@@ -112,9 +137,9 @@ class FormConsentCheckbox extends StatelessWidget {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => _openTerms(context),
                           ),
-                          const TextSpan(text: ' and acknowledge the '),
+                          TextSpan(text: andAcknowledge),
                           TextSpan(
-                            text: 'Privacy Policy',
+                            text: privacyPolicy,
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 12.5,
                               fontWeight: FontWeight.w700,
@@ -126,7 +151,7 @@ class FormConsentCheckbox extends StatelessWidget {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => _openPrivacy(context),
                           ),
-                          const TextSpan(text: '.'),
+                          TextSpan(text: aiProcessingNotice),
                         ],
                       ),
                     ),
@@ -146,8 +171,7 @@ class FormConsentCheckbox extends StatelessWidget {
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
-                    errorMessage ??
-                        'Please agree to the Terms of Use and Privacy Policy.',
+                    errorMessage ?? defaultError,
                     style: GoogleFonts.plusJakartaSans(
                       fontSize: 11.5,
                       fontWeight: FontWeight.w500,
@@ -208,15 +232,25 @@ class FormConsentAcknowledgement extends StatelessWidget {
     final bgCol = (isDark ? AppColors.darkSurface : AppColors.lightSurface)
         .withValues(alpha: 0.6);
 
+    final privacyPolicyText =
+        _tr(context, 'consent.privacyPolicy', 'Privacy Policy');
+    final termsOfUseText = _tr(context, 'consent.termsOfUse', 'Terms of Use');
+
     String mainText = '';
     switch (type) {
       case FormConsentType.legalQuestion:
-        mainText =
-            'I understand that the information I provide may be processed by LawBuddy to provide the requested legal assistance. Please do not submit information you do not wish to share.';
+        mainText = _tr(
+          context,
+          'consent.legalQuestionAcknowledgement',
+          'I understand that the information I provide may be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) to provide the requested legal assistance. Please do not submit information you do not wish to share.',
+        );
         break;
       case FormConsentType.documentUpload:
-        mainText =
-            'I understand that the document I submit will be processed by LawBuddy for the purpose described above.';
+        mainText = _tr(
+          context,
+          'consent.documentUploadAcknowledgement',
+          'I understand that the document I submit will be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) for legal risk analysis.',
+        );
         break;
       case FormConsentType.custom:
         mainText = customText ?? '';
@@ -237,7 +271,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
               TextSpan(text: '$mainText '),
               if (showPrivacy) ...[
                 TextSpan(
-                  text: 'Privacy Policy',
+                  text: privacyPolicyText,
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 10.5,
                     fontWeight: FontWeight.w600,
@@ -252,7 +286,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
               if (showTerms && showPrivacy) const TextSpan(text: ' • '),
               if (showTerms) ...[
                 TextSpan(
-                  text: 'Terms of Use',
+                  text: termsOfUseText,
                   style: GoogleFonts.plusJakartaSans(
                     fontSize: 10.5,
                     fontWeight: FontWeight.w600,
@@ -305,7 +339,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
                   TextSpan(text: '$mainText '),
                   if (showPrivacy) ...[
                     TextSpan(
-                      text: 'Privacy Policy',
+                      text: privacyPolicyText,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,
@@ -320,7 +354,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
                   if (showTerms && showPrivacy) const TextSpan(text: ' • '),
                   if (showTerms) ...[
                     TextSpan(
-                      text: 'Terms of Use',
+                      text: termsOfUseText,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w600,

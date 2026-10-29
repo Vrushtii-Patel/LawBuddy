@@ -59,14 +59,23 @@ async function runTests() {
   // Test Set B: Database-backed Integration Tests
   console.log('\n--- Test Set B: Integration & Lifecycle Verification ---');
 
-  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/lawbuddy';
+  const uri = process.env.MONGODB_URI;
+  let mongod = null;
   let connected = false;
   try {
-    await mongoose.connect(uri, { serverSelectionTimeoutMS: 3000 });
-    connected = true;
-    console.log('Connected to MongoDB for integration tests.');
+    if (uri) {
+      await mongoose.connect(uri, { serverSelectionTimeoutMS: 2000 });
+      connected = true;
+      console.log('Connected to MongoDB for integration tests.');
+    } else {
+      throw new Error('No MONGODB_URI set');
+    }
   } catch (err) {
-    console.warn('MongoDB not reachable for DB-backed tests, running in isolated mode:', err.message);
+    const { MongoMemoryServer } = require('mongodb-memory-server');
+    mongod = await MongoMemoryServer.create();
+    await mongoose.connect(mongod.getUri());
+    connected = true;
+    console.log('Connected to in-memory MongoDB for integration tests.');
   }
 
   if (connected) {
@@ -146,6 +155,7 @@ async function runTests() {
 
     } finally {
       await mongoose.disconnect();
+      if (mongod) await mongod.stop();
     }
   }
 

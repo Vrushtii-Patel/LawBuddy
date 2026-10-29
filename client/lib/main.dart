@@ -6,9 +6,11 @@ import 'screens/welcome_screen.dart';
 import 'screens/how_it_works_screen.dart';
 import 'screens/analysis_screen.dart';
 import 'screens/shared_summary_screen.dart';
+import 'screens/cant_connect_screen.dart';
 import 'providers/auth_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
+import 'providers/consent_provider.dart';
 import 'widgets/cookie_consent_banner.dart';
 import 'theme/app_theme.dart';
 
@@ -18,9 +20,37 @@ void main() {
   // Gracefully handle UI errors without crashing the entire web canvas to a blank white screen
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
+    debugPrint('[LawBuddy UI Error] ${details.exceptionAsString()}');
+    if (details.stack != null) {
+      debugPrint('[LawBuddy Stack Trace]\n${details.stack}');
+    }
   };
 
   ErrorWidget.builder = (FlutterErrorDetails details) {
+    debugPrint('[LawBuddy Widget Error] ${details.exceptionAsString()}');
+    if (details.stack != null) {
+      debugPrint('[LawBuddy Widget Stack]\n${details.stack}');
+    }
+    return GlobalErrorWidget(details: details);
+  };
+
+  runApp(const ProviderScope(child: LawBuddyApp()));
+}
+
+/// Theme-aware fallback widget displayed if a widget fails to build,
+/// preventing a full blank white screen crash while honoring dark/light mode.
+class GlobalErrorWidget extends StatelessWidget {
+  final FlutterErrorDetails details;
+  const GlobalErrorWidget({super.key, required this.details});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark ||
+        WidgetsBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
+
+    final iconColor = isDark ? AppColors.lavenderHaze : AppColors.lightPrimary;
+    final textColor = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+
     return Material(
       color: Colors.transparent,
       child: Center(
@@ -29,42 +59,81 @@ void main() {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.refresh_rounded, color: AppColors.lightPrimary, size: 28),
+              Icon(Icons.refresh_rounded, color: iconColor, size: 28),
               const SizedBox(height: 8),
               Text(
-                'Temporarily adjusting layout...',
+                LocaleNotifier.translateCurrent('app.layoutAdjusting'),
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey.shade600,
+                  color: textColor,
                   fontWeight: FontWeight.w500,
                 ),
               ),
+              if (kDebugMode) ...[
+                const SizedBox(height: 8),
+                Text(
+                  details.exceptionAsString(),
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: Colors.redAccent,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+              ],
             ],
           ),
         ),
       ),
     );
-  };
-
-  runApp(const ProviderScope(child: LawBuddyApp()));
+  }
 }
 
-class LawBuddyApp extends ConsumerWidget {
+class LawBuddyApp extends ConsumerStatefulWidget {
   const LawBuddyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LawBuddyApp> createState() => _LawBuddyAppState();
+}
+
+class _LawBuddyAppState extends ConsumerState<LawBuddyApp> {
+  bool _initialUrlThemeApplied = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _applyInitialUrlTheme();
+  }
+
+  void _applyInitialUrlTheme() {
+    if (_initialUrlThemeApplied) return;
+    _initialUrlThemeApplied = true;
+
+    try {
+      final themeParam = Uri.base.queryParameters['theme']?.toLowerCase();
+      if (themeParam == 'dark') {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            ref.read(themeProvider.notifier).setTheme(ThemeMode.dark);
+          }
+        });
+      } else if (themeParam == 'light') {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            ref.read(themeProvider.notifier).setTheme(ThemeMode.light);
+          }
+        });
+      }
+    } catch (_) {}
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
     final currentLocale = ref.watch(localeProvider);
-
-    // Check URL query parameters for theme or preview mode
-    ThemeMode effectiveThemeMode = themeMode;
-    final themeParam = Uri.base.queryParameters['theme']?.toLowerCase();
-    if (themeParam == 'dark') {
-      effectiveThemeMode = ThemeMode.dark;
-    } else if (themeParam == 'light') {
-      effectiveThemeMode = ThemeMode.light;
-    }
 
     String? shareParam = Uri.base.queryParameters['share'] ?? Uri.base.queryParameters['shareToken'];
     if (shareParam == null && Uri.base.hasFragment && Uri.base.fragment.contains('share=')) {
@@ -128,36 +197,52 @@ class LawBuddyApp extends ConsumerWidget {
       title: 'LawBuddy',
       locale: Locale(currentLocale.code),
       debugShowCheckedModeBanner: false,
-      themeMode: effectiveThemeMode,
+      themeMode: themeMode,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: homeWidget,
+      home: CookieConsentWrapper(child: homeWidget),
       routes: {
-        '/how-it-works': (context) => const HowItWorksScreen(),
-        '/welcome': (context) => const WelcomeScreen(),
+        '/how-it-works': (context) => const CookieConsentWrapper(child: HowItWorksScreen()),
+        '/welcome': (context) => const CookieConsentWrapper(child: WelcomeScreen()),
       },
       onGenerateRoute: (settings) {
         final name = (settings.name ?? '').toLowerCase();
         if (name == '/how-it-works' || name == 'how-it-works' || name == '/howitworks') {
           return MaterialPageRoute(
-            builder: (_) => const HowItWorksScreen(),
+            builder: (_) => const CookieConsentWrapper(child: HowItWorksScreen()),
             settings: settings,
           );
         }
         return null;
       },
       builder: (context, child) {
-        if (child == null) return const SizedBox.shrink();
-        return Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Stack(
-            children: [
-              child,
-              const CookieConsentBanner(),
-            ],
-          ),
-        );
+        return child ?? const SizedBox.shrink();
       },
+    );
+  }
+}
+
+/// Wraps top-level routes with the CookieConsentBanner inside the Navigator,
+/// ensuring dialogs, modal barriers, and overlays render above the banner and have full Navigator context.
+/// On mobile, provides bottom spacing so bottom navigation, FABs, and action buttons remain reachable.
+class CookieConsentWrapper extends ConsumerWidget {
+  final Widget child;
+  const CookieConsentWrapper({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final consentState = ref.watch(consentProvider);
+    final isDesktop = MediaQuery.of(context).size.width >= 768;
+    final bottomInset = (!consentState.hasDecided && !isDesktop) ? 140.0 : 0.0;
+
+    return Stack(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: bottomInset),
+          child: child,
+        ),
+        const CookieConsentBanner(),
+      ],
     );
   }
 }
@@ -181,8 +266,9 @@ class AuthGate extends ConsumerWidget {
       case AuthStatus.authenticated:
         return const HomeScreen();
       case AuthStatus.unauthenticated:
-      case AuthStatus.error:
         return const WelcomeScreen();
+      case AuthStatus.error:
+        return const CantConnectScreen();
     }
   }
 }

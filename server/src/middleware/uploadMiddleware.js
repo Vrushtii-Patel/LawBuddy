@@ -11,8 +11,6 @@ const ALLOWED_MIME_TYPES = new Set([
   'applications/vnd.pdf',
   'text/pdf',
   'text/x-pdf',
-  'application/octet-stream',
-  'binary/octet-stream',
   'image/jpeg',
   'image/jpg',
   'image/pjpeg',
@@ -30,65 +28,128 @@ const ALLOWED_EXTENSIONS = new Set([
 ]);
 
 /**
- * Validates actual binary signature (magic bytes) of the uploaded buffer.
- * Rejects disguised files (e.g., .exe renamed to .pdf).
+ * Detects the binary magic bytes of the buffer.
+ * Returns 'pdf' | 'jpeg' | 'png' | 'webp' | null.
  */
-function validateFileSignature(buffer, mimeType = '', ext = '') {
-  if (!buffer || buffer.length < 4) return false;
+function detectBufferType(buffer) {
+  if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 4) {
+    return null;
+  }
 
-  const mime = (mimeType || '').toLowerCase();
-  const extension = (ext || '').toLowerCase();
-
-  // Search header chunk (up to first 1024 bytes) for format markers
-  const headerSlice = buffer.subarray(0, Math.min(buffer.length, 1024));
-  const headerString = headerSlice.toString('latin1');
-
-  // PDF signature: '%PDF' in the first 1024 bytes (per ISO 32000-1 specification)
-  if (extension === '.pdf' || mime.includes('pdf') || mime.includes('octet-stream') || mime === '') {
-    if (headerString.includes('%PDF')) {
-      return true;
-    }
+  // PDF signature: '%PDF' (0x25 0x50 0x44 0x46) at the very start (offset 0)
+  if (
+    buffer[0] === 0x25 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x44 &&
+    buffer[3] === 0x46
+  ) {
+    return 'pdf';
   }
 
   // JPEG signature: FF D8 FF
-  if (extension === '.jpg' || extension === '.jpeg' || mime.includes('jpeg') || mime.includes('jpg') || mime.includes('octet-stream')) {
-    if (buffer.length >= 3 && buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) {
-      return true;
-    }
+  if (
+    buffer.length >= 3 &&
+    buffer[0] === 0xFF &&
+    buffer[1] === 0xD8 &&
+    buffer[2] === 0xFF
+  ) {
+    return 'jpeg';
   }
 
   // PNG signature: 89 50 4E 47 0D 0A 1A 0A
-  if (extension === '.png' || mime.includes('png') || mime.includes('octet-stream')) {
-    if (
-      buffer.length >= 8 &&
-      buffer[0] === 0x89 &&
-      buffer[1] === 0x50 &&
-      buffer[2] === 0x4E &&
-      buffer[3] === 0x47 &&
-      buffer[4] === 0x0D &&
-      buffer[5] === 0x0A &&
-      buffer[6] === 0x1A &&
-      buffer[7] === 0x0A
-    ) {
-      return true;
-    }
+  if (
+    buffer.length >= 8 &&
+    buffer[0] === 0x89 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x4E &&
+    buffer[3] === 0x47 &&
+    buffer[4] === 0x0D &&
+    buffer[5] === 0x0A &&
+    buffer[6] === 0x1A &&
+    buffer[7] === 0x0A
+  ) {
+    return 'png';
   }
 
   // WebP signature: RIFF....WEBP (0x52 0x49 0x46 0x46 ... 0x57 0x45 0x42 0x50)
-  if (extension === '.webp' || mime.includes('webp') || mime.includes('octet-stream')) {
-    if (buffer.length >= 12) {
-      const isRiff = buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46;
-      const isWebp = buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50;
-      if (isRiff && isWebp) return true;
+  if (buffer.length >= 12) {
+    const isRiff = buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46;
+    const isWebp = buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50;
+    if (isRiff && isWebp) return 'webp';
+  }
+
+  return null;
+}
+
+/**
+ * Validates actual binary signature (magic bytes) of the uploaded buffer.
+ * Rejects disguised or mismatched files.
+ * Rejects octet-stream MIME types.
+ * Ensures the real header matches the claimed file type (for PDF, %PDF at the very start).
+ */
+function validateFileSignature(buffer, mimeType = '', ext = '') {
+  if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 4) return false;
+
+  const mime = (mimeType || '').toLowerCase().trim();
+  let extension = (ext || '').toLowerCase().trim();
+  if (extension) {
+    if (extension.startsWith('.')) {
+      // already starts with dot
+    } else if (extension.includes('.')) {
+      extension = path.extname(extension);
+    } else {
+      extension = `.${extension}`;
     }
   }
 
-  // Fallback: If header contains %PDF anywhere in first 1024 bytes, accept as valid PDF
-  if (headerString.includes('%PDF')) {
-    return true;
+  // Explicitly reject octet-stream
+  if (mime.includes('octet-stream')) {
+    return false;
   }
 
-  return false;
+  // Identify real binary header signature
+  const detectedType = detectBufferType(buffer);
+  if (!detectedType) {
+    return false;
+  }
+
+  // Check that extension matches detected type
+  if (extension) {
+    switch (detectedType) {
+      case 'pdf':
+        if (extension !== '.pdf') return false;
+        break;
+      case 'jpeg':
+        if (extension !== '.jpg' && extension !== '.jpeg') return false;
+        break;
+      case 'png':
+        if (extension !== '.png') return false;
+        break;
+      case 'webp':
+        if (extension !== '.webp') return false;
+        break;
+    }
+  }
+
+  // Check that mimeType matches detected type
+  if (mime) {
+    switch (detectedType) {
+      case 'pdf':
+        if (!mime.includes('pdf')) return false;
+        break;
+      case 'jpeg':
+        if (!mime.includes('jpeg') && !mime.includes('jpg')) return false;
+        break;
+      case 'png':
+        if (!mime.includes('png')) return false;
+        break;
+      case 'webp':
+        if (!mime.includes('webp')) return false;
+        break;
+    }
+  }
+
+  return true;
 }
 
 // In-memory storage: prevents orphaned temporary files while allowing instant SHA-256 computation
@@ -103,6 +164,13 @@ const upload = multer({
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname || '').toLowerCase();
     const mime = (file.mimetype || '').toLowerCase();
+
+    // Reject octet-stream explicitly
+    if (!mime || mime.includes('octet-stream')) {
+      const err = new Error('UNSUPPORTED_FILE_TYPE');
+      err.code = 'UNSUPPORTED_FILE_TYPE';
+      return cb(err, false);
+    }
 
     // Accept if either extension is valid or MIME type is recognized
     if (ALLOWED_EXTENSIONS.has(ext) || ALLOWED_MIME_TYPES.has(mime) || mime.includes('pdf') || mime.includes('image')) {

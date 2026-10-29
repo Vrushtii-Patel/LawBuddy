@@ -12,6 +12,13 @@ class ApiService {
   /// Centralized request timeout for all standard HTTP calls.
   static const Duration defaultTimeout = Duration(seconds: 30);
 
+  /// Extended timeout for large multipart uploads (PDFs, high-resolution scans).
+  static const Duration uploadTimeout = Duration(minutes: 3);
+
+  /// Optional HTTP client override for testing or custom client configuration.
+  @visibleForTesting
+  static http.Client? client;
+
   /// Server address used by Android builds when API_URL is not set.
   /// 10.0.2.2 is how the Android emulator reaches the computer running the server.
   /// Override it when building, for example:
@@ -79,25 +86,48 @@ class ApiService {
         ? jsonEncode(body)
         : body;
 
+    final clientToUse = client;
     Future<http.Response> sendFuture;
-    switch (method.toUpperCase()) {
-      case 'GET':
-        sendFuture = http.get(url, headers: effectiveHeaders);
-        break;
-      case 'POST':
-        sendFuture = http.post(url, headers: effectiveHeaders, body: encodedBody);
-        break;
-      case 'PUT':
-        sendFuture = http.put(url, headers: effectiveHeaders, body: encodedBody);
-        break;
-      case 'PATCH':
-        sendFuture = http.patch(url, headers: effectiveHeaders, body: encodedBody);
-        break;
-      case 'DELETE':
-        sendFuture = http.delete(url, headers: effectiveHeaders, body: encodedBody);
-        break;
-      default:
-        throw ArgumentError('Unsupported HTTP method: $method');
+    if (clientToUse != null) {
+      switch (method.toUpperCase()) {
+        case 'GET':
+          sendFuture = clientToUse.get(url, headers: effectiveHeaders);
+          break;
+        case 'POST':
+          sendFuture = clientToUse.post(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'PUT':
+          sendFuture = clientToUse.put(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'PATCH':
+          sendFuture = clientToUse.patch(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'DELETE':
+          sendFuture = clientToUse.delete(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        default:
+          throw ArgumentError('Unsupported HTTP method: $method');
+      }
+    } else {
+      switch (method.toUpperCase()) {
+        case 'GET':
+          sendFuture = http.get(url, headers: effectiveHeaders);
+          break;
+        case 'POST':
+          sendFuture = http.post(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'PUT':
+          sendFuture = http.put(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'PATCH':
+          sendFuture = http.patch(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        case 'DELETE':
+          sendFuture = http.delete(url, headers: effectiveHeaders, body: encodedBody);
+          break;
+        default:
+          throw ArgumentError('Unsupported HTTP method: $method');
+      }
     }
 
     final effectiveTimeout = timeout ?? defaultTimeout;
@@ -120,10 +150,16 @@ class ApiService {
     String? explicitToken,
     bool requiresAuth = true,
     Duration? timeout,
+    void Function(int sentBytes, int totalBytes)? onProgress,
+    http.Client? client,
   }) async {
     final token = explicitToken ?? (requiresAuth ? await _getToken() : null);
     final url = Uri.parse(endpoint.startsWith('http') ? endpoint : '$baseUrl$endpoint');
-    final request = http.MultipartRequest('POST', url);
+    final request = _ProgressMultipartRequest(
+      'POST',
+      url,
+      onProgress: onProgress,
+    );
 
     if (token != null && token.isNotEmpty) {
       request.headers['Authorization'] = 'Bearer $token';
@@ -140,12 +176,17 @@ class ApiService {
       request.fields.addAll(fields);
     }
 
-    final effectiveTimeout = timeout ?? defaultTimeout;
+    final effectiveTimeout = timeout ?? uploadTimeout;
+    final httpClient = client ?? ApiService.client ?? http.Client();
     try {
-      final streamedResponse = await request.send().timeout(effectiveTimeout);
+      final streamedResponse = await httpClient.send(request).timeout(effectiveTimeout);
       return await http.Response.fromStream(streamedResponse).timeout(effectiveTimeout);
     } on TimeoutException {
       throw ApiTimeoutException();
+    } finally {
+      if (client == null && ApiService.client == null) {
+        httpClient.close();
+      }
     }
   }
 
@@ -338,6 +379,9 @@ class ApiService {
     String? fileName,
     String? mimeType,
     String? base64Data,
+    Duration? timeout,
+    void Function(int sentBytes, int totalBytes)? onProgress,
+    http.Client? client,
   }) async {
     final startRes = await startScanJob(
       text: text,
@@ -347,6 +391,9 @@ class ApiService {
       fileName: fileName,
       mimeType: mimeType,
       base64Data: base64Data,
+      timeout: timeout,
+      onProgress: onProgress,
+      client: client,
     );
 
     final String jobId = (startRes['jobId'] ?? '').toString();
@@ -392,6 +439,9 @@ class ApiService {
     String? title,
     String? sourceType,
     String? fileName,
+    Duration? timeout,
+    void Function(int sentBytes, int totalBytes)? onProgress,
+    http.Client? client,
   }) async {
     return scanDocument(
       '',
@@ -400,6 +450,9 @@ class ApiService {
       fileBytes: bytes,
       fileName: fileName,
       mimeType: mimeType,
+      timeout: timeout,
+      onProgress: onProgress,
+      client: client,
     );
   }
 
@@ -412,6 +465,9 @@ class ApiService {
     String? title,
     String? sourceType,
     String? base64Data,
+    Duration? timeout,
+    void Function(int sentBytes, int totalBytes)? onProgress,
+    http.Client? client,
   }) async {
     http.Response response;
     if (fileBytes != null && fileBytes.isNotEmpty) {
@@ -423,6 +479,9 @@ class ApiService {
         fileBytes: fileBytes,
         filename: effectiveFileName,
         mimeType: cleanMime,
+        timeout: timeout ?? uploadTimeout,
+        onProgress: onProgress,
+        client: client,
         fields: {
           if (title != null && title.isNotEmpty) 'title': title,
           if (sourceType != null && sourceType.isNotEmpty) 'sourceType': sourceType,
@@ -434,6 +493,7 @@ class ApiService {
       response = await _sendRequest(
         'POST',
         '/scans/start',
+        timeout: timeout ?? uploadTimeout,
         body: {
           if (text != null && text.isNotEmpty) 'text': text,
           if (base64Data != null && base64Data.isNotEmpty) 'base64Data': base64Data,
@@ -606,6 +666,29 @@ class ApiService {
     } catch (e) {
       debugPrint('Error fetching shared summary: $e');
       return null;
+    }
+  }
+
+  static Future<List<dynamic>?> getMyShares() async {
+    try {
+      final response = await _sendRequest('GET', '/shares', requiresAuth: true);
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as List<dynamic>;
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error listing shares: $e');
+      return null;
+    }
+  }
+
+  static Future<bool> revokeShare(String shareToken) async {
+    try {
+      final response = await _sendRequest('DELETE', '/shares/$shareToken', requiresAuth: true);
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint('Error revoking share: $e');
+      return false;
     }
   }
 
@@ -1145,4 +1228,34 @@ class ApiTimeoutException extends ApiException {
 
   @override
   String toString() => message;
+}
+
+/// Custom MultipartRequest that intercepts stream finalization to track upload progress.
+class _ProgressMultipartRequest extends http.MultipartRequest {
+  final void Function(int sentBytes, int totalBytes)? onProgress;
+
+  _ProgressMultipartRequest(
+    super.method,
+    super.url, {
+    this.onProgress,
+  });
+
+  @override
+  http.ByteStream finalize() {
+    final byteStream = super.finalize();
+    if (onProgress == null) return byteStream;
+
+    final total = contentLength;
+    int sent = 0;
+    final transformer = StreamTransformer<List<int>, List<int>>.fromHandlers(
+      handleData: (data, sink) {
+        sent += data.length;
+        if (onProgress != null && total > 0) {
+          onProgress!(sent, total);
+        }
+        sink.add(data);
+      },
+    );
+    return http.ByteStream(byteStream.transform(transformer));
+  }
 }
