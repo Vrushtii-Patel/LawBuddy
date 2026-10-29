@@ -46,24 +46,26 @@ jobs:
         working-directory: ./client
         run: flutter test
 
-      - name: Require API_URL secret
+      - name: Check API_URL secret for deployment
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         env:
           API_URL: ${{ secrets.API_URL }}
         run: |
           if [ -z "$API_URL" ]; then
-            echo "::error::The API_URL repository secret is empty or missing. Refusing to build a release that would point at localhost."
-            exit 1
+            echo "::warning::The API_URL repository secret is not configured. Skipping GitHub Pages deployment until production backend is deployed."
+            echo "deploy_ready=false" >> $GITHUB_ENV
+          else
+            echo "deploy_ready=true" >> $GITHUB_ENV
           fi
 
       - name: Build Web App
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.deploy_ready == 'true'
         working-directory: ./client
         # API_URL is supplied via repository secrets; base-href configured for GitHub Pages repository root
         run: flutter build web --release --dart-define=API_URL=${{ secrets.API_URL }} --base-href="/LawBuddy/"
 
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.deploy_ready == 'true'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
