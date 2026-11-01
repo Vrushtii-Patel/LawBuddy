@@ -28,22 +28,40 @@ class _WelcomeDownloadSectionState extends ConsumerState<WelcomeDownloadSection>
   final GlobalKey _guideAnchorKey = GlobalKey();
 
   Future<void> _handleDownloadApk(BuildContext context) async {
-    final uri = Uri.parse('/app-release.apk');
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: const [
+              Icon(Icons.downloading_rounded, color: Colors.white, size: 20),
+              SizedBox(width: 10),
+              Text('Starting LawBuddy APK download...'),
+            ],
+          ),
+          backgroundColor: AppColors.softGraphite,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    }
+
+    final Uri apkUri;
+    if (kIsWeb) {
+      // Resolve relative to base URL (e.g. /LawBuddy/app-release.apk on GitHub Pages)
+      final base = Uri.base;
+      apkUri = base.resolve('app-release.apk');
+    } else {
+      apkUri =
+          Uri.parse('https://vrushtii-patel.github.io/LawBuddy/app-release.apk');
+    }
+
     try {
       final launched =
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
+          await launchUrl(apkUri, mode: LaunchMode.externalApplication);
       if (!launched && context.mounted) {
-        await launchUrl(uri);
+        await launchUrl(apkUri);
       }
-    } catch (_) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Starting LawBuddy APK download...'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-      }
+    } catch (e) {
+      debugPrint('Error launching APK download: $e');
     }
   }
 
