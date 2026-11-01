@@ -376,6 +376,54 @@ void main() {
     expect(find.text('Resale Apartment Due Diligence'), findsOneWidget);
   });
 
+  testWidgets('ChecklistScreen Add Task button is disabled when input is empty or whitespace', (WidgetTester tester) async {
+    tester.view.physicalSize = const Size(1000, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(
+          home: ChecklistScreen(
+            type: 'sample_type',
+            initialTitle: 'Resale Apartment Due Diligence',
+          ),
+        ),
+      ),
+    );
+
+    await tester.pump();
+    final fab = find.byType(FloatingActionButton);
+    expect(fab, findsOneWidget);
+    await tester.tap(fab);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
+
+    // Dialog is open
+    final addButtonFinder = find.widgetWithText(ElevatedButton, 'Add Task');
+    expect(addButtonFinder, findsOneWidget);
+    ElevatedButton addBtn = tester.widget<ElevatedButton>(addButtonFinder);
+    expect(addBtn.onPressed, isNull); // Initially disabled
+
+    // Enter whitespace only
+    await tester.enterText(find.byType(TextField), '    ');
+    await tester.pump();
+    addBtn = tester.widget<ElevatedButton>(addButtonFinder);
+    expect(addBtn.onPressed, isNull); // Still disabled
+
+    // Enter valid text
+    await tester.enterText(find.byType(TextField), 'Verify Encumbrance Certificate');
+    await tester.pump();
+    addBtn = tester.widget<ElevatedButton>(addButtonFinder);
+    expect(addBtn.onPressed, isNotNull); // Enabled!
+
+    // Clear text
+    await tester.enterText(find.byType(TextField), '');
+    await tester.pump();
+    addBtn = tester.widget<ElevatedButton>(addButtonFinder);
+    expect(addBtn.onPressed, isNull); // Disabled again!
+  });
+
   testWidgets('PrivacyPolicyScreen renders all key legal sections and disclaimer', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(1200, 900);
     tester.view.devicePixelRatio = 1.0;

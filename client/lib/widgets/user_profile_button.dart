@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/auth_provider.dart';
 import '../providers/theme_provider.dart';
 import '../providers/locale_provider.dart';
 import '../screens/welcome_screen.dart';
+import '../screens/how_it_works_screen.dart';
 import '../screens/privacy_policy_screen.dart';
 import '../screens/terms_of_use_screen.dart';
 import 'cookie_consent_banner.dart';
@@ -103,13 +105,18 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                 ),
               ],
             ),
-            content: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 380),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            content: SizedBox(
+              width: 380,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.sizeOf(dialogContext).height * 0.68,
+                ),
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                     // Theme / Appearance Control
                     Text(
                       currentLanguage == AppLanguage.hindi ? 'थीम' : 'Theme',
@@ -312,6 +319,59 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                     ),
                     const SizedBox(height: 16),
 
+                    // Account Section
+                    if (authState.status == AuthStatus.authenticated && user != null) ...[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          currentLanguage == AppLanguage.hindi ? 'खाता' : 'Account',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w700,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                          ),
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(12),
+                          clipBehavior: Clip.antiAlias,
+                          child: ListTile(
+                            dense: true,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                            leading: Icon(Icons.person_outline_rounded, size: 19, color: colorScheme.primary),
+                            title: Text(
+                              currentLanguage == AppLanguage.hindi ? 'खाता प्रोफ़ाइल' : 'Account Profile',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                            subtitle: Text(
+                              user.fullName.isNotEmpty ? user.fullName : (user.email ?? ''),
+                              style: TextStyle(fontSize: 11.5, color: colorScheme.onSurfaceVariant),
+                            ),
+                            trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
+                            onTap: () {
+                              Navigator.pop(dialogContext);
+                              showProfileDialog(context, ref);
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+
                     // Legal & Privacy Section
                     Align(
                       alignment: Alignment.centerLeft,
@@ -339,31 +399,6 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                         clipBehavior: Clip.antiAlias,
                         child: Column(
                           children: [
-                            if (authState.status == AuthStatus.authenticated && user != null) ...[
-                              ListTile(
-                                dense: true,
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-                                leading: Icon(Icons.person_outline_rounded, size: 19, color: colorScheme.primary),
-                                title: Text(
-                                  currentLanguage == AppLanguage.hindi ? 'खाता प्रोफ़ाइल' : 'Account Profile',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: colorScheme.onSurface,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  user.fullName.isNotEmpty ? user.fullName : (user.email ?? ''),
-                                  style: TextStyle(fontSize: 11.5, color: colorScheme.onSurfaceVariant),
-                                ),
-                                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
-                                onTap: () {
-                                  Navigator.pop(dialogContext);
-                                  showProfileDialog(context, ref);
-                                },
-                              ),
-                              Divider(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
-                            ],
                             ListTile(
                               dense: true,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
@@ -430,35 +465,167 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                     ),
                     const SizedBox(height: 16),
 
-                    // App Engine Info
+                    // Help & Support Section
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        currentLanguage == AppLanguage.hindi ? 'सहायता और संपर्क' : 'Help & Support',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        ),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                        clipBehavior: Clip.antiAlias,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              dense: true,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                              leading: Icon(Icons.help_outline_rounded, size: 19, color: colorScheme.primary),
+                              title: Text(
+                                currentLanguage == AppLanguage.hindi ? 'यह कैसे काम करता है / सहायता' : 'How It Works / Help',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                              trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
+                              onTap: () {
+                                Navigator.pop(dialogContext);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (_) => const HowItWorksScreen()),
+                                );
+                              },
+                            ),
+                            Divider(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            ListTile(
+                              dense: true,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                              leading: Icon(Icons.mail_outline_rounded, size: 19, color: colorScheme.primary),
+                              title: Text(
+                                currentLanguage == AppLanguage.hindi ? 'संपर्क और प्रतिक्रिया' : 'Contact / Feedback',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                              subtitle: Text(
+                                'finalyearproject2513@gmail.com',
+                                style: TextStyle(fontSize: 11.5, color: colorScheme.onSurfaceVariant),
+                              ),
+                              trailing: Icon(Icons.open_in_new_rounded, size: 13, color: colorScheme.onSurfaceVariant),
+                              onTap: () async {
+                                final uri = Uri(
+                                  scheme: 'mailto',
+                                  path: 'finalyearproject2513@gmail.com',
+                                  queryParameters: {
+                                    'subject': 'LawBuddy Support & Feedback',
+                                  },
+                                );
+                                try {
+                                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                } catch (e) {
+                                  debugPrint('Error launching mailto: $e');
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // About Section
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        currentLanguage == AppLanguage.hindi ? 'ऐप के बारे में' : 'About',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                        ),
                       ),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.info_outline_rounded, size: 16, color: colorScheme.primary),
-                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: colorScheme.primary.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(Icons.info_outline_rounded, size: 16, color: colorScheme.primary),
+                          ),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'LawBuddy Core Engine v1.0',
-                                  style: TextStyle(
-                                    color: colorScheme.onSurface,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'LawBuddy',
+                                      style: TextStyle(
+                                        color: colorScheme.onSurface,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.primary.withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Text(
+                                        'v1.0.0',
+                                        style: TextStyle(
+                                          color: colorScheme.primary,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 10.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 2),
+                                const SizedBox(height: 4),
                                 Text(
-                                  'RERA Real Estate Analysis Module',
+                                  currentLanguage == AppLanguage.hindi
+                                      ? 'LawBuddy केवल सूचनात्मक मार्गदर्शन प्रदान करता है, कानूनी सलाह नहीं।'
+                                      : 'LawBuddy gives informational guidance, not legal advice.',
                                   style: TextStyle(
                                     color: colorScheme.onSurfaceVariant,
-                                    fontSize: 11,
+                                    fontSize: 11.5,
+                                    height: 1.35,
                                   ),
                                 ),
                               ],
@@ -471,7 +638,8 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                 ),
               ),
             ),
-            actions: [
+          ),
+          actions: [
               TextButton(
                 onPressed: () => Navigator.pop(dialogContext),
                 child: Text(

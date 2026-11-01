@@ -899,7 +899,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
         icon: const Icon(Icons.document_scanner_rounded, size: 20),
         label: Text(
           tr('recentDocs.scanNew'),
-          style: const TextStyle(fontWeight: FontWeight.w600, letterSpacing: 0.2),
+          style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w600, letterSpacing: 0.2),
         ),
         backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
         foregroundColor: isDark ? AppColors.softGraphite : AppColors.warmLinen,

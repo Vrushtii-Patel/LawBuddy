@@ -374,7 +374,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
               ),
               content: TextField(
                 controller: controller,
-                autofocus: true,
+                autofocus: false,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 14,
                   color: isDark
@@ -897,7 +897,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                     const SizedBox(height: 14),
                     TextField(
                       controller: controller,
-                      autofocus: true,
+                      autofocus: false,
                       maxLines: 3,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 14,
@@ -979,113 +979,132 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                    foregroundColor:
-                        isDark ? AppColors.darkBackground : Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 11),
-                  ),
-                  onPressed: isSubmitting
-                      ? null
-                      : () async {
-                          final prompt = controller.text.trim();
-                          if (prompt.isEmpty) return;
+                ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: controller,
+                  builder: (context, val, _) {
+                    final canSubmit =
+                        !isSubmitting && val.text.trim().isNotEmpty;
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightPrimary,
+                        foregroundColor:
+                            isDark ? AppColors.darkBackground : Colors.white,
+                        disabledBackgroundColor: (isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightPrimary)
+                            .withValues(alpha: 0.35),
+                        disabledForegroundColor: (isDark
+                                ? AppColors.darkBackground
+                                : Colors.white)
+                            .withValues(alpha: 0.5),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 11),
+                      ),
+                      onPressed: canSubmit
+                          ? () async {
+                              final prompt = controller.text.trim();
+                              if (prompt.isEmpty) return;
 
-                          // Check if a checklist with similar prompt or title already exists
-                          final duplicate = _findDuplicateChecklist(prompt);
-                          if (duplicate != null) {
-                            final action = await _showDuplicateWarningDialog(
-                                dialogCtx, duplicate, prompt);
-                            if (!dialogCtx.mounted) return;
-                            if (action == null ||
-                                action == _DuplicateChecklistAction.cancel) {
-                              return;
-                            } else if (action ==
-                                _DuplicateChecklistAction.viewExisting) {
-                              Navigator.pop(dialogCtx);
-                              if (mounted) {
-                                _navigateTo(ChecklistScreen(
-                                  type: (duplicate['type'] ?? '').toString(),
-                                  initialTitle:
-                                      (duplicate['title'] ?? '').toString(),
-                                ));
+                              // Check if a checklist with similar prompt or title already exists
+                              final duplicate = _findDuplicateChecklist(prompt);
+                              if (duplicate != null) {
+                                final action =
+                                    await _showDuplicateWarningDialog(
+                                        dialogCtx, duplicate, prompt);
+                                if (!dialogCtx.mounted) return;
+                                if (action == null ||
+                                    action ==
+                                        _DuplicateChecklistAction.cancel) {
+                                  return;
+                                } else if (action ==
+                                    _DuplicateChecklistAction.viewExisting) {
+                                  Navigator.pop(dialogCtx);
+                                  if (mounted) {
+                                    _navigateTo(ChecklistScreen(
+                                      type:
+                                          (duplicate['type'] ?? '').toString(),
+                                      initialTitle:
+                                          (duplicate['title'] ?? '').toString(),
+                                    ));
+                                  }
+                                  return;
+                                }
+                                // If action == _DuplicateChecklistAction.stillCreate, proceed below
                               }
-                              return;
-                            }
-                            // If action == _DuplicateChecklistAction.stillCreate, proceed below
-                          }
 
-                          setDialogState(() => isSubmitting = true);
-                          try {
-                            final res =
-                                await ApiService.generateChecklist(prompt);
-                            if (dialogCtx.mounted) Navigator.pop(dialogCtx);
-                            if (mounted) {
-                              _loadChecklists();
-                              _navigateTo(ChecklistScreen(
-                                type: (res['type'] ?? prompt).toString(),
-                                initialTitle:
-                                    (res['title'] ?? prompt).toString(),
-                              ));
-                            }
-                          } catch (e) {
-                            debugPrint('Error generating checklist: $e');
-                            setDialogState(() => isSubmitting = false);
-                            if (dialogCtx.mounted) {
-                              _showToast(
-                                backgroundColor: isDark
-                                    ? const Color(0xFF2A1515)
-                                    : const Color(0xFFFEF2F2),
-                                borderColor: isDark
-                                    ? const Color(0xFFEF4444)
-                                        .withValues(alpha: 0.5)
-                                    : const Color(0xFFFCA5A5),
-                                content: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.error_outline_rounded,
-                                      color: isDark
-                                          ? AppColors.darkError
-                                          : AppColors.lightError,
-                                      size: 18,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(
-                                        tr('checklists.generateFailed'),
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
+                              setDialogState(() => isSubmitting = true);
+                              try {
+                                final res = await ApiService.generateChecklist(
+                                    prompt);
+                                if (dialogCtx.mounted) Navigator.pop(dialogCtx);
+                                if (mounted) {
+                                  _loadChecklists();
+                                  _navigateTo(ChecklistScreen(
+                                    type: (res['type'] ?? prompt).toString(),
+                                    initialTitle:
+                                        (res['title'] ?? prompt).toString(),
+                                  ));
+                                }
+                              } catch (e) {
+                                debugPrint('Error generating checklist: $e');
+                                setDialogState(() => isSubmitting = false);
+                                if (dialogCtx.mounted) {
+                                  _showToast(
+                                    backgroundColor: isDark
+                                        ? const Color(0xFF2A1515)
+                                        : const Color(0xFFFEF2F2),
+                                    borderColor: isDark
+                                        ? const Color(0xFFEF4444)
+                                            .withValues(alpha: 0.5)
+                                        : const Color(0xFFFCA5A5),
+                                    content: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.error_outline_rounded,
                                           color: isDark
-                                              ? const Color(0xFFFEE2E2)
-                                              : const Color(0xFF991B1B),
+                                              ? AppColors.darkError
+                                              : AppColors.lightError,
+                                          size: 18,
                                         ),
-                                      ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Text(
+                                            tr('checklists.generateFailed'),
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w600,
+                                              color: isDark
+                                                  ? const Color(0xFFFEE2E2)
+                                                  : const Color(0xFF991B1B),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
+                                  );
+                                }
+                              }
                             }
-                          }
-                        },
-                  child: isSubmitting
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.white),
-                        )
-                      : Text(
-                          tr('checklists.generateBtn'),
-                          style: GoogleFonts.plusJakartaSans(
-                              fontWeight: FontWeight.w700),
-                        ),
+                          : null,
+                      child: isSubmitting
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2, color: Colors.white),
+                            )
+                          : Text(
+                              tr('checklists.generateBtn'),
+                              style: GoogleFonts.plusJakartaSans(
+                                  fontWeight: FontWeight.w700),
+                            ),
+                    );
+                  },
                 ),
               ],
             );
@@ -1137,20 +1156,6 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
     return Scaffold(
       backgroundColor:
           isDark ? AppColors.darkBackground : AppColors.lightBackground,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showCreateChecklistDialog(context),
-        backgroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-        foregroundColor:
-            isDark ? AppColors.darkBackground : AppColors.lightTextPrimary,
-        elevation: 2,
-        hoverElevation: 4,
-        icon: const Icon(Icons.add_rounded, size: 20),
-        label: Text(
-          tr('checklists.newBtn'),
-          style: GoogleFonts.plusJakartaSans(
-              fontWeight: FontWeight.w700, letterSpacing: 0.3),
-        ),
-      ),
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -1306,11 +1311,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
   Widget _buildHeroIntro(
       String Function(String, [Map<String, String>?]) tr, bool isDark) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 24),
-      padding: const EdgeInsets.all(22),
+      margin: const EdgeInsets.only(bottom: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           width: 1.0,
@@ -1320,12 +1325,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color:
                   (isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
                       .withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: (isDark
                         ? AppColors.darkSecondary
@@ -1337,10 +1342,10 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
               Icons.verified_user_rounded,
               color:
                   isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
-              size: 26,
+              size: 20,
             ),
           ),
-          const SizedBox(width: 18),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1350,7 +1355,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
+                          horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: (isDark
                                 ? AppColors.darkPrimary
@@ -1361,7 +1366,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                       child: Text(
                         tr('checklists.heroTitle'),
                         style: GoogleFonts.plusJakartaSans(
-                          fontSize: 10,
+                          fontSize: 9.5,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 0.8,
                           color: isDark
@@ -1372,11 +1377,11 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   tr('checklists.heroHeadline'),
                   style: GoogleFonts.plusJakartaSans(
-                    fontSize: 17,
+                    fontSize: 15,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -0.3,
                     color: isDark
@@ -1384,12 +1389,12 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                         : AppColors.lightTextPrimary,
                   ),
                 ),
-                const SizedBox(height: 3),
+                const SizedBox(height: 2),
                 Text(
                   tr('checklists.heroSub'),
                   style: GoogleFonts.plusJakartaSans(
-                    fontSize: 13,
-                    height: 1.4,
+                    fontSize: 12,
+                    height: 1.35,
                     color: isDark
                         ? AppColors.darkTextSecondary
                         : AppColors.lightTextSecondary,
@@ -1415,10 +1420,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
       physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.symmetric(
         horizontal: isDesktop ? 32.0 : 16.0,
-        vertical: 16.0,
+        vertical: 12.0,
       ),
       children: [
-        _buildHeroIntro(tr, isDark),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -1874,6 +1878,28 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
     final ratio = totalCount > 0 ? (completedCount / totalCount) : 0.0;
     final percent = (ratio * 100).toInt();
     final isAllDone = totalCount > 0 && completedCount == totalCount;
+    final isNotStarted = completedCount == 0;
+
+    final String badgeText;
+    final IconData badgeIcon;
+    final Color badgeColor;
+
+    if (isAllDone) {
+      badgeText = widget.tr('checklists.completed');
+      badgeIcon = Icons.check_circle_rounded;
+      badgeColor =
+          widget.isDark ? AppColors.darkSecondary : AppColors.lightSecondary;
+    } else if (isNotStarted) {
+      badgeText = widget.tr('checklists.notStarted');
+      badgeIcon = Icons.radio_button_unchecked_rounded;
+      badgeColor =
+          widget.isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    } else {
+      badgeText = widget.tr('checklists.inProgress');
+      badgeIcon = Icons.pending_outlined;
+      badgeColor =
+          widget.isDark ? AppColors.darkAccent : AppColors.lightPrimary;
+    }
 
     final accentColor = isAllDone
         ? (widget.isDark ? AppColors.darkSecondary : AppColors.lightSecondary)
@@ -2175,32 +2201,28 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: accentColor.withValues(
+                        color: badgeColor.withValues(
                             alpha: widget.isDark ? 0.15 : 0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: accentColor.withValues(alpha: 0.3),
+                          color: badgeColor.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            isAllDone
-                                ? Icons.check_circle_rounded
-                                : Icons.pending_outlined,
+                            badgeIcon,
                             size: 12,
-                            color: accentColor,
+                            color: badgeColor,
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            isAllDone
-                                ? widget.tr('checklists.completed')
-                                : widget.tr('checklists.inProgress'),
+                            badgeText,
                             style: GoogleFonts.plusJakartaSans(
                               fontSize: 10,
                               fontWeight: FontWeight.w800,
-                              color: accentColor,
+                              color: badgeColor,
                             ),
                           ),
                         ],

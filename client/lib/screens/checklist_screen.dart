@@ -297,7 +297,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                   const SizedBox(height: 8),
                   TextField(
                     controller: titleController,
-                    autofocus: true,
+                    autofocus: false,
                     maxLines: 2,
                     style:
                         TextStyle(fontSize: 14, color: colorScheme.onSurface),
@@ -344,121 +344,139 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                             : AppColors.lightTextSecondary),
                   ),
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                    foregroundColor: isDark
-                        ? AppColors.softGraphite
-                        : AppColors.warmLinen,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                  ),
-                  onPressed: isSubmitting
-                      ? null
-                      : () async {
-                          final text = titleController.text.trim();
-                          if (text.isEmpty) return;
+                ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: titleController,
+                  builder: (context, value, _) {
+                    final canSubmit =
+                        !isSubmitting && value.text.trim().isNotEmpty;
 
-                          setDialogState(() => isSubmitting = true);
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
+                        foregroundColor: isDark
+                            ? AppColors.softGraphite
+                            : AppColors.warmLinen,
+                        disabledBackgroundColor: (isDark
+                                ? AppColors.darkPrimary
+                                : AppColors.lightPrimary)
+                            .withValues(alpha: 0.35),
+                        disabledForegroundColor: (isDark
+                                ? AppColors.softGraphite
+                                : AppColors.warmLinen)
+                            .withValues(alpha: 0.5),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: canSubmit
+                          ? () async {
+                              final text = titleController.text.trim();
+                              if (text.isEmpty) return;
 
-                          try {
-                            final newItem = await ApiService.addChecklistItem(
-                                widget.type, text);
-                            if (dialogCtx.mounted) {
-                              Navigator.pop(dialogCtx);
-                            }
-                            if (mounted) {
-                              setState(() {
-                                final items = _checklistData?['items']
-                                        as List<dynamic>? ??
-                                    [];
-                                items.add(newItem);
-                              });
-                              _showToast(
-                                content: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(6),
-                                      decoration: BoxDecoration(
-                                        color: (isDarkOuter
+                              setDialogState(() => isSubmitting = true);
+
+                              try {
+                                final newItem = await ApiService.addChecklistItem(
+                                    widget.type, text);
+                                if (dialogCtx.mounted) {
+                                  Navigator.pop(dialogCtx);
+                                }
+                                if (mounted) {
+                                  setState(() {
+                                    final items = _checklistData?['items']
+                                            as List<dynamic>? ??
+                                        [];
+                                    items.add(newItem);
+                                  });
+                                  _showToast(
+                                    content: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: (isDarkOuter
+                                                    ? AppColors.darkSecondary
+                                                    : AppColors.lightSecondary)
+                                                .withValues(alpha: 0.16),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Icon(
+                                            Icons.check_rounded,
+                                            color: isDarkOuter
                                                 ? AppColors.darkSecondary
-                                                : AppColors.lightSecondary)
-                                            .withValues(alpha: 0.16),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                        Icons.check_rounded,
-                                        color: isDarkOuter
-                                            ? AppColors.darkSecondary
-                                            : AppColors.lightSecondary,
-                                        size: 18,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        tr('checklists.taskAddedSuccess'),
-                                        style: TextStyle(
-                                          fontSize: 13.5,
-                                          fontWeight: FontWeight.w600,
-                                          color: isDarkOuter
-                                              ? AppColors.darkTextPrimary
-                                              : AppColors.lightTextPrimary,
+                                                : AppColors.lightSecondary,
+                                            size: 18,
+                                          ),
                                         ),
-                                      ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            tr('checklists.taskAddedSuccess'),
+                                            style: TextStyle(
+                                              fontSize: 13.5,
+                                              fontWeight: FontWeight.w600,
+                                              color: isDarkOuter
+                                                  ? AppColors.darkTextPrimary
+                                                  : AppColors.lightTextPrimary,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            }
-                          } catch (e) {
-                            debugPrint('Error adding checklist item: $e');
-                            if (dialogCtx.mounted) {
-                              setDialogState(() => isSubmitting = false);
-                            }
-                            if (mounted) {
-                              _showToast(
-                                backgroundColor: isDarkOuter
-                                    ? const Color(0xFF2A1515)
-                                    : const Color(0xFFFEF2F2),
-                                borderColor: isDarkOuter
-                                    ? const Color(0xFFEF4444)
+                                  );
+                                }
+                              } catch (e) {
+                                debugPrint('Error adding checklist item: $e');
+                                if (dialogCtx.mounted) {
+                                  setDialogState(() => isSubmitting = false);
+                                }
+                                if (mounted) {
+                                  _showToast(
+                                    backgroundColor: isDarkOuter
+                                        ? const Color(0xFF2A1515)
+                                        : const Color(0xFFFEF2F2),
+                                    borderColor: isDarkOuter
+                                        ? const Color(0xFFEF4444)
                                         .withValues(alpha: 0.5)
-                                    : const Color(0xFFFCA5A5),
-                                content: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.error_outline_rounded,
-                                      color: isDarkOuter
-                                          ? AppColors.darkError
-                                          : AppColors.lightError,
-                                      size: 18,
+                                        : const Color(0xFFFCA5A5),
+                                    content: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.error_outline_rounded,
+                                          color: isDarkOuter
+                                              ? AppColors.darkError
+                                              : AppColors.lightError,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Text(
+                                            tr('checklists.addTaskFailed'),
+                                            style: const TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text(
-                                        tr('checklists.addTaskFailed'),
-                                        style: const TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
+                                  );
+                                }
+                              }
                             }
-                          }
-                        },
-                  child: isSubmitting
-                      ? const SizedBox(
-                          width: 18,
-                          height: 18,
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.white),
-                        )
-                      : Text(tr('checklists.addTaskAction')),
+                          : null,
+                      child: isSubmitting
+                          ? const SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2, color: Colors.white),
+                            )
+                          : Text(tr('checklists.addTaskAction')),
+                    );
+                  },
                 ),
               ],
             );
@@ -487,7 +505,7 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
               style: const TextStyle(fontWeight: FontWeight.w700)),
           content: TextField(
             controller: controller,
-            autofocus: true,
+            autofocus: false,
             decoration: InputDecoration(
               hintText: tr('checklists.newTitleHint'),
               filled: true,

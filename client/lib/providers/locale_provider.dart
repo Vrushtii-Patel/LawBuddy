@@ -609,6 +609,7 @@ final Map<String, Map<String, String>> _translations = {
   'checklists.casesHeading': {'en': 'Active Due-Diligence Cases', 'hi': 'सक्रिय उचित सावधानी मामले'},
   'checklists.verificationBadge': {'en': 'PROPERTY VERIFICATION', 'hi': 'संपत्ति सत्यापन'},
   'checklists.dueDiligenceProgress': {'en': 'Due-diligence progress', 'hi': 'उचित सावधानी प्रगति'},
+  'checklists.notStarted': {'en': 'Not Started', 'hi': 'शुरू नहीं हुआ'},
   'checklists.inProgress': {'en': 'In Progress', 'hi': 'प्रगति में'},
   'checklists.completed': {'en': 'Completed', 'hi': 'पूर्ण'},
   'checklists.emptyTitle': {'en': 'Start your property due diligence', 'hi': 'अपनी संपत्ति की उचित सावधानी शुरू करें'},
