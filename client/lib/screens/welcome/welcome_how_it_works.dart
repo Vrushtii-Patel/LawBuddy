@@ -11,6 +11,7 @@ class StepCard extends StatefulWidget {
   final String? tag;
   final IconData? icon;
   final List<String>? bulletPoints;
+  final double? minHeight;
   final bool isDark;
 
   const StepCard({
@@ -21,6 +22,7 @@ class StepCard extends StatefulWidget {
     this.tag,
     this.icon,
     this.bulletPoints,
+    this.minHeight,
     required this.isDark,
   });
 
@@ -43,7 +45,7 @@ class _StepCardState extends State<StepCard> {
         curve: Curves.easeOutCubic,
         transform: Matrix4.translationValues(0, _isHovered ? -4 : 0, 0),
         width: double.infinity,
-        constraints: const BoxConstraints(minHeight: 280),
+        constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkSurface : AppColors.lightSurface,

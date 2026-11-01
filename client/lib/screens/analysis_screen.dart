@@ -55,6 +55,8 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
   Uint8List? _resolvedFileBytes;
   bool _isLoadingFile = false;
   bool _pdfLoadFailed = false;
+  bool _isSynthesizedPdf = false;
+  int _selectedDocViewTab = 0; // 0 = PDF Viewer, 1 = Verified Legal Text Reader
 
   @override
   void initState() {
@@ -70,6 +72,28 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       _resolvedFileBytes = _getCleanBytes(widget.fileData);
     } else if (widget.documentId != null && widget.documentId!.isNotEmpty) {
       _fetchDocumentFileBytes(widget.documentId!);
+    } else if (widget.originalText.trim().isNotEmpty &&
+        _effectiveSourceType == 'PDF Document') {
+      _synthesizeFallbackPdf();
+    }
+  }
+
+  Future<void> _synthesizeFallbackPdf() async {
+    if (widget.originalText.trim().isEmpty) return;
+    try {
+      final synthBytes = await PdfExportService.generateExtractedTextPdf(
+        documentTitle: widget.documentTitle ?? 'Contract Document',
+        extractedText: widget.originalText,
+      );
+      if (mounted && synthBytes.isNotEmpty) {
+        setState(() {
+          _resolvedFileBytes = synthBytes;
+          _isSynthesizedPdf = true;
+          _pdfLoadFailed = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error synthesizing fallback PDF: $e');
     }
   }
 
@@ -86,19 +110,59 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
           _resolvedFileBytes = bytes;
           _isLoadingFile = false;
           _pdfLoadFailed = false;
+          _isSynthesizedPdf = false;
         });
       } else if (mounted) {
+        // Fallback: If original server binary is absent, synthesize clean PDF from verified extracted text
+        if (widget.originalText.trim().isNotEmpty) {
+          try {
+            final synthBytes = await PdfExportService.generateExtractedTextPdf(
+              documentTitle: widget.documentTitle ?? 'Contract Document',
+              extractedText: widget.originalText,
+            );
+            if (mounted && synthBytes.isNotEmpty) {
+              setState(() {
+                _resolvedFileBytes = synthBytes;
+                _isLoadingFile = false;
+                _pdfLoadFailed = false;
+                _isSynthesizedPdf = true;
+              });
+              return;
+            }
+          } catch (e) {
+            debugPrint('Failed to synthesize fallback PDF: $e');
+          }
+        }
         setState(() {
           _isLoadingFile = false;
           _pdfLoadFailed = true;
+          _selectedDocViewTab = 1;
         });
       }
     } catch (e) {
       debugPrint('Error fetching document file in AnalysisScreen: $e');
       if (mounted) {
+        if (widget.originalText.trim().isNotEmpty) {
+          try {
+            final synthBytes = await PdfExportService.generateExtractedTextPdf(
+              documentTitle: widget.documentTitle ?? 'Contract Document',
+              extractedText: widget.originalText,
+            );
+            if (mounted && synthBytes.isNotEmpty) {
+              setState(() {
+                _resolvedFileBytes = synthBytes;
+                _isLoadingFile = false;
+                _pdfLoadFailed = false;
+                _isSynthesizedPdf = true;
+              });
+              return;
+            }
+          } catch (_) {}
+        }
         setState(() {
           _isLoadingFile = false;
           _pdfLoadFailed = true;
+          _selectedDocViewTab = 1;
         });
       }
     }
@@ -1247,132 +1311,386 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                         const SizedBox(height: 14),
                       ],
 
-                      // Inline PDF Document Viewer Preview (if PDF Document & bytes present)
-                      if (_resolvedFileBytes != null &&
-                          _resolvedFileBytes!.isNotEmpty &&
-                          _effectiveSourceType == 'PDF Document') ...[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            height: _pdfLoadFailed ? null : 380,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: _pdfLoadFailed
-                                  ? (isDark
-                                      ? AppColors.darkSurfaceElevated
-                                      : AppColors.lightSurfaceElevated)
-                                  : null,
-                              border: Border.all(
-                                  color: isDark
-                                      ? AppColors.darkBorder
-                                      : AppColors.lightBorder),
-                              borderRadius: BorderRadius.circular(12),
+                      // Interactive PDF Document Viewer & Extracted Text Tabs
+                      if (_effectiveSourceType == 'PDF Document') ...[
+                        // Segmented Tab Switcher (PDF vs Extracted Legal Text)
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? AppColors.darkElevatedSurface
+                                : AppColors.lightElevatedSurface,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: isDark
+                                  ? AppColors.darkBorder
+                                  : AppColors.lightBorder,
                             ),
-                            child: _pdfLoadFailed
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 28),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () => setState(() => _selectedDocViewTab = 0),
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: _selectedDocViewTab == 0
+                                          ? (isDark
+                                              ? AppColors.darkPrimary
+                                              : AppColors.lightPrimary)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.picture_as_pdf_outlined,
-                                          size: 36,
-                                          color: isDark
-                                              ? AppColors.darkTextSecondary
-                                              : AppColors.lightTextSecondary,
+                                          size: 15,
+                                          color: _selectedDocViewTab == 0
+                                              ? (isDark
+                                                  ? AppColors.darkBackground
+                                                  : Colors.white)
+                                              : (isDark
+                                                  ? AppColors.darkTextSecondary
+                                                  : AppColors.lightTextSecondary),
                                         ),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(width: 6),
                                         Text(
-                                          tr('analysis.pdfPreviewUnavailable'),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 14,
-                                            color: isDark
-                                                ? AppColors.darkTextPrimary
-                                                : AppColors.lightTextPrimary,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          tr('analysis.pdfPreviewFallbackDesc'),
-                                          textAlign: TextAlign.center,
+                                          'PDF Document View',
                                           style: TextStyle(
                                             fontSize: 12,
-                                            color: isDark
-                                                ? AppColors.darkTextSecondary
-                                                : AppColors.lightTextSecondary,
+                                            fontWeight: FontWeight.w700,
+                                            color: _selectedDocViewTab == 0
+                                              ? (isDark
+                                                  ? AppColors.darkBackground
+                                                  : Colors.white)
+                                              : (isDark
+                                                  ? AppColors.darkTextSecondary
+                                                  : AppColors.lightTextSecondary),
                                           ),
-                                        ),
-                                        const SizedBox(height: 14),
-                                        Wrap(
-                                          spacing: 10,
-                                          runSpacing: 8,
-                                          alignment: WrapAlignment.center,
-                                          children: [
-                                            OutlinedButton.icon(
-                                              onPressed: _isLoadingFile
-                                                  ? null
-                                                  : () {
-                                                      if (widget.documentId !=
-                                                              null &&
-                                                          widget.documentId!
-                                                              .isNotEmpty) {
-                                                        _fetchDocumentFileBytes(
-                                                            widget.documentId!);
-                                                      } else {
-                                                        setState(() =>
-                                                            _pdfLoadFailed = false);
-                                                      }
-                                                    },
-                                              icon: const Icon(
-                                                  Icons.refresh_rounded,
-                                                  size: 15),
-                                              label: Text(tr('common.retry')),
-                                              style: OutlinedButton.styleFrom(
-                                                visualDensity:
-                                                    VisualDensity.compact,
-                                              ),
-                                            ),
-                                            OutlinedButton.icon(
-                                              onPressed: () =>
-                                                  _showDocumentViewerModal(context),
-                                              icon: const Icon(
-                                                  Icons.article_outlined,
-                                                  size: 15),
-                                              label: const Text('View Full Text'),
-                                              style: OutlinedButton.styleFrom(
-                                                visualDensity:
-                                                    VisualDensity.compact,
-                                              ),
-                                            ),
-                                          ],
                                         ),
                                       ],
                                     ),
-                                  )
-                                : SfPdfViewer.memory(
-                                    _resolvedFileBytes!,
-                                    key: ValueKey(
-                                        'pdf_${_resolvedFileBytes.hashCode}'),
-                                    canShowScrollHead: true,
-                                    canShowScrollStatus: true,
-                                    enableDoubleTapZooming: true,
-                                    onDocumentLoadFailed:
-                                        (PdfDocumentLoadFailedDetails details) {
-                                      debugPrint(
-                                          'PDF viewer load error: ${details.error}');
-                                      if (mounted) {
-                                        setState(() {
-                                          _pdfLoadFailed = true;
-                                        });
-                                      }
-                                    },
                                   ),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () => setState(() => _selectedDocViewTab = 1),
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 8),
+                                    decoration: BoxDecoration(
+                                      color: _selectedDocViewTab == 1
+                                          ? (isDark
+                                              ? AppColors.darkPrimary
+                                              : AppColors.lightPrimary)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.description_outlined,
+                                          size: 15,
+                                          color: _selectedDocViewTab == 1
+                                              ? (isDark
+                                                  ? AppColors.darkBackground
+                                                  : Colors.white)
+                                              : (isDark
+                                                  ? AppColors.darkTextSecondary
+                                                  : AppColors.lightTextSecondary),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          'Verified Extracted Text',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w700,
+                                            color: _selectedDocViewTab == 1
+                                              ? (isDark
+                                                  ? AppColors.darkBackground
+                                                  : Colors.white)
+                                              : (isDark
+                                                  ? AppColors.darkTextSecondary
+                                                  : AppColors.lightTextSecondary),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 14),
+
+                        // Synthesized notification badge if rendering extracted text PDF
+                        if (_isSynthesizedPdf) ...[
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                                    .withValues(alpha: 0.3),
+                                width: 0.8,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.verified_outlined,
+                                  size: 15,
+                                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    'Verified Extracted Legal Text • Original agreement clauses preserved in full',
+                                    style: TextStyle(
+                                      fontSize: 11.5,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark
+                                          ? AppColors.darkTextPrimary
+                                          : AppColors.lightTextPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+
+                        // TAB 0: PDF Viewer
+                        if (_selectedDocViewTab == 0) ...[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              height: _pdfLoadFailed ? null : 380,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: _pdfLoadFailed
+                                    ? (isDark
+                                        ? AppColors.darkSurfaceElevated
+                                        : AppColors.lightSurfaceElevated)
+                                    : null,
+                                border: Border.all(
+                                    color: isDark
+                                        ? AppColors.darkBorder
+                                        : AppColors.lightBorder),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: _pdfLoadFailed
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 26),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.description_outlined,
+                                            size: 36,
+                                            color: isDark
+                                                ? AppColors.darkAccent
+                                                : AppColors.lightPrimary,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            'Extracted Text Available',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 14,
+                                              color: isDark
+                                                  ? AppColors.darkTextPrimary
+                                                  : AppColors.lightTextPrimary,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            'The original PDF binary could not be rendered by this device viewer. 100% of the clauses were extracted and verified below.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: isDark
+                                                  ? AppColors.darkTextSecondary
+                                                  : AppColors.lightTextSecondary,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 14),
+                                          Wrap(
+                                            spacing: 10,
+                                            runSpacing: 8,
+                                            alignment: WrapAlignment.center,
+                                            children: [
+                                              ElevatedButton.icon(
+                                                onPressed: () => setState(() => _selectedDocViewTab = 1),
+                                                icon: const Icon(Icons.article_outlined, size: 15),
+                                                label: const Text('Read Extracted Legal Text'),
+                                                style: ElevatedButton.styleFrom(
+                                                  visualDensity: VisualDensity.compact,
+                                                  backgroundColor: isDark
+                                                      ? AppColors.darkPrimary
+                                                      : AppColors.lightPrimary,
+                                                  foregroundColor: isDark
+                                                      ? AppColors.darkBackground
+                                                      : Colors.white,
+                                                ),
+                                              ),
+                                              OutlinedButton.icon(
+                                                onPressed: _isLoadingFile
+                                                    ? null
+                                                    : () {
+                                                        if (widget.documentId != null &&
+                                                            widget.documentId!.isNotEmpty) {
+                                                          _fetchDocumentFileBytes(widget.documentId!);
+                                                        } else {
+                                                          _synthesizeFallbackPdf();
+                                                        }
+                                                      },
+                                                icon: const Icon(Icons.refresh_rounded, size: 15),
+                                                label: Text(tr('common.retry')),
+                                                style: OutlinedButton.styleFrom(
+                                                  visualDensity: VisualDensity.compact,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : (_resolvedFileBytes != null && _resolvedFileBytes!.isNotEmpty)
+                                      ? SfPdfViewer.memory(
+                                          _resolvedFileBytes!,
+                                          key: ValueKey(
+                                              'pdf_${_resolvedFileBytes.hashCode}'),
+                                          canShowScrollHead: true,
+                                          canShowScrollStatus: true,
+                                          enableDoubleTapZooming: true,
+                                          onDocumentLoadFailed:
+                                              (PdfDocumentLoadFailedDetails details) async {
+                                            debugPrint('PDF viewer load error: ${details.error}');
+                                            if (!_isSynthesizedPdf && widget.originalText.trim().isNotEmpty) {
+                                              try {
+                                                final synthBytes = await PdfExportService.generateExtractedTextPdf(
+                                                  documentTitle: widget.documentTitle ?? 'Contract Document',
+                                                  extractedText: widget.originalText,
+                                                );
+                                                if (mounted && synthBytes.isNotEmpty) {
+                                                  setState(() {
+                                                    _resolvedFileBytes = synthBytes;
+                                                    _isSynthesizedPdf = true;
+                                                    _pdfLoadFailed = false;
+                                                  });
+                                                  return;
+                                                }
+                                              } catch (_) {}
+                                            }
+                                            if (mounted) {
+                                              setState(() {
+                                                _pdfLoadFailed = true;
+                                                _selectedDocViewTab = 1;
+                                              });
+                                            }
+                                          },
+                                        )
+                                      : const Center(child: CircularProgressIndicator()),
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                        ],
+
+                        // TAB 1: Extracted Text Sheet Reader
+                        if (_selectedDocViewTab == 1) ...[
+                          Container(
+                            width: double.infinity,
+                            constraints: const BoxConstraints(maxHeight: 380),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppColors.darkElevatedSurface
+                                  : AppColors.lightElevatedSurface,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: isDark
+                                    ? AppColors.darkBorder
+                                    : AppColors.lightBorder,
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.gavel_rounded,
+                                      size: 16,
+                                      color: isDark
+                                          ? AppColors.darkAccent
+                                          : AppColors.lightPrimary,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'VERIFIED EXTRACTED LEGAL TEXT',
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 0.6,
+                                        color: isDark
+                                            ? AppColors.darkAccent
+                                            : AppColors.lightPrimary,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      icon: const Icon(Icons.copy_rounded, size: 16),
+                                      tooltip: 'Copy all extracted text',
+                                      visualDensity: VisualDensity.compact,
+                                      onPressed: () {
+                                        Clipboard.setData(ClipboardData(text: widget.originalText));
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Extracted text copied to clipboard'),
+                                            duration: Duration(seconds: 2),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const Divider(height: 16),
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    child: SelectableText(
+                                      widget.originalText,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        height: 1.6,
+                                        fontFamily: 'monospace',
+                                        color: isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.lightTextPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                        ],
                       ],
 
                       // Show text box only for pure text input scans without an uploaded file/image

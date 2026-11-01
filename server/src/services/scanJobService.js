@@ -614,6 +614,18 @@ async function executeJobPipeline(jobId) {
                 ? `${(rawBytes / 1048576).toFixed(1)} MB`
                 : `${Math.max(1, Math.round(rawBytes / 1024))} KB`;
 
+            // Persist inline base64 for files <= 3 MB so ephemeral server restarts never lose the preview
+            const MAX_INLINE_FILE_DATA_SIZE = 3 * 1024 * 1024;
+            let inlineFileData = null;
+            if (job.fileData && job.fileData.length <= MAX_INLINE_FILE_DATA_SIZE) {
+                inlineFileData = job.fileData;
+            } else if (job.storagePath) {
+                const storedBuf = readFileFromStorage(job.storagePath);
+                if (storedBuf && storedBuf.length <= MAX_INLINE_FILE_DATA_SIZE) {
+                    inlineFileData = storedBuf.toString('base64');
+                }
+            }
+
             const docData = {
                 userId: job.userId,
                 fileHash: job.fileHash,
@@ -621,7 +633,7 @@ async function executeJobPipeline(jobId) {
                 originalText: job.extractedText,
                 sourceType: job.sourceType,
                 mimeType: job.mimeType,
-                fileData: null, // Preserved lightweight in Document schema
+                fileData: inlineFileData,
                 fileName,
                 riskLevel,
                 docSize,
