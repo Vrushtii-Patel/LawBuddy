@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="lb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2D3139"/>
+      <stop offset="100%" stop-color="#3F5282"/>
+    </linearGradient>
+    <linearGradient id="icon-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#E8EFFF"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Squircle -->
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="url(#lb-grad)" stroke="#92A9E1" stroke-width="6" stroke-opacity="0.35"/>
+  
+  <!-- Scales of Justice Emblem -->
+  <circle cx="256" cy="120" r="14" fill="url(#icon-grad)"/>
+  <rect x="248" y="134" width="16" height="236" rx="7" fill="url(#icon-grad)"/>
+  <rect x="186" y="370" width="140" height="20" rx="8" fill="url(#icon-grad)"/>
+  <rect x="210" y="354" width="92" height="16" rx="5" fill="url(#icon-grad)"/>
+  <circle cx="256" cy="164" r="16" fill="url(#icon-grad)"/>
+
+  <!-- Cross Beam -->
+  <path d="M 120 172 Q 256 156 392 172" stroke="url(#icon-grad)" stroke-width="17" stroke-linecap="round" fill="none"/>
+
+  <!-- Left Scale Pan -->
+  <line x1="120" y1="172" x2="80" y2="256" stroke="url(#icon-grad)" stroke-width="7.5" stroke-linecap="round"/>
+  <line x1="120" y1="172" x2="160" y2="256" stroke="url(#icon-grad)" stroke-width="7.5" stroke-linecap="round"/>
+  <line x1="68" y1="256" x2="172" y2="256" stroke="url(#icon-grad)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 72 256 Q 120 292 168 256 Z" fill="url(#icon-grad)"/>
+
+  <!-- Right Scale Pan -->
+  <line x1="392" y1="172" x2="352" y2="256" stroke="url(#icon-grad)" stroke-width="7.5" stroke-linecap="round"/>
+  <line x1="392" y1="172" x2="432" y2="256" stroke="url(#icon-grad)" stroke-width="7.5" stroke-linecap="round"/>
+  <line x1="340" y1="256" x2="444" y2="256" stroke="url(#icon-grad)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M 344 256 Q 392 292 440 256 Z" fill="url(#icon-grad)"/>
+</svg>
