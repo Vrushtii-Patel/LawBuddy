@@ -1044,6 +1044,7 @@ final Map<String, Map<String, String>> _translations = {
   'welcome.storagePreferences': {'en': 'Storage Preferences', 'hi': 'भंडारण प्राथमिकताएं'},
   'welcome.headerTagline': {'en': 'REAL ESTATE AI TECH', 'hi': 'रियल एस्टेट एआई टेक'},
   'welcome.navFeatures': {'en': 'Features', 'hi': 'सुविधाएं'},
+  'welcome.navDownload': {'en': 'Download APK', 'hi': 'एपीके डाउनलोड करें'},
   'welcome.navHowItWorks': {'en': 'How It Works', 'hi': 'यह कैसे काम करता है'},
   'welcome.navRiskSystem': {'en': 'Risk System', 'hi': 'जोखिम प्रणाली'},
   'welcome.navFaq': {'en': 'FAQ', 'hi': 'एफएक्यू'},
