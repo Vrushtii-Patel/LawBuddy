@@ -39,9 +39,6 @@ class ApiService {
       return 'http://localhost:3000/api';
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
-      if (kReleaseMode) {
-        return 'https://lawbuddy-n5wh.onrender.com/api';
-      }
       return 'http://$androidHost/api';
     }
     return 'http://localhost:3000/api';
