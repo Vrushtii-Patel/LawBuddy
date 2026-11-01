@@ -9,3 +9,4 @@ Future<void> downloadLawBuddyApk() async {
     await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }
+
