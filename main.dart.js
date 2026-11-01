@@ -126449,13 +126449,13 @@ A.bcG.prototype={
 $0(){return this.a.Fx(this.b)},
 $S:0}
 A.a20.prototype={
-N(a3){var s,r,q,p,o,n,m,l,k,j=this,i="category",h=null,g="icon",f="color",e="title",d="desc",c=j.d,b=A.p("chat.card1Cat",c.f.c,h),a=j.c,a0=a?B.o:B.d,a1=t.N,a2=t.K
+N(a3){var s,r,q,p,o,n,m,l,k,j=this,i="category",h=null,g="icon",f="color",e="title",d="desc",c=j.d,b=A.p("chat.card1Cat",c.f.c,h),a=j.c,a0=a?B.M:B.L,a1=t.N,a2=t.K
 a0=A.c(["category",b,"icon",B.dS,"color",a0,"title",A.p("chat.card1Title",c.f.c,h),"desc",A.p("chat.card1Desc",c.f.c,h),"prompt","Can you review the key clauses in a residential property agreement and highlight standard red flags?"],a1,a2)
 b=A.p("chat.card2Cat",c.f.c,h)
 s=a?B.M:B.L
 s=A.c(["category",b,"icon",B.cH,"color",s,"title",A.p("chat.card2Title",c.f.c,h),"desc",A.p("chat.card2Desc",c.f.c,h),"prompt","What are my legal rights and compensation rules under RERA if a builder delays possession?"],a1,a2)
 b=A.p("chat.card3Cat",c.f.c,h)
-r=a?B.o:B.d
+r=a?B.M:B.L
 r=A.c(["category",b,"icon",B.tQ,"color",r,"title",A.p("chat.card3Title",c.f.c,h),"desc",A.p("chat.card3Desc",c.f.c,h),"prompt","Please draft a standard 11-month residential rental agreement with essential tenant and landlord clauses."],a1,a2)
 b=A.p("chat.card4Cat",c.f.c,h)
 q=a?B.M:B.L
@@ -126887,10 +126887,10 @@ n=A.l(14)
 if(h.w)m=r.v(0.8)
 else m=q?B.y:B.z
 m=A.ac(m,1)
-l=r.v(q?0.15:0.1)
+l=r.v(q?0.2:0.14)
 k=A.l(8)
 k=A.D(g,A.N(h.a.f,r,g,g,g,15),B.j,g,g,new A.F(l,g,g,k,g,g,g,B.l),g,g,g,g,B.Y0,g,g,g)
-l=r.v(0.08)
+l=r.v(q?0.2:0.14)
 j=A.l(6)
 i=t.p
 j=A.G(A.b([k,A.D(g,A.f(h.a.e,g,g,g,g,g,A.m().$3$color$fontSize$fontWeight(r,9.5,B.r),g,g,g),B.j,g,g,new A.F(l,g,g,j,g,g,g,B.l),g,g,g,g,B.XY,g,g,g)],i),B.k,g,B.as,B.i,0,g)
