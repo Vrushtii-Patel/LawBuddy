@@ -8,7 +8,6 @@ import '../theme/app_theme.dart';
 import '../widgets/user_profile_button.dart';
 import '../widgets/form_consent_widget.dart';
 import '../widgets/app_toast.dart';
-import 'chat/chat_ui_helpers.dart';
 import 'chat/chat_empty_state.dart';
 import 'chat/chat_message_bubble.dart';
 import 'chat/chat_input_bar.dart';
@@ -505,22 +504,27 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              HoverGlassIconButton(
-                icon: Icons.arrow_back_rounded,
+              IconButton(
+                icon: Icon(
+                  Icons.arrow_back_rounded,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  size: 22,
+                ),
                 tooltip: loc.translate('common.back'),
-                isDark: isDark,
-                onTap: () => Navigator.of(context).pop(),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+                onPressed: () => Navigator.of(context).pop(),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 8),
               Text(
                 'LawBuddy',
                 style: GoogleFonts.plusJakartaSans(
                   color: isDark
                       ? AppColors.darkTextPrimary
                       : AppColors.lightTextPrimary,
-                  fontSize: 16.5,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  letterSpacing: -0.2,
+                  letterSpacing: -0.3,
                 ),
               ),
             ],
@@ -530,23 +534,33 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              HoverGlassIconButton(
-                icon: Icons.edit_note_rounded,
+              IconButton(
+                icon: Icon(
+                  Icons.edit_note_rounded,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  size: 22,
+                ),
                 tooltip: loc.translate('chat.newChat'),
-                isDark: isDark,
-                onTap: _clearChat,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
+                onPressed: _clearChat,
               ),
-              const SizedBox(width: 6),
-              HoverGlassIconButton(
-                icon: Icons.history_rounded,
+              const SizedBox(width: 4),
+              IconButton(
+                icon: Icon(
+                  Icons.history_rounded,
+                  color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  size: 22,
+                ),
                 tooltip: loc.translate('chat.chatHistory'),
-                isDark: isDark,
-                onTap: () {
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
+                onPressed: () {
                   _loadSessions();
                   _scaffoldKey.currentState?.openEndDrawer();
                 },
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 4),
               const UserProfileButton(),
             ],
           ),

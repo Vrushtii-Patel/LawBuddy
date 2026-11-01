@@ -1394,9 +1394,10 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
         ),
         title: Text(
           title,
-          style: TextStyle(
+          style: GoogleFonts.plusJakartaSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
+            letterSpacing: -0.3,
             color: colorScheme.onSurface,
           ),
         ),

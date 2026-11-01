@@ -269,7 +269,7 @@ class _DocumentComparisonScreenState
                 ),
               ),
               backgroundColor:
-                  isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  isDark ? AppColors.darkBackground : AppColors.lightBackground,
               elevation: 0,
               scrolledUnderElevation: 0,
               leading: IconButton(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/analytics_model.dart';
 import '../providers/locale_provider.dart';
 import '../services/api_service.dart';
@@ -64,9 +65,18 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
     return Scaffold(
       backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
-        backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
         elevation: 0,
-        scrolledUnderElevation: 1,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            size: 22,
+          ),
+          tooltip: 'Back',
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -82,7 +92,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                   ),
                   child: Text(
                     loc.translate('adminAnalytics.badge'),
-                    style: TextStyle(
+                    style: GoogleFonts.plusJakartaSans(
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.0,
@@ -93,9 +103,10 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
                 const SizedBox(width: 8),
                 Text(
                   loc.translate('adminAnalytics.title'),
-                  style: TextStyle(
+                  style: GoogleFonts.plusJakartaSans(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
+                    letterSpacing: -0.3,
                     color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                 ),
@@ -103,7 +114,7 @@ class _AdminAnalyticsScreenState extends ConsumerState<AdminAnalyticsScreen> {
             ),
             Text(
               loc.translate('adminAnalytics.subtitle'),
-              style: TextStyle(
+              style: GoogleFonts.plusJakartaSans(
                 fontSize: 12,
                 color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
               ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/user_profile_button.dart';
@@ -41,26 +40,9 @@ class TopNavBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authProvider);
-    final user = authState.user;
-    final String userName =
-        (user?.fullName != null && user!.fullName.trim().isNotEmpty)
-            ? user.fullName.trim()
-            : 'User';
-    final String initial =
-        userName.isNotEmpty ? userName[0].toUpperCase() : 'U';
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-        border: Border(
-          bottom: BorderSide(
-            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-            width: 1,
-          ),
-        ),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: isDark ? AppColors.darkBackground : AppColors.lightBackground,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -76,11 +58,11 @@ class TopNavBar extends ConsumerWidget {
                 onPressed: () => scaffoldKey.currentState?.openDrawer(),
                 tooltip: 'Menu',
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 4),
               Text(
                 'LawBuddy',
                 style: GoogleFonts.plusJakartaSans(
-                  fontSize: 16.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w700,
                   color: isDark
                       ? AppColors.darkTextPrimary
@@ -90,36 +72,7 @@ class TopNavBar extends ConsumerWidget {
               ),
             ],
           ),
-          InkWell(
-            onTap: () => showProfileDialog(context, ref),
-            borderRadius: AppRadii.rounded20,
-            child: Container(
-              padding: const EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                  width: 1.0,
-                ),
-              ),
-              child: CircleAvatar(
-                radius: 14,
-                backgroundColor:
-                    (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                        .withValues(alpha: 0.15),
-                child: Text(
-                  initial,
-                  style: GoogleFonts.plusJakartaSans(
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 11,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          const UserProfileButton(),
         ],
       ),
     );

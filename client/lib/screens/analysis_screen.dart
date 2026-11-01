@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../providers/locale_provider.dart';
@@ -873,17 +874,29 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       backgroundColor:
           isDark ? AppColors.darkBackground : AppColors.lightBackground,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_rounded,
+            color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+            size: 22,
+          ),
+          tooltip: 'Back',
+          onPressed: () => Navigator.of(context).maybePop(),
+        ),
         title: Text(
           tr('analysis.reportTitle'),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+          style: GoogleFonts.plusJakartaSans(
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+            letterSpacing: -0.3,
             color:
                 isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
           ),
         ),
         backgroundColor:
-            isDark ? AppColors.darkSurface : AppColors.lightSurface,
+            isDark ? AppColors.darkBackground : AppColors.lightBackground,
         elevation: 0,
+        scrolledUnderElevation: 0,
         actions: const [
           UserProfileButton(),
           SizedBox(width: 8),

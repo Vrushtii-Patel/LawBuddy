@@ -394,91 +394,72 @@ class _StampDutyCalculatorScreenState
   Widget _buildTopBar(BuildContext context, bool isDark, LocaleNotifier loc) {
     final isDesktopOrTablet = MediaQuery.of(context).size.width >= 700;
     return Container(
-      height: 50,
+      height: 54,
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Stack(
-        alignment: Alignment.center,
+      child: Row(
         children: [
-          // Left: Back button
-          Align(
-            alignment: Alignment.centerLeft,
-            child: _HoverGlassButton(
-              onTap: () => Navigator.of(context).pop(),
-              isDark: isDark,
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back_rounded,
+              color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              size: 22,
+            ),
+            tooltip: loc.translate('common.back'),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              loc.translate('home.stampDutyCalculator'),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.3,
+                color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          if (isDesktopOrTablet) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.2 : 0.08),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: AppColors.lightPrimary.withValues(alpha: isDark ? 0.35 : 0.2),
+                ),
+              ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.arrow_back_rounded,
-                    color: isDark
-                        ? AppColors.darkTextSecondary
-                        : AppColors.lightTextPrimary,
-                    size: 18,
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.lightPrimary,
+                    ),
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    loc.translate('common.back'),
+                    'STATUTORY TAX & REGISTRY CALCULATOR',
                     style: GoogleFonts.plusJakartaSans(
-                      color: isDark
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextPrimary,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? AppColors.darkTextPrimary : AppColors.lightPrimary,
+                      letterSpacing: 0.9,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-
-          // Center: Exact dead-center badge (desktop/tablet only to avoid mobile overlap)
-          if (isDesktopOrTablet)
-            Center(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppColors.lightPrimary
-                      .withValues(alpha: isDark ? 0.2 : 0.08),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: AppColors.lightPrimary
-                        .withValues(alpha: isDark ? 0.35 : 0.2),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.lightPrimary,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'STATUTORY TAX & REGISTRY CALCULATOR',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        color: isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.lightPrimary,
-                        letterSpacing: 0.9,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-          // Right: Profile Button
-          const Align(
-            alignment: Alignment.centerRight,
-            child: UserProfileButton(),
-          ),
+            const SizedBox(width: 12),
+          ],
+          const UserProfileButton(),
         ],
       ),
     );

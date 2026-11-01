@@ -634,14 +634,16 @@ class _BinScreenState extends ConsumerState<BinScreen> {
                 tr('bin.title'),
                 style: GoogleFonts.plusJakartaSans(
                   fontWeight: FontWeight.w700,
+                  fontSize: 18,
                   letterSpacing: -0.3,
                   color:
                       isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
               ),
               backgroundColor:
-                  isDark ? AppColors.darkSurface : AppColors.lightSurface,
+                  isDark ? AppColors.darkBackground : AppColors.lightBackground,
               elevation: 0,
+              scrolledUnderElevation: 0,
               actions: const [
                 UserProfileButton(),
                 SizedBox(width: 12),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../providers/locale_provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
@@ -834,16 +835,19 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                 tooltip: 'Back',
                 onPressed: () => Navigator.of(context).maybePop(),
               ),
+              titleSpacing: 0,
               title: Text(
                 tr('recentDocs.title'),
-                style: TextStyle(
+                style: GoogleFonts.plusJakartaSans(
                   fontWeight: FontWeight.w700,
+                  fontSize: 17,
                   letterSpacing: -0.3,
                   color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                 ),
               ),
-              backgroundColor: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+              backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightBackground,
               elevation: 0,
+              scrolledUnderElevation: 0,
               actions: [
                 IconButton(
                   icon: Icon(
@@ -851,6 +855,8 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                     color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                   tooltip: 'Recycle Bin',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -864,6 +870,8 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                     color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
                   ),
                   tooltip: 'Compare Agreements',
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -871,6 +879,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
                     );
                   },
                 ),
+                const SizedBox(width: 4),
                 const UserProfileButton(),
                 const SizedBox(width: 12),
               ],
@@ -1040,7 +1049,7 @@ class _RecentDocumentsScreenState extends ConsumerState<RecentDocumentsScreen> {
           const SizedBox(width: 8),
           Text(
             tr('recentDocs.title'),
-            style: TextStyle(
+            style: GoogleFonts.plusJakartaSans(
               fontWeight: FontWeight.w700,
               fontSize: 16,
               letterSpacing: -0.3,
