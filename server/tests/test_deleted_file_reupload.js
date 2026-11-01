@@ -42,13 +42,21 @@ const mockAnalysis = [
 async function runTests() {
     console.log('=== Starting LawBuddy Issue 22 Regression Test Suite ===\n');
 
+    let mongod = null;
     const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/lawbuddy';
     try {
-        await mongoose.connect(uri, { serverSelectionTimeoutMS: 4000 });
+        await mongoose.connect(uri, { serverSelectionTimeoutMS: 2000 });
         console.log('Connected to MongoDB.');
     } catch (err) {
-        console.error('Failed to connect to MongoDB:', err.message);
-        process.exit(1);
+        try {
+            const { MongoMemoryServer } = require('mongodb-memory-server');
+            mongod = await MongoMemoryServer.create();
+            await mongoose.connect(mongod.getUri());
+            console.log('Connected to in-memory MongoDB for testing.');
+        } catch (memErr) {
+            console.error('Failed to connect to MongoDB:', memErr.message);
+            process.exit(1);
+        }
     }
 
     // Save original analysis function to restore later
@@ -319,6 +327,9 @@ async function runTests() {
     } finally {
         llmService.analyzeCanonicalClauses = originalAnalyzeCanonicalClauses;
         await mongoose.disconnect();
+        if (mongod) {
+            await mongod.stop();
+        }
     }
 }
 
