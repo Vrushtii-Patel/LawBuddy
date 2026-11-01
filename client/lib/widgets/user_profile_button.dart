@@ -319,64 +319,11 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                     ),
                     const SizedBox(height: 16),
 
-                    // Account Section
-                    if (authState.status == AuthStatus.authenticated && user != null) ...[
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          currentLanguage == AppLanguage.hindi ? 'खाता' : 'Account',
-                          style: TextStyle(
-                            fontSize: 12.5,
-                            fontWeight: FontWeight.w700,
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: isDark ? AppColors.darkSurface : AppColors.lightBackground,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                          ),
-                        ),
-                        child: Material(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(12),
-                          clipBehavior: Clip.antiAlias,
-                          child: ListTile(
-                            dense: true,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
-                            leading: Icon(Icons.person_outline_rounded, size: 19, color: colorScheme.primary),
-                            title: Text(
-                              currentLanguage == AppLanguage.hindi ? 'खाता प्रोफ़ाइल' : 'Account Profile',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                            subtitle: Text(
-                              user.fullName.isNotEmpty ? user.fullName : (user.email ?? ''),
-                              style: TextStyle(fontSize: 11.5, color: colorScheme.onSurfaceVariant),
-                            ),
-                            trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
-                            onTap: () {
-                              Navigator.pop(dialogContext);
-                              showProfileDialog(context, ref);
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    // Legal & Privacy Section
+                    // Account & Privacy Section
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        currentLanguage == AppLanguage.hindi ? 'कानूनी और गोपनीयता' : 'Legal & Privacy',
+                        currentLanguage == AppLanguage.hindi ? 'खाता और गोपनीयता' : 'Account & Privacy',
                         style: TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w700,
@@ -399,6 +346,31 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                         clipBehavior: Clip.antiAlias,
                         child: Column(
                           children: [
+                            if (authState.status == AuthStatus.authenticated && user != null) ...[
+                              ListTile(
+                                dense: true,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
+                                leading: Icon(Icons.person_outline_rounded, size: 19, color: colorScheme.primary),
+                                title: Text(
+                                  currentLanguage == AppLanguage.hindi ? 'खाता प्रोफ़ाइल' : 'Account Profile',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: colorScheme.onSurface,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  user.fullName.isNotEmpty ? user.fullName : (user.email ?? ''),
+                                  style: TextStyle(fontSize: 11.5, color: colorScheme.onSurfaceVariant),
+                                ),
+                                trailing: Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorScheme.onSurfaceVariant),
+                                onTap: () {
+                                  Navigator.pop(dialogContext);
+                                  showProfileDialog(context, ref);
+                                },
+                              ),
+                              Divider(height: 1, color: isDark ? AppColors.darkBorder : AppColors.lightBorder),
+                            ],
                             ListTile(
                               dense: true,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
