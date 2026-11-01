@@ -715,14 +715,16 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                           size: 22),
                     ),
                     const SizedBox(width: 12),
-                    Text(
-                      tr('analysis.plainEnglish'),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.lightTextPrimary,
+                    Expanded(
+                      child: Text(
+                        tr('analysis.plainEnglish'),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
+                        ),
                       ),
                     ),
                   ],
@@ -871,10 +873,13 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isNarrow = constraints.maxWidth < 620;
+
+                        final statusWidget = Row(
+                          mainAxisSize:
+                              isNarrow ? MainAxisSize.max : MainAxisSize.min,
                           children: [
                             Icon(
                               redCount > 0
@@ -886,21 +891,38 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                               size: 24,
                             ),
                             const SizedBox(width: 8),
-                            Text(
-                              redCount > 0
-                                  ? tr('analysis.highRiskDetected')
-                                  : (yellowCount > 0
-                                      ? tr('analysis.moderateCaution')
-                                      : tr('analysis.noRiskDetected')),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: summaryColor,
+                            if (isNarrow)
+                              Expanded(
+                                child: Text(
+                                  redCount > 0
+                                      ? tr('analysis.highRiskDetected')
+                                      : (yellowCount > 0
+                                          ? tr('analysis.moderateCaution')
+                                          : tr('analysis.noRiskDetected')),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: summaryColor,
+                                  ),
+                                ),
+                              )
+                            else
+                              Text(
+                                redCount > 0
+                                    ? tr('analysis.highRiskDetected')
+                                    : (yellowCount > 0
+                                        ? tr('analysis.moderateCaution')
+                                        : tr('analysis.noRiskDetected')),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: summaryColor,
+                                ),
                               ),
-                            ),
                           ],
-                        ),
-                        Wrap(
+                        );
+
+                        final actionsWidget = Wrap(
                           spacing: 8,
                           runSpacing: 8,
                           children: [
@@ -957,8 +979,28 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                               ),
                             ),
                           ],
-                        ),
-                      ],
+                        );
+
+                        if (isNarrow) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              statusWidget,
+                              const SizedBox(height: 12),
+                              actionsWidget,
+                            ],
+                          );
+                        }
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            statusWidget,
+                            const SizedBox(width: 12),
+                            Flexible(child: actionsWidget),
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 14),
                     // Stats Pill Row

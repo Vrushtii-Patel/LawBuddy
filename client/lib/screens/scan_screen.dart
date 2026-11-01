@@ -1263,6 +1263,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
       children: [
         // Eyebrow Tag
         Container(
+          constraints: const BoxConstraints(maxWidth: 360),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
             color: (isDark ? AppColors.darkAccent : AppColors.lightAccent)
@@ -1273,30 +1274,35 @@ class _ScanScreenState extends ConsumerState<ScanScreen>
                   .withValues(alpha: 0.25),
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 6,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: isDark ? AppColors.darkAccent : AppColors.lightAccent,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 7),
-              Text(
-                'RERA COMPLIANCE • LEGAL OCR • RISK DETECTION',
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  color: isDark
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextSecondary,
-                  letterSpacing: 0.8,
+                const SizedBox(width: 7),
+                Text(
+                  isDesktop
+                      ? 'RERA COMPLIANCE • LEGAL OCR • RISK DETECTION'
+                      : 'RERA COMPLIANCE • LEGAL OCR',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w700,
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.lightTextSecondary,
+                    letterSpacing: 0.6,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 14),
