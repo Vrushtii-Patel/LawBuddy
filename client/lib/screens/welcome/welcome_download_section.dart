@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
+import 'welcome_how_it_works.dart';
 
-class WelcomeDownloadSection extends StatelessWidget {
+class WelcomeDownloadSection extends ConsumerStatefulWidget {
   final bool isDark;
   final bool isDesktop;
   final bool isTablet;
@@ -16,10 +19,19 @@ class WelcomeDownloadSection extends StatelessWidget {
     required this.isTablet,
   });
 
+  @override
+  ConsumerState<WelcomeDownloadSection> createState() =>
+      _WelcomeDownloadSectionState();
+}
+
+class _WelcomeDownloadSectionState extends ConsumerState<WelcomeDownloadSection> {
+  final GlobalKey _guideAnchorKey = GlobalKey();
+
   Future<void> _handleDownloadApk(BuildContext context) async {
     final uri = Uri.parse('/app-release.apk');
     try {
-      final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      final launched =
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
       if (!launched && context.mounted) {
         await launchUrl(uri);
       }
@@ -35,122 +47,195 @@ class WelcomeDownloadSection extends StatelessWidget {
     }
   }
 
-  void _showInstallGuide(BuildContext context) {
-    final surfaceColor = isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
+  void _scrollToGuide() {
+    final ctx = _guideAnchorKey.currentContext;
+    if (ctx != null) {
+      Scrollable.ensureVisible(
+        ctx,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeInOutCubic,
+      );
+    }
+  }
+
+  void _showInstallGuideModal(BuildContext context) {
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
+    final isDark = widget.isDark;
+
+    final surfaceColor =
+        isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final primaryColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final textPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final primaryColor =
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
 
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: surfaceColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
           side: BorderSide(color: borderColor),
         ),
+        titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+        contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
         title: Row(
           children: [
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: primaryColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(Icons.install_mobile_rounded, size: 20, color: primaryColor),
+              child: Icon(Icons.install_mobile_rounded,
+                  size: 22, color: primaryColor),
             ),
             const SizedBox(width: 12),
-            Text(
-              'How to Install APK',
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: textPrimary,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    loc.translate('welcome.installTitle'),
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                      color: textPrimary,
+                    ),
+                  ),
+                  Text(
+                    'Step-by-step Android installation instructions',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12,
+                      color: textSecondary,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
         content: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 420),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildGuideStep('1', 'Tap "Download Android APK" to save the file to your device.', textPrimary, textSecondary, primaryColor),
-              const SizedBox(height: 12),
-              _buildGuideStep('2', 'If prompted by Chrome or your browser, select "Download anyway".', textPrimary, textSecondary, primaryColor),
-              const SizedBox(height: 12),
-              _buildGuideStep('3', 'Open the downloaded file and tap "Install". Enable "Allow from this source" in Android settings if requested.', textPrimary, textSecondary, primaryColor),
-            ],
+          constraints: const BoxConstraints(maxWidth: 550, maxHeight: 520),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 12),
+                StepCard(
+                  number: '01',
+                  title: loc.translate('welcome.installStep1Title'),
+                  description: loc.translate('welcome.installStep1Desc'),
+                  tag: 'DIRECT HTTPS • ~40 MB',
+                  icon: Icons.download_for_offline_rounded,
+                  bulletPoints: const [
+                    'Saves directly to your Downloads folder',
+                    'Zero store accounts or sign-ins needed',
+                  ],
+                  isDark: isDark,
+                ),
+                const SizedBox(height: 14),
+                StepCard(
+                  number: '02',
+                  title: loc.translate('welcome.installStep2Title'),
+                  description: loc.translate('welcome.installStep2Desc'),
+                  tag: 'SECURITY PROMPT',
+                  icon: Icons.security_rounded,
+                  bulletPoints: const [
+                    'Tap "Download anyway" on browser alert',
+                    'Standard Android notice for third-party APKs',
+                  ],
+                  isDark: isDark,
+                ),
+                const SizedBox(height: 14),
+                StepCard(
+                  number: '03',
+                  title: loc.translate('welcome.installStep3Title'),
+                  description: loc.translate('welcome.installStep3Desc'),
+                  tag: 'ONE-TIME PERMISSION',
+                  icon: Icons.settings_suggest_rounded,
+                  bulletPoints: const [
+                    'Settings → Allow from this source',
+                    'One-time setup on Android 8+',
+                  ],
+                  isDark: isDark,
+                ),
+                const SizedBox(height: 14),
+                StepCard(
+                  number: '04',
+                  title: loc.translate('welcome.installStep4Title'),
+                  description: loc.translate('welcome.installStep4Desc'),
+                  tag: 'ON-SITE READY',
+                  icon: Icons.camera_enhance_rounded,
+                  bulletPoints: const [
+                    'Tap "Install" → "Open"',
+                    'Camera deed scanning ready',
+                  ],
+                  isDark: isDark,
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
-          ElevatedButton(
+          OutlinedButton(
             onPressed: () => Navigator.of(ctx).pop(),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+            child: const Text('Close'),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              _handleDownloadApk(context);
+            },
+            icon: const Icon(Icons.download_rounded, size: 16),
+            label: const Text('Download APK Now'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-              foregroundColor: isDark ? AppColors.softGraphite : AppColors.warmLinen,
+              backgroundColor:
+                  isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              foregroundColor:
+                  isDark ? AppColors.softGraphite : AppColors.warmLinen,
               elevation: 0,
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              textStyle: GoogleFonts.plusJakartaSans(fontSize: 13, fontWeight: FontWeight.w700),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              textStyle: GoogleFonts.plusJakartaSans(
+                  fontSize: 13, fontWeight: FontWeight.w700),
             ),
-            child: const Text('Got It'),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildGuideStep(String number, String text, Color textPrimary, Color textSecondary, Color primaryColor) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 22,
-          height: 22,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: primaryColor.withValues(alpha: 0.15),
-            shape: BoxShape.circle,
-          ),
-          child: Text(
-            number,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 11,
-              fontWeight: FontWeight.w800,
-              color: primaryColor,
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            text,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 13,
-              height: 1.45,
-              color: textSecondary,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Only display on website/web browser; do NOT display inside installed mobile application
     if (!kIsWeb) {
       return const SizedBox.shrink();
     }
 
-    final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+    ref.watch(localeProvider);
+    final loc = ref.read(localeProvider.notifier);
+
+    final isDark = widget.isDark;
+    final isDesktop = widget.isDesktop;
+    final surfaceColor =
+        isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final borderColor = isDark ? AppColors.darkBorder : AppColors.lightBorder;
-    final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
-    final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
-    final primaryColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final textPrimary =
+        isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
+    final textSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final primaryColor =
+        isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
     final accentColor = isDark ? AppColors.darkAccent : AppColors.lightPrimary;
 
     return Container(
@@ -158,81 +243,286 @@ class WelcomeDownloadSection extends StatelessWidget {
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1200),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: isDesktop ? 40 : 22,
-              vertical: isDesktop ? 38 : 26,
-            ),
-            decoration: BoxDecoration(
-              color: surfaceColor,
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(
-                color: borderColor.withValues(alpha: isDark ? 0.8 : 0.9),
-                width: 1.2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
-                  blurRadius: 18,
-                  offset: const Offset(0, 6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 1. Top Download Banner Card
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isDesktop ? 40 : 22,
+                  vertical: isDesktop ? 38 : 26,
                 ),
-              ],
-            ),
-            child: isDesktop
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Left Column: Details & CTAs
-                      Expanded(
-                        flex: 6,
-                        child: _buildDetailsColumn(
-                          context,
-                          accentColor: accentColor,
-                          textPrimary: textPrimary,
-                          textSecondary: textSecondary,
-                          primaryColor: primaryColor,
-                          borderColor: borderColor,
-                        ),
-                      ),
-                      const SizedBox(width: 48),
-
-                      // Right Column: Mobile App Preview Card
-                      Expanded(
-                        flex: 4,
-                        child: _buildAppPreviewCard(
-                          accentColor: accentColor,
-                          surfaceColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
-                          borderColor: borderColor,
-                          textPrimary: textPrimary,
-                          textSecondary: textSecondary,
-                          primaryColor: primaryColor,
-                        ),
-                      ),
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildDetailsColumn(
-                        context,
-                        accentColor: accentColor,
-                        textPrimary: textPrimary,
-                        textSecondary: textSecondary,
-                        primaryColor: primaryColor,
-                        borderColor: borderColor,
-                      ),
-                      const SizedBox(height: 24),
-                      _buildAppPreviewCard(
-                        accentColor: accentColor,
-                        surfaceColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
-                        borderColor: borderColor,
-                        textPrimary: textPrimary,
-                        textSecondary: textSecondary,
-                        primaryColor: primaryColor,
-                      ),
-                    ],
+                decoration: BoxDecoration(
+                  color: surfaceColor,
+                  borderRadius: BorderRadius.circular(22),
+                  border: Border.all(
+                    color: borderColor.withValues(alpha: isDark ? 0.8 : 0.9),
+                    width: 1.2,
                   ),
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.25 : 0.04),
+                      blurRadius: 18,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: isDesktop
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 6,
+                            child: _buildDetailsColumn(
+                              context,
+                              accentColor: accentColor,
+                              textPrimary: textPrimary,
+                              textSecondary: textSecondary,
+                              primaryColor: primaryColor,
+                              borderColor: borderColor,
+                            ),
+                          ),
+                          const SizedBox(width: 48),
+                          Expanded(
+                            flex: 4,
+                            child: _buildAppPreviewCard(
+                              accentColor: accentColor,
+                              surfaceColor: isDark
+                                  ? AppColors.darkSurfaceElevated
+                                  : AppColors.lightSurfaceElevated,
+                              borderColor: borderColor,
+                              textPrimary: textPrimary,
+                              textSecondary: textSecondary,
+                              primaryColor: primaryColor,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildDetailsColumn(
+                            context,
+                            accentColor: accentColor,
+                            textPrimary: textPrimary,
+                            textSecondary: textSecondary,
+                            primaryColor: primaryColor,
+                            borderColor: borderColor,
+                          ),
+                          const SizedBox(height: 24),
+                          _buildAppPreviewCard(
+                            accentColor: accentColor,
+                            surfaceColor: isDark
+                                ? AppColors.darkSurfaceElevated
+                                : AppColors.lightSurfaceElevated,
+                            borderColor: borderColor,
+                            textPrimary: textPrimary,
+                            textSecondary: textSecondary,
+                            primaryColor: primaryColor,
+                          ),
+                        ],
+                      ),
+              ),
+
+              const SizedBox(height: 48),
+
+              // 2. Step-by-Step Android Installation Guide (Matching How It Works Format)
+              Container(
+                key: _guideAnchorKey,
+                child: Column(
+                  children: [
+                    Text(
+                      loc.translate('welcome.installEyebrow'),
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w700,
+                        color: accentColor,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      loc.translate('welcome.installTitle'),
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: isDesktop ? 28 : 22,
+                        fontWeight: FontWeight.w800,
+                        color: textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 620),
+                      child: Text(
+                        loc.translate('welcome.installSubtitle'),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 13.5,
+                          height: 1.45,
+                          color: textSecondary,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+
+                    // 4 StepCards in exact same format as How It Works
+                    isDesktop
+                        ? IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  child: StepCard(
+                                    number: '01',
+                                    title: loc
+                                        .translate('welcome.installStep1Title'),
+                                    description: loc
+                                        .translate('welcome.installStep1Desc'),
+                                    tag: 'DIRECT HTTPS • ~40 MB',
+                                    icon: Icons.download_for_offline_rounded,
+                                    bulletPoints: const [
+                                      'Direct cryptographic download',
+                                      'No Google Play account needed',
+                                    ],
+                                    isDark: isDark,
+                                  ),
+                                ),
+                                _buildStepArrow(isDark),
+                                Expanded(
+                                  child: StepCard(
+                                    number: '02',
+                                    title: loc
+                                        .translate('welcome.installStep2Title'),
+                                    description: loc
+                                        .translate('welcome.installStep2Desc'),
+                                    tag: 'SECURITY PROMPT',
+                                    icon: Icons.security_rounded,
+                                    bulletPoints: const [
+                                      'Select "Download anyway"',
+                                      'Standard Android outside-store notice',
+                                    ],
+                                    isDark: isDark,
+                                  ),
+                                ),
+                                _buildStepArrow(isDark),
+                                Expanded(
+                                  child: StepCard(
+                                    number: '03',
+                                    title: loc
+                                        .translate('welcome.installStep3Title'),
+                                    description: loc
+                                        .translate('welcome.installStep3Desc'),
+                                    tag: 'ONE-TIME PERMISSION',
+                                    icon: Icons.settings_suggest_rounded,
+                                    bulletPoints: const [
+                                      'Settings → Allow from this source',
+                                      'One-time setup on Android 8+',
+                                    ],
+                                    isDark: isDark,
+                                  ),
+                                ),
+                                _buildStepArrow(isDark),
+                                Expanded(
+                                  child: StepCard(
+                                    number: '04',
+                                    title: loc
+                                        .translate('welcome.installStep4Title'),
+                                    description: loc
+                                        .translate('welcome.installStep4Desc'),
+                                    tag: 'ON-SITE READY',
+                                    icon: Icons.camera_enhance_rounded,
+                                    bulletPoints: const [
+                                      'Tap "Install" → "Open"',
+                                      'Camera deed scanning ready',
+                                    ],
+                                    isDark: isDark,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Column(
+                            children: [
+                              StepCard(
+                                number: '01',
+                                title:
+                                    loc.translate('welcome.installStep1Title'),
+                                description:
+                                    loc.translate('welcome.installStep1Desc'),
+                                tag: 'DIRECT HTTPS • ~40 MB',
+                                icon: Icons.download_for_offline_rounded,
+                                bulletPoints: const [
+                                  'Direct cryptographic download',
+                                  'No Google Play account needed',
+                                ],
+                                isDark: isDark,
+                              ),
+                              const SizedBox(height: 14),
+                              StepCard(
+                                number: '02',
+                                title:
+                                    loc.translate('welcome.installStep2Title'),
+                                description:
+                                    loc.translate('welcome.installStep2Desc'),
+                                tag: 'SECURITY PROMPT',
+                                icon: Icons.security_rounded,
+                                bulletPoints: const [
+                                  'Select "Download anyway"',
+                                  'Standard Android outside-store notice',
+                                ],
+                                isDark: isDark,
+                              ),
+                              const SizedBox(height: 14),
+                              StepCard(
+                                number: '03',
+                                title:
+                                    loc.translate('welcome.installStep3Title'),
+                                description:
+                                    loc.translate('welcome.installStep3Desc'),
+                                tag: 'ONE-TIME PERMISSION',
+                                icon: Icons.settings_suggest_rounded,
+                                bulletPoints: const [
+                                  'Settings → Allow from this source',
+                                  'One-time setup on Android 8+',
+                                ],
+                                isDark: isDark,
+                              ),
+                              const SizedBox(height: 14),
+                              StepCard(
+                                number: '04',
+                                title:
+                                    loc.translate('welcome.installStep4Title'),
+                                description:
+                                    loc.translate('welcome.installStep4Desc'),
+                                tag: 'ON-SITE READY',
+                                icon: Icons.camera_enhance_rounded,
+                                bulletPoints: const [
+                                  'Tap "Install" → "Open"',
+                                  'Camera deed scanning ready',
+                                ],
+                                isDark: isDark,
+                              ),
+                            ],
+                          ),
+                  ],
+                ),
+              ),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStepArrow(bool isDark) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        child: Icon(
+          Icons.chevron_right_rounded,
+          size: 22,
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
         ),
       ),
     );
@@ -246,6 +536,9 @@ class WelcomeDownloadSection extends StatelessWidget {
     required Color primaryColor,
     required Color borderColor,
   }) {
+    final isDark = widget.isDark;
+    final isDesktop = widget.isDesktop;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -312,20 +605,27 @@ class WelcomeDownloadSection extends StatelessWidget {
               icon: const Icon(Icons.download_rounded, size: 18),
               label: const Text('Download Android APK'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                foregroundColor: isDark ? AppColors.softGraphite : AppColors.warmLinen,
+                backgroundColor:
+                    isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                foregroundColor:
+                    isDark ? AppColors.softGraphite : AppColors.warmLinen,
                 elevation: 0,
                 shadowColor: Colors.transparent,
                 minimumSize: const Size(0, 48),
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                textStyle: GoogleFonts.plusJakartaSans(fontSize: 13.5, fontWeight: FontWeight.w700),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                textStyle: GoogleFonts.plusJakartaSans(
+                    fontSize: 13.5, fontWeight: FontWeight.w700),
               ),
             ),
             OutlinedButton.icon(
-              onPressed: () => _showInstallGuide(context),
-              icon: const Icon(Icons.help_outline_rounded, size: 16),
-              label: const Text('Install Guide'),
+              onPressed: () {
+                _scrollToGuide();
+              },
+              icon: const Icon(Icons.menu_book_rounded, size: 16),
+              label: const Text('View Install Guide'),
               style: OutlinedButton.styleFrom(
                 backgroundColor: isDark
                     ? AppColors.darkSurfaceElevated
@@ -334,13 +634,28 @@ class WelcomeDownloadSection extends StatelessWidget {
                     ? AppColors.darkTextPrimary
                     : AppColors.lightTextPrimary,
                 side: BorderSide(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorderMedium,
+                  color: isDark
+                      ? AppColors.darkBorder
+                      : AppColors.lightBorderMedium,
                   width: 1.2,
                 ),
                 minimumSize: const Size(0, 48),
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                textStyle: GoogleFonts.plusJakartaSans(fontSize: 13.5, fontWeight: FontWeight.w600),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                textStyle: GoogleFonts.plusJakartaSans(
+                    fontSize: 13.5, fontWeight: FontWeight.w600),
+              ),
+            ),
+            IconButton(
+              onPressed: () => _showInstallGuideModal(context),
+              icon: const Icon(Icons.open_in_new_rounded, size: 18),
+              tooltip: 'Open in Pop-up Modal',
+              style: IconButton.styleFrom(
+                foregroundColor: isDark
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
               ),
             ),
           ],
@@ -351,7 +666,8 @@ class WelcomeDownloadSection extends StatelessWidget {
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.verified_rounded, size: 13, color: AppColors.compliant(isDark)),
+            Icon(Icons.verified_rounded,
+                size: 13, color: AppColors.compliant(isDark)),
             const SizedBox(width: 5),
             Text(
               'Direct APK • Android 8.0+ • Free standalone package',
@@ -374,6 +690,7 @@ class WelcomeDownloadSection extends StatelessWidget {
     required Color textSecondary,
     required Color primaryColor,
   }) {
+    final isDark = widget.isDark;
     final features = [
       'Camera scanning for multi-page paper deeds',
       'Encumbrance & occupancy verification lists',
@@ -399,7 +716,8 @@ class WelcomeDownloadSection extends StatelessWidget {
                   color: primaryColor.withValues(alpha: isDark ? 0.2 : 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(Icons.phone_android_rounded, size: 20, color: accentColor),
+                child: Icon(Icons.phone_android_rounded,
+                    size: 20, color: accentColor),
               ),
               const SizedBox(width: 10),
               Column(

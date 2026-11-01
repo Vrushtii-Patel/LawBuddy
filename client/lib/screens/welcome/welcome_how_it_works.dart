@@ -8,6 +8,9 @@ class StepCard extends StatefulWidget {
   final String number;
   final String title;
   final String description;
+  final String? tag;
+  final IconData? icon;
+  final List<String>? bulletPoints;
   final bool isDark;
 
   const StepCard({
@@ -15,6 +18,9 @@ class StepCard extends StatefulWidget {
     required this.number,
     required this.title,
     required this.description,
+    this.tag,
+    this.icon,
+    this.bulletPoints,
     required this.isDark,
   });
 
@@ -35,13 +41,13 @@ class _StepCardState extends State<StepCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOutCubic,
-        transform: Matrix4.translationValues(0, _isHovered ? -5 : 0, 0),
+        transform: Matrix4.translationValues(0, _isHovered ? -4 : 0, 0),
         width: double.infinity,
-        constraints: const BoxConstraints(minHeight: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+        constraints: const BoxConstraints(minHeight: 280),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
           border: Border.all(
             color: _isHovered
                 ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
@@ -49,62 +55,167 @@ class _StepCardState extends State<StepCard> {
             width: _isHovered ? 1.5 : 1.0,
           ),
           boxShadow: [
-            if (_isHovered)
-              BoxShadow(
-                color: (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
-                    .withValues(alpha: 0.15),
-                blurRadius: 16,
-                offset: const Offset(0, 6),
-              ),
+            BoxShadow(
+              color: _isHovered
+                  ? (isDark ? AppColors.darkAccent : AppColors.lightPrimary)
+                      .withValues(alpha: 0.16)
+                  : Colors.black.withValues(alpha: isDark ? 0.2 : 0.03),
+              blurRadius: _isHovered ? 18 : 10,
+              offset: Offset(0, _isHovered ? 6 : 3),
+            ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-              decoration: BoxDecoration(
-                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
-                    .withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(8),
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Top Row: Number badge + Icon
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 3.5),
+                    decoration: BoxDecoration(
+                      color: (isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightPrimary)
+                          .withValues(alpha: 0.12),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      widget.number,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightPrimary,
+                      ),
+                    ),
+                  ),
+                  if (widget.icon != null)
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: (isDark
+                                ? AppColors.darkBackground
+                                : AppColors.lightBackground)
+                            .withValues(alpha: 0.8),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        widget.icon,
+                        size: 16,
+                        color: isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightPrimary,
+                      ),
+                    ),
+                ],
               ),
-              child: Text(
-                widget.number,
+
+              if (widget.tag != null) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
+                  decoration: BoxDecoration(
+                    color: (isDark
+                            ? AppColors.darkBackground
+                            : AppColors.lightBackground)
+                        .withValues(alpha: 0.6),
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(
+                      color: (isDark
+                              ? AppColors.darkBorder
+                              : AppColors.lightBorder)
+                          .withValues(alpha: 0.5),
+                      width: 0.8,
+                    ),
+                  ),
+                  child: Text(
+                    widget.tag!,
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 9.5,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.6,
+                      color: isDark
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
+                    ),
+                  ),
+                ),
+              ],
+
+              const SizedBox(height: 9),
+              Text(
+                widget.title,
                 style: GoogleFonts.plusJakartaSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: isDark
+                      ? AppColors.darkTextPrimary
+                      : AppColors.lightTextPrimary,
+                  height: 1.25,
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              widget.title,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 15.5,
-                fontWeight: FontWeight.w700,
-                color: isDark
-                    ? AppColors.darkTextPrimary
-                    : AppColors.lightTextPrimary,
-              ),
-            ),
-            const SizedBox(height: 5),
-            Flexible(
-              fit: FlexFit.loose,
-              child: Text(
+              const SizedBox(height: 5),
+              Text(
                 widget.description,
                 style: GoogleFonts.plusJakartaSans(
-                  fontSize: 12.5,
-                  height: 1.4,
+                  fontSize: 12,
+                  height: 1.42,
                   color: isDark
                       ? AppColors.darkTextSecondary
                       : AppColors.lightTextSecondary,
                 ),
               ),
-            ),
-          ],
+
+              if (widget.bulletPoints != null &&
+                  widget.bulletPoints!.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                ...widget.bulletPoints!.map(
+                  (point) => Padding(
+                    padding: const EdgeInsets.only(top: 3.5),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Icon(
+                            Icons.check_circle_rounded,
+                            size: 13,
+                            color: isDark
+                                ? AppColors.darkAccent
+                                : AppColors.lightPrimary,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            point,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              height: 1.35,
+                              color: isDark
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
@@ -145,7 +256,7 @@ class WelcomeHowItWorksSection extends ConsumerWidget {
           child: Column(
             children: [
               Text(
-                loc.translate('welcome.howItWorksEyebrow'),
+                loc.translate('welcome.howEyebrow'),
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w700,
@@ -155,7 +266,8 @@ class WelcomeHowItWorksSection extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                loc.translate('welcome.howItWorksTitle'),
+                loc.translate('welcome.howTitle'),
+                textAlign: TextAlign.center,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: isDesktop ? 30 : 22,
                   fontWeight: FontWeight.w800,
@@ -171,60 +283,120 @@ class WelcomeHowItWorksSection extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Expanded(
-                              child: StepCard(
-                                  number: '01',
-                                  title: step1Title,
-                                  description: step1Desc,
-                                  isDark: isDark)),
+                            child: StepCard(
+                              number: '01',
+                              title: step1Title,
+                              description: step1Desc,
+                              tag: 'INGESTION & OCR',
+                              icon: Icons.document_scanner_rounded,
+                              bulletPoints: const [
+                                'Digital PDF & deed upload',
+                                'English & Devanagari OCR',
+                              ],
+                              isDark: isDark,
+                            ),
+                          ),
                           _buildStepArrow(isDark),
                           Expanded(
-                              child: StepCard(
-                                  number: '02',
-                                  title: step2Title,
-                                  description: step2Desc,
-                                  isDark: isDark)),
+                            child: StepCard(
+                              number: '02',
+                              title: step2Title,
+                              description: step2Desc,
+                              tag: 'STATUTORY AUDIT',
+                              icon: Icons.rule_folder_rounded,
+                              bulletPoints: const [
+                                'RERA Section 13 benchmark check',
+                                'Forfeiture & milestone scrutiny',
+                              ],
+                              isDark: isDark,
+                            ),
+                          ),
                           _buildStepArrow(isDark),
                           Expanded(
-                              child: StepCard(
-                                  number: '03',
-                                  title: step3Title,
-                                  description: step3Desc,
-                                  isDark: isDark)),
+                            child: StepCard(
+                              number: '03',
+                              title: step3Title,
+                              description: step3Desc,
+                              tag: 'RISK SCORING',
+                              icon: Icons.gavel_rounded,
+                              bulletPoints: const [
+                                '3-tier color risk ratings',
+                                'Plain-English clause breakdown',
+                              ],
+                              isDark: isDark,
+                            ),
+                          ),
                           _buildStepArrow(isDark),
                           Expanded(
-                              child: StepCard(
-                                  number: '04',
-                                  title: step4Title,
-                                  description: step4Desc,
-                                  isDark: isDark)),
+                            child: StepCard(
+                              number: '04',
+                              title: step4Title,
+                              description: step4Desc,
+                              tag: 'AUDIT & ACTION',
+                              icon: Icons.picture_as_pdf_rounded,
+                              bulletPoints: const [
+                                'Exportable legal PDF audit report',
+                                'Actionable renegotiation points',
+                              ],
+                              isDark: isDark,
+                            ),
+                          ),
                         ],
                       ),
                     )
                   : Column(
                       children: [
                         StepCard(
-                            number: '01',
-                            title: step1Title,
-                            description: step1Desc,
-                            isDark: isDark),
+                          number: '01',
+                          title: step1Title,
+                          description: step1Desc,
+                          tag: 'INGESTION & OCR',
+                          icon: Icons.document_scanner_rounded,
+                          bulletPoints: const [
+                            'Digital PDF & deed upload',
+                            'English & Devanagari OCR',
+                          ],
+                          isDark: isDark,
+                        ),
                         const SizedBox(height: 14),
                         StepCard(
-                            number: '02',
-                            title: step2Title,
-                            description: step2Desc,
-                            isDark: isDark),
+                          number: '02',
+                          title: step2Title,
+                          description: step2Desc,
+                          tag: 'STATUTORY AUDIT',
+                          icon: Icons.rule_folder_rounded,
+                          bulletPoints: const [
+                            'RERA Section 13 benchmark check',
+                            'Forfeiture & milestone scrutiny',
+                          ],
+                          isDark: isDark,
+                        ),
                         const SizedBox(height: 14),
                         StepCard(
-                            number: '03',
-                            title: step3Title,
-                            description: step3Desc,
-                            isDark: isDark),
+                          number: '03',
+                          title: step3Title,
+                          description: step3Desc,
+                          tag: 'RISK SCORING',
+                          icon: Icons.gavel_rounded,
+                          bulletPoints: const [
+                            '3-tier color risk ratings',
+                            'Plain-English clause breakdown',
+                          ],
+                          isDark: isDark,
+                        ),
                         const SizedBox(height: 14),
                         StepCard(
-                            number: '04',
-                            title: step4Title,
-                            description: step4Desc,
-                            isDark: isDark),
+                          number: '04',
+                          title: step4Title,
+                          description: step4Desc,
+                          tag: 'AUDIT & ACTION',
+                          icon: Icons.picture_as_pdf_rounded,
+                          bulletPoints: const [
+                            'Exportable legal PDF audit report',
+                            'Actionable renegotiation points',
+                          ],
+                          isDark: isDark,
+                        ),
                       ],
                     ),
             ],

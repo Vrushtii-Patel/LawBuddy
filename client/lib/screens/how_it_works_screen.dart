@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
@@ -27,7 +28,7 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
   final GlobalKey _checklistsKey = GlobalKey();
   final GlobalKey _calculatorKey = GlobalKey();
   final GlobalKey _legalAiKey = GlobalKey();
-  final GlobalKey _faqKey = GlobalKey();
+  final GlobalKey _installKey = GlobalKey();
 
   @override
   void dispose() {
@@ -187,6 +188,30 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
       ),
     ];
 
+    // Feature 5: Android Mobile Installation & Setup
+    final installSteps = [
+      _StepInfo(
+        number: '01',
+        title: loc.translate('welcome.installStep1Title'),
+        description: loc.translate('welcome.installStep1Desc'),
+      ),
+      _StepInfo(
+        number: '02',
+        title: loc.translate('welcome.installStep2Title'),
+        description: loc.translate('welcome.installStep2Desc'),
+      ),
+      _StepInfo(
+        number: '03',
+        title: loc.translate('welcome.installStep3Title'),
+        description: loc.translate('welcome.installStep3Desc'),
+      ),
+      _StepInfo(
+        number: '04',
+        title: loc.translate('welcome.installStep4Title'),
+        description: loc.translate('welcome.installStep4Desc'),
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: bgColor,
       body: SafeArea(
@@ -334,23 +359,34 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
                             borderColor: borderColor,
                           ),
 
-                          const SizedBox(height: 52),
+                          _buildSectionDivider(borderColor),
 
-                          // 6. COMMON QUESTIONS (FAQ)
-                          _buildFaqSection(
-                            key: _faqKey,
+                          // 6. FEATURE 5: ANDROID MOBILE INSTALLATION & ON-SITE SETUP
+                          _buildFeatureWorkflowSection(
+                            key: _installKey,
+                            badgeNumber: 'INSTALL GUIDE',
+                            eyebrow: 'MOBILE SETUP',
+                            title: loc.translate('welcome.installTitle'),
+                            subtitle: 'Four clear steps to download the verified APK, configure Android security permissions, and enable camera deed scanning.',
+                            steps: installSteps,
+                            actionLabel: 'Download Android APK',
+                            actionIcon: Icons.download_rounded,
+                            onAction: () async {
+                              final uri = Uri.parse('/app-release.apk');
+                              await launchUrl(uri, mode: LaunchMode.externalApplication);
+                            },
                             isDark: isDark,
                             isDesktop: isDesktop,
                             textPrimary: textPrimary,
                             textSecondary: textSecondary,
-                            surfaceColor: surfaceColor,
-                            borderColor: borderColor,
+                            primaryColor: primaryColor,
                             accentColor: accentColor,
+                            borderColor: borderColor,
                           ),
 
-                          const SizedBox(height: 48),
+                          const SizedBox(height: 52),
 
-                          // 7. BOTTOM CTA CARD
+                          // 6. BOTTOM CTA CARD
                           _buildBottomCtaCard(
                             isDark: isDark,
                             isDesktop: isDesktop,
@@ -680,9 +716,9 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
                 ),
               ),
               OutlinedButton.icon(
-                onPressed: () => _scrollTo(_faqKey),
-                icon: const Icon(Icons.help_outline_rounded, size: 16),
-                label: const Text('Common Questions'),
+                onPressed: () => _scrollTo(_scannerKey),
+                icon: const Icon(Icons.explore_outlined, size: 16),
+                label: const Text('Explore Modules'),
                 style: OutlinedButton.styleFrom(
                   backgroundColor: isDark
                       ? AppColors.darkSurfaceElevated
@@ -746,7 +782,7 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
             _buildJumpChip('📋 Due Diligence Checklists', () => _scrollTo(_checklistsKey), isDark, surfaceColor, borderColor, textPrimary),
             _buildJumpChip('🧮 Stamp Duty Calculator', () => _scrollTo(_calculatorKey), isDark, surfaceColor, borderColor, textPrimary),
             _buildJumpChip('💬 Legal AI & Comparison', () => _scrollTo(_legalAiKey), isDark, surfaceColor, borderColor, textPrimary),
-            _buildJumpChip('❓ FAQ', () => _scrollTo(_faqKey), isDark, surfaceColor, borderColor, textPrimary),
+            _buildJumpChip('📱 Android Install Guide', () => _scrollTo(_installKey), isDark, surfaceColor, borderColor, textPrimary),
           ],
         ),
       ],
@@ -972,117 +1008,7 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
   }
 
   // =========================================================================
-  // 6. COMMON QUESTIONS (FAQ)
-  // =========================================================================
-  Widget _buildFaqSection({
-    required Key key,
-    required bool isDark,
-    required bool isDesktop,
-    required Color textPrimary,
-    required Color textSecondary,
-    required Color surfaceColor,
-    required Color borderColor,
-    required Color accentColor,
-  }) {
-    final faqs = [
-      const _FaqItem(
-        question: 'What types of property documents can I upload?',
-        answer: 'You can upload Sale Deeds, Agreements for Sale, Builder-Buyer Agreements, Lease/Rental Agreements, and Allotment Letters as PDFs, camera photos, image scans, or pasted text.',
-      ),
-      const _FaqItem(
-        question: 'What do the risk colors mean in Document Analysis?',
-        answer: '🟢 Green indicates safe, standard clauses. 🟡 Yellow warns of missing terms or vague charges. 🔴 Red flags dangerous liabilities, unfair forfeiture terms, or statutory RERA violations.',
-      ),
-      const _FaqItem(
-        question: 'How accurate is the Stamp Duty Calculator?',
-        answer: 'It calculates statutory stamp duty, registration charges, and municipal cess based on active state revenue rates and gender/first-time buyer concessions.',
-      ),
-      const _FaqItem(
-        question: 'Does LawBuddy replace a real estate lawyer?',
-        answer: 'No. LawBuddy provides preliminary document transparency and educational AI analysis. For high-value purchases, always consult a licensed property advocate for formal title clearance.',
-      ),
-    ];
-
-    return Container(
-      key: key,
-      child: Column(
-        children: [
-          Text(
-            'COMMON QUESTIONS',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 11,
-              fontWeight: FontWeight.w800,
-              color: accentColor,
-              letterSpacing: 1.2,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            ref.read(localeProvider.notifier).translate('howItWorks.faqTitle'),
-            textAlign: TextAlign.center,
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: isDesktop ? 26 : 21,
-              fontWeight: FontWeight.w800,
-              color: textPrimary,
-              letterSpacing: -0.4,
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          Column(
-            children: faqs.map((f) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Material(
-                  color: surfaceColor,
-                  clipBehavior: Clip.antiAlias,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: BorderSide(color: borderColor),
-                  ),
-                  child: Theme(
-                    data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-                    child: ExpansionTile(
-                      iconColor: accentColor,
-                      collapsedIconColor: textSecondary,
-                      tilePadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 2),
-                      title: Text(
-                        f.question,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: textPrimary,
-                        ),
-                      ),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(18, 0, 18, 14),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              f.answer,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 13,
-                                height: 1.5,
-                                color: textSecondary,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // =========================================================================
-  // 7. BOTTOM CTA CARD
+  // 6. BOTTOM CTA CARD
   // =========================================================================
   Widget _buildBottomCtaCard({
     required bool isDark,
@@ -1249,38 +1175,38 @@ class _SimpleStepCardState extends State<_SimpleStepCard> {
               ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3.5),
-              decoration: BoxDecoration(
-                color: primaryColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                widget.number,
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                  color: accentColor,
+        child: SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3.5),
+                decoration: BoxDecoration(
+                  color: primaryColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  widget.number,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: accentColor,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              widget.title,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: textPrimary,
+              const SizedBox(height: 10),
+              Text(
+                widget.title,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: textPrimary,
+                ),
               ),
-            ),
-            const SizedBox(height: 5),
-            Flexible(
-              fit: FlexFit.loose,
-              child: Text(
+              const SizedBox(height: 5),
+              Text(
                 widget.description,
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 12.5,
@@ -1288,8 +1214,8 @@ class _SimpleStepCardState extends State<_SimpleStepCard> {
                   color: textSecondary,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -1308,15 +1234,5 @@ class _StepInfo {
     required this.number,
     required this.title,
     required this.description,
-  });
-}
-
-class _FaqItem {
-  final String question;
-  final String answer;
-
-  const _FaqItem({
-    required this.question,
-    required this.answer,
   });
 }
