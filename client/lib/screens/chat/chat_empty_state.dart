@@ -26,7 +26,7 @@ class ChatEmptyState extends StatelessWidget {
       {
         'category': loc.translate('chat.card1Cat'),
         'icon': Icons.description_outlined,
-        'color': isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+        'color': isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
         'title': loc.translate('chat.card1Title'),
         'desc': loc.translate('chat.card1Desc'),
         'prompt':
@@ -44,7 +44,7 @@ class ChatEmptyState extends StatelessWidget {
       {
         'category': loc.translate('chat.card3Cat'),
         'icon': Icons.edit_note_rounded,
-        'color': isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+        'color': isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
         'title': loc.translate('chat.card3Title'),
         'desc': loc.translate('chat.card3Desc'),
         'prompt':

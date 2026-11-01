@@ -69,7 +69,7 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                   Container(
                     padding: const EdgeInsets.all(5.5),
                     decoration: BoxDecoration(
-                      color: itemAccent.withValues(alpha: isDark ? 0.15 : 0.1),
+                      color: itemAccent.withValues(alpha: isDark ? 0.20 : 0.14),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(widget.icon, color: itemAccent, size: 15),
@@ -78,7 +78,7 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 2.5),
                     decoration: BoxDecoration(
-                      color: itemAccent.withValues(alpha: 0.08),
+                      color: itemAccent.withValues(alpha: isDark ? 0.20 : 0.14),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
