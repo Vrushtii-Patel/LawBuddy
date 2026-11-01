@@ -369,7 +369,7 @@ class _StampDutyCalculatorScreenState
                                     ),
                                     const SizedBox(width: 28),
 
-                                    // Right Column: Result Summary & Breakdown
+                                    // Right Column: Result Summary or State Benchmark Guide
                                     Expanded(
                                       flex: 5,
                                       child: Column(
@@ -378,9 +378,15 @@ class _StampDutyCalculatorScreenState
                                             _buildResultSummaryCard(
                                                 context, isDark, loc),
                                             const SizedBox(height: 20),
+                                            _buildDisclaimerBox(
+                                                context, isDark, loc),
+                                          ] else ...[
+                                            _buildCalculationGuidanceCard(
+                                                context, isDark, loc, isDesktop),
+                                            const SizedBox(height: 20),
+                                            _buildDisclaimerBox(
+                                                context, isDark, loc),
                                           ],
-                                          _buildDisclaimerBox(
-                                              context, isDark, loc),
                                         ],
                                       ),
                                     ),
@@ -520,48 +526,55 @@ class _StampDutyCalculatorScreenState
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Eyebrow Tag
-        Container(
-          constraints: const BoxConstraints(maxWidth: 360),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-          decoration: BoxDecoration(
-            color:
-                AppColors.lightPrimary.withValues(alpha: isDark ? 0.2 : 0.08),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color:
-                  AppColors.lightPrimary.withValues(alpha: isDark ? 0.35 : 0.2),
-            ),
-          ),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 6,
-                  height: 6,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.lightPrimary,
-                  ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final maxBadgeWidth =
+                (constraints.maxWidth - 24).clamp(160.0, 380.0);
+            return Container(
+              constraints: BoxConstraints(maxWidth: maxBadgeWidth),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(
+                color: AppColors.lightPrimary
+                    .withValues(alpha: isDark ? 0.2 : 0.08),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: AppColors.lightPrimary
+                      .withValues(alpha: isDark ? 0.35 : 0.2),
                 ),
-                const SizedBox(width: 7),
-                Text(
-                  isDesktop
-                      ? 'STATE REGISTRATION ACT • CIRCLE RATES • STAMP REBATES'
-                      : 'STATE REGISTRATION ACT • CIRCLE RATES',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 9.5,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.6,
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightPrimary,
-                  ),
+              ),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.lightPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 7),
+                    Text(
+                      isDesktop
+                          ? 'STATE REGISTRATION ACT • CIRCLE RATES • STAMP REBATES'
+                          : 'STATE REGISTRATION ACT • CIRCLE RATES',
+                      maxLines: 1,
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.6,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightPrimary,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 14),
 
@@ -666,7 +679,7 @@ class _StampDutyCalculatorScreenState
             // Form Inputs Grid
             LayoutBuilder(
               builder: (context, constraints) {
-                final isTwoCol = constraints.maxWidth > 560;
+                final isTwoCol = constraints.maxWidth >= 440;
 
                 Widget propertyTypeField = _buildDropdownField(
                   label: loc.translate('calc.propertyTypeLabel'),
@@ -1262,6 +1275,327 @@ class _StampDutyCalculatorScreenState
           ),
         ),
       ],
+    );
+  }
+
+  // ==========================================
+  // READY TO CALCULATE / GUIDANCE CARD (Desktop Placeholder)
+  // ==========================================
+  Widget _buildCalculationGuidanceCard(
+      BuildContext context, bool isDark, LocaleNotifier loc, bool isDesktop) {
+    final primaryColor =
+        isDark ? AppColors.darkAccent : AppColors.lightPrimary;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 1.0,
+        ),
+      ),
+      padding: EdgeInsets.all(isDesktop ? 26.0 : 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header Row
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: primaryColor.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  Icons.balance_rounded,
+                  color: primaryColor,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Statutory Stamp Duty & Registry Guide',
+                      style: GoogleFonts.plusJakartaSans(
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      'Prevailing rates, valuation rules, and statutory concessions',
+                      style: GoogleFonts.plusJakartaSans(
+                        color: isDark
+                            ? AppColors.darkTextSecondary
+                            : AppColors.lightTextSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // Key Principle 1: Circle Rate vs Agreement Value
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? AppColors.darkSurfaceElevated
+                  : AppColors.lightSurfaceElevated,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.rule_folder_outlined,
+                  size: 20,
+                  color: primaryColor,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Valuation Rule: Higher of Deed vs Circle Rate',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Under Section 47-A of the Indian Stamp Act, tax is computed on whichever is higher between the declared sale consideration and the State Government ready reckoner / circle rate.',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12,
+                          height: 1.45,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // Key Principle 2: Concessions & Rebates
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: isDark
+                  ? AppColors.darkSurfaceElevated
+                  : AppColors.lightSurfaceElevated,
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(
+                  Icons.discount_outlined,
+                  size: 20,
+                  color: isDark
+                      ? AppColors.darkSecondary
+                      : AppColors.lightSecondary,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Ownership Concessions & State Rebates',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Multiple states (Maharashtra, Delhi, UP, Gujarat, Haryana) grant 1%–2% stamp duty rebates for sole or joint women buyers, and reduced registration slabs for first-time owners.',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12,
+                          height: 1.45,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.lightTextSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 18),
+
+          // State Benchmark Quick Reference Matrix
+          Text(
+            'KEY STATE STAMP DUTY BENCHMARKS',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.8,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              _buildStateBenchmarkChip(
+                  'Maharashtra', '5%–7%', '1% Female rebate, 1% Metro cess', isDark),
+              _buildStateBenchmarkChip(
+                  'Delhi', '4%–6%', '4% Female / 6% Male + 1% Reg', isDark),
+              _buildStateBenchmarkChip(
+                  'Karnataka', '2%–5%', 'Slab: 2% (<20L), 3% (20-45L), 5% (>45L)', isDark),
+              _buildStateBenchmarkChip(
+                  'Uttar Pradesh', '6%–7%', '1% Rebate for women up to ₹10L', isDark),
+              _buildStateBenchmarkChip(
+                  'Gujarat', '4.9%', '100% Stamp Duty Exemption for Women', isDark),
+              _buildStateBenchmarkChip(
+                  'West Bengal', '5%–6%', '5% (<1Cr) / 6% (>1Cr)', isDark),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // Call to action callout
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: primaryColor.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: primaryColor.withValues(alpha: 0.25),
+                style: BorderStyle.solid,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.touch_app_rounded,
+                  size: 18,
+                  color: primaryColor,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    'Select your state and consideration on the left, then tap "Calculate Charges" for your itemized breakdown.',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: isDark
+                          ? AppColors.darkTextPrimary
+                          : AppColors.lightTextPrimary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStateBenchmarkChip(
+      String state, String rate, String note, bool isDark) {
+    return Container(
+      width: 220,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: isDark
+            ? AppColors.darkSurfaceElevated
+            : AppColors.lightSurfaceElevated,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          width: 0.8,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Text(
+                  state,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+                decoration: BoxDecoration(
+                  color: AppColors.lightPrimary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  rate,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.lightPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 3),
+          Text(
+            note,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 10,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.lightTextSecondary,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
     );
   }
 
