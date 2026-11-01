@@ -832,7 +832,7 @@ void main() {
 
     // Verify informational consent is displayed near input
     expect(
-      find.textContaining('I understand that the information I provide may be processed by LawBuddy'),
+      find.textContaining('AI answers are informational, not legal advice'),
       findsOneWidget,
     );
   });

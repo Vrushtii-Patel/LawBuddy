@@ -232,9 +232,12 @@ class FormConsentAcknowledgement extends StatelessWidget {
     final bgCol = (isDark ? AppColors.darkSurface : AppColors.lightSurface)
         .withValues(alpha: 0.6);
 
-    final privacyPolicyText =
-        _tr(context, 'consent.privacyPolicy', 'Privacy Policy');
-    final termsOfUseText = _tr(context, 'consent.termsOfUse', 'Terms of Use');
+    final privacyPolicyText = compact
+        ? _tr(context, 'consent.privacy', 'Privacy')
+        : _tr(context, 'consent.privacyPolicy', 'Privacy Policy');
+    final termsOfUseText = compact
+        ? _tr(context, 'consent.terms', 'Terms')
+        : _tr(context, 'consent.termsOfUse', 'Terms of Use');
 
     String mainText = '';
     switch (type) {
@@ -242,7 +245,7 @@ class FormConsentAcknowledgement extends StatelessWidget {
         mainText = _tr(
           context,
           'consent.legalQuestionAcknowledgement',
-          'I understand that the information I provide may be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) to provide the requested legal assistance. Please do not submit information you do not wish to share.',
+          'AI answers are informational, not legal advice. Messages are processed by Google Gemini and OpenRouter.',
         );
         break;
       case FormConsentType.documentUpload:
@@ -258,14 +261,18 @@ class FormConsentAcknowledgement extends StatelessWidget {
     }
 
     if (compact) {
+      final darkerTextColor = isDark
+          ? AppColors.darkTextSecondary.withValues(alpha: 0.95)
+          : AppColors.softGraphite.withValues(alpha: 0.85);
+
       return Padding(
         padding: margin ?? const EdgeInsets.symmetric(vertical: 4),
         child: Text.rich(
           TextSpan(
             style: GoogleFonts.plusJakartaSans(
-              fontSize: 10.5,
+              fontSize: 11.5,
               height: 1.35,
-              color: secondaryText.withValues(alpha: 0.8),
+              color: darkerTextColor,
             ),
             children: [
               TextSpan(text: '$mainText '),
@@ -273,26 +280,35 @@ class FormConsentAcknowledgement extends StatelessWidget {
                 TextSpan(
                   text: privacyPolicyText,
                   style: GoogleFonts.plusJakartaSans(
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w600,
-                    color: primaryText,
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                    color:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                     decoration: TextDecoration.underline,
-                    decorationColor: primaryText.withValues(alpha: 0.4),
+                    decorationColor: (isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.5),
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => _openPrivacy(context),
                 ),
               ],
-              if (showTerms && showPrivacy) const TextSpan(text: ' • '),
+              if (showTerms && showPrivacy)
+                TextSpan(text: compact ? ' · ' : ' • '),
               if (showTerms) ...[
                 TextSpan(
                   text: termsOfUseText,
                   style: GoogleFonts.plusJakartaSans(
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w600,
-                    color: primaryText,
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                    color:
+                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
                     decoration: TextDecoration.underline,
-                    decorationColor: primaryText.withValues(alpha: 0.4),
+                    decorationColor: (isDark
+                            ? AppColors.darkAccent
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.5),
                   ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () => _openTerms(context),

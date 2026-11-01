@@ -1533,6 +1533,8 @@ final Map<String, Map<String, String>> _translations = {
   'consent.termsOfUse': {'en': 'Terms of Use', 'hi': 'उपयोग की शर्तें'},
   'consent.andAcknowledge': {'en': ' and acknowledge the ', 'hi': ' और स्वीकार करता हूँ '},
   'consent.privacyPolicy': {'en': 'Privacy Policy', 'hi': 'गोपनीयता नीति'},
+  'consent.privacy': {'en': 'Privacy', 'hi': 'गोपनीयता'},
+  'consent.terms': {'en': 'Terms', 'hi': 'नियम'},
   'consent.aiProcessingNotice': {
     'en': ' (including AI processing via Google Gemini and OpenRouter fallback).',
     'hi': ' (Google Gemini और OpenRouter फ़ॉलबैक के माध्यम से AI प्रोसेसिंग सहित)।',
@@ -1542,8 +1544,8 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'कृपया उपयोग की शर्तों और गोपनीयता नीति से सहमत हों।',
   },
   'consent.legalQuestionAcknowledgement': {
-    'en': 'I understand that the information I provide may be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) to provide the requested legal assistance. Please do not submit information you do not wish to share.',
-    'hi': 'मैं समझता हूँ कि मेरे द्वारा प्रदान की गई जानकारी का उपयोग LawBuddy और इसके AI सेवा प्रदाताओं (Google Gemini और फ़ॉलबैक प्रदाता OpenRouter) द्वारा मांगी गई कानूनी सहायता प्रदान करने के लिए संसाधित किया जा सकता है। कृपया वह जानकारी साझा न करें जिसे आप साझा नहीं करना चाहते।',
+    'en': 'AI answers are informational, not legal advice. Messages are processed by Google Gemini and OpenRouter.',
+    'hi': 'एआई उत्तर केवल जानकारी के लिए हैं, कानूनी सलाह नहीं। संदेश Google Gemini और OpenRouter द्वारा संसाधित किए जाते हैं।',
   },
   'consent.documentUploadAcknowledgement': {
     'en': 'I understand that the document I submit will be processed by LawBuddy and its AI service providers (Google Gemini and fallback provider OpenRouter) for legal risk analysis.',
