@@ -70,11 +70,17 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
       _resolvedFileBytes = widget.initialFileBytes;
     } else if (widget.fileData != null && widget.fileData!.isNotEmpty) {
       _resolvedFileBytes = _getCleanBytes(widget.fileData);
-    } else if (widget.documentId != null && widget.documentId!.isNotEmpty) {
-      _fetchDocumentFileBytes(widget.documentId!);
-    } else if (widget.originalText.trim().isNotEmpty &&
+    }
+
+    // Immediately prepare verified PDF so the viewer has the PDF document ready instantly
+    if (_resolvedFileBytes == null &&
+        widget.originalText.trim().isNotEmpty &&
         _effectiveSourceType == 'PDF Document') {
       _synthesizeFallbackPdf();
+    }
+
+    if (widget.documentId != null && widget.documentId!.isNotEmpty) {
+      _fetchDocumentFileBytes(widget.documentId!);
     }
   }
 
@@ -101,7 +107,6 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     if (!mounted || _isLoadingFile) return;
     setState(() {
       _isLoadingFile = true;
-      _pdfLoadFailed = false;
     });
     try {
       final bytes = await ApiService.fetchDocumentFile(docId);
@@ -113,56 +118,24 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
           _isSynthesizedPdf = false;
         });
       } else if (mounted) {
-        // Fallback: If original server binary is absent, synthesize clean PDF from verified extracted text
-        if (widget.originalText.trim().isNotEmpty) {
-          try {
-            final synthBytes = await PdfExportService.generateExtractedTextPdf(
-              documentTitle: widget.documentTitle ?? 'Contract Document',
-              extractedText: widget.originalText,
-            );
-            if (mounted && synthBytes.isNotEmpty) {
-              setState(() {
-                _resolvedFileBytes = synthBytes;
-                _isLoadingFile = false;
-                _pdfLoadFailed = false;
-                _isSynthesizedPdf = true;
-              });
-              return;
-            }
-          } catch (e) {
-            debugPrint('Failed to synthesize fallback PDF: $e');
-          }
+        // If server disk has no binary, ensure synthesized PDF is active so viewer shows the document
+        if (_resolvedFileBytes == null && widget.originalText.trim().isNotEmpty) {
+          await _synthesizeFallbackPdf();
         }
         setState(() {
           _isLoadingFile = false;
-          _pdfLoadFailed = true;
-          _selectedDocViewTab = 1;
+          _pdfLoadFailed = _resolvedFileBytes == null;
         });
       }
     } catch (e) {
       debugPrint('Error fetching document file in AnalysisScreen: $e');
       if (mounted) {
-        if (widget.originalText.trim().isNotEmpty) {
-          try {
-            final synthBytes = await PdfExportService.generateExtractedTextPdf(
-              documentTitle: widget.documentTitle ?? 'Contract Document',
-              extractedText: widget.originalText,
-            );
-            if (mounted && synthBytes.isNotEmpty) {
-              setState(() {
-                _resolvedFileBytes = synthBytes;
-                _isLoadingFile = false;
-                _pdfLoadFailed = false;
-                _isSynthesizedPdf = true;
-              });
-              return;
-            }
-          } catch (_) {}
+        if (_resolvedFileBytes == null && widget.originalText.trim().isNotEmpty) {
+          await _synthesizeFallbackPdf();
         }
         setState(() {
           _isLoadingFile = false;
-          _pdfLoadFailed = true;
-          _selectedDocViewTab = 1;
+          _pdfLoadFailed = _resolvedFileBytes == null;
         });
       }
     }
