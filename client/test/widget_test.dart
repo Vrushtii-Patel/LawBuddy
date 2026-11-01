@@ -150,6 +150,9 @@ void main() {
     expect(find.byType(WelcomeScreen), findsOneWidget);
     expect(find.text('Get Started'), findsOneWidget);
     expect(find.text('Sign In'), findsWidgets);
+    expect(find.text('Features'), findsWidgets);
+    expect(find.text('How It Works'), findsWidgets);
+    expect(find.text('welcome.navDownload'), findsNothing);
     expect(find.byType(WelcomeFeaturesSection), findsOneWidget);
     expect(find.byType(WelcomeHowItWorksSection), findsOneWidget);
     expect(find.byType(WelcomeRiskSystemSection), findsOneWidget);
