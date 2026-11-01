@@ -66,8 +66,8 @@ class ChatEmptyState extends StatelessWidget {
       padding: EdgeInsets.only(
         left: isMobile ? 16 : 28,
         right: isMobile ? 16 : 28,
-        top: isMobile ? 20 : 32,
-        bottom: isMobile ? 24 : 36,
+        top: isMobile ? 8 : 28,
+        bottom: isMobile ? 12 : 36,
       ),
       child: Center(
         child: ConstrainedBox(
@@ -78,8 +78,8 @@ class ChatEmptyState extends StatelessWidget {
             children: [
               // Clean Centered Emblem
               Container(
-                width: 48,
-                height: 48,
+                width: isMobile ? 36 : 48,
+                height: isMobile ? 36 : 48,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -91,7 +91,7 @@ class ChatEmptyState extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
                   border: Border.all(
                     color: (isDark
                             ? AppColors.darkPrimary
@@ -102,13 +102,13 @@ class ChatEmptyState extends StatelessWidget {
                 child: Center(
                   child: Icon(
                     Icons.balance_rounded,
-                    size: 24,
+                    size: isMobile ? 18 : 24,
                     color:
                         isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
                   ),
                 ),
               ),
-              const SizedBox(height: 18),
+              SizedBox(height: isMobile ? 8 : 16),
 
               // Title
               Text(
@@ -118,12 +118,12 @@ class ChatEmptyState extends StatelessWidget {
                   color: isDark
                       ? AppColors.darkTextPrimary
                       : AppColors.lightTextPrimary,
-                  fontSize: isMobile ? 22 : 26,
+                  fontSize: isMobile ? 19 : 26,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.4,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: isMobile ? 4 : 8),
 
               // Subtitle
               ConstrainedBox(
@@ -135,12 +135,12 @@ class ChatEmptyState extends StatelessWidget {
                     color: isDark
                         ? AppColors.darkTextSecondary
                         : AppColors.lightTextSecondary,
-                    fontSize: 13.5,
-                    height: 1.45,
+                    fontSize: isMobile ? 12 : 13.5,
+                    height: 1.35,
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: isMobile ? 12 : 26),
 
               // 4 Clean Starter Prompt Cards in Responsive Grid
               if (isMobile)
@@ -149,7 +149,7 @@ class ChatEmptyState extends StatelessWidget {
                     final index = entry.key;
                     final p = entry.value;
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.only(bottom: index == promptCards.length - 1 ? 0 : 7),
                       child: PromptCard(
                         index: index,
                         category: p['category'] as String,

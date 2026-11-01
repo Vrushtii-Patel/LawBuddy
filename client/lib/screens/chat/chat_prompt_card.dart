@@ -58,7 +58,7 @@ class _PromptCardState extends ConsumerState<PromptCard> {
               width: 1.0,
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,12 +67,12 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(7),
+                    padding: const EdgeInsets.all(5.5),
                     decoration: BoxDecoration(
                       color: itemAccent.withValues(alpha: isDark ? 0.15 : 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(widget.icon, color: itemAccent, size: 16),
+                    child: Icon(widget.icon, color: itemAccent, size: 15),
                   ),
                   Container(
                     padding:
@@ -85,18 +85,18 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                       widget.category,
                       style: GoogleFonts.plusJakartaSans(
                         color: itemAccent,
-                        fontSize: 10,
+                        fontSize: 9.5,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 6),
               Text(
                 widget.title,
                 style: GoogleFonts.plusJakartaSans(
-                  fontSize: 13.5,
+                  fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: isDark
                       ? AppColors.darkTextPrimary
@@ -106,17 +106,17 @@ class _PromptCardState extends ConsumerState<PromptCard> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
                 widget.description,
                 style: GoogleFonts.plusJakartaSans(
-                  fontSize: 11.5,
-                  height: 1.35,
+                  fontSize: 11,
+                  height: 1.3,
                   color: isDark
                       ? AppColors.darkTextSecondary
                       : AppColors.lightTextSecondary,
                 ),
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ],
