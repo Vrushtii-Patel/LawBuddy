@@ -63,9 +63,11 @@ class ChatEmptyState extends StatelessWidget {
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16 : 28,
-        vertical: isMobile ? 24 : 36,
+      padding: EdgeInsets.only(
+        left: isMobile ? 16 : 28,
+        right: isMobile ? 16 : 28,
+        top: isMobile ? 20 : 32,
+        bottom: isMobile ? 24 : 36,
       ),
       child: Center(
         child: ConstrainedBox(

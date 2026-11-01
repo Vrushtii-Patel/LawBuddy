@@ -33,6 +33,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
 
   final List<Map<String, dynamic>> _messages = [];
   bool _isTyping = false;
+  bool _isScrolled = false;
   String? _currentSessionId;
   List<dynamic> _sessions = [];
   bool _isLoadingSessions = false;
@@ -207,6 +208,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
     setState(() {
       _currentSessionId = null;
       _messages.clear();
+      _isScrolled = false;
     });
   }
 
@@ -339,79 +341,123 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
         child: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 6),
-              // TOP BAR
+              // TOP BAR (Solid page background, dynamic 1px bottom border & soft shadow)
               _buildTopBar(context, isDark, loc),
-              const SizedBox(height: 4),
 
               // BODY STREAM / EMPTY STATE
               Expanded(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 1040),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: _messages.isEmpty
-                              ? ChatEmptyState(
-                                  isDark: isDark,
-                                  loc: loc,
-                                  isMobile: isMobile,
-                                  isDesktop: isDesktop,
-                                  onPromptSelected: (p) =>
-                                      _sendMessage(textOverride: p),
-                                )
-                              : ListView.builder(
-                                  controller: _scrollController,
-                                  physics: const BouncingScrollPhysics(),
+                child: Stack(
+                  children: [
+                    NotificationListener<ScrollNotification>(
+                      onNotification: (notification) {
+                        if (notification.metrics.axis == Axis.vertical) {
+                          final isScrolled = notification.metrics.pixels > 6;
+                          if (isScrolled != _isScrolled && mounted) {
+                            setState(() => _isScrolled = isScrolled);
+                          }
+                        }
+                        return false;
+                      },
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 1040),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: _messages.isEmpty
+                                    ? ChatEmptyState(
+                                        isDark: isDark,
+                                        loc: loc,
+                                        isMobile: isMobile,
+                                        isDesktop: isDesktop,
+                                        onPromptSelected: (p) =>
+                                            _sendMessage(textOverride: p),
+                                      )
+                                    : ListView.builder(
+                                        controller: _scrollController,
+                                        physics: const BouncingScrollPhysics(),
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: isMobile ? 16 : 32,
+                                          vertical: 16,
+                                        ),
+                                        itemCount: _messages.length,
+                                        itemBuilder: (context, index) {
+                                          final msg = _messages[index];
+                                          return AnimatedMessageBubble(
+                                            key: ValueKey(
+                                                '${msg['role']}_${msg['time']}_$index'),
+                                            message: msg,
+                                            onSuggestionTap: (s) =>
+                                                _sendMessage(textOverride: s),
+                                            onScrollRequest: _scrollToBottom,
+                                          );
+                                        },
+                                      ),
+                              ),
+                              if (_isTyping)
+                                Padding(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: isMobile ? 16 : 32,
-                                    vertical: 16,
-                                  ),
-                                  itemCount: _messages.length,
-                                  itemBuilder: (context, index) {
-                                    final msg = _messages[index];
-                                    return AnimatedMessageBubble(
-                                      key: ValueKey(
-                                          '${msg['role']}_${msg['time']}_$index'),
-                                      message: msg,
-                                      onSuggestionTap: (s) =>
-                                          _sendMessage(textOverride: s),
-                                      onScrollRequest: _scrollToBottom,
-                                    );
-                                  },
+                                      horizontal: isMobile ? 16 : 32),
+                                  child: const TypingIndicator(),
                                 ),
-                        ),
-                        if (_isTyping)
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: isMobile ? 16 : 32),
-                            child: const TypingIndicator(),
-                          ),
-                        ChatInput(
-                          controller: _controller,
-                          focusNode: _inputFocusNode,
-                          isLoading: _isTyping,
-                          onSend: () => _sendMessage(),
-                          isMobile: isMobile,
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: isMobile ? 16 : 32,
-                            right: isMobile ? 16 : 32,
-                            bottom: 8,
-                          ),
-                          child: const FormConsentAcknowledgement(
-                            type: FormConsentType.legalQuestion,
-                            showTerms: true,
-                            showPrivacy: true,
-                            compact: true,
-                            margin: EdgeInsets.zero,
+                              ChatInput(
+                                controller: _controller,
+                                focusNode: _inputFocusNode,
+                                isLoading: _isTyping,
+                                onSend: () => _sendMessage(),
+                                isMobile: isMobile,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: isMobile ? 16 : 32,
+                                  right: isMobile ? 16 : 32,
+                                  bottom: 8,
+                                ),
+                                child: const FormConsentAcknowledgement(
+                                  type: FormConsentType.legalQuestion,
+                                  showTerms: true,
+                                  showPrivacy: true,
+                                  compact: true,
+                                  margin: EdgeInsets.zero,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+
+                    // Short gradient fade from beige/background to transparent under the header
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: IgnorePointer(
+                        child: AnimatedOpacity(
+                          opacity: _isScrolled ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 180),
+                          child: Container(
+                            height: 12,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  (isDark
+                                      ? AppColors.darkBackground
+                                      : AppColors.lightBackground),
+                                  (isDark
+                                      ? AppColors.darkBackground
+                                      : AppColors.lightBackground)
+                                      .withValues(alpha: 0.0),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -425,9 +471,33 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
   // TOP APP BAR
   // ==========================================
   Widget _buildTopBar(BuildContext context, bool isDark, LocaleNotifier loc) {
-    return Container(
-      height: 52,
+    final pageBg =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final borderColor =
+        isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      height: 54,
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      decoration: BoxDecoration(
+        color: pageBg,
+        border: Border(
+          bottom: BorderSide(
+            color: _isScrolled ? borderColor : Colors.transparent,
+            width: 1.0,
+          ),
+        ),
+        boxShadow: _isScrolled
+            ? [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: isDark ? 0.28 : 0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
