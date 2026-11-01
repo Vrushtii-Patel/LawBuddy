@@ -35,6 +35,12 @@ class ApiService {
       return envApiUrl;
     }
 
+    // In release mode (e.g. installed Android APK or production web),
+    // default to the live production backend on Render when API_URL is not set.
+    if (kReleaseMode) {
+      return 'https://lawbuddy-n5wh.onrender.com/api';
+    }
+
     if (kIsWeb) {
       return 'http://localhost:3000/api';
     }

@@ -31,3 +31,4 @@ Future<void> downloadLawBuddyApk() async {
   anchor.click();
   html.document.body?.children.remove(anchor);
 }
+
