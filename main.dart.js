@@ -34618,7 +34618,8 @@ bpr:function bpr(a){this.a=a},
 bps:function bps(a){this.a=a},
 bpt:function bpt(a){this.a=a},
 a_D:function a_D(){},
-bAM(){return"https://lawbuddy-n5wh.onrender.com/api"},
+bAM(){var s="https://lawbuddy-n5wh.onrender.com/api"
+return s},
 bOW(a){var s,r,q
 try{s=A.b(a.split("/"),t.s)
 if(J.aF(s)===2){r=A.OT(J.a_(s,0),J.a_(s,1),null)
