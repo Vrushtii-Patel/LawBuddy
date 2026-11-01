@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
+import '../services/apk_download/apk_downloader.dart';
 import '../theme/app_theme.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
@@ -372,8 +372,7 @@ class _HowItWorksScreenState extends ConsumerState<HowItWorksScreen> {
                             actionLabel: 'Download Android APK',
                             actionIcon: Icons.download_rounded,
                             onAction: () async {
-                              final uri = Uri.parse('/app-release.apk');
-                              await launchUrl(uri, mode: LaunchMode.externalApplication);
+                              await downloadLawBuddyApk();
                             },
                             isDark: isDark,
                             isDesktop: isDesktop,

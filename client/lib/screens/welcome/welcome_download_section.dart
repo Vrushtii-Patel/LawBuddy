@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../providers/locale_provider.dart';
+import '../../services/apk_download/apk_downloader.dart';
 import '../../theme/app_theme.dart';
 import 'welcome_how_it_works.dart';
 
@@ -44,22 +44,8 @@ class _WelcomeDownloadSectionState extends ConsumerState<WelcomeDownloadSection>
       );
     }
 
-    final Uri apkUri;
-    if (kIsWeb) {
-      // Resolve relative to base URL (e.g. /LawBuddy/app-release.apk on GitHub Pages)
-      final base = Uri.base;
-      apkUri = base.resolve('app-release.apk');
-    } else {
-      apkUri =
-          Uri.parse('https://vrushtii-patel.github.io/LawBuddy/app-release.apk');
-    }
-
     try {
-      final launched =
-          await launchUrl(apkUri, mode: LaunchMode.externalApplication);
-      if (!launched && context.mounted) {
-        await launchUrl(apkUri);
-      }
+      await downloadLawBuddyApk();
     } catch (e) {
       debugPrint('Error launching APK download: $e');
     }
