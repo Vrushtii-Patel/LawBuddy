@@ -1306,29 +1306,48 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                                           ),
                                         ),
                                         const SizedBox(height: 14),
-                                        OutlinedButton.icon(
-                                          onPressed: _isLoadingFile
-                                              ? null
-                                              : () {
-                                                  if (widget.documentId !=
-                                                          null &&
-                                                      widget.documentId!
-                                                          .isNotEmpty) {
-                                                    _fetchDocumentFileBytes(
-                                                        widget.documentId!);
-                                                  } else {
-                                                    setState(() =>
-                                                        _pdfLoadFailed = false);
-                                                  }
-                                                },
-                                          icon: const Icon(
-                                              Icons.refresh_rounded,
-                                              size: 15),
-                                          label: Text(tr('common.retry')),
-                                          style: OutlinedButton.styleFrom(
-                                            visualDensity:
-                                                VisualDensity.compact,
-                                          ),
+                                        Wrap(
+                                          spacing: 10,
+                                          runSpacing: 8,
+                                          alignment: WrapAlignment.center,
+                                          children: [
+                                            OutlinedButton.icon(
+                                              onPressed: _isLoadingFile
+                                                  ? null
+                                                  : () {
+                                                      if (widget.documentId !=
+                                                              null &&
+                                                          widget.documentId!
+                                                              .isNotEmpty) {
+                                                        _fetchDocumentFileBytes(
+                                                            widget.documentId!);
+                                                      } else {
+                                                        setState(() =>
+                                                            _pdfLoadFailed = false);
+                                                      }
+                                                    },
+                                              icon: const Icon(
+                                                  Icons.refresh_rounded,
+                                                  size: 15),
+                                              label: Text(tr('common.retry')),
+                                              style: OutlinedButton.styleFrom(
+                                                visualDensity:
+                                                    VisualDensity.compact,
+                                              ),
+                                            ),
+                                            OutlinedButton.icon(
+                                              onPressed: () =>
+                                                  _showDocumentViewerModal(context),
+                                              icon: const Icon(
+                                                  Icons.article_outlined,
+                                                  size: 15),
+                                              label: const Text('View Full Text'),
+                                              style: OutlinedButton.styleFrom(
+                                                visualDensity:
+                                                    VisualDensity.compact,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),
