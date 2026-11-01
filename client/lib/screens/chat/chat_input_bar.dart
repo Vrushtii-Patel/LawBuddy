@@ -167,12 +167,18 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                 child: AnimatedOpacity(
                   opacity: canSend || widget.isLoading ? 1.0 : 0.35,
                   duration: const Duration(milliseconds: 150),
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
                     width: 44,
                     height: 44,
                     decoration: BoxDecoration(
-                      color:
-                          isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      color: canSend || widget.isLoading
+                          ? (isDark
+                              ? AppColors.darkAccent
+                              : AppColors.lightPrimary)
+                          : (isDark
+                              ? AppColors.darkSurfaceElevated
+                              : const Color(0xFFE2E4E8)),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: widget.isLoading
@@ -190,9 +196,13 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                           )
                         : Icon(
                             Icons.arrow_upward_rounded,
-                            color: isDark
-                                ? AppColors.softGraphite
-                                : AppColors.warmLinen,
+                            color: canSend
+                                ? (isDark
+                                    ? AppColors.softGraphite
+                                    : AppColors.warmLinen)
+                                : (isDark
+                                    ? AppColors.darkTextSecondary
+                                    : const Color(0xFF9AA0A6)),
                             size: 22,
                           ),
                   ),

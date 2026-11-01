@@ -1023,7 +1023,7 @@ void main() {
           themeMode: ThemeMode.light,
           home: Scaffold(
             body: ChatInput(
-              controller: TextEditingController(),
+              controller: TextEditingController(text: 'Query'),
               focusNode: FocusNode(),
               isLoading: false,
               onSend: () {},
@@ -1046,7 +1046,7 @@ void main() {
           themeMode: ThemeMode.dark,
           home: Scaffold(
             body: ChatInput(
-              controller: TextEditingController(),
+              controller: TextEditingController(text: 'Query'),
               focusNode: FocusNode(),
               isLoading: false,
               onSend: () {},
