@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'file_saver/save_file.dart';
@@ -259,5 +260,72 @@ class PdfExportService {
 
     final safeFileName = 'Legal_Risk_Report_${DateTime.now().millisecondsSinceEpoch}.pdf';
     await saveAndLaunchPdf(bytes, safeFileName);
+  }
+
+  /// Synthesizes a valid, clean multi-page PDF from extracted legal text
+  /// so that PDF viewers can render it reliably without network or disk dependency.
+  static Future<Uint8List> generateExtractedTextPdf({
+    required String documentTitle,
+    required String extractedText,
+  }) async {
+    final PdfDocument document = PdfDocument();
+    document.pageSettings.margins.all = 36;
+
+    final PdfPage page = document.pages.add();
+    final Size pageSize = page.getClientSize();
+    double currentY = 0;
+
+    // Brand header banner
+    page.graphics.drawRectangle(
+      brush: PdfSolidBrush(PdfColor(45, 49, 57)),
+      bounds: Rect.fromLTWH(0, currentY, pageSize.width, 36),
+    );
+    page.graphics.drawString(
+      'LAWBUDDY • VERIFIED EXTRACTED LEGAL TEXT',
+      PdfStandardFont(PdfFontFamily.helvetica, 10, style: PdfFontStyle.bold),
+      brush: PdfSolidBrush(PdfColor(239, 232, 214)),
+      bounds: Rect.fromLTWH(12, 11, pageSize.width - 24, 20),
+    );
+    currentY += 46;
+
+    // Document title
+    final safeTitle = _sanitizeText(
+      documentTitle.isNotEmpty ? documentTitle : 'Contract Document',
+    );
+    page.graphics.drawString(
+      safeTitle,
+      PdfStandardFont(PdfFontFamily.helvetica, 13, style: PdfFontStyle.bold),
+      brush: PdfSolidBrush(PdfColor(30, 41, 59)),
+      bounds: Rect.fromLTWH(0, currentY, pageSize.width, 22),
+    );
+    currentY += 26;
+
+    // Thin separator
+    page.graphics.drawLine(
+      PdfPen(PdfColor(226, 232, 240), width: 1),
+      Offset(0, currentY),
+      Offset(pageSize.width, currentY),
+    );
+    currentY += 12;
+
+    // Body legal text with auto-pagination
+    final cleanText = _sanitizeText(extractedText);
+    final PdfFont bodyFont = PdfStandardFont(PdfFontFamily.helvetica, 9.5);
+    final PdfTextElement textElement = PdfTextElement(
+      text: cleanText.isNotEmpty ? cleanText : 'No legal text extracted.',
+      font: bodyFont,
+      brush: PdfSolidBrush(PdfColor(51, 65, 85)),
+      format: PdfStringFormat(lineSpacing: 3),
+    );
+
+    textElement.draw(
+      page: page,
+      bounds: Rect.fromLTWH(0, currentY, pageSize.width, pageSize.height - currentY - 20),
+      format: PdfLayoutFormat(layoutType: PdfLayoutType.paginate),
+    );
+
+    final List<int> bytes = await document.save();
+    document.dispose();
+    return Uint8List.fromList(bytes);
   }
 }
