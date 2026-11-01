@@ -75,7 +75,7 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
               child: Stack(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(isDesktop ? 22 : 18),
+                    padding: EdgeInsets.all(isDesktop ? 22 : (isTablet ? 18 : 13)),
                     decoration: BoxDecoration(
                       color: isDark
                           ? AppColors.darkElevatedSurface
@@ -194,7 +194,7 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                           ],
                         ),
 
-                        const SizedBox(height: 12),
+                        SizedBox(height: isDesktop ? 12 : 8),
 
                         // Progress bar
                         ClipRRect(
@@ -210,7 +210,7 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                           ),
                         ),
 
-                        const SizedBox(height: 14),
+                        SizedBox(height: isDesktop ? 14 : 9),
 
                         // Clause 7.2 Header
                         Row(
@@ -260,11 +260,11 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                           ],
                         ),
 
-                        const SizedBox(height: 8),
+                        SizedBox(height: isDesktop ? 8 : 6),
 
                         // Clause Body with subtle border
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.all(isDesktop ? 12 : 9),
                           decoration: BoxDecoration(
                             color: isDark
                                 ? AppColors.darkSurface
@@ -290,11 +290,11 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                           ),
                         ),
 
-                        const SizedBox(height: 14),
+                        SizedBox(height: isDesktop ? 14 : 9),
 
                         // AI Assessment Card
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.all(isDesktop ? 12 : 9),
                           decoration: BoxDecoration(
                             color: isDark
                                 ? AppColors.darkSurface
@@ -389,7 +389,7 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
+                              SizedBox(height: isDesktop ? 8 : 6),
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(4),
                                 child: LinearProgressIndicator(
@@ -405,7 +405,7 @@ class _HeroDocumentScanVisualState extends ConsumerState<HeroDocumentScanVisual>
                                           : AppColors.lightError),
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              SizedBox(height: isDesktop ? 8 : 6),
                               Text(
                                 loc.translate('welcome.heroPlainEnglish'),
                                 style: GoogleFonts.plusJakartaSans(

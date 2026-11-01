@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/cookie_consent_banner.dart';
@@ -167,11 +168,11 @@ class WelcomeFooter extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 48),
+                    const SizedBox(width: 32),
 
                     // Quick Navigation Links
                     Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -199,6 +200,7 @@ class WelcomeFooter extends ConsumerWidget {
                         ],
                       ),
                     ),
+                    const SizedBox(width: 28),
 
                     // Legal & Policies
                     Expanded(
@@ -239,6 +241,62 @@ class WelcomeFooter extends ConsumerWidget {
                             loc.translate('welcome.storagePreferences'),
                             () => showPrivacyPreferencesDialog(context),
                             textSecondary,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 28),
+
+                    // Support & Contact
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            loc.translate('welcome.footerSupportTitle'),
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: textPrimary,
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          _buildFooterLink(
+                            loc.translate('welcome.footerContactSupport'),
+                            () => _handleContactTap(context, isDark),
+                            textSecondary,
+                          ),
+                          const SizedBox(height: 4),
+                          InkWell(
+                            onTap: () => _handleContactTap(context, isDark),
+                            borderRadius: BorderRadius.circular(6),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.mail_outline_rounded,
+                                    size: 14,
+                                    color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Flexible(
+                                    child: Text(
+                                      'finalyearproject2513@gmail.com',
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w500,
+                                        color: textSecondary,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -323,7 +381,52 @@ class WelcomeFooter extends ConsumerWidget {
                           () => showLegalDisclaimerDialog(context, isDark, ref),
                           textSecondary,
                         ),
+                        _buildFooterLink(
+                          loc.translate('welcome.footerContactSupport'),
+                          () => _handleContactTap(context, isDark),
+                          textSecondary,
+                        ),
                       ],
+                    ),
+                    const SizedBox(height: 14),
+                    InkWell(
+                      onTap: () => _handleContactTap(context, isDark),
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                        decoration: BoxDecoration(
+                          color: isDark
+                              ? AppColors.darkBackground.withValues(alpha: 0.6)
+                              : AppColors.lightBackground,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: borderColor,
+                            width: 0.8,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.mail_outline_rounded,
+                              size: 14,
+                              color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                            ),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                'finalyearproject2513@gmail.com',
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: textSecondary,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -333,41 +436,12 @@ class WelcomeFooter extends ConsumerWidget {
               const SizedBox(height: 20),
 
               // Bottom Bar
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text(
-                      '© 2026 LawBuddy. Built with precision for Indian Real Estate.',
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 11.5,
-                        color: textSecondary.withValues(alpha: 0.8),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 7,
-                        height: 7,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF4CAF50),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'Systems Normal',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+              Text(
+                '© 2026 LawBuddy. Built with precision for Indian Real Estate.',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 11.5,
+                  color: textSecondary.withValues(alpha: 0.8),
+                ),
               ),
             ],
           ),
@@ -394,6 +468,131 @@ class WelcomeFooter extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _handleContactTap(BuildContext context, bool isDark) async {
+    const email = 'finalyearproject2513@gmail.com';
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: email,
+      queryParameters: {
+        'subject': 'LawBuddy Support & Legal Tech Inquiry',
+      },
+    );
+
+    try {
+      final launched = await launchUrl(
+        emailUri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched && context.mounted) {
+        _showContactInfoDialog(context, isDark, email);
+      }
+    } catch (_) {
+      if (context.mounted) {
+        _showContactInfoDialog(context, isDark, email);
+      }
+    }
+  }
+
+  void _showContactInfoDialog(
+    BuildContext context,
+    bool isDark,
+    String email,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          backgroundColor:
+              isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurface,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Row(
+            children: [
+              Icon(
+                Icons.support_agent_rounded,
+                color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  'LawBuddy Support',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Need assistance with document scanning, legal clause queries, or account support? Reach out directly:',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  height: 1.5,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.lightTextSecondary,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkSurface
+                      : AppColors.lightSurfaceElevated,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.email_outlined,
+                        size: 16, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: SelectableText(
+                        email,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text(
+                'Close',
+                style: GoogleFonts.plusJakartaSans(
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

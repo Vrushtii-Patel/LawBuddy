@@ -577,6 +577,11 @@ final Map<String, Map<String, String>> _translations = {
   'checklists.progress': {'en': 'Progress', 'hi': 'प्रगति'},
   'checklists.completedRatio': {'en': '{completed} of {total} completed', 'hi': '{total} में से {completed} पूर्ण'},
   'checklists.allDone': {'en': 'All due-diligence items completed!', 'hi': 'सभी जांच कार्य पूर्ण हो गए!'},
+  'checklists.noCompletedTasks': {'en': 'No completed tasks yet.', 'hi': 'अभी तक कोई कार्य पूर्ण नहीं हुआ है।'},
+  'checklists.noFlaggedTasks': {'en': 'No flagged document issues in this checklist.', 'hi': 'इस चेकलिस्ट में कोई ध्वजांकित दस्तावेज़ मुद्दा नहीं है।'},
+  'checklists.noTasksFound': {'en': 'No tasks found in this checklist.', 'hi': 'इस चेकलिस्ट में कोई कार्य नहीं मिला।'},
+  'checklists.diligenceEngineBadge': {'en': 'PROPERTY DUE DILIGENCE ENGINE', 'hi': 'संपत्ति उचित सावधानी इंजन'},
+  'checklists.loadFailedTitle': {'en': 'Unable to Load Checklists', 'hi': 'चेकलिस्ट लोड करने में असमर्थ'},
   'checklists.flaggedBadge': {'en': 'FLAGGED BY DOCUMENT ISSUE', 'hi': 'दस्तावेज़ मुद्दे द्वारा ध्वजांकित'},
   'checklists.flaggedCountBadge': {'en': '{count} Flagged', 'hi': '{count} ध्वजांकित'},
   'checklists.triggeredBy': {'en': 'Triggered by: {doc}', 'hi': 'ट्रिगर: {doc}'},
@@ -1046,6 +1051,8 @@ final Map<String, Map<String, String>> _translations = {
     'en': 'AI-powered document intelligence and legal risk detection designed specifically for Indian real estate buyers, sellers, and tenants.',
     'hi': 'भारतीय रियल एस्टेट खरीदारों, विक्रेताओं और किरायेदारों के लिए विशेष रूप से डिज़ाइन किया गया एआई-संचालित दस्तावेज़ विश्लेषण।',
   },
+  'welcome.footerSupportTitle': {'en': 'Support', 'hi': 'सहायता'},
+  'welcome.footerContactSupport': {'en': 'Contact Support', 'hi': 'सहायता से संपर्क करें'},
   'welcome.navDisclaimer': {'en': 'Disclaimer', 'hi': 'अस्वीकरण'},
   'welcome.signIn': {'en': 'Sign In', 'hi': 'साइन इन'},
 
@@ -1614,6 +1621,14 @@ final Map<String, Map<String, String>> _translations = {
   'welcome.faqSubtitle': {
     'en': 'Clear answers to common questions about document audits, RERA rules, data privacy, and vernacular scanning.',
     'hi': 'दस्तावेज़ ऑडिट, रेरा नियमों, डेटा गोपनीयता और भारतीय भाषा स्कैनिंग के बारे में सामान्य प्रश्नों के स्पष्ट उत्तर।',
+  },
+  'welcome.faqStillHaveQuestions': {
+    'en': 'Still have questions about LawBuddy?',
+    'hi': 'क्या आपके पास LawBuddy के बारे में अभी भी प्रश्न हैं?',
+  },
+  'welcome.faqContactUs': {
+    'en': 'Contact Us',
+    'hi': 'हमसे संपर्क करें',
   },
 
   // Welcome CTA Banner

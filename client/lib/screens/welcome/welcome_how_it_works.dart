@@ -46,7 +46,7 @@ class _StepCardState extends State<StepCard> {
         transform: Matrix4.translationValues(0, _isHovered ? -4 : 0, 0),
         width: double.infinity,
         constraints: BoxConstraints(minHeight: widget.minHeight ?? 0),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
           borderRadius: BorderRadius.circular(18),
@@ -67,12 +67,10 @@ class _StepCardState extends State<StepCard> {
             ),
           ],
         ),
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
               // Top Row: Number badge + Icon
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -219,8 +217,7 @@ class _StepCardState extends State<StepCard> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 

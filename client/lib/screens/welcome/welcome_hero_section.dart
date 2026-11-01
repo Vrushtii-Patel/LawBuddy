@@ -45,9 +45,6 @@ class WelcomeHeroSection extends ConsumerWidget {
         final scrollProgress = clampedScroll / 450.0;
 
         // Dynamic scroll parallax offsets
-        final titleShiftBack = scrollProgress * 14.0;
-        final titleShiftMid = scrollProgress * 8.0;
-        final titleShiftThird = scrollProgress * 4.0;
         final docShift = scrollProgress * -14.0;
         final sideWordInward =
             (1.0 - scrollProgress) * (isDesktop ? 30.0 : 14.0);
@@ -55,7 +52,7 @@ class WelcomeHeroSection extends ConsumerWidget {
         return Container(
           padding: EdgeInsets.symmetric(
             horizontal: isDesktop ? 32.0 : (isTablet ? 20.0 : 16.0),
-            vertical: isDesktop ? 32.0 : 20.0,
+            vertical: isDesktop ? 32.0 : (isTablet ? 20.0 : 12.0),
           ),
           child: Center(
             child: ConstrainedBox(
@@ -68,72 +65,33 @@ class WelcomeHeroSection extends ConsumerWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Eyebrow Badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: (isDark
-                                  ? AppColors.darkPrimary
-                                  : AppColors.lightPrimary)
-                              .withValues(alpha: isDark ? 0.2 : 0.08),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: (isDark
-                                    ? AppColors.darkPrimary
-                                    : AppColors.lightPrimary)
-                                .withValues(alpha: isDark ? 0.35 : 0.20),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 7,
-                              height: 7,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isDark
-                                    ? AppColors.darkAccent
-                                    : AppColors.lightPrimary,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Flexible(
-                              child: Text(
-                                isDesktop
-                                    ? loc
-                                        .translate('welcome.heroEyebrowDesktop')
-                                    : loc
-                                        .translate('welcome.heroEyebrowMobile'),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: isDark
-                                      ? AppColors.darkTextPrimary
-                                      : AppColors.lightTextPrimary,
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                            ),
-                          ],
+                      // Clean Eyebrow Header (No pill container, no dot)
+                      Text(
+                        isDesktop
+                            ? loc.translate('welcome.heroEyebrowDesktop')
+                            : loc.translate('welcome.heroEyebrowMobile'),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: isDesktop ? 12.0 : 11.0,
+                          fontWeight: FontWeight.w800,
+                          color: isDark
+                              ? AppColors.darkAccent
+                              : AppColors.lightPrimary,
+                          letterSpacing: 1.4,
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      SizedBox(height: isDesktop ? 16.0 : (isTablet ? 12.0 : 8.0)),
 
-                      // Giant Dimensional 4-Layered Headline (All 3 lines 100% visible & readable)
-                      _buildLayeredHeadline(
+                      // Clean High-Contrast Headline (Crisp, single-layer, zero shadow)
+                      _buildHeadline(
                         context,
                         loc,
-                        titleShiftBack,
-                        titleShiftMid,
-                        titleShiftThird,
                       ),
 
-                      const SizedBox(height: 24),
+                      SizedBox(height: isDesktop ? 24.0 : (isTablet ? 18.0 : 14.0)),
 
                       // 3D Document Visual with Live Scanning Animation
                       Transform.translate(
@@ -145,7 +103,7 @@ class WelcomeHeroSection extends ConsumerWidget {
                         ),
                       ),
 
-                      const SizedBox(height: 24),
+                      SizedBox(height: isDesktop ? 24.0 : (isTablet ? 18.0 : 14.0)),
 
                       // Supporting Narrative
                       ConstrainedBox(
@@ -154,8 +112,8 @@ class WelcomeHeroSection extends ConsumerWidget {
                           loc.translate('welcome.heroNarrative'),
                           textAlign: TextAlign.center,
                           style: GoogleFonts.plusJakartaSans(
-                            fontSize: isDesktop ? 15.0 : 13.5,
-                            height: 1.6,
+                            fontSize: isDesktop ? 15.0 : 13.0,
+                            height: isDesktop ? 1.6 : 1.45,
                             color: isDark
                                 ? AppColors.darkTextSecondary
                                 : AppColors.lightTextSecondary,
@@ -163,7 +121,7 @@ class WelcomeHeroSection extends ConsumerWidget {
                         ),
                       ),
 
-                      const SizedBox(height: 24),
+                      SizedBox(height: isDesktop ? 24.0 : (isTablet ? 18.0 : 16.0)),
 
                       // CTA Buttons Row
                       Wrap(
@@ -181,8 +139,9 @@ class WelcomeHeroSection extends ConsumerWidget {
                               foregroundColor: isDark
                                   ? AppColors.softGraphite
                                   : AppColors.warmLinen,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 28, vertical: 15),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: isDesktop ? 28.0 : 24.0,
+                                  vertical: isDesktop ? 15.0 : 12.0),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
                               elevation: 0,
@@ -313,23 +272,13 @@ class WelcomeHeroSection extends ConsumerWidget {
     );
   }
 
-  Widget _buildLayeredHeadline(
+  Widget _buildHeadline(
     BuildContext context,
     LocaleNotifier loc,
-    double shiftBack,
-    double shiftMid,
-    double shiftThird,
   ) {
     final textScale = MediaQuery.textScalerOf(context).scale(1.0);
     final rawFontSize = isDesktop ? 62.0 : (isTablet ? 42.0 : 28.0);
     final fontSize = (rawFontSize / (textScale > 1.2 ? textScale * 0.8 : 1.0)).clamp(20.0, 68.0);
-
-    final backOffsetY =
-        (isDesktop ? 10.0 : (isTablet ? 7.0 : 5.0)) + (shiftBack * 0.4);
-    final secOffsetY =
-        (isDesktop ? 7.0 : (isTablet ? 5.0 : 3.5)) + (shiftMid * 0.4);
-    final thirdOffsetY =
-        (isDesktop ? 4.0 : (isTablet ? 3.0 : 2.0)) + (shiftThird * 0.4);
 
     final baseStyle = GoogleFonts.plusJakartaSans(
       fontSize: fontSize,
@@ -338,10 +287,9 @@ class WelcomeHeroSection extends ConsumerWidget {
       letterSpacing: -1.0,
     );
 
-    Widget buildHeadlineLine(String lineText, Animation<double> anim,
-        {String? prefix, String? accentWord, String? suffix}) {
+    Widget buildHeadlineLine(String lineText, Animation<double> anim) {
       return Padding(
-        padding: EdgeInsets.only(bottom: isDesktop ? 6.0 : 4.0),
+        padding: EdgeInsets.only(bottom: isDesktop ? 6.0 : (isTablet ? 4.0 : 2.0)),
         child: AnimatedBuilder(
           animation: anim,
           builder: (context, child) {
@@ -354,90 +302,13 @@ class WelcomeHeroSection extends ConsumerWidget {
               ),
             );
           },
-          child: Padding(
-            padding: EdgeInsets.only(bottom: backOffsetY),
-            child: Stack(
-              alignment: Alignment.center,
-              clipBehavior: Clip.none,
-              children: [
-                // Layer 1: Back Deep Slate Tone
-                Transform.translate(
-                  offset: Offset(0, backOffsetY),
-                  child: Text(
-                    lineText,
-                    textAlign: TextAlign.center,
-                    style: baseStyle.copyWith(
-                      color:
-                          (isDark ? AppColors.darkSurface : AppColors.lightBorder)
-                              .withValues(alpha: 0.5),
-                    ),
-                  ),
-                ),
-
-                // Layer 2: Mid Lavender Shadow
-                Transform.translate(
-                  offset: Offset(0, secOffsetY),
-                  child: Text(
-                    lineText,
-                    textAlign: TextAlign.center,
-                    style: baseStyle.copyWith(
-                      color: (isDark
-                              ? AppColors.darkPrimary
-                              : AppColors.lightPrimary)
-                          .withValues(alpha: 0.4),
-                    ),
-                  ),
-                ),
-
-                // Layer 3: Third Brand Warm Tone
-                Transform.translate(
-                  offset: Offset(0, thirdOffsetY),
-                  child: Text(
-                    lineText,
-                    textAlign: TextAlign.center,
-                    style: baseStyle.copyWith(
-                      color:
-                          (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
-                              .withValues(alpha: 0.3),
-                    ),
-                  ),
-                ),
-
-                // Layer 4: Front Crisp Dominant Layer
-                if (accentWord != null)
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      style: baseStyle.copyWith(
-                        color: isDark
-                            ? AppColors.darkTextPrimary
-                            : AppColors.lightTextPrimary,
-                      ),
-                      children: [
-                        if (prefix != null) TextSpan(text: prefix),
-                        TextSpan(
-                          text: accentWord,
-                          style: TextStyle(
-                            color: isDark
-                                ? AppColors.darkAccent
-                                : AppColors.lightPrimary,
-                          ),
-                        ),
-                        if (suffix != null) TextSpan(text: suffix),
-                      ],
-                    ),
-                  )
-                else
-                  Text(
-                    lineText,
-                    textAlign: TextAlign.center,
-                    style: baseStyle.copyWith(
-                      color: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
-                    ),
-                  ),
-              ],
+          child: Text(
+            lineText,
+            textAlign: TextAlign.center,
+            style: baseStyle.copyWith(
+              color: isDark
+                  ? AppColors.darkTextPrimary
+                  : AppColors.lightTextPrimary,
             ),
           ),
         ),
@@ -451,11 +322,7 @@ class WelcomeHeroSection extends ConsumerWidget {
         buildHeadlineLine(
             loc.translate('welcome.headlineLine1'), headlineLine1),
         buildHeadlineLine(
-          loc.translate('welcome.headlineLine2Full'),
-          headlineLine2,
-          prefix: loc.translate('welcome.headlineLine2Prefix'),
-          accentWord: loc.translate('welcome.headlineLine2Accent'),
-        ),
+            loc.translate('welcome.headlineLine2Full'), headlineLine2),
         buildHeadlineLine(
             loc.translate('welcome.headlineLine3'), headlineLine3),
       ],

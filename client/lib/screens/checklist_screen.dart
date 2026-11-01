@@ -1541,12 +1541,12 @@ class _ChecklistScreenState extends ConsumerState<ChecklistScreen> {
                                 const SizedBox(height: 12),
                                 Text(
                                   _selectedFilter == 'Completed'
-                                      ? 'No completed tasks yet.'
+                                      ? tr('checklists.noCompletedTasks')
                                       : (_selectedFilter == 'Flagged'
-                                          ? 'No flagged document issues in this checklist.'
+                                          ? tr('checklists.noFlaggedTasks')
                                           : (_selectedFilter == 'Pending'
                                               ? tr('checklists.allDone')
-                                              : 'No tasks found in this checklist.')),
+                                              : tr('checklists.noTasksFound'))),
                                   style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,

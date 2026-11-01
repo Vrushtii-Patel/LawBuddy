@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 
@@ -33,8 +35,6 @@ class WelcomeFaqSection extends ConsumerStatefulWidget {
 }
 
 class _WelcomeFaqSectionState extends ConsumerState<WelcomeFaqSection> {
-  String _selectedCategory = 'All';
-
   static const List<LawBuddyFaqItem> _faqList = [
     LawBuddyFaqItem(
       category: 'RERA & Law',
@@ -91,12 +91,6 @@ class _WelcomeFaqSectionState extends ConsumerState<WelcomeFaqSection> {
     final isDark = widget.isDark;
     final isDesktop = widget.isDesktop;
     final loc = ref.watch(localeProvider.notifier);
-
-    final categories = ['All', 'RERA & Law', 'Documents', 'OCR & Vernacular', 'Privacy & Security', 'Stamp Duty & Fees', 'Next Steps'];
-
-    final filteredFaqs = _selectedCategory == 'All'
-        ? _faqList
-        : _faqList.where((item) => item.category == _selectedCategory).toList();
 
     final textPrimary = isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary;
     final textSecondary = isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
@@ -160,56 +154,14 @@ class _WelcomeFaqSectionState extends ConsumerState<WelcomeFaqSection> {
               ),
               const SizedBox(height: 28),
 
-              // Category Filter Chips
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: categories.map((cat) {
-                    final isSelected = _selectedCategory == cat;
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: FilterChip(
-                        selected: isSelected,
-                        label: Text(cat),
-                        labelStyle: GoogleFonts.plusJakartaSans(
-                          fontSize: 12,
-                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                          color: isSelected
-                              ? (isDark ? Colors.white : AppColors.lightPrimary)
-                              : textSecondary,
-                        ),
-                        backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated,
-                        selectedColor: accentColor.withValues(alpha: isDark ? 0.25 : 0.15),
-                        checkmarkColor: accentColor,
-                        side: BorderSide(
-                          color: isSelected
-                              ? accentColor.withValues(alpha: 0.7)
-                              : borderColor,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        onSelected: (_) {
-                          setState(() {
-                            _selectedCategory = cat;
-                          });
-                        },
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-              const SizedBox(height: 24),
-
               // Accordion List
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: filteredFaqs.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                itemCount: _faqList.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
-                  final faq = filteredFaqs[index];
+                  final faq = _faqList[index];
                   return _FaqCard(
                     faq: faq,
                     isDark: isDark,
@@ -221,10 +173,236 @@ class _WelcomeFaqSectionState extends ConsumerState<WelcomeFaqSection> {
                   );
                 },
               ),
+              const SizedBox(height: 24),
+
+              // Final Contact Option Card
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(
+                  horizontal: isDesktop ? 22 : 16,
+                  vertical: 14,
+                ),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkSurfaceElevated
+                      : AppColors.lightSurfaceElevated,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: borderColor),
+                ),
+                child: isDesktop
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.help_outline_rounded,
+                                size: 18,
+                                color: accentColor,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                loc.translate('welcome.faqStillHaveQuestions'),
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                          _buildContactButton(context, isDark, accentColor, loc),
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.help_outline_rounded,
+                                size: 17,
+                                color: accentColor,
+                              ),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                  loc.translate('welcome.faqStillHaveQuestions'),
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.plusJakartaSans(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: textPrimary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          _buildContactButton(context, isDark, accentColor, loc),
+                        ],
+                      ),
+              ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildContactButton(
+    BuildContext context,
+    bool isDark,
+    Color accentColor,
+    LocaleNotifier loc,
+  ) {
+    return TextButton.icon(
+      onPressed: () => _handleContactTap(context, isDark),
+      icon: const Icon(Icons.mail_outline_rounded, size: 15),
+      label: Text(
+        loc.translate('welcome.faqContactUs'),
+        style: GoogleFonts.plusJakartaSans(
+          fontSize: 12.5,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+      style: TextButton.styleFrom(
+        foregroundColor: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        backgroundColor: accentColor.withValues(alpha: isDark ? 0.15 : 0.08),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(
+            color: accentColor.withValues(alpha: isDark ? 0.35 : 0.2),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleContactTap(BuildContext context, bool isDark) async {
+    const email = 'finalyearproject2513@gmail.com';
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: email,
+      queryParameters: {
+        'subject': 'LawBuddy Question & Legal Tech Inquiry',
+      },
+    );
+
+    try {
+      final launched = await launchUrl(
+        emailUri,
+        mode: LaunchMode.externalApplication,
+      );
+      if (!launched && context.mounted) {
+        _showContactInfoDialog(context, isDark, email);
+      }
+    } catch (_) {
+      if (context.mounted) {
+        _showContactInfoDialog(context, isDark, email);
+      }
+    }
+  }
+
+  void _showContactInfoDialog(
+    BuildContext context,
+    bool isDark,
+    String email,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          backgroundColor: isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurface,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Row(
+            children: [
+              Icon(
+                Icons.support_agent_rounded,
+                color: isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+              ),
+              const SizedBox(width: 10),
+              Flexible(
+                child: Text(
+                  'Contact LawBuddy Support',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Have questions about agreement scanning, RERA compliance, or document security? Reach out to our team:',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  height: 1.5,
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.darkSurface : AppColors.lightSurfaceElevated,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.email_outlined, size: 16, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: SelectableText(
+                        email,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Close'),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: email));
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Support email copied to clipboard'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.copy_rounded, size: 15),
+              label: const Text('Copy Email'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -295,51 +473,29 @@ class _FaqCardState extends State<_FaqCard> {
               highlightColor: Colors.transparent,
             ),
             child: ExpansionTile(
-              tilePadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+              dense: true,
+              visualDensity: const VisualDensity(vertical: -1.5),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 2),
               onExpansionChanged: (expanded) {
                 setState(() => _isExpanded = expanded);
               },
               iconColor: widget.accentColor,
               collapsedIconColor: widget.textSecondary,
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    margin: const EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(
-                      color: widget.accentColor.withValues(alpha: widget.isDark ? 0.16 : 0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      widget.faq.category.toUpperCase(),
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.6,
-                        color: widget.accentColor,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      widget.faq.question,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.w700,
-                        color: _isExpanded ? widget.accentColor : widget.textPrimary,
-                        height: 1.35,
-                      ),
-                    ),
-                  ),
-                ],
+              title: Text(
+                widget.faq.question,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w600,
+                  color: _isExpanded ? widget.accentColor : widget.textPrimary,
+                  height: 1.3,
+                ),
               ),
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
+                  padding: const EdgeInsets.fromLTRB(18, 0, 18, 14),
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: (widget.isDark ? Colors.white : Colors.black).withValues(alpha: 0.025),
                       borderRadius: BorderRadius.circular(10),
@@ -350,8 +506,8 @@ class _FaqCardState extends State<_FaqCard> {
                     child: Text(
                       widget.faq.answer,
                       style: GoogleFonts.plusJakartaSans(
-                        fontSize: 13.5,
-                        height: 1.6,
+                        fontSize: 13.0,
+                        height: 1.55,
                         color: widget.textSecondary,
                       ),
                     ),

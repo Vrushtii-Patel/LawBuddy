@@ -84,8 +84,9 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
       debugPrint('Error fetching checklists: $e');
       if (mounted) {
         setState(() {
-          _error =
-              'Unable to load checklists. Please check your connection and try again.';
+          _error = ref
+              .read(localeProvider.notifier)
+              .translate('checklists.loadFailedGeneral');
           _isLoading = false;
         });
       }
@@ -515,7 +516,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                                     const SizedBox(width: 10),
                                     Expanded(
                                       child: Text(
-                                        'Unable to rename checklist. Please try again.',
+                                        tr('checklists.renameFailedGeneral'),
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w600,
@@ -723,7 +724,10 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                             const SizedBox(height: 2),
                             Text(
                               totalCount > 0
-                                  ? '$completedCount of $totalCount items completed'
+                                  ? tr('checklists.completedRatio', {
+                                      'completed': completedCount.toString(),
+                                      'total': totalCount.toString(),
+                                    })
                                   : 'Active case',
                               style: GoogleFonts.plusJakartaSans(
                                 fontSize: 11.5,
@@ -1292,7 +1296,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'PROPERTY DUE DILIGENCE ENGINE',
+                      tr('checklists.diligenceEngineBadge'),
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
@@ -1807,7 +1811,7 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
             ),
             const SizedBox(height: 16),
             Text(
-              'Unable to Load Checklists',
+              tr('checklists.loadFailedTitle'),
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -2176,7 +2180,10 @@ class _DueDiligenceCaseCardState extends State<_DueDiligenceCaseCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '$completedCount of $totalCount completed',
+                      widget.tr('checklists.completedRatio', {
+                        'completed': completedCount.toString(),
+                        'total': totalCount.toString(),
+                      }),
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
