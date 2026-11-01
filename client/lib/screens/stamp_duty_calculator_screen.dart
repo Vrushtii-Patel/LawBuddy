@@ -521,6 +521,7 @@ class _StampDutyCalculatorScreenState
       children: [
         // Eyebrow Tag
         Container(
+          constraints: const BoxConstraints(maxWidth: 360),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
             color:
@@ -531,30 +532,35 @@ class _StampDutyCalculatorScreenState
                   AppColors.lightPrimary.withValues(alpha: isDark ? 0.35 : 0.2),
             ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.lightPrimary,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 6,
+                  height: 6,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.lightPrimary,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 7),
-              Text(
-                'STATE REGISTRATION ACT • CIRCLE RATES • STAMP REBATES',
-                style: GoogleFonts.plusJakartaSans(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.8,
-                  color: isDark
-                      ? AppColors.darkTextPrimary
-                      : AppColors.lightPrimary,
+                const SizedBox(width: 7),
+                Text(
+                  isDesktop
+                      ? 'STATE REGISTRATION ACT • CIRCLE RATES • STAMP REBATES'
+                      : 'STATE REGISTRATION ACT • CIRCLE RATES',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.6,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightPrimary,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 14),

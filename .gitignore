@@ -10,7 +10,9 @@ node_modules/
 
 # OS & IDE
 .DS_Store
+run_app.ps1
 **/.DS_Store
+run_app.ps1
 .idea/
 **/.idea/
 *.iml
