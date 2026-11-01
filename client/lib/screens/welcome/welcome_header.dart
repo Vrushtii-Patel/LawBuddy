@@ -186,6 +186,7 @@ class WelcomeHeader extends ConsumerWidget {
   final VoidCallback? onDownloadTap;
   final VoidCallback onHowItWorksTap;
   final VoidCallback onRiskSystemTap;
+  final VoidCallback? onFaqTap;
   final VoidCallback onLoginTap;
 
   const WelcomeHeader({
@@ -197,6 +198,7 @@ class WelcomeHeader extends ConsumerWidget {
     this.onDownloadTap,
     required this.onHowItWorksTap,
     required this.onRiskSystemTap,
+    this.onFaqTap,
     required this.onLoginTap,
   });
 
@@ -228,80 +230,12 @@ class WelcomeHeader extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Brand Logo + Title
-              Flexible(
-                child: InkWell(
-                  onTap: onLogoTap,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 34,
-                        height: 34,
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? AppColors.darkPrimary
-                              : AppColors.lightPrimary,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.gavel_rounded,
-                          size: 17,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              loc.translate('common.appName'),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 15.5,
-                                fontWeight: FontWeight.w800,
-                                color: isDark
-                                    ? AppColors.darkTextPrimary
-                                    : AppColors.lightTextPrimary,
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Container(
-                              width: 20,
-                              height: 1.5,
-                              decoration: BoxDecoration(
-                                color: (isDark
-                                        ? AppColors.darkPrimary
-                                        : AppColors.lightPrimary)
-                                    .withValues(alpha: 0.65),
-                                borderRadius: BorderRadius.circular(1),
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              loc.translate('welcome.headerTagline'),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 8,
-                                fontWeight: FontWeight.w700,
-                                color: isDark
-                                    ? AppColors.darkAccent
-                                    : AppColors.lightPrimary,
-                                letterSpacing: 1.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+              if (isDesktop)
+                _buildBrandLogo(onLogoTap, isDark, loc)
+              else
+                Flexible(
+                  child: _buildBrandLogo(onLogoTap, isDark, loc),
                 ),
-              ),
 
               // Desktop Navigation Links
               if (isDesktop)
@@ -317,30 +251,16 @@ class WelcomeHeader extends ConsumerWidget {
                             _buildNavButton(loc.translate('welcome.navFeatures'),
                                 onFeaturesTap, isDark),
                             if (kIsWeb && onDownloadTap != null)
-                              _buildNavButton('Download', onDownloadTap!, isDark),
+                              _buildNavButton(loc.translate('welcome.navDownload'),
+                                  onDownloadTap!, isDark),
                             _buildNavButton(loc.translate('welcome.navHowItWorks'),
                                 onHowItWorksTap, isDark),
                             _buildNavButton(loc.translate('welcome.navRiskSystem'),
                                 onRiskSystemTap, isDark),
-                            _buildNavButton(loc.translate('welcome.privacyPolicy'),
-                                () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => const PrivacyPolicyScreen()),
-                              );
-                            }, isDark),
-                            _buildNavButton(loc.translate('welcome.termsOfUse'),
-                                () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => const TermsOfUseScreen()),
-                              );
-                            }, isDark),
-                            _buildNavButton(
-                                loc.translate('welcome.navDisclaimer'),
-                                () =>
-                                    showLegalDisclaimerDialog(context, isDark, ref),
-                                isDark),
+                            if (onFaqTap != null)
+                              _buildNavButton(loc.translate('welcome.navFaq'),
+                                  onFaqTap!, isDark),
+                            _buildLegalMenuButton(context, isDark, loc, ref),
                           ],
                         ),
                       ),
@@ -413,6 +333,9 @@ class WelcomeHeader extends ConsumerWidget {
                           case 'riskSystem':
                             onRiskSystemTap();
                             break;
+                          case 'faq':
+                            onFaqTap?.call();
+                            break;
                           case 'privacy':
                             Navigator.of(context).push(
                               MaterialPageRoute(
@@ -449,6 +372,10 @@ class WelcomeHeader extends ConsumerWidget {
                             value: 'riskSystem',
                             child:
                                 Text(loc.translate('welcome.navRiskSystem'))),
+                        if (onFaqTap != null)
+                          PopupMenuItem(
+                              value: 'faq',
+                              child: Text(loc.translate('welcome.navFaq'))),
                         const PopupMenuDivider(),
                         PopupMenuItem(
                             value: 'privacy',
@@ -479,7 +406,7 @@ class WelcomeHeader extends ConsumerWidget {
 
   Widget _buildNavButton(String label, VoidCallback onTap, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: TextButton(
         onPressed: onTap,
         style: TextButton.styleFrom(
@@ -493,6 +420,217 @@ class WelcomeHeader extends ConsumerWidget {
           style: GoogleFonts.plusJakartaSans(
               fontSize: 13, fontWeight: FontWeight.w500),
         ),
+      ),
+    );
+  }
+
+  Widget _buildLegalMenuButton(
+    BuildContext context,
+    bool isDark,
+    LocaleNotifier loc,
+    WidgetRef ref,
+  ) {
+    final textSecondary =
+        isDark ? AppColors.darkTextSecondary : AppColors.lightTextSecondary;
+    final surfaceElevated =
+        isDark ? AppColors.darkSurfaceElevated : AppColors.lightSurfaceElevated;
+    final border = isDark ? AppColors.darkBorder : AppColors.lightBorder;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: PopupMenuButton<String>(
+        tooltip: loc.translate('welcome.navLegal'),
+        offset: const Offset(0, 36),
+        color: surfaceElevated,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: border),
+        ),
+        onSelected: (value) {
+          switch (value) {
+            case 'privacy':
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (_) => const PrivacyPolicyScreen()),
+              );
+              break;
+            case 'terms':
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (_) => const TermsOfUseScreen()),
+              );
+              break;
+            case 'disclaimer':
+              showLegalDisclaimerDialog(context, isDark, ref);
+              break;
+            case 'storage':
+              showPrivacyPreferencesDialog(context);
+              break;
+          }
+        },
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            value: 'privacy',
+            child: Row(
+              children: [
+                Icon(Icons.shield_outlined, size: 16, color: textSecondary),
+                const SizedBox(width: 10),
+                Text(
+                  loc.translate('welcome.privacyPolicy'),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 'terms',
+            child: Row(
+              children: [
+                Icon(Icons.description_outlined,
+                    size: 16, color: textSecondary),
+                const SizedBox(width: 10),
+                Text(
+                  loc.translate('welcome.termsOfUse'),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            value: 'disclaimer',
+            child: Row(
+              children: [
+                Icon(Icons.gavel_outlined, size: 16, color: textSecondary),
+                const SizedBox(width: 10),
+                Text(
+                  loc.translate('welcome.disclaimerTitle'),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const PopupMenuDivider(),
+          PopupMenuItem(
+            value: 'storage',
+            child: Row(
+              children: [
+                Icon(Icons.cookie_outlined, size: 16, color: textSecondary),
+                const SizedBox(width: 10),
+                Text(
+                  loc.translate('welcome.storagePreferences'),
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                loc.translate('welcome.navLegal'),
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: textSecondary,
+                ),
+              ),
+              const SizedBox(width: 3),
+              Icon(
+                Icons.keyboard_arrow_down_rounded,
+                size: 16,
+                color: textSecondary,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBrandLogo(VoidCallback onTap, bool isDark, LocaleNotifier loc) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              Icons.gavel_rounded,
+              size: 17,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  loc.translate('common.appName'),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.w800,
+                    color: isDark
+                        ? AppColors.darkTextPrimary
+                        : AppColors.lightTextPrimary,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Container(
+                  width: 20,
+                  height: 1.5,
+                  decoration: BoxDecoration(
+                    color: (isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary)
+                        .withValues(alpha: 0.65),
+                    borderRadius: BorderRadius.circular(1),
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  loc.translate('welcome.headerTagline'),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 8,
+                    fontWeight: FontWeight.w700,
+                    color: isDark
+                        ? AppColors.darkAccent
+                        : AppColors.lightPrimary,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

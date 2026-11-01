@@ -153,6 +153,7 @@ void main() {
     expect(find.byType(WelcomeFeaturesSection), findsOneWidget);
     expect(find.byType(WelcomeHowItWorksSection), findsOneWidget);
     expect(find.byType(WelcomeRiskSystemSection), findsOneWidget);
+    expect(find.byType(WelcomeFaqSection), findsOneWidget);
     expect(find.byType(WelcomeCtaBanner), findsOneWidget);
   });
 
@@ -966,7 +967,7 @@ void main() {
     expect(find.text('How LawBuddy Works'), findsWidgets);
     expect(find.text('How Document Analysis Works'), findsOneWidget);
     expect(find.text('Explore LawBuddy Tools'), findsOneWidget);
-    expect(find.text('Frequently Asked Questions'), findsOneWidget);
+    expect(find.text('Explore Modules'), findsOneWidget);
   });
 
   testWidgets('HowItWorksScreen renders on Mobile without overflow', (WidgetTester tester) async {

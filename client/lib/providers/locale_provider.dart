@@ -1040,6 +1040,12 @@ final Map<String, Map<String, String>> _translations = {
   'welcome.navFeatures': {'en': 'Features', 'hi': 'सुविधाएं'},
   'welcome.navHowItWorks': {'en': 'How It Works', 'hi': 'यह कैसे काम करता है'},
   'welcome.navRiskSystem': {'en': 'Risk System', 'hi': 'जोखिम प्रणाली'},
+  'welcome.navFaq': {'en': 'FAQ', 'hi': 'एफएक्यू'},
+  'welcome.navLegal': {'en': 'Legal', 'hi': 'कानूनी'},
+  'welcome.footerDescription': {
+    'en': 'AI-powered document intelligence and legal risk detection designed specifically for Indian real estate buyers, sellers, and tenants.',
+    'hi': 'भारतीय रियल एस्टेट खरीदारों, विक्रेताओं और किरायेदारों के लिए विशेष रूप से डिज़ाइन किया गया एआई-संचालित दस्तावेज़ विश्लेषण।',
+  },
   'welcome.navDisclaimer': {'en': 'Disclaimer', 'hi': 'अस्वीकरण'},
   'welcome.signIn': {'en': 'Sign In', 'hi': 'साइन इन'},
 
@@ -1155,27 +1161,54 @@ final Map<String, Map<String, String>> _translations = {
     'hi': 'शीर्षक मंजूरी, रेरा अनुमोदन, भार प्रमाणपत्र और ओसी रिकॉर्ड को कवर करने वाला चरण-दर-चरण सत्यापन।',
   },
 
-  'welcome.howEyebrow': {'en': 'SIMPLE 4-STEP PROCESS', 'hi': 'सरल 4-चरणीय प्रक्रिया'},
-  'welcome.howTitle': {'en': 'How It Works', 'hi': 'यह कैसे काम करता है'},
-  'welcome.step1Title': {'en': 'Upload Agreement', 'hi': 'अनुबंध अपलोड करें'},
+  'welcome.howEyebrow': {'en': 'HOW LAWBUDDY WORKS', 'hi': 'LAWBUDDY कैसे काम करता है'},
+  'welcome.howTitle': {'en': 'From Paper Deed to Plain-English Audit in 4 Steps', 'hi': '4 चरणों में कागजी विलेख से सरल भाषा ऑडिट तक'},
+  'welcome.step1Title': {'en': 'Upload or Scan Deed', 'hi': 'विलेख अपलोड या स्कैन करें'},
   'welcome.step1Desc': {
-    'en': 'Upload your property agreement, sale deed, or rental contract.',
-    'hi': 'अपना संपत्ति समझौता, बिक्री विलेख, या किराया अनुबंध अपलोड करें।',
+    'en': 'Upload digital PDFs, scanned contracts, or deed photos. Built-in OCR accurately extracts text from English and vernacular Devanagari legal papers.',
+    'hi': 'डिजिटल पीडीएफ, स्कैन किए गए अनुबंध या विलेख फोटो अपलोड करें। अंतर्निहित ओसीआर अंग्रेजी और देवनागरी कानूनी दस्तावेजों से सटीक टेक्स्ट निकालता है।',
   },
-  'welcome.step2Title': {'en': 'AI Contract Scan', 'hi': 'एआई अनुबंध स्कैन'},
+  'welcome.step2Title': {'en': 'Clause Extraction & RERA Audit', 'hi': 'खंड निष्कर्षण और रेरा ऑडिट'},
   'welcome.step2Desc': {
-    'en': 'AI examines the text and evaluates statutory RERA compliance.',
-    'hi': 'एआई पाठ की जांच करता है और वैधानिक रेरा अनुपालन का मूल्यांकन करता है।',
+    'en': 'Automated extraction of forfeiture clauses, indemnity covenants, and handover milestones, benchmarked against statutory RERA Section 13 standards.',
+    'hi': 'जब्ती शर्तों, क्षतिपूर्ति दायित्वों और कब्जे की समयसीमा का स्वचालित विश्लेषण, जिसे वैधानिक रेरा धारा 13 के मानकों के साथ परखा जाता है।',
   },
-  'welcome.step3Title': {'en': 'Plain-English Insights', 'hi': 'सरल भाषा अंतर्दृष्टि'},
+  'welcome.step3Title': {'en': 'Plain-English Risk Rating', 'hi': 'सरल भाषा में जोखिम रेटिंग'},
   'welcome.step3Desc': {
-    'en': 'Get plain-English explanations and flagged risk highlights.',
-    'hi': 'सरल भाषा स्पष्टीकरण और चिह्नित जोखिम हाइलाइट प्राप्त करें।',
+    'en': 'Complex legal jargon translated into plain layman terms with 3-tier risk classification: High Risk (Red builder traps), Caution (Amber), and Compliant (Green).',
+    'hi': 'जटिल कानूनी भाषा का सरल आम बोलचाल में 3-स्तरीय जोखिम वर्गीकरण: उच्च जोखिम (लाल जाल), सावधानी (पीला), और अनुपालन (हरा)।',
   },
-  'welcome.step4Title': {'en': 'Legal Audit Report', 'hi': 'कानूनी ऑडिट रिपोर्ट'},
+  'welcome.step4Title': {'en': 'Audit Report & Action Plan', 'hi': 'ऑडिट रिपोर्ट और कार्य योजना'},
   'welcome.step4Desc': {
-    'en': 'Generate and download a structured legal risk assessment PDF.',
-    'hi': 'एक संरचित कानूनी जोखिम मूल्यांकन पीडीएफ तैयार करें और डाउनलोड करें।',
+    'en': 'Generate an exportable PDF audit report featuring recommended clause renegotiations, legal discussion points, and state stamp duty estimates.',
+    'hi': 'अनुशंसित खंड संशोधनों, कानूनी चर्चा बिंदुओं और राज्य स्टांप शुल्क अनुमानों के साथ एक संपूर्ण कानूनी ऑडिट पीडीएफ रिपोर्ट बनाएं।',
+  },
+
+  'welcome.installEyebrow': {'en': 'ANDROID INSTALLATION GUIDE', 'hi': 'एंड्रॉइड इंस्टॉलेशन गाइड'},
+  'welcome.installTitle': {'en': 'How to Install LawBuddy APK', 'hi': 'LawBuddy एपीके कैसे इंस्टॉल करें'},
+  'welcome.installSubtitle': {
+    'en': 'Direct, secure installation on any Android phone in 4 quick steps. No Google Play account required.',
+    'hi': '4 त्वरित चरणों में किसी भी एंड्रॉइड फोन पर सीधा और सुरक्षित इंस्टॉलेशन। Google Play खाते की आवश्यकता नहीं है।',
+  },
+  'welcome.installStep1Title': {'en': 'Download Release APK', 'hi': 'रिलीज़ एपीके डाउनलोड करें'},
+  'welcome.installStep1Desc': {
+    'en': 'Tap "Download Android APK" above. The verified installer package (app-release.apk, ~40 MB) saves directly to your device Downloads folder.',
+    'hi': 'ऊपर "Download Android APK" पर टैप करें। सत्यापित इंस्टॉलर पैकेज आपके डिवाइस डाउनलोड फ़ोल्डर में सुरक्षित रूप से सेव हो जाएगा।',
+  },
+  'welcome.installStep2Title': {'en': 'Confirm Browser Notice', 'hi': 'ब्राउज़र सूचना की पुष्टि करें'},
+  'welcome.installStep2Desc': {
+    'en': 'When Chrome or your mobile browser warns "File might be harmful", tap "Download anyway". This is Android\'s standard notice for direct HTTPS APK downloads.',
+    'hi': 'जब क्रोम या आपका ब्राउज़र "File might be harmful" चेतावनी दे, तो "Download anyway" पर टैप करें। यह सीधे एपीके डाउनलोड के लिए एंड्रॉइड की मानक सुरक्षा सूचना है।',
+  },
+  'welcome.installStep3Title': {'en': 'Enable Unknown Sources', 'hi': 'अज्ञात स्रोत सक्षम करें'},
+  'welcome.installStep3Desc': {
+    'en': 'Tap the downloaded APK. Select Settings and toggle "Allow from this source" to ON. This is a one-time Android security setup.',
+    'hi': 'डाउनलोड की गई फ़ाइल पर टैप करें। सेटिंग्स चुनें और "Allow from this source" को चालू करें। यह एकमुश्त अनुमति है।',
+  },
+  'welcome.installStep4Title': {'en': 'Install & Grant Camera', 'hi': 'इंस्टॉल करें और कैमरा अनुमति दें'},
+  'welcome.installStep4Desc': {
+    'en': 'Return to installer and tap "Install" → "Open". Grant Camera permission for real-time deed scanning right at registrar offices.',
+    'hi': 'वापस जाएं और "Install" → "Open" पर टैप करें। विलेखों को सीधे स्कैन करने के लिए कैमरा अनुमति दें।',
   },
 
   'welcome.riskEyebrow': {'en': 'AI-POWERED AUDIT PREVIEW', 'hi': 'एआई-संचालित ऑडिट पूर्वावलोकन'},
@@ -1574,6 +1607,14 @@ final Map<String, Map<String, String>> _translations = {
   'welcome.riskItem1': {'en': 'Clause 7.2: Unilateral earnest forfeiture (100%)', 'hi': 'खंड 7.2: एकतरफा बयाना जब्ती (100%)'},
   'welcome.riskItem2': {'en': 'Clause 14.1: Asymmetric delay penalty compensation', 'hi': 'खंड 14.1: असममित विलंब जुर्माना मुआवजा'},
   'welcome.riskItem3': {'en': 'Clause 3.1: Carpet area specification & RERA warranty', 'hi': 'खंड 3.1: कारपेट एरिया विनिर्देश और रेरा वारंटी'},
+
+  // Welcome FAQ Section
+  'welcome.faqEyebrow': {'en': 'FREQUENTLY ASKED QUESTIONS', 'hi': 'अक्सर पूछे जाने वाले प्रश्न'},
+  'welcome.faqTitle': {'en': 'Real Estate Legal Clarity, Answered', 'hi': 'अचल संपत्ति कानूनी स्पष्टता और समाधान'},
+  'welcome.faqSubtitle': {
+    'en': 'Clear answers to common questions about document audits, RERA rules, data privacy, and vernacular scanning.',
+    'hi': 'दस्तावेज़ ऑडिट, रेरा नियमों, डेटा गोपनीयता और भारतीय भाषा स्कैनिंग के बारे में सामान्य प्रश्नों के स्पष्ट उत्तर।',
+  },
 
   // Welcome CTA Banner
   'welcome.ctaBannerTitle': {

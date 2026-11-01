@@ -21,6 +21,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProvid
   final GlobalKey _downloadKey = GlobalKey();
   final GlobalKey _howItWorksKey = GlobalKey();
   final GlobalKey _riskSystemKey = GlobalKey();
+  final GlobalKey _faqKey = GlobalKey();
 
   late final AnimationController _heroEntryController;
   late final Animation<double> _headlineLine1;
@@ -151,6 +152,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProvid
                   onDownloadTap: () => _scrollToSection(_downloadKey),
                   onHowItWorksTap: _navigateToHowItWorks,
                   onRiskSystemTap: () => _scrollToSection(_riskSystemKey),
+                  onFaqTap: () => _scrollToSection(_faqKey),
                   onLoginTap: _navigateToLogin,
                 ),
 
@@ -223,7 +225,17 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProvid
 
                         const SizedBox(height: 80),
 
-                        // 6. Bottom CTA Callout Card
+                        // 6. Comprehensive Legal FAQ Section
+                        WelcomeFaqSection(
+                          key: _faqKey,
+                          isDark: isDark,
+                          isDesktop: isDesktop,
+                          isTablet: isTablet,
+                        ),
+
+                        const SizedBox(height: 80),
+
+                        // 7. Bottom CTA Callout Card
                         WelcomeCtaBanner(
                           isDark: isDark,
                           isDesktop: isDesktop,
@@ -231,7 +243,18 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with TickerProvid
                           onAnalyzeDoc: _navigateToSignup,
                         ),
 
-                        const SizedBox(height: 56),
+                        const SizedBox(height: 64),
+
+                        // 8. Professional Landing Page Footer
+                        WelcomeFooter(
+                          isDark: isDark,
+                          isDesktop: isDesktop,
+                          onFeaturesTap: () => _scrollToSection(_featuresKey),
+                          onDownloadTap: () => _scrollToSection(_downloadKey),
+                          onHowItWorksTap: _navigateToHowItWorks,
+                          onRiskSystemTap: () => _scrollToSection(_riskSystemKey),
+                          onFaqTap: () => _scrollToSection(_faqKey),
+                        ),
                       ],
                     ),
                   ),

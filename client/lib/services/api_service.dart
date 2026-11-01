@@ -39,6 +39,9 @@ class ApiService {
       return 'http://localhost:3000/api';
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
+      if (kReleaseMode) {
+        return 'https://lawbuddy-n5wh.onrender.com/api';
+      }
       return 'http://$androidHost/api';
     }
     return 'http://localhost:3000/api';
@@ -704,8 +707,8 @@ class ApiService {
       final uri = Uri.base;
       return '${uri.scheme}://${uri.host}${uri.hasPort ? ':${uri.port}' : ''}${uri.path}';
     }
-    // Development/testing fallback URL until production deployment domain is configured
-    return 'https://vrushti1303.github.io/Final-year-project/';
+    // Production GitHub Pages deployment URL
+    return 'https://vrushtii-patel.github.io/LawBuddy/';
   }
 
   static String buildShareUrl(String shareToken) {

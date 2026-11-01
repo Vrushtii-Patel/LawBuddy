@@ -5,5 +5,7 @@ export 'welcome_marquee.dart';
 export 'welcome_features_section.dart';
 export 'welcome_how_it_works.dart';
 export 'welcome_risk_showcase.dart';
+export 'welcome_faq_section.dart';
 export 'welcome_cta_banner.dart';
 export 'welcome_download_section.dart';
+export 'welcome_footer.dart';
