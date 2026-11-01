@@ -26,11 +26,21 @@ class ChatInput extends ConsumerStatefulWidget {
 
 class _ChatInputState extends ConsumerState<ChatInput> {
   bool _isFocused = false;
+  bool _hasText = false;
 
   @override
   void initState() {
     super.initState();
+    _hasText = widget.controller.text.trim().isNotEmpty;
+    widget.controller.addListener(_onTextChanged);
     widget.focusNode.addListener(_onFocusChange);
+  }
+
+  void _onTextChanged() {
+    final hasText = widget.controller.text.trim().isNotEmpty;
+    if (hasText != _hasText && mounted) {
+      setState(() => _hasText = hasText);
+    }
   }
 
   void _onFocusChange() {
@@ -40,7 +50,23 @@ class _ChatInputState extends ConsumerState<ChatInput> {
   }
 
   @override
+  void didUpdateWidget(ChatInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_onTextChanged);
+      widget.controller.addListener(_onTextChanged);
+      _hasText = widget.controller.text.trim().isNotEmpty;
+    }
+    if (oldWidget.focusNode != widget.focusNode) {
+      oldWidget.focusNode.removeListener(_onFocusChange);
+      widget.focusNode.addListener(_onFocusChange);
+      _isFocused = widget.focusNode.hasFocus;
+    }
+  }
+
+  @override
   void dispose() {
+    widget.controller.removeListener(_onTextChanged);
     widget.focusNode.removeListener(_onFocusChange);
     super.dispose();
   }
@@ -48,6 +74,7 @@ class _ChatInputState extends ConsumerState<ChatInput> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bool canSend = !widget.isLoading && _hasText;
 
     final dockBg = isDark ? AppColors.darkSurface : AppColors.lightSurface;
     final dockBorder = _isFocused
@@ -105,8 +132,8 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                     .translate('chat.inputHint'),
                 hintStyle: GoogleFonts.plusJakartaSans(
                   color: isDark
-                      ? AppColors.darkTextSecondary
-                      : AppColors.lightTextSecondary,
+                    ? AppColors.darkTextSecondary
+                    : AppColors.lightTextSecondary,
                   fontSize: 13.5,
                 ),
                 border: InputBorder.none,
@@ -116,14 +143,14 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                 filled: false,
               ),
               onSubmitted: (_) {
-                if (!widget.isLoading) widget.onSend();
+                if (canSend) widget.onSend();
               },
             ),
           ),
           const SizedBox(width: 8),
           Semantics(
             button: true,
-            enabled: !widget.isLoading,
+            enabled: canSend,
             label: widget.isLoading
                 ? ref
                     .watch(localeProvider.notifier)
@@ -132,39 +159,43 @@ class _ChatInputState extends ConsumerState<ChatInput> {
                     .watch(localeProvider.notifier)
                     .translate('a11y.chatSendMessage'),
             child: MouseRegion(
-              cursor: widget.isLoading
-                  ? SystemMouseCursors.basic
-                  : SystemMouseCursors.click,
+              cursor: canSend
+                  ? SystemMouseCursors.click
+                  : SystemMouseCursors.basic,
               child: GestureDetector(
-                onTap: widget.isLoading ? null : widget.onSend,
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color:
-                        isDark ? AppColors.darkAccent : AppColors.lightPrimary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: widget.isLoading
-                      ? Center(
-                          child: SizedBox(
-                            width: 18,
-                            height: 18,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: isDark
-                                  ? AppColors.softGraphite
-                                  : AppColors.warmLinen,
+                onTap: canSend ? widget.onSend : null,
+                child: AnimatedOpacity(
+                  opacity: canSend || widget.isLoading ? 1.0 : 0.35,
+                  duration: const Duration(milliseconds: 150),
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color:
+                          isDark ? AppColors.darkAccent : AppColors.lightPrimary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: widget.isLoading
+                        ? Center(
+                            child: SizedBox(
+                              width: 18,
+                              height: 18,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: isDark
+                                    ? AppColors.softGraphite
+                                    : AppColors.warmLinen,
+                              ),
                             ),
+                          )
+                        : Icon(
+                            Icons.arrow_upward_rounded,
+                            color: isDark
+                                ? AppColors.softGraphite
+                                : AppColors.warmLinen,
+                            size: 22,
                           ),
-                        )
-                      : Icon(
-                          Icons.arrow_upward_rounded,
-                          color: isDark
-                              ? AppColors.softGraphite
-                              : AppColors.warmLinen,
-                          size: 22,
-                        ),
+                  ),
                 ),
               ),
             ),

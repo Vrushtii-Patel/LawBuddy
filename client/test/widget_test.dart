@@ -1062,6 +1062,51 @@ void main() {
     expect(darkIcon.color, equals(AppColors.softGraphite));
   });
 
+  testWidgets('ChatInput send button is dimmed and disabled when empty, and active when text is typed', (WidgetTester tester) async {
+    final controller = TextEditingController();
+    bool sendCalled = false;
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.lightTheme,
+          home: Scaffold(
+            body: ChatInput(
+              controller: controller,
+              focusNode: FocusNode(),
+              isLoading: false,
+              onSend: () => sendCalled = true,
+              isMobile: false,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Verify dimmed to 35% opacity when empty
+    final sendButtonOpacity = find.ancestor(
+      of: find.byIcon(Icons.arrow_upward_rounded),
+      matching: find.byType(AnimatedOpacity),
+    );
+    expect(tester.widget<AnimatedOpacity>(sendButtonOpacity).opacity, equals(0.35));
+
+    // Tap should not invoke onSend
+    await tester.tap(find.byIcon(Icons.arrow_upward_rounded));
+    expect(sendCalled, isFalse);
+
+    // Enter non-whitespace text
+    await tester.enterText(find.byType(TextField), 'Hello LawBuddy');
+    await tester.pumpAndSettle();
+
+    // Verify active at 100% opacity
+    expect(tester.widget<AnimatedOpacity>(sendButtonOpacity).opacity, equals(1.0));
+
+    // Tap should now invoke onSend
+    await tester.tap(find.byIcon(Icons.arrow_upward_rounded));
+    expect(sendCalled, isTrue);
+  });
+
   testWidgets('LoginScreen submit button has high-contrast text in light and dark mode', (WidgetTester tester) async {
     // Dark mode
     await tester.pumpWidget(
