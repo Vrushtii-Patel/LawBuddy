@@ -1456,6 +1456,7 @@ final Map<String, Map<String, String>> _translations = {
   'chatCitation.ragGrounded': {'en': 'RAG Grounded', 'hi': 'RAG आधारित'},
   'chatCitation.statutoryLaw': {'en': 'Statutory Law', 'hi': 'वैधानिक कानून'},
   'chatCitation.secPrefix': {'en': 'Sec {section}', 'hi': 'धारा {section}'},
+  'chatCitation.rulePrefix': {'en': 'Rule {rule}', 'hi': 'नियम {rule}'},
   'chatCitation.officialLaw': {'en': 'Official Law', 'hi': 'आधिकारिक कानून'},
   'chatCitation.officialSource': {'en': 'Official Source', 'hi': 'आधिकारिक स्रोत'},
   'chatCitation.defaultJurisdiction': {'en': 'India', 'hi': 'भारत'},
