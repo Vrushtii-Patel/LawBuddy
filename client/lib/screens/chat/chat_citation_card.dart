@@ -79,18 +79,22 @@ class _LegalSourcesCitationCardState
                 children: [
                   Icon(Icons.verified_outlined, size: 15, color: primaryColor),
                   const SizedBox(width: 7),
-                  Text(
-                    loc.translate('chatCitation.title',
-                        {'count': widget.sources.length.toString()}),
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
+                  Expanded(
+                    child: Text(
+                      loc.translate('chatCitation.title',
+                          {'count': widget.sources.length.toString()}),
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: isDark
+                            ? AppColors.darkTextPrimary
+                            : AppColors.lightTextPrimary,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 8),
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -133,9 +137,20 @@ class _LegalSourcesCitationCardState
                   final doc = (map['document'] ??
                           loc.translate('chatCitation.statutoryLaw'))
                       .toString();
-                  final sec = map['section'] != null
-                      ? 'Sec ${map['section']}'
-                      : map['rule']?.toString();
+                  final secRaw = map['section']?.toString().trim();
+                  final ruleRaw = map['rule']?.toString().trim();
+                  String? secBadge;
+                  if (secRaw != null && secRaw.isNotEmpty) {
+                    secBadge = secRaw.toLowerCase().startsWith('sec')
+                        ? secRaw
+                        : loc.translate(
+                            'chatCitation.secPrefix', {'section': secRaw});
+                  } else if (ruleRaw != null && ruleRaw.isNotEmpty) {
+                    secBadge = ruleRaw.toLowerCase().startsWith('rule')
+                        ? ruleRaw
+                        : loc.translate(
+                            'chatCitation.rulePrefix', {'rule': ruleRaw});
+                  }
                   final authority = (map['authority'] ??
                           loc.translate('chatCitation.officialLaw'))
                       .toString();
@@ -168,43 +183,55 @@ class _LegalSourcesCitationCardState
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Wrap(
-                                spacing: 6,
-                                runSpacing: 4,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                children: [
-                                  Text(
-                                    doc,
-                                    style: GoogleFonts.plusJakartaSans(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: isDark
-                                          ? AppColors.darkTextPrimary
-                                          : AppColors.lightTextPrimary,
-                                    ),
-                                  ),
-                                  if (sec != null)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 1.5),
-                                      decoration: BoxDecoration(
-                                        color: secondaryColor.withValues(
-                                            alpha: 0.15),
-                                        borderRadius: BorderRadius.circular(4),
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: doc,
+                                      style: GoogleFonts.plusJakartaSans(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: isDark
+                                            ? AppColors.darkTextPrimary
+                                            : AppColors.lightTextPrimary,
+                                        height: 1.35,
                                       ),
-                                      child: Text(
-                                        sec,
-                                        style: GoogleFonts.plusJakartaSans(
-                                          fontSize: 10.5,
-                                          fontWeight: FontWeight.w700,
-                                          color: secondaryColor,
+                                    ),
+                                    if (secBadge != null) ...[
+                                      const WidgetSpan(
+                                        alignment: PlaceholderAlignment.middle,
+                                        child: SizedBox(width: 6),
+                                      ),
+                                      WidgetSpan(
+                                        alignment: PlaceholderAlignment.middle,
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5, vertical: 1.5),
+                                          decoration: BoxDecoration(
+                                            color: secondaryColor.withValues(
+                                                alpha: 0.15),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                          child: Text(
+                                            secBadge,
+                                            style: GoogleFonts.plusJakartaSans(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w700,
+                                              color: secondaryColor,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                ],
+                                    ],
+                                  ],
+                                ),
                               ),
-                              const SizedBox(height: 3),
-                              Row(
+                              const SizedBox(height: 5),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 4,
+                                crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
                                   Text(
                                     '$jurisdiction • $authority',
@@ -213,33 +240,38 @@ class _LegalSourcesCitationCardState
                                       color: isDark
                                           ? AppColors.darkTextSecondary
                                           : AppColors.lightTextSecondary,
+                                      height: 1.3,
                                     ),
                                   ),
-                                  if (url != null && url.isNotEmpty) ...[
-                                    const SizedBox(width: 8),
+                                  if (url != null && url.isNotEmpty)
                                     InkWell(
                                       onTap: () => _launchSourceUrl(url),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            loc.translate(
-                                                'chatCitation.officialSource'),
-                                            style: GoogleFonts.plusJakartaSans(
-                                              fontSize: 10.5,
-                                              fontWeight: FontWeight.w600,
-                                              color: primaryColor,
-                                              decoration:
-                                                  TextDecoration.underline,
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 1.5),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              loc.translate(
+                                                  'chatCitation.officialSource'),
+                                              style:
+                                                  GoogleFonts.plusJakartaSans(
+                                                fontSize: 10.5,
+                                                fontWeight: FontWeight.w600,
+                                                color: primaryColor,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(width: 2),
-                                          Icon(Icons.open_in_new_rounded,
-                                              size: 10, color: primaryColor),
-                                        ],
+                                            const SizedBox(width: 3),
+                                            Icon(Icons.open_in_new_rounded,
+                                                size: 10, color: primaryColor),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ],
                                 ],
                               ),
                             ],
