@@ -1315,29 +1315,6 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
             ),
             const SizedBox(width: 12),
           ],
-          IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: (isDark ? AppColors.darkPrimary : AppColors.lightPrimary)
-                    .withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                ),
-              ),
-              child: Icon(
-                Icons.add_rounded,
-                color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
-                size: 18,
-              ),
-            ),
-            tooltip: tr('checklists.newChecklist'),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
-            onPressed: () => _showCreateChecklistDialog(context),
-          ),
-          const SizedBox(width: 8),
           const UserProfileButton(),
         ],
       ),
@@ -1463,69 +1440,41 @@ class _ChecklistsListScreenState extends ConsumerState<ChecklistsListScreen>
       ),
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              children: [
-                Text(
-                  tr('checklists.casesHeading'),
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.2,
-                    color: isDark
-                        ? AppColors.darkTextPrimary
-                        : AppColors.lightTextPrimary,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: (isDark
-                            ? AppColors.darkPrimary
-                            : AppColors.lightPrimary)
-                        .withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color:
-                          isDark ? AppColors.darkBorder : AppColors.lightBorder,
-                    ),
-                  ),
-                  child: Text(
-                    '${_checklists.length}',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w800,
-                      color: isDark
-                          ? AppColors.darkAccent
-                          : AppColors.lightPrimary,
-                    ),
-                  ),
-                ),
-              ],
+            Text(
+              tr('checklists.casesHeading'),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.2,
+                color: isDark
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
+              ),
             ),
-            FilledButton.icon(
-              onPressed: () => _showCreateChecklistDialog(context),
-              icon: const Icon(Icons.add_rounded, size: 18),
-              label: Text(
-                tr('checklists.newChecklist'),
-                style: GoogleFonts.plusJakartaSans(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13,
+            const SizedBox(width: 10),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+              decoration: BoxDecoration(
+                color: (isDark
+                        ? AppColors.darkPrimary
+                        : AppColors.lightPrimary)
+                    .withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color:
+                      isDark ? AppColors.darkBorder : AppColors.lightBorder,
                 ),
               ),
-              style: FilledButton.styleFrom(
-                backgroundColor: isDark
-                    ? AppColors.darkPrimary
-                    : AppColors.lightPrimary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 14, vertical: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+              child: Text(
+                '${_checklists.length}',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  color: isDark
+                      ? AppColors.darkAccent
+                      : AppColors.lightPrimary,
                 ),
               ),
             ),
