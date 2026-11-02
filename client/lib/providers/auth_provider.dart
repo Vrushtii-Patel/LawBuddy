@@ -336,30 +336,38 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> logout() async {
     if (_isLoggingOut) return;
     _isLoggingOut = true;
-    state = state.copyWith(status: AuthStatus.loading);
+
+    String? tokenToRevoke;
     try {
-      final token = await TokenStorage.getToken();
-      if (token != null && token.isNotEmpty) {
-        try {
-          await ApiService.logout(explicitToken: token);
-        } catch (e) {
-          debugPrint('Remote logout warning (continuing local logout): $e');
-        }
-      }
+      tokenToRevoke = await TokenStorage.getToken();
     } catch (e) {
       debugPrint('Error retrieving token during logout: $e');
-    } finally {
-      try {
-        await TokenStorage.deleteToken();
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.remove('userId');
-      } catch (_) {}
-      _isLoggingOut = false;
-      state = state.copyWith(
-        status: AuthStatus.unauthenticated,
-        clearUser: true,
-        clearError: true,
-      );
+    }
+
+    // Purge local credentials immediately so that subsequent route loads or app
+    // reloads cannot see the previous session, regardless of network status.
+    try {
+      await TokenStorage.deleteToken();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('userId');
+    } catch (e) {
+      debugPrint('Error clearing local storage on logout: $e');
+    }
+
+    _isLoggingOut = false;
+    state = state.copyWith(
+      status: AuthStatus.unauthenticated,
+      clearUser: true,
+      clearError: true,
+    );
+
+    // Fire-and-forget remote revocation so that network delays, timeouts, or
+    // Render spin-up delays NEVER block the user from signing out.
+    if (tokenToRevoke != null && tokenToRevoke.isNotEmpty) {
+      ApiService.logout(explicitToken: tokenToRevoke).catchError((e) {
+        debugPrint('Remote logout warning (ignored): $e');
+        return <String, dynamic>{'success': false};
+      });
     }
   }
 

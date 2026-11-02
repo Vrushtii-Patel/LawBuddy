@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../providers/locale_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/user_profile_button.dart';
+import '../../widgets/cookie_consent_banner.dart';
 import '../admin_analytics_screen.dart';
 import '../chat_screen.dart';
 import '../checklists_list_screen.dart';
@@ -354,15 +355,28 @@ Widget _buildSidebarContent(
               isActive: false,
               isDark: isDark,
               onTap: () {
+                final targetCtx = rootNavigatorKey.currentContext ?? context;
                 if (isDrawer) Navigator.pop(context);
-                showSettingsDialog(context, ref);
+                showSettingsDialog(targetCtx, ref);
+              },
+            ),
+            const SizedBox(height: 2),
+            SidebarNavItem(
+              icon: Icons.logout_rounded,
+              label: loc.translate('common.signOut'),
+              isActive: false,
+              isDark: isDark,
+              onTap: () {
+                if (isDrawer) Navigator.pop(context);
+                handleAppLogout(null, ref);
               },
             ),
             const SizedBox(height: 4),
             InkWell(
               onTap: () {
+                final targetCtx = rootNavigatorKey.currentContext ?? context;
                 if (isDrawer) Navigator.pop(context);
-                showProfileDialog(context, ref);
+                showProfileDialog(targetCtx, ref);
               },
               borderRadius: BorderRadius.circular(10),
               child: Padding(

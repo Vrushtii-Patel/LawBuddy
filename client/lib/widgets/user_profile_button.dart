@@ -69,6 +69,46 @@ class _UserProfileButtonState extends ConsumerState<UserProfileButton> {
   }
 }
 
+/// Centralized, rock-solid logout handler that guarantees the user is immediately
+/// logged out locally, closes any dialogs, and resets the root navigation stack to WelcomeScreen.
+Future<void> handleAppLogout(BuildContext? context, WidgetRef ref) async {
+  // 1. Pop any open dialog or sheet if a valid context was provided
+  if (context != null) {
+    try {
+      Navigator.of(context, rootNavigator: true).pop();
+    } catch (_) {}
+  }
+
+  // 2. Perform instant local logout (clears token & sets status to unauthenticated)
+  await ref.read(authProvider.notifier).logout();
+
+  // 3. Reset root navigator stack to WelcomeScreen
+  final navState = rootNavigatorKey.currentState;
+  if (navState != null) {
+    navState.pushAndRemoveUntil(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const WelcomeScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      (route) => false,
+    );
+  } else if (context != null && context.mounted) {
+    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const WelcomeScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+      (route) => false,
+    );
+  }
+}
+
 void showSettingsDialog(BuildContext context, WidgetRef ref) {
   showDialog(
     context: context,
@@ -619,7 +659,7 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                   style: TextStyle(color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w600),
                 ),
               ),
-              if (authState.status == AuthStatus.authenticated && user != null)
+              if (authState.status != AuthStatus.unauthenticated)
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: colorScheme.error,
@@ -627,20 +667,7 @@ void showSettingsDialog(BuildContext context, WidgetRef ref) {
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                   ),
-                  onPressed: () {
-                    Navigator.pop(dialogContext);
-                    ref.read(authProvider.notifier).logout();
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) => const WelcomeScreen(),
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(opacity: animation, child: child);
-                        },
-                      ),
-                      (route) => false,
-                    );
-                  },
+                  onPressed: () => handleAppLogout(dialogContext, ref),
                   icon: const Icon(Icons.logout_rounded, size: 16),
                   label: Text(
                     currentLanguage == AppLanguage.hindi ? 'साइन आउट' : 'Sign Out',
@@ -971,27 +998,14 @@ class _ProfileDialogContentState extends ConsumerState<_ProfileDialogContent> {
             style: TextStyle(color: colorScheme.onSurfaceVariant),
           ),
         ),
-        if (authState.user != null || authState.status == AuthStatus.authenticated)
+        if (authState.status != AuthStatus.unauthenticated)
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               backgroundColor: colorScheme.error,
               foregroundColor: colorScheme.onError,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
-            onPressed: () {
-              Navigator.pop(context);
-              ref.read(authProvider.notifier).logout();
-              Navigator.pushAndRemoveUntil(
-                widget.parentContext,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) => const WelcomeScreen(),
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-                ),
-                (route) => false,
-              );
-            },
+            onPressed: () => handleAppLogout(context, ref),
             icon: const Icon(Icons.logout_rounded, size: 16),
             label: Text(currentLanguage == AppLanguage.hindi ? 'साइन आउट' : 'Sign Out'),
           ),

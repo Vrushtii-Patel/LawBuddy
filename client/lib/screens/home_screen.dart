@@ -4,6 +4,8 @@ import '../providers/auth_provider.dart';
 import '../providers/locale_provider.dart';
 import '../theme/app_theme.dart';
 import '../services/api_service.dart';
+import '../widgets/cookie_consent_banner.dart';
+import 'welcome_screen.dart';
 import 'home/home_widgets.dart';
 import 'home/home_sidebar.dart';
 import 'home/home_header.dart';
@@ -136,9 +138,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      if (next.status == AuthStatus.unauthenticated) {
+        rootNavigatorKey.currentState?.pushAndRemoveUntil(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const WelcomeScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          ),
+          (route) => false,
+        );
+      }
+    });
+
     ref.watch(localeProvider);
     final loc = ref.read(localeProvider.notifier);
     final authState = ref.watch(authProvider);
+
+    if (authState.status == AuthStatus.unauthenticated) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        rootNavigatorKey.currentState?.pushAndRemoveUntil(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                const WelcomeScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          ),
+          (route) => false,
+        );
+      });
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     final user = authState.user;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
